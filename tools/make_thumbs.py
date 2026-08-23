@@ -70,8 +70,20 @@ def shrink(w, h, pal, data):
 
 def main():
     blobs = []
+    missing = []
     for dex in range(1, DEX_COUNT + 1):
         path = os.path.join(DIR, f'p{dex:03d}.bin')
+        # Not every species HAS art. This used to assume they all did, which
+        # held only while every packed region was 100% -- Unova is the first
+        # that is not, and 13 missing files crashed the whole build. An absent
+        # species gets an EMPTY blob: it keeps its slot and its offset (the
+        # index is positional, so skipping one would shift every species after
+        # it), and the gallery falls back to the dex number, which is what it
+        # already does for a species whose sprite is not on the card.
+        if not os.path.exists(path):
+            missing.append(dex)
+            blobs.append(struct.pack('<3B', 0, 0, 0))
+            continue
         w, h, pal, data = read_pmd_idle_frame0(path)
         nw, nh, npal, ndata = shrink(w, h, pal, data)
         if len(npal) > 255:
@@ -86,6 +98,11 @@ def main():
     for b in blobs:
         offsets.append(pos)
         pos += len(b)
+
+    if missing:
+        print('%d species have no sprite here, so no thumbnail: %s' %
+              (len(missing), ' '.join(str(d) for d in missing[:16]) +
+               ('...' if len(missing) > 16 else '')))
 
     out = os.path.join(DIR, 'thumbs.bin')
     with open(out, 'wb') as f:

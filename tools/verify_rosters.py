@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the Johto and Hoenn ladders in trainers.h against the real game data.
+"""Check the Johto, Hoenn and Sinnoh ladders in trainers.h against the real games.\n\nUNOVA IS NOT CHECKED: pret has no Gen 5 disassembly. The script says so out\nloud rather than letting a clean run imply otherwise.
 
     python3 tools/verify_rosters.py
 
@@ -175,6 +175,22 @@ def main():
     n += compare('HOENN (pokeemerald)', ours('HOENN'), eh, HOENN)
     n += compare('SINNOH (pokeplatinum)', ours('SINNOH'), platinum_parties(), SINNOH)
     print('%d trainers differ in total' % n)
+
+    # UNOVA IS NOT CHECKED, and saying so matters more than the number above.
+    # pret has no Gen 5 disassembly -- their DS work stops at Platinum -- so
+    # there is nothing to diff against. Without this line "0 trainers differ"
+    # would read as if every ladder had been verified, which is the sort of
+    # quiet over-claim this script exists to prevent.
+    try:
+        unova = ours('UNOVA')
+    except Exception:
+        unova = None
+    if unova:
+        print()
+        print('=== UNOVA: NOT VERIFIED')
+        print('  %d trainers written from knowledge, not from a disassembly.' % len(unova))
+        print('  pret has no Gen 5 decomp. If one appears, add it here -- the')
+        print('  same recall produced ten errors in Johto and Hoenn.')
     return 1 if n else 0
 
 

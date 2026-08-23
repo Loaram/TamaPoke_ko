@@ -1,6 +1,6 @@
 # TamaPoke — where things stand
 
-Written 2026-08-20, updated 2026-08-21 (twice), so work can resume after a restart.
+Written 2026-08-20, updated through 2026-08-23, so work can resume after a restart.
 Read this with `CLAUDE.md`; this file is the *current* state, that one is the
 permanent knowledge.
 
@@ -11,11 +11,11 @@ permanent knowledge.
 | | |
 |---|---|
 | Published firmware | **v3.3**, live at https://dylanpdao.github.io/TamaPoke/web/ |
-| Repo version | **v3.4** in `TamaPoke.ino` — Sinnoh gyms, **not yet flashed/published** |
+| Repo version | **v3.5** in `TamaPoke.ino` — Unova, on `feat/unova`, **not merged** |
 | Your board | on **v3.3**, flashed and verified |
 | Live creature | Dragonair L45, `iv=31/31/31/31 tr=100/100/100`, Charizard\* L100 banked |
 | Branch | `feat/dex-expansion-phase0`, pushed, **no PR** |
-| Sprites | all four regions 100% (302/200/270/214), `thumbs.bin` at 493 |
+| Sprites | Kanto-Sinnoh 100%; Unova 143/156 (13 have no art upstream) |
 | Tests | 33 suites, **33 passing** — first fully green run on this branch |
 
 **Everything merged and published today:** RETIRE, the move-picker TM gate, type
@@ -207,6 +207,49 @@ replacing a block, never by slicing at an index.
 `check_installer.py` still passes on every build, guarding both rules that each
 destroyed a real save: four parts at their own offsets, and
 `new_install_prompt_erase: true`.
+
+## 4c. Unova (`feat/unova`) — DEX_COUNT 649
+
+Two things happened here that had not happened in any earlier expansion.
+
+**1. A region that is not 100% art.** 13 of Unova's 156 have no sprite upstream:
+
+    514 516 520 522 523 538 558 564 565 591 592 616 626
+
+They **keep their dex numbers**. Removing one renumbers every species after it,
+and dex numbers are positional in saved data -- `dexReg` bits, `speciesId`,
+every party record -- so a deletion corrupts existing saves. What is removed is
+their ability to HATCH: `tools/check_sprites.py --emit` writes `noart.h`, and
+`pickEggSpecies()`/`rollInRegion()` skip them. `region_test` rolls 2400 eggs and
+fails if one appears. **Re-run `--emit` after any expansion and whenever
+upstream adds art** -- several of these are base forms, so the list is doing
+real work, not covering a theoretical case.
+
+**2. A ladder with nothing to verify it against.** pret's DS disassemblies stop
+at Platinum. Unova is therefore written from knowledge, which is precisely how
+Johto and Hoenn were first written -- and `verify_rosters.py` later found TEN
+errors in those, including two trainers carrying the wrong game's team. So:
+
+- `trainers.h` carries a `*** NOT VERIFIED AGAINST A DISASSEMBLY ***` block
+- `verify_rosters.py` prints a NOT VERIFIED section, so "0 trainers differ"
+  cannot be read as covering Unova
+- `roster_test`'s structural checks still apply, and its monotonic-ramp rule is
+  what caught a wrong gym ORDER in Sinnoh earlier
+
+It follows **B2W2**: Black/White's Striaton trio depends on your starter and
+Drayden-or-Iris on your version, and one fixed ladder cannot express a choice.
+Zebstrika, Throh and Carracosta are on it and have no art -- kept faithful, and
+they draw as dex numbers.
+
+**If a Gen 5 decomp ever appears, wire it into `verify_rosters.py` first.**
+
+`check_sprites.py` also had to be fixed: it paged the GitHub API and `break`'d
+on any failure, returning a partial set. Rate-limited, it reported all 156 Unova
+species as art-less. That was survivable while it only printed a table; it is
+not now that the output decides what can hatch. It fails loudly and prefers
+authenticated `gh`.
+
+---
 
 ## 5. Pitfalls — the ones that have actually cost time
 
