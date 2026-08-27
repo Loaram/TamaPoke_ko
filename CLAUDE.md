@@ -81,6 +81,16 @@ second caller has its own copy of it, and nobody notices until a player does.
 | horizontal swipe = page | one screen at a time | the other three | the same paging bug shipped **four times** |
 | save survives an install | the four-part manifest | `new_install_prompt_erase` | fixing one still wiped a real player's pet |
 | evolution threshold | `canEvolveNow()` | `renderCardProgress()` | the card would promise an evolution that never came |
+| a region needs its pack | `sdBegin()`, at mount | files arriving later over `PUT` | the pack you just downloaded stayed greyed out until a reboot |
+| the 3 s hold is for the pet | a list of screens to EXCLUDE | every screen not on that list | holding a PARTY SLOT offered to release the LIVE pet |
+
+**A guard written as a list of EXCLUSIONS is this trap pre-loaded.** The hold
+was gated by `!galleryOpen && !cardOpen && !kbOpen && !clockOpen`, so every
+screen added afterwards was live by default -- party, box, gym, battle, player,
+menu. On the party screen the grid overlaps `inPetZone` AND the dialog's YES box
+lands on party slot 4, so a hold plus a tap released the creature you were
+raising. It asks `uiCurrentScreen() == SCR_MAIN` now: state what is ALLOWED, not
+what is forbidden, or the list rots every time a screen is added.
 
 **The habit:** when you change a rule, `grep` for every caller and make them all
 ask ONE function. `moveUnlockLevel()` and `uiButtonDisabled()` exist for exactly
@@ -162,6 +172,15 @@ a VALUE that happens to hold rather than to the RULE.
 whatever it had -- so a rate-limited run said an entire generation had no art.
 Harmless while it only printed a table; not once that list decides which species
 can hatch. It fails loudly now, and sanity-checks the total.
+
+**A test at the END of a long suite is running in whatever state the suite left
+behind.** The long-press guard was first checked at the bottom of `touch_test`,
+which by then had opened a dozen screens: `cardOpen` was still set, so the hold
+was refused for the wrong reason, and the check passed *with the bug put back*.
+Twice -- the second time because the panel had DIMMED, and `swallowGesture` eats
+a gesture before the gate is consulted at all. It lives in `release_test` now,
+from a known state, and asserts the screen it thinks it is on before testing
+anything. Prefer a fresh harness to appending onto a long one.
 
 **The habit that catches all of them: break it on purpose and watch the test
 fail.** Every guard added since has been negative-checked that way, and it has
@@ -982,7 +1001,7 @@ which is a factory reset and is meant to.
 ### Tests
 
 ```bash
-bash tools/emu/tests/run.sh          # all 10 suites
+bash tools/emu/tests/run.sh          # all 34 suites
 bash tools/emu/tests/run.sh battle   # just matching ones
 ```
 

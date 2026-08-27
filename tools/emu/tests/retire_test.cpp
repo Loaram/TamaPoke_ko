@@ -9,6 +9,12 @@
 //   * the debt must land on the NEXT creature, never the one being retired
 //   * it must not compound: retiring early twice is still one day, not two
 //   * retiring a creature that HAS earned its farewell must cost nothing
+//
+// And, since it stopped banking: an EARLY retire gives the creature up for good
+// and must not pay like the good ending either. Both halves are pinned, because
+// each is invisible from the other -- the creature vanishing is obvious on the
+// party screen, while lastEnd quietly deciding the next egg's rarity and shiny
+// odds is not visible anywhere at all.
 #include "Arduino.h"
 #include "Preferences.h"
 #include "pet.h"
@@ -58,9 +64,15 @@ int main(){
     ck(!p.retireIsFree(), "and the game says that costs something");
     p.startRetire();
     ck(p.ceremony == CER_FAREWELL, "retiring runs the farewell ceremony");
+    ck(p.retireIsEarly(), "and knows this one was early");
     finish(p, q);
-    ck(q.count() == 1 && q.slots[0].dex == 4, "the creature is banked, not lost");
-    ck(q.slots[0].level == 21, "frozen at the level it had");
+    // THE CHANGE: an early retire gives the creature up. It used to bank
+    // exactly as a farewell does, which made this the good ending with a small
+    // tax on it rather than a real decision.
+    ck(q.count() == 0, "an early retire does NOT bank the creature");
+    ck(p.endedKind == CER_NONE, "so nothing is left waiting for a party slot");
+    ck(p.lastEnd == CER_RELEASE,
+       "and the next egg is neutral, not blessed -- or this is a shiny farm");
     ck(p.isEgg(), "and a new egg is waiting");
 
     // THE POINT: the debt is on the new creature
@@ -83,13 +95,24 @@ int main(){
     ck(p.canFarewellNow() && p.retireIsFree(),
        "a creature past three days in final form retires for nothing");
     p.startRetire();
+    ck(!p.retireIsEarly(), "an earned retire is not an early one");
     finish(p, q);
     ck(p.evoPenalty() == 0, "and hands the next creature no debt");
+    // The other side of the rule, and the one a naive "retire never banks"
+    // would break: this IS the farewell, reached by a different button.
+    ck(q.count() == 1 && q.slots[0].dex == 6,
+       "an EARNED retire still banks the creature, exactly as a farewell does");
+    ck(p.lastEnd == CER_FAREWELL, "and still blesses the next egg");
   }
 
   // --- it does not compound
   {
     Pet p; Party q; p.begin(); q.begin();
+    // Tests share one NVS store within a process, so this Party loads whatever
+    // the EARNED-retire block above banked. Start from a known-empty one or the
+    // "none of the three was banked" check below reads the previous block's
+    // Charizard and fails for the wrong reason.
+    for (int i = 0; i < PARTY_SLOTS; i++) q.releaseAt(i);
     for (int i = 0; i < 3; i++) {
       young(p, 4, 10);
       p.startRetire();
@@ -97,6 +120,7 @@ int main(){
     }
     ck(p.evoPenalty() == EVO_PENALTY_LEVELS,
        "three early retires in a row still cost one day, not three");
+    ck(q.count() == 0, "and none of the three was banked");
   }
 
   // --- a normal farewell clears a debt inherited from before

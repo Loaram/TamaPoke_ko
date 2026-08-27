@@ -3,7 +3,7 @@
 [![Flash in browser](https://img.shields.io/badge/flash-in%20browser-FF6B00?logo=googlechrome&logoColor=white)](https://dylanpdao.github.io/TamaPoke/web/)
 [![MakerWorld](https://img.shields.io/badge/MakerWorld-3D%20case-00AE42?logo=bambulab&logoColor=white)](https://makerworld.com/es/models/2937822-tamapoke-a-pokemon-pokeball-tamagotchi)
 ![Board](https://img.shields.io/badge/board-ESP32--S3%20round%20AMOLED-E7352C?logo=espressif&logoColor=white)
-![Firmware](https://img.shields.io/badge/firmware-v3.5-8A2BE2)
+![Firmware](https://img.shields.io/badge/firmware-v3.6-8A2BE2)
 ![Code](https://img.shields.io/badge/code-MIT-blue)
 ![Languages](https://img.shields.io/badge/languages-6-FFCB05)
 [![Stars](https://img.shields.io/github/stars/DylanPDao/TamaPoke?style=flat&logo=github&color=yellow)](https://github.com/DylanPDao/TamaPoke/stargazers)
@@ -210,7 +210,13 @@ brings ELECTIVIRE, MAGMORTAR and RHYPERIOR waiting on exactly the same thing.
   **joins your party** (6 slots), keeping its species, nickname, shiny status, IVs,
   training and the level it reached. Frozen there: it no longer ages or trains.
 - A **runaway does not join.** It's the one ending with a cost, and letting a
-  neglected pet come back on the team would remove it.
+  neglected pet come back on the team would remove it. **Neither does an early
+  retire** — see "Retiring a creature early" below.
+- **Letting one go for good.** Tap a party or box slot to open its sheet;
+  **RELEASE** removes that creature permanently. It asks first, every time, and
+  the creature does not fall through into the box — this is the one way to free
+  a slot without something taking its place. A box slot now opens the same sheet
+  rather than jumping straight into the party, and **TO PARTY** does that.
 - With a full party you're taken straight to the party screen to pick who the
   newcomer replaces — or to let it go. Nothing is ever overwritten silently.
 - *(Gym battles, which is what the party is for: on the roadmap.)*
@@ -241,7 +247,9 @@ After any ending, a **new egg** appears.
   Unova's 156); they keep their dex numbers but never hatch, since the egg would
   give a creature that could only ever draw as a number.
   A region whose **sprite pack is not on the card** shows as locked and is kept
-  out of the egg pool, so a partial sprite install is a supported state.
+  out of the egg pool, so a partial sprite install is a supported state. A pack
+  sent from the web installer is picked up **as it lands** — the region unlocks
+  without a reboot.
 
 ### Battle stats & IVs
 Every pet rolls four **IVs** (individual values, 0–31) at hatch — ATK / DEF / SPD /
@@ -296,13 +304,19 @@ a checklist you tick once:
 ### Retiring a creature early
 
 The farewell is only *offered* at final form and three days. **RETIRE** on the
-menu ends a creature whenever you like -- it is the same ceremony, and it banks
-the creature into your party exactly as a farewell does.
+menu ends a creature whenever you like -- but what that costs depends entirely
+on whether the farewell had been earned yet.
 
 | | |
 |---|---|
-| Retiring one that has earned its farewell | free |
-| Retiring one that has not | the **next** creature evolves a day later |
+| Retiring one that has **earned** its farewell | free -- it is simply the farewell reached by another button. It **joins your party** and **blesses** the next egg |
+| Retiring one that has **not** | it is **gone for good** -- not banked, not in the box -- the next egg is **neutral** instead of blessed, and the **next** creature evolves a day later |
+
+An early retire used to bank the creature and bless the next egg exactly as a
+farewell does, which made it the good ending with a small tax on it: you could
+retire, check the egg, and retire again, farming blessed rolls at no real cost.
+Giving the creature up is the price now, and the confirm dialog spells out both
+halves before you accept.
 
 The penalty is `EVO_PENALTY_LEVELS` (24 at `MINUTES_PER_LEVEL 60`) added to
 every evolution threshold, the same sum `careMistakes` moves. It lands on the

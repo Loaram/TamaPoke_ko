@@ -17,6 +17,11 @@ void emuSetSpriteDir(const char *d) { g_spriteDir = d; }
 
 bool sdReady = true;
 bool sdDirty = false;
+// The firmware rescans region art when a pack lands over PUT. There is no card
+// here and no PUT path, so the flag never sets and the scan is a no-op -- but both
+// symbols are referenced from loop(), so they have to exist to link.
+bool sdArtDirty = false;
+void sdScanRegionArt(bool) {}
 SdThumbs thumbs;
 
 static uint8_t *slurp(const std::string &path, uint32_t *size) {

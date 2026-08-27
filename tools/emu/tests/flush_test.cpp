@@ -23,12 +23,17 @@ extern Pet pet;
 extern bool cardOpen, galleryOpen, clockOpen, kbOpen, menuOpen, partyOpen, partyPick;
 extern bool trainOpen, movePickOpen, battleOpen, gymOpen, playerOpen;
 extern uint8_t cardPage;
+extern uint8_t partyDetail, boxDetail;
+extern bool boxOpen, releaseConfirm;
+extern Party party;
 void startBattle(int16_t dex, uint8_t lvl);
 
 static int bad = 0;
 static void clearAll(){
   cardOpen=galleryOpen=clockOpen=kbOpen=menuOpen=partyOpen=partyPick=false;
   trainOpen=movePickOpen=battleOpen=gymOpen=playerOpen=false;
+  boxOpen=releaseConfirm=false;
+  partyDetail=boxDetail=0;
 }
 static void check(const char *name){
   gfx->frameReady = false;
@@ -67,6 +72,18 @@ int main(){
   for (uint8_t p=0;p<4;p++){ clearAll(); cardOpen=true; cardPage=p;
     char n[16]; snprintf(n,sizeof(n),"card%u",p); check(n); }
   clearAll(); startBattle(9,50); check("battle");
+  // The detail sheets and the release confirm drawn over them. A creature has to
+  // be IN the slot: an empty one falls through to the grid, which flushes for a
+  // different reason and would pass without ever drawing a sheet.
+  {
+    PartyMon m; m.dex=25; m.level=30; m.ivAtk=m.ivDef=m.ivSpe=m.ivHp=20;
+    snprintf(m.nick,sizeof(m.nick),"PIKA");
+    party.slots[0]=m; party.box[0]=m; party.save(); party.boxSave();
+  }
+  clearAll(); partyOpen=true; partyDetail=1;                      check("partysheet");
+  clearAll(); partyOpen=true; partyDetail=1; releaseConfirm=true;  check("partyconfirm");
+  clearAll(); partyOpen=true; boxOpen=true; boxDetail=1;           check("boxsheet");
+  clearAll(); partyOpen=true; boxOpen=true; boxDetail=1; releaseConfirm=true; check("boxconfirm");
 
   clearAll();                       crumbIs("main");
   clearAll(); trainOpen=true;       crumbIs("train");
