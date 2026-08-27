@@ -157,6 +157,12 @@ a VALUE that happens to hold rather than to the RULE.
   **vacuously true** when nothing was locked, and survived deleting the gate
   entirely. Only the negative-check caught it.
 
+**A tool that reports a partial fetch as fact is the same disease.**
+`check_sprites.py` paged the GitHub API and `break`'d on any failure, returning
+whatever it had -- so a rate-limited run said an entire generation had no art.
+Harmless while it only printed a table; not once that list decides which species
+can hatch. It fails loudly now, and sanity-checks the total.
+
 **The habit that catches all of them: break it on purpose and watch the test
 fail.** Every guard added since has been negative-checked that way, and it has
 caught a bad test roughly as often as it has confirmed a good one. If an
@@ -779,7 +785,7 @@ region with its own progress (badges n/8, or dex n/total), paging back off the
 front of a ladder or grid returns to it, and the vertical swipe still works as a
 shortcut. `swipe_test` asserts both screens land on it.
 
-**Phase 3 landed: four ladders.** `trainers.h` holds `TRAINERS_KANTO/JOHTO/
+**Phase 3 landed: five ladders.** `trainers.h` holds `TRAINERS_KANTO/JOHTO/
 HOENN` behind `TRAINER_SETS[GYM_REGIONS]`, and the gym screen changes ladder on
 a vertical swipe -- the same gesture the Pokedex uses, and the swipe-left
 chooser that was once planned is not needed. `TrainerMon::dex` had to widen to
@@ -842,8 +848,26 @@ narrowed by the SD, which gives "no card keeps today's behaviour" for free and
 keeps `pet.cpp` free of SD symbols (it links into all 33 test binaries, none of
 which build `sdmon.cpp`).
 
-**Phase 4 landed: the sprites.** All four regions are 100% packed
-(302/200/270/214 files) and `thumbs.bin` regenerates at 493.
+**Phase 4 landed: the sprites.** Kanto through Sinnoh are 100% packed;
+`thumbs.bin` regenerates from `DEX_COUNT`.
+
+**Unova landed (DEX_COUNT 649), and brought two firsts.**
+
+1. **A region that is NOT 100% art.** 13 of Unova's 156 have no sprite upstream.
+   They KEEP THEIR DEX NUMBERS -- removing one renumbers every species after it,
+   and dex numbers are positional in saved data (`dexReg` bits, `speciesId`,
+   every party record) -- but they are barred from the EGG POOL, because
+   hatching one gives a creature that can only ever draw as a number.
+   `tools/check_sprites.py --emit` writes `noart.h`; `region_test` rolls 2400
+   eggs and fails if one appears. **Re-run `--emit` after any expansion, and
+   again whenever upstream adds art.**
+2. **A ladder with no disassembly to check it against.** pret's DS work stops at
+   Platinum, so Unova is written from knowledge -- which is exactly how Johto and
+   Hoenn were first written, and `verify_rosters.py` later found TEN errors in
+   them. `trainers.h` marks it, and the script prints a NOT VERIFIED section so
+   that "0 trainers differ" can never be read as covering it. It follows
+   **B2W2**, since Black/White's Striaton trio depends on your starter and
+   Drayden-or-Iris on your version, and a fixed ladder cannot express a choice.
 
 What changed for 386 species:
 

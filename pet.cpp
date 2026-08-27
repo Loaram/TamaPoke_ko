@@ -2,6 +2,7 @@
 #include "avatars.h"
 #include "dex.h"
 #include "moves.h"
+#include "noart.h"   // speciesHasArt(): the egg pool skips what cannot be drawn
 #include "audio.h"
 
 void Pet::begin() {
@@ -391,6 +392,10 @@ int16_t Pet::pickEggSpecies() {
         // ALL spans every region, so filter per species: a missing Sinnoh pack
         // must not put a Sinnoh creature in a mixed egg.
         if (!regionAvailable(regionOfDex(d))) continue;
+        // And a species with no art ANYWHERE never hatches, pack or no pack --
+        // it would be a creature that can only ever draw as a number. It keeps
+        // its dex slot; it is simply not something an egg can contain.
+        if (!speciesHasArt(d)) continue;
         cand[n++] = d;
       }
       if (n > 0) return cand[random(n)];
@@ -408,7 +413,8 @@ int16_t Pet::rollInRegion(uint8_t r, uint8_t tier) {
     int16_t cand[CAND_MAX];
     int n = 0;
     for (int16_t d = rg.lo; d <= rg.hi && n < CAND_MAX; d++)
-      if (DEX_TBL[d].rarity == t && regionAvailable(regionOfDex(d))) cand[n++] = d;
+      if (DEX_TBL[d].rarity == t && regionAvailable(regionOfDex(d)) &&
+          speciesHasArt(d)) cand[n++] = d;
     if (n) return cand[random(n)];
   }
   return rg.starters[0];      // a region with nothing in it cannot happen

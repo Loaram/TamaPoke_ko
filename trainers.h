@@ -123,12 +123,48 @@ static const Trainer TRAINERS_SINNOH[TRAINER_COUNT] = {
   { "CYNTHIA", "CHAMPION",  T_DRAGON,   6, { {442,58},{407,58},{468,60},{448,60},{350,58},{445,62} } },
 };
 
-#define GYM_REGIONS 4
+// UNOVA -- BLACK 2 / WHITE 2, and *** NOT VERIFIED AGAINST A DISASSEMBLY ***.
+//
+// THIS ONE IS DIFFERENT FROM THE OTHER FOUR. Kanto, Johto, Hoenn and Sinnoh are
+// checked by tools/verify_rosters.py against pokered/pokecrystal/pokeemerald/
+// pokeplatinum -- the games' own tables. pret has no Gen 5 disassembly (their
+// DS work stops at Platinum) and no machine-readable substitute was found, so
+// this ladder is written from knowledge. That is EXACTLY how Johto and Hoenn
+// were first written, and verify_rosters.py later found ten errors in them,
+// including two trainers carrying the wrong game's team entirely. Treat every
+// level here as approximate until a source exists.
+//
+// B2W2 rather than Black/White because BW has two AMBIGUOUS leaders: the
+// Striaton trio (which of Cilan/Chili/Cress you face depends on your starter)
+// and Drayden-or-Iris (version). B2W2 has neither, and a single fixed ladder
+// cannot represent a choice.
+//
+// Zebstrika (523), Throh (538) and Carracosta (565) have no sprite upstream and
+// will draw as dex numbers. Kept faithful rather than substituted -- see
+// noart.h; they are barred from the EGG POOL, not from existing.
+static const Trainer TRAINERS_UNOVA[TRAINER_COUNT] = {
+  { "CHEREN",  "ASPERTIA",  T_NORMAL,   2, { {504,11},{506,13} } },
+  { "ROXIE",   "VIRBANK",   T_POISON,   2, { {109,16},{544,18} } },
+  { "BURGH",   "CASTELIA",  T_BUG,      3, { {541,21},{557,21},{542,23} } },
+  { "ELESA",   "NIMBASA",   T_ELECTRIC, 3, { {587,25},{180,25},{523,27} } },
+  { "CLAY",    "DRIFTVEIL", T_GROUND,   3, { {552,29},{28,29},{530,31} } },
+  { "SKYLA",   "MISTRALTON",T_FLYING,   3, { {528,33},{227,33},{581,35} } },
+  { "DRAYDEN", "OPELUCID",  T_DRAGON,   3, { {621,43},{330,43},{612,46} } },
+  { "MARLON",  "HUMILAU",   T_WATER,    3, { {565,49},{321,49},{593,51} } },
+  { "SHAUNTAL","ELITE 4",   T_GHOST,    4, { {563,56},{426,56},{623,56},{609,58} } },
+  { "GRIMSLEY","ELITE 4",   T_DARK,     4, { {510,56},{560,56},{553,56},{625,58} } },
+  { "CAITLIN", "ELITE 4",   T_PSYCHIC,  4, { {518,56},{561,56},{579,56},{576,58} } },
+  { "MARSHAL", "ELITE 4",   T_FIGHTING, 4, { {538,56},{539,56},{534,56},{620,58} } },
+  { "IRIS",    "CHAMPION",  T_DRAGON,   6, { {635,59},{621,57},{306,57},{567,57},{131,57},{612,59} } },
+};
+
+#define GYM_REGIONS 5
 static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_KANTO,  "KANTO" },
   { TRAINERS_JOHTO,  "JOHTO" },
   { TRAINERS_HOENN,  "HOENN" },
   { TRAINERS_SINNOH, "SINNOH" },
+  { TRAINERS_UNOVA,  "UNOVA" },
 };
 
 // Hard mode reruns the same ladder with perfect IVs and a smarter AI, so the

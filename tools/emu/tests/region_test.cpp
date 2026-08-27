@@ -14,6 +14,7 @@
 #include "Preferences.h"
 #include "pet.h"
 #include "party.h"
+#include "noart.h"   // speciesHasArt / NO_ART_COUNT
 #include <cstdio>
 #include <set>
 uint32_t g_seed=23; FakeSerial Serial; FakeESP ESP; FakeWire Wire;
@@ -180,6 +181,28 @@ int main(){
     p.region = 99;               // as a corrupt or newer save might have it
     p.setRegion(99);             // must normalise rather than read off the end
     ck(p.region < REGION_COUNT, "an impossible region is brought back in range");
+  }
+
+  // A species SpriteCollab has no art for must never hatch. It keeps its dex
+  // number -- removing one renumbers every species after it, and dex numbers
+  // are positional in saved data -- but an egg containing it would give a
+  // creature that can only ever draw as a number. Unova is the first region
+  // where this bites: 13 of its 156 have no art upstream.
+  {
+    Pet p; seed(p, 60);
+    gRegionArt = 0xFFFF;                       // every pack present
+    int artless = 0, rolls = 0;
+    for (uint8_t r = 0; r < REGION_COUNT; r++) {
+      for (int i = 0; i < 400; i++) {
+        int16_t d = p.rollInRegion(r, R_COMUN);
+        rolls++;
+        if (!speciesHasArt(d)) artless++;
+      }
+    }
+    printf("      %d rolls across %d regions\n", rolls, (int)REGION_COUNT);
+    ck(artless == 0, "no egg ever contains a species with no art");
+    // and the guard is real: the list is not empty, so this can actually fail
+    ck(NO_ART_COUNT > 0, "and there really are art-less species to exclude");
   }
 
   printf("%s\n", bad?"FAILURES":"all good");
