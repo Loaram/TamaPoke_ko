@@ -296,6 +296,15 @@ int main(){
     // land on nothing rather than on the destructive one.
     ck(rL > lR, "they do not overlap");
     ck(rL - lR >= 8, "and there is a real dead gap between them");
+    // WHERE THE GAP IS MATTERS. The first version centred the pair on 233, which
+    // put the dead gap on the panel's centre line -- the one spot a thumb aims
+    // at, and exactly where every build up to v3.5 drew BRING BACK as a single
+    // full-width button. It was reported as "the bring back button is not
+    // working": the taps were landing between the two.
+    ck(monSheetBtn(233, (lT + lB) / 2, true),
+       "the panel CENTRE lands on the primary button, not in the gap");
+    ck(!monSheetBtn(233, (lT + lB) / 2, false),
+       "and never on the destructive one");
     // Both must sit on the round panel: the corner furthest from the centre is
     // the one that falls off a 466 px circle of radius 233.
     int worst = 0;

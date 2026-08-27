@@ -36,7 +36,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.9"
+#define FW_VERSION "3.10"
 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
   LCD_CS, LCD_SCLK, LCD_SDIO0, LCD_SDIO1, LCD_SDIO2, LCD_SDIO3);
@@ -370,16 +370,31 @@ uint8_t btlMyAct = 0;        // host: our own action, latched until theirs lands
 #define CONFIRM_B1_Y 206
 #define CONFIRM_B2_Y 268
 
-// The two buttons on the party/box detail sheet, side by side. A third
-// full-width row would not fit above BACK, and BRING BACK was h=38 -- under
-// UI_TAP_MIN, which is the shape section 4 of CLAUDE.md keeps warning about.
-// 96..226 and 240..370 centre the pair on 233 with a 14 px dead gap between
-// them, and RELEASE is the irreversible one so the gap is the point.
+// The two buttons on the party/box detail sheet. A third full-width row would
+// not fit above BACK, and BRING BACK was h=38 -- under UI_TAP_MIN, the shape
+// section 4 of CLAUDE.md keeps warning about.
+//
+// THEY ARE NOT EQUAL HALVES, and that is the whole point. The first version
+// centred the pair on 233 with a dead gap between them -- which put the gap at
+// the CENTRE OF THE PANEL, the one place a thumb naturally lands, so BRING BACK
+// "did not work" and was reported as broken. Worse, every build up to v3.5 drew
+// BRING BACK as a FULL-WIDTH button centred exactly there, so muscle memory
+// aimed straight at the dead zone.
+//
+// The primary action now owns the centre. RELEASE is narrower, offset right,
+// and still over UI_TAP_MIN -- it is irreversible, so it should be reachable
+// but never the thing you hit by aiming at the middle. The gap between them is
+// wider than before, not narrower.
 #define PDET_BTN_Y 336
 #define PDET_BTN_H 48
-#define PDET_L_X 96
-#define PDET_R_X 240
-#define PDET_BTN_W 130
+#define PDET_L_X 70
+#define PDET_L_W 180
+#define PDET_R_X 266
+#define PDET_R_W 120
+static_assert(PDET_L_X < 233 && 233 < PDET_L_X + PDET_L_W,
+              "the panel centre must land on the sheet's PRIMARY button, not between the two");
+static_assert(PDET_R_X > PDET_L_X + PDET_L_W + 8,
+              "the destructive button needs a real dead gap before it");
 
 uint8_t gymRegion = 0;
 uint8_t btlRegion = 0;
@@ -1271,19 +1286,20 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
   bool leftOk = fromBox ? (party.firstFree() >= 0)
                         : (pet.isEgg() && !pet.awaitingStarter());
   const char *leftLbl = fromBox ? T(S_BOX_TAKE) : T(S_REVIVE);
-  gfx->fillRoundRect(PDET_L_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10,
+  gfx->fillRoundRect(PDET_L_X, PDET_BTN_Y, PDET_L_W, PDET_BTN_H, 10,
                      leftOk ? UI_BAR_OK : UI_TRACK);
-  gfx->drawRoundRect(PDET_L_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10, UI_INK);
+  gfx->drawRoundRect(PDET_L_X, PDET_BTN_Y, PDET_L_W, PDET_BTN_H, 10, UI_INK);
   gfx->setTextColor(leftOk ? UI_BG_DAY : 0x8410);
-  gfx->setTextSize(1);
-  gfx->setCursor(PDET_L_X + PDET_BTN_W / 2 - (int)strlen(leftLbl) * 3,
-                 PDET_BTN_Y + PDET_BTN_H / 2 - 4);
+  gfx->setTextSize(2);
+  gfx->setCursor(PDET_L_X + PDET_L_W / 2 - (int)strlen(leftLbl) * 6,
+                 PDET_BTN_Y + PDET_BTN_H / 2 - 8);
   gfx->print(leftLbl);
 
-  gfx->fillRoundRect(PDET_R_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10, UI_BAR_BAD);
-  gfx->drawRoundRect(PDET_R_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10, UI_INK);
+  gfx->fillRoundRect(PDET_R_X, PDET_BTN_Y, PDET_R_W, PDET_BTN_H, 10, UI_BAR_BAD);
+  gfx->drawRoundRect(PDET_R_X, PDET_BTN_Y, PDET_R_W, PDET_BTN_H, 10, UI_INK);
   gfx->setTextColor(UI_WHITE);
-  gfx->setCursor(PDET_R_X + PDET_BTN_W / 2 - (int)strlen(T(S_RELEASE_BTN)) * 3,
+  gfx->setTextSize(1);
+  gfx->setCursor(PDET_R_X + PDET_R_W / 2 - (int)strlen(T(S_RELEASE_BTN)) * 3,
                  PDET_BTN_Y + PDET_BTN_H / 2 - 4);
   gfx->print(T(S_RELEASE_BTN));
 
@@ -1388,7 +1404,8 @@ void partyButtonRects(int *boxTop, int *boxBot, int *closeTop, int *closeBot) {
 bool monSheetBtn(int16_t x, int16_t y, bool left) {
   if (y < PDET_BTN_Y || y > PDET_BTN_Y + PDET_BTN_H) return false;
   int x0 = left ? PDET_L_X : PDET_R_X;
-  return x >= x0 && x <= x0 + PDET_BTN_W;
+  int w = left ? PDET_L_W : PDET_R_W;
+  return x >= x0 && x <= x0 + w;
 }
 
 // YES / NO on the release confirm. Returns true when the tap was consumed. The
