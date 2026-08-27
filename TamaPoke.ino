@@ -36,7 +36,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.7"
+#define FW_VERSION "3.8"
 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
   LCD_CS, LCD_SCLK, LCD_SDIO0, LCD_SDIO1, LCD_SDIO2, LCD_SDIO3);
@@ -237,6 +237,27 @@ const char *const SCREEN_NAME[SCR_COUNT] = {
   "lan", "pick", "battle", "win", "learn", "train", "menu",
   "minigame", "main"
 };
+
+// Badge art for a region, or nullptr when that region has none yet.
+//
+// NEVER `BADGES_ART[region % BADGE_REGIONS]`. The moment GYM_REGIONS outgrew
+// BADGE_REGIONS -- which happened when Kalos landed and the upstream badge set
+// stops at Unova -- 5 % 5 = 0 silently dressed Kalos in KANTO's badges, on both
+// the win screen and the player card. A wrong badge is worse than an honest
+// blank: it claims you won something you did not. The callers draw a
+// placeholder instead, and static_assert below stops the array being indexed
+// out of range whatever the two counts are.
+static_assert(BADGE_REGIONS <= GYM_REGIONS,
+              "more badge sheets than ladders -- BADGES_ART would be indexed by a region that does not exist");
+static const BadgeArt *badgeArtFor(uint8_t region, uint8_t i) {
+  if (region >= BADGE_REGIONS || i >= TRAINER_GYMS) return nullptr;
+  return &BADGES_ART[region][i];
+}
+
+// Does this region have its own badge art? Split out with a primitive return
+// type so the tests can ask: the emulator's genproto.py emits every prototype
+// ABOVE the includes, where the BadgeArt struct does not exist yet.
+bool badgeArtExists(uint8_t region, uint8_t i) { return badgeArtFor(region, i) != nullptr; }
 
 Combatant btlYou, btlFoe;
 bool btlOver = false;
@@ -3723,15 +3744,29 @@ void renderWin() {
     if (btlHard) {
       for (int r = 62; r >= 56; r--) gfx->drawCircle(CX, by, r, r % 2 ? 0xFEA0 : 0xFF60);
     }
-    const BadgeArt &a = BADGES_ART[btlRegion % BADGE_REGIONS][btlTrainer];
-    for (int r = 0; r < BADGE_PX; r++)
-      for (int c = 0; c < BADGE_PX; c++) {
-        uint8_t v = a.idx[r * BADGE_PX + c];
-        if (v == 0xFF) continue;
-        // 3x, so it reads as a prize rather than a list entry
-        gfx->fillRect(CX - BADGE_PX * 3 / 2 + c * 3, by - BADGE_PX * 3 / 2 + r * 3,
-                      3, 3, a.pal[v]);
-      }
+    const BadgeArt *a = badgeArtFor(btlRegion, btlTrainer);
+    if (a) {
+      for (int r = 0; r < BADGE_PX; r++)
+        for (int c = 0; c < BADGE_PX; c++) {
+          uint8_t v = a->idx[r * BADGE_PX + c];
+          if (v == 0xFF) continue;
+          // 3x, so it reads as a prize rather than a list entry
+          gfx->fillRect(CX - BADGE_PX * 3 / 2 + c * 3, by - BADGE_PX * 3 / 2 + r * 3,
+                        3, 3, a->pal[v]);
+        }
+    } else {
+      // This region has no badge art. Say so with a plain medal in the leader's
+      // type colour rather than borrowing another region's badge.
+      const Trainer &tr = TRAINER_SETS[btlRegion % GYM_REGIONS].list[btlTrainer];
+      gfx->fillCircle(CX, by, 26, typeColor(tr.type));
+      gfx->drawCircle(CX, by, 26, UI_INK);
+      char n[4];
+      snprintf(n, sizeof(n), "%u", (unsigned)(btlTrainer + 1));
+      gfx->setTextSize(3);
+      gfx->setTextColor(typeColorIsLight(tr.type) ? UI_INK : UI_WHITE);
+      gfx->setCursor(CX - (int)strlen(n) * 9, by - 11);
+      gfx->print(n);
+    }
     if (btlNewBadge) {
       gfx->setTextColor(UI_BAR_OK);
       gfx->setTextSize(2);
@@ -4109,12 +4144,17 @@ static void renderPlayerBadges() {
       gfx->drawCircle(bx, by, 20, UI_TRACK);
       continue;
     }
-    const BadgeArt &a = BADGES_ART[playerBadgeRegion % BADGE_REGIONS][i];
+    const BadgeArt *a = badgeArtFor(playerBadgeRegion, i);
+    if (!a) {                 // no art for this region: a filled disc, won is won
+      gfx->fillCircle(bx, by, 14, typeColor(TRAINER_SETS[playerBadgeRegion % GYM_REGIONS].list[i].type));
+      gfx->drawCircle(bx, by, 14, UI_INK);
+      continue;
+    }
     for (int r = 0; r < BADGE_PX; r++)
       for (int c = 0; c < BADGE_PX; c++) {
-        uint8_t v = a.idx[r * BADGE_PX + c];
+        uint8_t v = a->idx[r * BADGE_PX + c];
         if (v == 0xFF) continue;
-        gfx->fillRect(bx - BADGE_PX / 2 + c, by - BADGE_PX / 2 + r, 1, 1, a.pal[v]);
+        gfx->fillRect(bx - BADGE_PX / 2 + c, by - BADGE_PX / 2 + r, 1, 1, a->pal[v]);
       }
   }
   char l[32];

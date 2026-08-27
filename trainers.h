@@ -158,13 +158,37 @@ static const Trainer TRAINERS_UNOVA[TRAINER_COUNT] = {
   { "IRIS",    "CHAMPION",  T_DRAGON,   6, { {635,59},{621,57},{306,57},{567,57},{131,57},{612,59} } },
 };
 
-#define GYM_REGIONS 5
+// KALOS -- X / Y, and *** NOT VERIFIED AGAINST A DISASSEMBLY ***, for the same
+// reason Unova is not: there is no Gen 6 decomp. pret's work stops at the DS
+// generation, and Gen 6 is 3DS. Checked by hand against the games as recalled,
+// which is precisely the standard that produced ten errors in Johto and Hoenn.
+//
+// Kalos is the LAST generation whose sprites are 100% complete upstream, which
+// is why it was chosen over Alola/Galar/Paldea -- see check_sprites.py.
+static const Trainer TRAINERS_KALOS[TRAINER_COUNT] = {
+  { "VIOLA",    "SANTALUNE", T_BUG,      2, { {283,10},{666,12} } },
+  { "GRANT",    "CYLLAGE",   T_ROCK,     2, { {698,25},{696,25} } },
+  { "KORRINA",  "SHALOUR",   T_FIGHTING, 3, { {619,29},{67,28},{701,32} } },
+  { "RAMOS",    "COUMARINE", T_GRASS,    3, { {189,30},{70,31},{673,34} } },
+  { "CLEMONT",  "LUMIOSE",   T_ELECTRIC, 3, { {587,35},{82,35},{695,37} } },
+  { "VALERIE",  "LAVERRE",   T_FAIRY,    3, { {303,38},{122,39},{700,42} } },
+  { "OLYMPIA",  "ANISTAR",   T_PSYCHIC,  3, { {561,44},{199,45},{678,48} } },
+  { "WULFRIC",  "SNOWBELLE", T_ICE,      3, { {460,56},{615,55},{713,59} } },
+  { "MALVA",    "ELITE 4",   T_FIRE,     4, { {668,63},{324,63},{609,63},{663,65} } },
+  { "SIEBOLD",  "ELITE 4",   T_WATER,    4, { {693,63},{130,63},{121,63},{689,65} } },
+  { "WIKSTROM", "ELITE 4",   T_STEEL,    4, { {707,63},{476,63},{212,63},{681,65} } },
+  { "DRASNA",   "ELITE 4",   T_DRAGON,   4, { {691,63},{621,63},{334,63},{715,65} } },
+  { "DIANTHA",  "CHAMPION",  T_FAIRY,    6, { {701,64},{697,65},{699,65},{711,65},{706,66},{282,68} } },
+};
+
+#define GYM_REGIONS 6
 static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_KANTO,  "KANTO" },
   { TRAINERS_JOHTO,  "JOHTO" },
   { TRAINERS_HOENN,  "HOENN" },
   { TRAINERS_SINNOH, "SINNOH" },
   { TRAINERS_UNOVA,  "UNOVA" },
+  { TRAINERS_KALOS,  "KALOS" },
 };
 
 // Hard mode reruns the same ladder with perfect IVs and a smarter AI, so the

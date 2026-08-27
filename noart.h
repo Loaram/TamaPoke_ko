@@ -9,9 +9,9 @@
 // Re-run after any expansion, and again if upstream adds art.
 #pragma once
 
-#define NO_ART_COUNT 13
+#define NO_ART_COUNT 14
 static const int16_t NO_ART[NO_ART_COUNT ? NO_ART_COUNT : 1] = {
-  514, 516, 520, 522, 523, 538, 558, 564, 565, 591, 592, 616, 626
+  514, 516, 520, 522, 523, 538, 558, 564, 565, 591, 592, 616, 626, 668
 };
 
 static inline bool speciesHasArt(int16_t d) {

@@ -167,6 +167,16 @@ a VALUE that happens to hold rather than to the RULE.
   **vacuously true** when nothing was locked, and survived deleting the gate
   entirely. Only the negative-check caught it.
 
+**A DIRECTORY IS NOT COVERAGE.** `check_sprites.py` counted `sprite/NNNN`
+existing as "has art" and reported Kalos 100%, while `pack_pmd.py` failed on
+0668 PYROAR -- whose directory holds only the form subdirs `0000`/`0001` with no
+`AnimData.xml` of its own. The table said complete and the packer disagreed;
+the packer was right. It now HEADs the actual sprite per species (curl, in
+parallel -- the git tree API comes back truncated at 19 MB and urllib has no
+cert store here), which also found four more over-reported species in Alola,
+Galar and Paldea. Coverage has to mean "can be drawn", because it decides what
+can hatch.
+
 **A tool that reports a partial fetch as fact is the same disease.**
 `check_sprites.py` paged the GitHub API and `break`'d on any failure, returning
 whatever it had -- so a rate-limited run said an entire generation had no art.
