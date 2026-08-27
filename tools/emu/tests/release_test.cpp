@@ -44,8 +44,9 @@ static void ck(bool ok,const char*w){printf("%s  %s\n",ok?"PASS":"FAIL",w); if(!
 // a test that restates the layout drifts from it and then proves nothing.
 #define PCELL_X(i) (78 + ((i) % 2) * 160)
 #define PCELL_Y(i) (88 + ((i) / 2) * 78)
-#define SHEET_L_X (96 + 130/2)
-#define SHEET_R_X (240 + 130/2)
+bool monSheetBtn(int16_t,int16_t,bool);
+#define SHEET_L_X 160
+#define SHEET_R_X 320
 #define SHEET_BTN_Y (336 + 48/2)
 #define CONF_YES_Y (206 + 52/2)
 #define CONF_NO_Y  (268 + 52/2)
@@ -168,6 +169,27 @@ int main(){
     partyTap(CONF_X, CONF_YES_Y);
     ck(boxSwapFrom==0 && boxSel==0,
        "and releasing disarms it, so nothing points at a creature that is gone");
+  }
+
+  // ---- BRING BACK, tapped where a thumb actually lands
+  //
+  // Never covered before: the party section above hatches a creature, so
+  // pet.isEgg() is false and BRING BACK correctly denies. With an egg waiting --
+  // the state a new board is set up in -- it must work, AND it must work from
+  // the panel's centre line, which is where the button used to be drawn
+  // full-width and where a thumb goes by default.
+  {
+    clearAll();
+    party.slots[0] = mon(3, 100, "");
+    party.save();
+    if (!pet.isEgg()) { pet.newEgg(); }
+    if (pet.awaitingStarter()) pet.chooseStarter(4);
+    partyOpen = true;
+    partyTap(PCELL_X(0) + 40, PCELL_Y(0) + 30);
+    ck(partyDetail == 1, "the sheet opens with an egg waiting");
+    partyTap(233, SHEET_BTN_Y);                  // dead centre
+    ck(pet.speciesId == 3, "BRING BACK works when tapped at the panel centre");
+    ck(party.count() == 0, "and the creature leaves the party to become the pet");
   }
 
   // ---- the 3 s hold, and WHERE it is allowed to fire
