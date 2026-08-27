@@ -756,6 +756,94 @@ DEX = [
     (719, 'diancie', 'DIANCIE', 'roca', 0, 0),
     (720, 'hoopa', 'HOOPA', 'psiquico', 0, 0),
     (721, 'volcanion', 'VOLCANION', 'fuego', 0, 0),
+    (722, 'rowlet', 'ROWLET', 'planta', 723, 17),
+    (723, 'dartrix', 'DARTRIX', 'planta', 724, 34),
+    (724, 'decidueye', 'DECIDUEYE', 'planta', 0, 0),
+    (725, 'litten', 'LITTEN', 'fuego', 726, 17),
+    (726, 'torracat', 'TORRACAT', 'fuego', 727, 34),
+    (727, 'incineroar', 'INCINEROAR', 'fuego', 0, 0),
+    (728, 'popplio', 'POPPLIO', 'agua', 729, 17),
+    (729, 'brionne', 'BRIONNE', 'agua', 730, 34),
+    (730, 'primarina', 'PRIMARINA', 'agua', 0, 0),
+    (731, 'pikipek', 'PIKIPEK', 'normal', 732, 14),
+    (732, 'trumbeak', 'TRUMBEAK', 'normal', 733, 28),
+    (733, 'toucannon', 'TOUCANNON', 'normal', 0, 0),
+    (734, 'yungoos', 'YUNGOOS', 'normal', 735, 20),
+    (735, 'gumshoos', 'GUMSHOOS', 'normal', 0, 0),
+    (736, 'grubbin', 'GRUBBIN', 'bicho', 737, 20),
+    (737, 'charjabug', 'CHARJABUG', 'bicho', 738, 30),
+    (738, 'vikavolt', 'VIKAVOLT', 'bicho', 0, 0),
+    (739, 'crabrawler', 'CRABRAWLER', 'lucha', 740, 30),
+    (740, 'crabominable', 'CRABOMINABLE', 'lucha', 0, 0),
+    (741, 'oricorio', 'ORICORIO', 'fuego', 0, 0),
+    (742, 'cutiefly', 'CUTIEFLY', 'bicho', 743, 25),
+    (743, 'ribombee', 'RIBOMBEE', 'bicho', 0, 0),
+    (744, 'rockruff', 'ROCKRUFF', 'roca', 745, 25),
+    (745, 'lycanroc', 'LYCANROC', 'roca', 0, 0),
+    (746, 'wishiwashi', 'WISHIWASHI', 'agua', 0, 0),
+    (747, 'mareanie', 'MAREANIE', 'veneno', 748, 38),
+    (748, 'toxapex', 'TOXAPEX', 'veneno', 0, 0),
+    (749, 'mudbray', 'MUDBRAY', 'tierra', 750, 30),
+    (750, 'mudsdale', 'MUDSDALE', 'tierra', 0, 0),
+    (751, 'dewpider', 'DEWPIDER', 'agua', 752, 22),
+    (752, 'araquanid', 'ARAQUANID', 'agua', 0, 0),
+    (753, 'fomantis', 'FOMANTIS', 'planta', 754, 34),
+    (754, 'lurantis', 'LURANTIS', 'planta', 0, 0),
+    (755, 'morelull', 'MORELULL', 'planta', 756, 24),
+    (756, 'shiinotic', 'SHIINOTIC', 'planta', 0, 0),
+    (757, 'salandit', 'SALANDIT', 'veneno', 758, 33),
+    (758, 'salazzle', 'SALAZZLE', 'veneno', 0, 0),
+    (759, 'stufful', 'STUFFUL', 'normal', 760, 27),
+    (760, 'bewear', 'BEWEAR', 'normal', 0, 0),
+    (761, 'bounsweet', 'BOUNSWEET', 'planta', 762, 18),
+    (762, 'steenee', 'STEENEE', 'planta', 763, 30),
+    (763, 'tsareena', 'TSAREENA', 'planta', 0, 0),
+    (764, 'comfey', 'COMFEY', 'hada', 0, 0),
+    (765, 'oranguru', 'ORANGURU', 'normal', 0, 0),
+    (766, 'passimian', 'PASSIMIAN', 'lucha', 0, 0),
+    (767, 'wimpod', 'WIMPOD', 'bicho', 768, 30),
+    (768, 'golisopod', 'GOLISOPOD', 'bicho', 0, 0),
+    (769, 'sandygast', 'SANDYGAST', 'fantasma', 770, 42),
+    (770, 'palossand', 'PALOSSAND', 'fantasma', 0, 0),
+    (771, 'pyukumuku', 'PYUKUMUKU', 'agua', 0, 0),
+    (772, 'typenull', 'TYPE NULL', 'normal', 773, 25),
+    (773, 'silvally', 'SILVALLY', 'normal', 0, 0),
+    (774, 'minior', 'MINIOR', 'roca', 0, 0),
+    (775, 'komala', 'KOMALA', 'normal', 0, 0),
+    (776, 'turtonator', 'TURTONATOR', 'fuego', 0, 0),
+    (777, 'togedemaru', 'TOGEDEMARU', 'electrico', 0, 0),
+    (778, 'mimikyu', 'MIMIKYU', 'fantasma', 0, 0),
+    (779, 'bruxish', 'BRUXISH', 'agua', 0, 0),
+    (780, 'drampa', 'DRAMPA', 'normal', 0, 0),
+    (781, 'dhelmise', 'DHELMISE', 'fantasma', 0, 0),
+    (782, 'jangmoo', 'JANGMO O', 'dragon', 783, 35),
+    (783, 'hakamoo', 'HAKAMO O', 'dragon', 784, 45),
+    (784, 'kommoo', 'KOMMO O', 'dragon', 0, 0),
+    (785, 'tapukoko', 'TAPU KOKO', 'electrico', 0, 0),
+    (786, 'tapulele', 'TAPU LELE', 'psiquico', 0, 0),
+    (787, 'tapubulu', 'TAPU BULU', 'planta', 0, 0),
+    (788, 'tapufini', 'TAPU FINI', 'agua', 0, 0),
+    (789, 'cosmog', 'COSMOG', 'psiquico', 790, 43),
+    (790, 'cosmoem', 'COSMOEM', 'psiquico', 791, 53),
+    (791, 'solgaleo', 'SOLGALEO', 'psiquico', 0, 0),
+    (792, 'lunala', 'LUNALA', 'psiquico', 0, 0),
+    (793, 'nihilego', 'NIHILEGO', 'roca', 0, 0),
+    (794, 'buzzwole', 'BUZZWOLE', 'bicho', 0, 0),
+    (795, 'pheromosa', 'PHEROMOSA', 'bicho', 0, 0),
+    (796, 'xurkitree', 'XURKITREE', 'electrico', 0, 0),
+    (797, 'celesteela', 'CELESTEELA', 'acero', 0, 0),
+    (798, 'kartana', 'KARTANA', 'planta', 0, 0),
+    (799, 'guzzlord', 'GUZZLORD', 'siniestro', 0, 0),
+    (800, 'necrozma', 'NECROZMA', 'psiquico', 0, 0),
+    (801, 'magearna', 'MAGEARNA', 'acero', 0, 0),
+    (802, 'marshadow', 'MARSHADOW', 'lucha', 0, 0),
+    (803, 'poipole', 'POIPOLE', 'veneno', 804, 30),
+    (804, 'naganadel', 'NAGANADEL', 'veneno', 0, 0),
+    (805, 'stakataka', 'STAKATAKA', 'roca', 0, 0),
+    (806, 'blacephalon', 'BLACEPHALON', 'fuego', 0, 0),
+    (807, 'zeraora', 'ZERAORA', 'electrico', 0, 0),
+    (808, 'meltan', 'MELTAN', 'acero', 0, 0),
+    (809, 'melmetal', 'MELMETAL', 'acero', 0, 0),
 ]
 
 # el primer huevo de la partida siempre es un inicial clasico
@@ -769,6 +857,14 @@ CLASSIC = [1, 4, 7, 25, 133]
 # from the others rather than written out.
 #
 # Extending to a fourth generation means adding a row here and nothing else.
+# EEVEE's branches. DexEntry carries a single evolvesTo, so only 134 lives in
+# the table proper; the other seven cannot be expressed as data at all. They are
+# listed ONCE here, consumed by gen_dex.py for the rarity derivation AND emitted
+# into dex.h for the firmware, so the two cannot disagree about what an Eevee can
+# become -- which is exactly how the branch stayed at three for six generations
+# while five more Eeveelutions sat in the dex hatching out of eggs instead.
+EEVEE_BRANCHES = [134, 135, 136, 196, 197, 470, 471, 700]
+
 REGIONS = [
     ('KANTO', 1,   151, [1, 4, 7, 25, 133]),
     ('JOHTO', 152, 251, [152, 155, 158]),
@@ -776,14 +872,15 @@ REGIONS = [
     ('SINNOH', 387, 493, [387, 390, 393]),
     ('UNOVA', 494, 649, [495, 498, 501]),
     ('KALOS', 650, 721, [650, 653, 656]),
+    ('ALOLA', 722, 809, [722, 725, 728]),
 ]
 
 # rarezas de las formas base (lo que no este aqui y sea base = comun)
 RARE = {58, 77, 83, 88, 95, 106, 107, 108, 111, 113, 114, 115, 122, 123, 124, 125, 126, 127, 128, 131, 132, 137, 138, 140, 142, 143, 147,
         # generated:
-        152, 155, 158, 182, 186, 190, 196, 197, 198, 200, 211, 214, 225, 227, 234, 235, 237, 238, 239, 240, 241, 246, 252, 255, 258, 292, 302, 303, 337, 338, 345, 347, 351, 359, 369, 371, 374, 387, 390, 393, 408, 410, 414, 441, 443, 458, 470, 471, 475, 479, 495, 498, 501, 538, 539, 550, 561, 564, 566, 615, 621, 626, 633, 636, 650, 653, 656, 696, 698, 700, 704}
+        152, 155, 158, 182, 186, 190, 196, 197, 198, 200, 211, 214, 225, 227, 234, 235, 237, 238, 239, 240, 241, 246, 252, 255, 258, 292, 302, 303, 337, 338, 345, 347, 351, 359, 369, 371, 374, 387, 390, 393, 408, 410, 414, 441, 443, 458, 470, 471, 475, 479, 495, 498, 501, 538, 539, 550, 561, 564, 566, 615, 621, 626, 633, 636, 650, 653, 656, 696, 698, 700, 704, 722, 725, 728, 741, 765, 766, 774, 775, 778, 781, 782, 793, 794, 795, 796, 797, 798, 799, 803, 805, 806}
 LEGENDARY = {144, 145, 146, 150, 151,
         # generated:
-        243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 716, 717, 718, 719, 720, 721}
+        243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 716, 717, 718, 719, 720, 721, 772, 773, 785, 786, 787, 788, 789, 790, 791, 792, 800, 801, 802, 807, 808, 809}
 
 SLUGS = {n: s for n, s, *_ in DEX}

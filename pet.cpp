@@ -310,13 +310,27 @@ bool Pet::lineHasUnregistered(int16_t base) const {
   for (int guard = 0; cur >= 1 && cur <= DEX_COUNT && guard < 6; guard++) {
     if (!isRegistered(cur)) return true;
     if (cur == DEX_EEVEE) {
-      for (int16_t b = 134; b <= 136; b++)
-        if (!isRegistered(b)) return true;
+      int16_t opts[EEVEE_EVO_COUNT];
+      uint8_t n = eeveeOptions(opts);
+      for (uint8_t i = 0; i < n; i++)
+        if (!isRegistered(opts[i])) return true;
       return false;
     }
     cur = DEX_TBL[cur].evolvesTo;
   }
   return false;
+}
+
+uint8_t Pet::eeveeOptions(int16_t *out) const {
+  uint8_t n = 0;
+  for (uint8_t i = 0; i < EEVEE_EVO_COUNT; i++) {
+    int16_t b = EEVEE_EVOS[i];
+    if (b < 1 || b > DEX_COUNT) continue;
+    if (!speciesHasArt(b)) continue;                     // no art anywhere
+    if (!regionAvailable(regionOfDex(b))) continue;      // pack not on the card
+    out[n++] = b;
+  }
+  return n;
 }
 
 uint8_t Pet::eggRarity() const {
@@ -934,12 +948,20 @@ void Pet::evolve() {
   prevSpeciesId = speciesId;
   int16_t next = d.evolvesTo;
   if (speciesId == DEX_EEVEE) {
-    // rama de Eevee: prefiere la evolucion que falte en la pokedex
-    int16_t opts[3];
-    int n = 0;
-    for (int16_t b = 134; b <= 136; b++)
-      if (!isRegistered(b)) opts[n++] = b;
-    next = n > 0 ? opts[random(n)] : (int16_t)(134 + random(3));
+    // Eevee's branch: all eight, preferring one still missing from the Pokedex,
+    // which is what makes raising Eevees a collection goal rather than a
+    // coin flip. Only ones this player can actually be shown -- see
+    // eeveeOptions(). If none qualify the table's own 134 stands, so a card with
+    // no packs at all still evolves rather than freezing.
+    int16_t opts[EEVEE_EVO_COUNT];
+    uint8_t n = eeveeOptions(opts);
+    if (n) {
+      int16_t fresh[EEVEE_EVO_COUNT];
+      uint8_t m = 0;
+      for (uint8_t i = 0; i < n; i++)
+        if (!isRegistered(opts[i])) fresh[m++] = opts[i];
+      next = m ? fresh[random(m)] : opts[random(n)];
+    }
   }
   speciesId = next;
   registerSpecies(speciesId);

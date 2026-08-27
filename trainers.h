@@ -210,7 +210,36 @@ static const Trainer TRAINERS_KALOS[TRAINER_COUNT] = {
   { "DIANTHA",  "CHAMPION",  T_FAIRY,    6, { {701,64},{697,65},{699,65},{711,65},{706,66},{282,68} } },
 };
 
-#define GYM_REGIONS 6
+// ALOLA -- SUN / MOON, and *** NOT VERIFIED AGAINST A DISASSEMBLY ***: there is
+// no Gen 7 decomp either.
+//
+// ALOLA HAS NO GYMS. It has seven trial captains and four island kahunas, so the
+// eight "gym" slots are six captains plus the two kahunas the Elite Four does
+// not need, in ISLAND ORDER -- Melemele, Akala, Ula'ula, Poni -- which is also
+// the game's own difficulty order. That leaves Hala, Olivia, Acerola and Kahili
+// free to be the real Sun/Moon Elite Four, with no trainer appearing twice.
+//
+// Alola has no badge art anywhere (SteGriff stops at Unova; the Kalos sheet is
+// one artist's). BADGE_REGIONS stays 6 while GYM_REGIONS becomes 7, and
+// badgeArtFor() returns nullptr for Alola so the win screen and player card draw
+// the plain type-coloured medal instead of borrowing another region's badges.
+static const Trainer TRAINERS_ALOLA[TRAINER_COUNT] = {
+  { "ILIMA",    "MELEMELE",  T_NORMAL,   2, { {734,10},{731,11} } },
+  { "LANA",     "AKALA",     T_WATER,    2, { {746,18},{752,20} } },
+  { "KIAWE",    "AKALA",     T_FIRE,     2, { {757,22},{776,24} } },
+  { "MALLOW",   "AKALA",     T_GRASS,    3, { {753,24},{762,24},{754,26} } },
+  { "SOPHOCLES","ULAULA",    T_ELECTRIC, 3, { {737,30},{777,31},{738,33} } },
+  { "MINA",     "PONI",      T_FAIRY,    3, { {743,38},{210,38},{764,40} } },
+  { "NANU",     "ULAULA",    T_DARK,     3, { {302,42},{552,42},{53,44} } },
+  { "HAPU",     "PONI",      T_GROUND,   4, { {623,47},{423,47},{330,49},{750,51} } },
+  { "HALA",     "ELITE 4",   T_FIGHTING, 4, { {297,54},{740,54},{57,54},{760,56} } },
+  { "OLIVIA",   "ELITE 4",   T_ROCK,     4, { {348,54},{346,54},{526,54},{745,56} } },
+  { "ACEROLA",  "ELITE 4",   T_GHOST,    4, { {426,54},{770,54},{478,54},{781,56} } },
+  { "KAHILI",   "ELITE 4",   T_FLYING,   4, { {628,54},{701,54},{733,54},{630,56} } },
+  { "KUKUI",    "CHAMPION",  T_NORMAL,   6, { {745,57},{38,56},{628,56},{462,56},{143,56},{727,58} } },
+};
+
+#define GYM_REGIONS 7
 static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_KANTO,  "KANTO" },
   { TRAINERS_JOHTO,  "JOHTO" },
@@ -218,6 +247,7 @@ static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_SINNOH, "SINNOH" },
   { TRAINERS_UNOVA,  "UNOVA" },
   { TRAINERS_KALOS,  "KALOS" },
+  { TRAINERS_ALOLA,  "ALOLA" },
 };
 
 // Hard mode reruns the same ladder with perfect IVs and a smarter AI, so the
