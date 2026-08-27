@@ -39,6 +39,9 @@ bool uiButtonDisabled(int i);
 void uiButtonAt(int i, int *cx, int *cy, int *half);
 bool monSheetBtn(int16_t x, int16_t y, bool left);
 void uiConfirmRects(int *b1Top, int *b1Bot, int *b2Top, int *b2Bot);
+#include "badges.h"
+#include "trainers.h"
+bool badgeArtExists(uint8_t region, uint8_t i);
 extern Pet pet;
 void onTap(int16_t x, int16_t y);
 
@@ -315,6 +318,39 @@ int main(){
        "both confirm buttons are at least UI_TAP_MIN tall");
     ck(b2t > b1b, "and they do not overlap");
   }
+
+  // ---- badge art must never be borrowed from another region
+  //
+  // BADGES_ART was indexed as [region % BADGE_REGIONS]. The upstream badge set
+  // stops at Unova, so the moment Kalos made GYM_REGIONS 6 against
+  // BADGE_REGIONS 5, `5 % 5 == 0` dressed Kalos in KANTO's badges on both the
+  // win screen and the player card -- silently, and no test looked. A wrong
+  // badge is worse than a blank one: it claims you won something you did not.
+  {
+    for (uint8_t r = 0; r < BADGE_REGIONS; r++)
+      for (uint8_t i = 0; i < TRAINER_GYMS; i++)
+        if (!badgeArtExists(r, i)) { ck(false, "a region WITH art returned none"); goto done; }
+    ck(true, "every region with art returns it");
+    // and the ones past the art: null, NOT somebody else's badge
+    {
+      bool leaked = false;
+      for (uint8_t r = BADGE_REGIONS; r < GYM_REGIONS; r++)
+        for (uint8_t i = 0; i < TRAINER_GYMS; i++)
+          if (badgeArtExists(r, i)) leaked = true;
+      ck(!leaked, "a region with no art returns none rather than wrapping");
+      // With art for every ladder the loop above is EMPTY and proves nothing,
+      // so the real invariant is checked separately and is exercisable however
+      // the two counts happen to line up: an index past the end is refused
+      // rather than folded back onto region 0 by a modulo.
+      ck(!badgeArtExists(BADGE_REGIONS, 0),
+         "one past the badge art is refused, not wrapped to region 0");
+      ck(!badgeArtExists(GYM_REGIONS, 0),
+         "and so is one past every ladder");
+      ck(!badgeArtExists(250, 0), "and a wildly out-of-range region too");
+    }
+    ck(!badgeArtExists(0, TRAINER_GYMS), "and an out-of-range gym index is refused");
+  }
+done:
 
   printf("%s\n", bad?"FAILURES":"all good");
   return bad?1:0;

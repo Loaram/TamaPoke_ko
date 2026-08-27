@@ -52,12 +52,23 @@ public:
     auto it = kv.find(k);
     return it == kv.end() ? 0 : it->second.size();
   }
+  // MATCHES THE HARDWARE, which is not the obvious behaviour. Arduino's
+  // Preferences::getBytes reads the stored length first and, if it is LARGER
+  // than the caller's buffer, logs and returns 0 WITHOUT COPYING ANYTHING:
+  //
+  //     if (len > maxLen) { log_e("not enough space in buffer"); return 0; }
+  //
+  // This stub used to truncate instead -- copying the first n bytes -- which is
+  // the friendlier behaviour and made a whole class of save loss invisible here.
+  // Flashing a build with a SMALLER DEX_COUNT over a newer save leaves dexReg,
+  // the badge arrays and eggByRegion at their zero initialiser on a real board,
+  // while every test on this stub happily read a sane prefix and passed.
   size_t getBytes(const char *k, void *p, size_t n) {
     auto it = kv.find(k);
     if (it == kv.end()) return 0;
-    size_t c = it->second.size() < n ? it->second.size() : n;
-    memcpy(p, it->second.data(), c);
-    return c;
+    if (it->second.size() > n) return 0;      // hardware copies nothing here
+    memcpy(p, it->second.data(), it->second.size());
+    return it->second.size();
   }
   void putString(const char *k, const char *v) {
     kv[k] = std::vector<uint8_t>(v, v + strlen(v) + 1);

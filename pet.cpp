@@ -5,6 +5,38 @@
 #include "noart.h"   // speciesHasArt(): the egg pool skips what cannot be drawn
 #include "audio.h"
 
+// Reads a blob that may be LONGER than the array we are reading it into.
+//
+// Preferences::getBytes reads the stored length FIRST and, if it exceeds the
+// caller's buffer, logs and returns 0 WITHOUT COPYING ANYTHING:
+//
+//     if (len > maxLen) { log_e("not enough space in buffer"); return 0; }
+//
+// Growing the dex was always safe -- a short blob lands in the front of a bigger
+// array and the rest keeps its zero initialiser, which is what every migration
+// here relies on. SHRINKING was not: flashing a build with a smaller DEX_COUNT,
+// GYM_REGIONS or REGION_COUNT over a newer save left dexReg, dexShinyReg, the
+// badge arrays and eggByRegion entirely ZERO. The creature survived, being all
+// scalars, while the Pokedex and every badge past Kanto quietly vanished --
+// which from the player's side is their game rolling back.
+//
+// The PREFIX is the right thing to keep: dex bit n means the same species
+// whatever the table grew to afterwards, and region n is the same region.
+// Only the tail we have no room for is dropped, which is data about content
+// this build does not have anyway.
+//
+// The emulator's Preferences stub used to truncate rather than refuse, so no
+// test could see any of this -- see tools/emu/Preferences.h.
+static void loadBlob(Preferences &p, const char *key, void *dst, size_t n) {
+  size_t have = p.getBytesLength(key);
+  if (!have) return;                       // absent: keep the initialiser
+  if (have <= n) { p.getBytes(key, dst, n); return; }
+  uint8_t *tmp = (uint8_t *)malloc(have);
+  if (!tmp) return;                        // rather no read than a half one
+  if (p.getBytes(key, tmp, have) == have) memcpy(dst, tmp, n);
+  free(tmp);
+}
+
 void Pet::begin() {
   prefs.begin("tamapoke", false);
   // Zeroed BEFORE the branch below, not inside load(): getBytes() leaves its
@@ -310,13 +342,27 @@ bool Pet::lineHasUnregistered(int16_t base) const {
   for (int guard = 0; cur >= 1 && cur <= DEX_COUNT && guard < 6; guard++) {
     if (!isRegistered(cur)) return true;
     if (cur == DEX_EEVEE) {
-      for (int16_t b = 134; b <= 136; b++)
-        if (!isRegistered(b)) return true;
+      int16_t opts[EEVEE_EVO_COUNT];
+      uint8_t n = eeveeOptions(opts);
+      for (uint8_t i = 0; i < n; i++)
+        if (!isRegistered(opts[i])) return true;
       return false;
     }
     cur = DEX_TBL[cur].evolvesTo;
   }
   return false;
+}
+
+uint8_t Pet::eeveeOptions(int16_t *out) const {
+  uint8_t n = 0;
+  for (uint8_t i = 0; i < EEVEE_EVO_COUNT; i++) {
+    int16_t b = EEVEE_EVOS[i];
+    if (b < 1 || b > DEX_COUNT) continue;
+    if (!speciesHasArt(b)) continue;                     // no art anywhere
+    if (!regionAvailable(regionOfDex(b))) continue;      // pack not on the card
+    out[n++] = b;
+  }
+  return n;
 }
 
 uint8_t Pet::eggRarity() const {
@@ -934,12 +980,20 @@ void Pet::evolve() {
   prevSpeciesId = speciesId;
   int16_t next = d.evolvesTo;
   if (speciesId == DEX_EEVEE) {
-    // rama de Eevee: prefiere la evolucion que falte en la pokedex
-    int16_t opts[3];
-    int n = 0;
-    for (int16_t b = 134; b <= 136; b++)
-      if (!isRegistered(b)) opts[n++] = b;
-    next = n > 0 ? opts[random(n)] : (int16_t)(134 + random(3));
+    // Eevee's branch: all eight, preferring one still missing from the Pokedex,
+    // which is what makes raising Eevees a collection goal rather than a
+    // coin flip. Only ones this player can actually be shown -- see
+    // eeveeOptions(). If none qualify the table's own 134 stands, so a card with
+    // no packs at all still evolves rather than freezing.
+    int16_t opts[EEVEE_EVO_COUNT];
+    uint8_t n = eeveeOptions(opts);
+    if (n) {
+      int16_t fresh[EEVEE_EVO_COUNT];
+      uint8_t m = 0;
+      for (uint8_t i = 0; i < n; i++)
+        if (!isRegistered(opts[i])) fresh[m++] = opts[i];
+      next = m ? fresh[random(m)] : opts[random(n)];
+    }
   }
   speciesId = next;
   registerSpecies(speciesId);
@@ -1280,7 +1334,7 @@ void Pet::load() {
   evoPen = prefs.getUChar("evop", 0);
   sleepAuto = prefs.getUChar("slpa", SLEEP_NONE);
   retirePending = prefs.getBool("rtpn", false);
-  prefs.getBytes("dexsh", dexShinyReg, sizeof(dexShinyReg));
+  loadBlob(prefs, "dexsh", dexShinyReg, sizeof(dexShinyReg));
   ageMinutes = prefs.getUInt("age", 0);
   if (prefs.isKey("dexn")) {
     speciesId = prefs.getShort("dexn", -1);
@@ -1297,7 +1351,7 @@ void Pet::load() {
   careMistakes = prefs.getUChar("mist", 0);
   sleeping = prefs.getBool("sleep", false);
   lastEnd = prefs.getUChar("lend", CER_NONE);
-  prefs.getBytes("dexreg", dexReg, sizeof(dexReg));
+  loadBlob(prefs, "dexreg", dexReg, sizeof(dexReg));
   streak = prefs.getUShort("strk", 0);
   bestStreak = prefs.getUShort("bstrk", 0);
   lastCareDay = prefs.getUInt("cday", 0);
@@ -1313,7 +1367,7 @@ void Pet::load() {
   // which are read above. A save from before moves existed has no "mvs" key and
   // leaves the array zeroed, so an established pet is handed the moveset it
   // should already have rather than walking into a battle knowing nothing.
-  prefs.getBytes("mvs", moves, sizeof(moves));
+  loadBlob(prefs, "mvs", moves, sizeof(moves));
   for (int i = 0; i < MOVE_SLOTS; i++)
     if (moves[i] >= MOVE_COUNT) moves[i] = 0;   // never index MOVE_TBL with junk
   lastLearnLevel = prefs.getUChar("mvlv", 0);
@@ -1321,13 +1375,13 @@ void Pet::load() {
   avatar = prefs.getUChar("avtr", 0);
   // Absent on a Kanto-only save, which leaves both arrays zeroed -- exactly
   // "no Johto or Hoenn badges yet".
-  prefs.getBytes("badgX", badgesX, sizeof(badgesX));
-  prefs.getBytes("badhX", badgesHardX, sizeof(badgesHardX));
+  loadBlob(prefs, "badgX", badgesX, sizeof(badgesX));
+  loadBlob(prefs, "badhX", badgesHardX, sizeof(badgesHardX));
   region = prefs.getUChar("reg", REGION_ALL);
   if (region >= REGION_COUNT) region = REGION_ALL;
   // A save from the Kanto-only build has neither key; getBytes leaves the
   // array at its zeroed initialiser, which is exactly "nothing remembered".
-  prefs.getBytes("eggR", eggByRegion, sizeof(eggByRegion));
+  loadBlob(prefs, "eggR", eggByRegion, sizeof(eggByRegion));
   prefs.getString("tnam", trainerName, sizeof(trainerName));
   if (avatar >= AVATAR_COUNT) avatar = 0;   // a save from when there were four
   badges = prefs.getUShort("badg", 0);

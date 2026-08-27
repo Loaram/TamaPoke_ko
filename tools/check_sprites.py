@@ -33,8 +33,51 @@ GENS = [
 ]
 
 
+RAW = 'https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/sprite/%04d/AnimData.xml'
+
+
+def packable(dexes):
+    """Of these dex numbers, which have a sprite pack_pmd.py can actually use.
+
+    A DIRECTORY IS NOT COVERAGE. This checked only that sprite/NNNN existed, and
+    reported Kalos as 100% -- but 0668 PYROAR holds nothing except the form
+    subdirectories 0000/0001, with no AnimData.xml of its own, so pack_pmd.py
+    404s on it. The table said complete while the packer failed, which is the
+    same "partial fetch presented as fact" this script was already fixed for
+    once: it now decides which species can hatch, so it has to mean what it says.
+
+    One HEAD per species against raw.githubusercontent, which is a CDN with no
+    meaningful rate limit -- the contents API would need an authenticated call
+    each and the git tree API comes back truncated (19 MB, truncated: true), so
+    neither can answer this.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    def has(d):
+        # curl, not urllib: this Python's SSL store is not configured on macOS
+        # and urllib raises CERTIFICATE_VERIFY_FAILED, which would look exactly
+        # like "no art" if it were swallowed. The rest of this script already
+        # shells out for the same reason.
+        r = subprocess.run(['curl', '-sI', '-o', '/dev/null', '-w', '%{http_code}',
+                            RAW % d], capture_output=True, text=True)
+        code = r.stdout.strip()
+        if code == '200':
+            return d, True
+        if code == '404':
+            return d, False
+        raise SystemExit('HEAD for dex %d returned %r -- refusing to report '
+                         'partial coverage as fact' % (d, code))
+
+    out = set()
+    with ThreadPoolExecutor(max_workers=24) as ex:
+        for d, ok in ex.map(has, sorted(x for x in dexes if x > 0)):
+            if ok:
+                out.add(d)
+    return out
+
+
 def upstream():
-    """Every dex number SpriteCollab has a directory for.
+    """Every dex number SpriteCollab has a USABLE sprite for.
 
     A FAILED PAGE IS FATAL, not a break. This used to swallow any error and
     return whatever it had, so a rate-limited run reported every species in a
@@ -71,7 +114,8 @@ def upstream():
     if len(have) < 900:
         raise SystemExit('only %d sprite dirs found, expected ~980 -- looks '
                          'truncated, refusing to report it' % len(have))
-    return have
+    # A directory is only a candidate; the sprite itself decides.
+    return packable(have)
 
 
 def local():

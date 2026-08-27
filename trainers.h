@@ -15,6 +15,35 @@
 // bring whoever you have, so attrition is the difficulty: one strong creature
 // can sweep Brock but will not survive five of Lance's in a row.
 
+// FOUR ROSTER SLOTS ARE DELIBERATE SUBSTITUTIONS, not transcription errors.
+// SpriteCollab has no art for these, so as written they put a bare dex NUMBER on
+// screen where a leader's creature should be -- and three of them LEAD, which is
+// the first thing you see in the fight:
+//
+//   ELESA   ZEBSTRIKA  523 -> GALVANTULA 596   (Bug/Electric, still fast)
+//   MARLON  CARRACOSTA 565 -> SEISMITOAD 537   (bulky Water)
+//   MARSHAL THROH      538 -> HARIYAMA   297   (bulky pure Fighting; see below)
+//   MALVA   PYROAR     668 -> DELPHOX    655   (fast special Fire, Kalos)
+//
+// Each stand-in keeps the leader's specialty type, sits near the original's
+// base-stat total and comes from the same region as the ladder, so the fight
+// still reads as that region's. Levels are unchanged.
+//
+// MARSHAL IS THE ONE EXCEPTION, and deliberately. Unova has no pure Fighting
+// left once Conkeldurr, Sawk and Mienshao are already on his team and Throh has
+// no art: what remains is Gurdurr (BST 405, and Marshal already carries its own
+// evolution), the 580-BST musketeer legendaries, or Scrafty -- which GRIMSLEY
+// already leads with, so the Fighting specialist would inherit the Dark
+// specialist's signature. Hariyama is Hoenn but is what Throh actually was: a
+// slow, enormously bulky pure-Fighting grappler, HP 144 to Throh's 120.
+//
+// This REVERSES the earlier decision to keep art-less mons and let them draw as
+// numbers. That was defensible while it affected mid-team slots; a gym leader
+// leading with a number is not. roster_test now fails if any team contains a
+// species from noart.h, so a future generation cannot reintroduce this quietly.
+// It does mean Unova no longer matches B2W2 exactly -- and verify_rosters.py
+// cannot catch that, since there is no Gen 5 decomp to diff against.
+
 #define TRAINER_TEAM_MAX 6
 // The ladders are levelled to this game's curve, where 100 is the ceiling.
 #define MAX_TRAINER_LEVEL 100
@@ -146,25 +175,79 @@ static const Trainer TRAINERS_UNOVA[TRAINER_COUNT] = {
   { "CHEREN",  "ASPERTIA",  T_NORMAL,   2, { {504,11},{506,13} } },
   { "ROXIE",   "VIRBANK",   T_POISON,   2, { {109,16},{544,18} } },
   { "BURGH",   "CASTELIA",  T_BUG,      3, { {541,21},{557,21},{542,23} } },
-  { "ELESA",   "NIMBASA",   T_ELECTRIC, 3, { {587,25},{180,25},{523,27} } },
+  { "ELESA",   "NIMBASA",   T_ELECTRIC, 3, { {587,25},{180,25},{596,27} } },  // 523 ZEBSTRIKA: no art
   { "CLAY",    "DRIFTVEIL", T_GROUND,   3, { {552,29},{28,29},{530,31} } },
   { "SKYLA",   "MISTRALTON",T_FLYING,   3, { {528,33},{227,33},{581,35} } },
   { "DRAYDEN", "OPELUCID",  T_DRAGON,   3, { {621,43},{330,43},{612,46} } },
-  { "MARLON",  "HUMILAU",   T_WATER,    3, { {565,49},{321,49},{593,51} } },
+  { "MARLON",  "HUMILAU",   T_WATER,    3, { {537,49},{321,49},{593,51} } },  // 565 CARRACOSTA: no art
   { "SHAUNTAL","ELITE 4",   T_GHOST,    4, { {563,56},{426,56},{623,56},{609,58} } },
   { "GRIMSLEY","ELITE 4",   T_DARK,     4, { {510,56},{560,56},{553,56},{625,58} } },
   { "CAITLIN", "ELITE 4",   T_PSYCHIC,  4, { {518,56},{561,56},{579,56},{576,58} } },
-  { "MARSHAL", "ELITE 4",   T_FIGHTING, 4, { {538,56},{539,56},{534,56},{620,58} } },
+  { "MARSHAL", "ELITE 4",   T_FIGHTING, 4, { {297,56},{539,56},{534,56},{620,58} } },  // 538 THROH: no art
   { "IRIS",    "CHAMPION",  T_DRAGON,   6, { {635,59},{621,57},{306,57},{567,57},{131,57},{612,59} } },
 };
 
-#define GYM_REGIONS 5
+// KALOS -- X / Y, and *** NOT VERIFIED AGAINST A DISASSEMBLY ***, for the same
+// reason Unova is not: there is no Gen 6 decomp. pret's work stops at the DS
+// generation, and Gen 6 is 3DS. Checked by hand against the games as recalled,
+// which is precisely the standard that produced ten errors in Johto and Hoenn.
+//
+// Kalos is the LAST generation whose sprites are 100% complete upstream, which
+// is why it was chosen over Alola/Galar/Paldea -- see check_sprites.py.
+static const Trainer TRAINERS_KALOS[TRAINER_COUNT] = {
+  { "VIOLA",    "SANTALUNE", T_BUG,      2, { {283,10},{666,12} } },
+  { "GRANT",    "CYLLAGE",   T_ROCK,     2, { {698,25},{696,25} } },
+  { "KORRINA",  "SHALOUR",   T_FIGHTING, 3, { {619,29},{67,28},{701,32} } },
+  { "RAMOS",    "COUMARINE", T_GRASS,    3, { {189,30},{70,31},{673,34} } },
+  { "CLEMONT",  "LUMIOSE",   T_ELECTRIC, 3, { {587,35},{82,35},{695,37} } },
+  { "VALERIE",  "LAVERRE",   T_FAIRY,    3, { {303,38},{122,39},{700,42} } },
+  { "OLYMPIA",  "ANISTAR",   T_PSYCHIC,  3, { {561,44},{199,45},{678,48} } },
+  { "WULFRIC",  "SNOWBELLE", T_ICE,      3, { {460,56},{615,55},{713,59} } },
+  { "MALVA",    "ELITE 4",   T_FIRE,     4, { {655,63},{324,63},{609,63},{663,65} } },  // 668 PYROAR: no art
+  { "SIEBOLD",  "ELITE 4",   T_WATER,    4, { {693,63},{130,63},{121,63},{689,65} } },
+  { "WIKSTROM", "ELITE 4",   T_STEEL,    4, { {707,63},{476,63},{212,63},{681,65} } },
+  { "DRASNA",   "ELITE 4",   T_DRAGON,   4, { {691,63},{621,63},{334,63},{715,65} } },
+  { "DIANTHA",  "CHAMPION",  T_FAIRY,    6, { {701,64},{697,65},{699,65},{711,65},{706,66},{282,68} } },
+};
+
+// ALOLA -- SUN / MOON, and *** NOT VERIFIED AGAINST A DISASSEMBLY ***: there is
+// no Gen 7 decomp either.
+//
+// ALOLA HAS NO GYMS. It has seven trial captains and four island kahunas, so the
+// eight "gym" slots are six captains plus the two kahunas the Elite Four does
+// not need, in ISLAND ORDER -- Melemele, Akala, Ula'ula, Poni -- which is also
+// the game's own difficulty order. That leaves Hala, Olivia, Acerola and Kahili
+// free to be the real Sun/Moon Elite Four, with no trainer appearing twice.
+//
+// Alola has no badge art anywhere (SteGriff stops at Unova; the Kalos sheet is
+// one artist's). BADGE_REGIONS stays 6 while GYM_REGIONS becomes 7, and
+// badgeArtFor() returns nullptr for Alola so the win screen and player card draw
+// the plain type-coloured medal instead of borrowing another region's badges.
+static const Trainer TRAINERS_ALOLA[TRAINER_COUNT] = {
+  { "ILIMA",    "MELEMELE",  T_NORMAL,   2, { {734,10},{731,11} } },
+  { "LANA",     "AKALA",     T_WATER,    2, { {746,18},{752,20} } },
+  { "KIAWE",    "AKALA",     T_FIRE,     2, { {757,22},{776,24} } },
+  { "MALLOW",   "AKALA",     T_GRASS,    3, { {753,24},{762,24},{754,26} } },
+  { "SOPHOCLES","ULAULA",    T_ELECTRIC, 3, { {737,30},{777,31},{738,33} } },
+  { "MINA",     "PONI",      T_FAIRY,    3, { {743,38},{210,38},{764,40} } },
+  { "NANU",     "ULAULA",    T_DARK,     3, { {302,42},{552,42},{53,44} } },
+  { "HAPU",     "PONI",      T_GROUND,   4, { {623,47},{423,47},{330,49},{750,51} } },
+  { "HALA",     "ELITE 4",   T_FIGHTING, 4, { {297,54},{740,54},{57,54},{760,56} } },
+  { "OLIVIA",   "ELITE 4",   T_ROCK,     4, { {348,54},{346,54},{526,54},{745,56} } },
+  { "ACEROLA",  "ELITE 4",   T_GHOST,    4, { {426,54},{770,54},{478,54},{781,56} } },
+  { "KAHILI",   "ELITE 4",   T_FLYING,   4, { {628,54},{701,54},{733,54},{630,56} } },
+  { "KUKUI",    "CHAMPION",  T_NORMAL,   6, { {745,57},{38,56},{628,56},{462,56},{143,56},{727,58} } },
+};
+
+#define GYM_REGIONS 7
 static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_KANTO,  "KANTO" },
   { TRAINERS_JOHTO,  "JOHTO" },
   { TRAINERS_HOENN,  "HOENN" },
   { TRAINERS_SINNOH, "SINNOH" },
   { TRAINERS_UNOVA,  "UNOVA" },
+  { TRAINERS_KALOS,  "KALOS" },
+  { TRAINERS_ALOLA,  "ALOLA" },
 };
 
 // Hard mode reruns the same ladder with perfect IVs and a smarter AI, so the

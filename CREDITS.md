@@ -88,7 +88,11 @@ replace them if that cannot be answered.
 
 ## Gym badge artwork
 
-**https://github.com/SteGriff/pokemon-badges** — SVG recreations of the first 40
+Two sources, because no single one covers every region.
+
+### Kanto through Unova
+
+**https://github.com/SteGriff/pokemon-badges** -- SVG recreations of the first 40
 league badges, Kanto through Unova, traced from Bulbapedia. Stephen Griffiths,
 2011, **CC BY 3.0** (attribution required, commercial use permitted).
 
@@ -97,3 +101,37 @@ with `rsvg-convert`, isolates each and packs them into `badges.h` at 32x32.
 
 **CC BY requires this attribution to travel with anything built from it** --
 firmware binaries included, not just the source.
+
+### Kalos
+
+**MarillTachiquin** -- "Simple Kalos Region Badges (Pokemon X Y)", vectors drawn
+in Inkscape from in-game references.
+
+  https://www.deviantart.com/marilltachiquin/art/Simple-Kalos-Region-Badges-Pokemon-X-Y-410369360
+
+That set exists because the SteGriff collection stops at Unova; there is no
+Kalos sheet in it, and no other openly licensed one was found.
+
+**THE ARTIST'S OWN TERMS**, quoted from the deviation's description so the
+condition travels with the file rather than being paraphrased away:
+
+> "Vector made with Inkscape. Please credit me if you're going to use them
+> somewhere. Badges originally made by Nintendo, Game Freak, The Pokemon Co.,
+> etc. etc."
+
+So: **credit is the condition, and this section is that credit.** It has to ship
+with anything built from `badges.h`, exactly as the CC BY attribution above
+does. The page also carries a CC BY-NC-ND 3.0 tag; this project is
+non-commercial and attributes, and the artist's written request to be credited
+when using the badges is the permission being relied on here.
+
+The sheet is committed as `tools/kalos_badges.png` so `gen_badges.py` stays
+reproducible -- the DeviantArt image URL is signed and expires, so a build that
+re-fetched it would break. `gen_badges.py` isolates the eight badges from that
+raster by connected component (the sheet is a 4x2 grid whose rows overlap, so
+the column splitter used for the SVG sheets cannot cut it) and packs them at
+32x32 like the rest.
+
+**If this project is ever published in a form that would trouble either artist,
+the honest fix is the one already recommended for the player avatars: ship
+`tools/gen_badges.py` and let each user fetch the art themselves.**

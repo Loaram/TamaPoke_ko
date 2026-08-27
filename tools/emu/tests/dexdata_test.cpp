@@ -73,8 +73,14 @@ int main(){
   // WOBBUFFET and WYNAUT counter rather than attack, SMEARGLE only Sketches.
   // Listed rather than tolerated, so a NEW species joining them is a failure --
   // which is what a new generation's typings would cause.
-  static const int16_t NO_ATTACK[] = { 11, 14, 132, 201, 202, 235, 266, 268, 360 };
-  static const int16_t NO_LEARNSET[] = { 11, 14, 132, 201, 235 };
+  // Alola added three more, and they are genuine non-attackers rather than a
+  // gap in dex_moves.py -- adding a Water move would not give PYUKUMUKU one,
+  // because it learns no damaging move of its own type in the games either:
+  // its whole gimmick is Counter and Recover. COSMOG and COSMOEM are the nebula
+  // stages, which know Splash, Teleport and Cosmic Power and nothing else.
+  static const int16_t NO_ATTACK[] = { 11, 14, 132, 201, 202, 235, 266, 268, 360,
+                                       771, 789, 790 };
+  static const int16_t NO_LEARNSET[] = { 11, 14, 132, 201, 235, 789, 790 };
   auto known = [](const int16_t *a, size_t n, int16_t d) {
     for (size_t i = 0; i < n; i++) if (a[i] == d) return true;
     return false;
@@ -102,7 +108,7 @@ int main(){
     if (noStab) printf("      %d species have no same-type attack, first is %s (%d)\n",
                        noStab, DEX_TBL[first].name, first);
     ck(noStab == 0,
-       "every species can learn an attack of its own type, bar the known nine");
+       "every species can learn an attack of its own type, bar the known twelve");
   }
 
   // --- and everything it can learn is a real move
@@ -170,7 +176,15 @@ int main(){
     int stranded = 0;
     for (int16_t d = 1; d <= DEX_COUNT; d++) {
       if (DEX_TBL[d].rarity != R_EVO || isTarget[d]) continue;
-      if (d >= 134 && d <= 136) continue;          // the EEVEE branch
+      // EEVEE's branch: DexEntry holds one evolvesTo, so the other seven are
+      // nobody's target in the table and would read as unreachable. They are
+      // reached by eeveeOptions(), off the SAME generated EEVEE_EVOS list that
+      // marked them evolution-only -- so ask that list rather than a hardcoded
+      // 134..136, which is what let five of them quietly hatch from eggs.
+      bool isEevee = false;
+      for (int e = 0; e < EEVEE_EVO_COUNT; e++)
+        if (EEVEE_EVOS[e] == d) isEevee = true;
+      if (isEevee) continue;
       printf("      %s (%d) can be neither hatched nor evolved into\n",
              DEX_TBL[d].name, d);
       stranded++;

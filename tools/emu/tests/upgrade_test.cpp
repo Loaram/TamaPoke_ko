@@ -161,6 +161,61 @@ int main(){
        "with the upgraded contents intact");
   }
 
+  // ---- DOWNGRADE: a save written by a build with a BIGGER dex
+  //
+  // Every migration above tests GROWTH, which is the safe direction: getBytes
+  // copies the shorter stored blob into the front of the bigger array and the
+  // rest keeps its zero initialiser. Shrinking is the dangerous one and was
+  // never tested, because the emulator's getBytes used to truncate. Hardware
+  // does not -- Preferences::getBytes reads the stored length first and returns
+  // 0 WITHOUT COPYING if it exceeds the caller's buffer:
+  //
+  //     if (len > maxLen) { log_e("not enough space in buffer"); return 0; }
+  //
+  // So flashing a build with a smaller DEX_COUNT over a newer save leaves
+  // dexReg, dexShinyReg, the badge arrays and eggByRegion ENTIRELY ZERO: the
+  // Pokedex, every badge past Kanto and the egg memory, gone. The creature
+  // survives, because it is all scalars. That is what "it rolled my game back"
+  // looks like from the player's side.
+  {
+    Preferences pr;
+    pr.begin("tamapoke", false);
+    // a dex bitmap from a build whose DEX_COUNT was larger than ours
+    std::vector<uint8_t> big(sizeof(((Pet*)nullptr)->dexReg) + 24, 0);
+    big[(25 - 1) >> 3] |= 1 << ((25 - 1) & 7);      // PIKACHU registered
+    big[(151 - 1) >> 3] |= 1 << ((151 - 1) & 7);    // MEW registered
+    pr.putBytes("dexreg", big.data(), big.size());
+    std::vector<uint8_t> bigb(sizeof(((Pet*)nullptr)->badgesX) + 8, 0);
+    bigb[0] = 0xFF;                                  // all eight Johto badges
+    pr.putBytes("badgX", bigb.data(), bigb.size());
+    pr.end();
+
+    // and a party/box blob from a build with MORE slots at the same stride
+    {
+      Preferences pr2; pr2.begin("tamapoke", false);
+      std::vector<uint8_t> bigp(sizeof(PartyMon) * (PARTY_SLOTS + 3), 0);
+      PartyMon m; m.dex = 149; m.level = 100;
+      snprintf(m.nick, sizeof(m.nick), "DRAGO");
+      memcpy(bigp.data(), &m, sizeof(m));
+      pr2.putBytes("party", bigp.data(), bigp.size());
+      std::vector<uint8_t> bigb2(sizeof(PartyMon) * (BOX_SLOTS + 5), 0);
+      PartyMon b; b.dex = 6; b.level = 100;
+      memcpy(bigb2.data(), &b, sizeof(b));
+      pr2.putBytes("box", bigb2.data(), bigb2.size());
+      pr2.end();
+      Party pq; pq.begin();
+      ck(pq.slots[0].dex == 149 && pq.slots[0].level == 100,
+         "a party written by a build with MORE slots keeps its first six");
+      ck(pq.box[0].dex == 6, "and so does the box");
+    }
+
+    Pet q; q.begin();
+    ck(q.isRegistered(25) && q.isRegistered(151),
+       "a Pokedex written by a LATER build still loads after downgrading");
+    ck(q.badgeCountIn(1, false) == 8,
+       "and so do the badges it recorded for a region this build still has");
+  }
+
   printf("%s\n", bad?"FAILURES":"all good");
   return bad?1:0;
 }

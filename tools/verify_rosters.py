@@ -121,6 +121,15 @@ def emerald_parties(text):
     return out
 
 
+def all_regions():
+    """Every ladder in trainers.h, read from TRAINER_SETS -- the one place the
+    list already exists. Never restate it; that is how four separate helpers
+    came to disagree when Sinnoh landed."""
+    src = open(os.path.join(HERE, '..', 'trainers.h'), encoding='utf-8').read()
+    blk = src.split('TRAINER_SETS[GYM_REGIONS] = {')[1].split('\n};')[0]
+    return re.findall(r'TRAINERS_(\w+),', blk)
+
+
 def ours(region):
     """Parse our own table out of trainers.h."""
     src = open(os.path.join(HERE, '..', 'trainers.h'), encoding='utf-8').read()
@@ -176,21 +185,26 @@ def main():
     n += compare('SINNOH (pokeplatinum)', ours('SINNOH'), platinum_parties(), SINNOH)
     print('%d trainers differ in total' % n)
 
-    # UNOVA IS NOT CHECKED, and saying so matters more than the number above.
-    # pret has no Gen 5 disassembly -- their DS work stops at Platinum -- so
-    # there is nothing to diff against. Without this line "0 trainers differ"
-    # would read as if every ladder had been verified, which is the sort of
-    # quiet over-claim this script exists to prevent.
-    try:
-        unova = ours('UNOVA')
-    except Exception:
-        unova = None
-    if unova:
+    # WHICH LADDERS ARE NOT CHECKED, derived from trainers.h rather than named
+    # here. Saying so matters more than the number above: without it "0 trainers
+    # differ" reads as though every ladder had been verified, which is the sort
+    # of quiet over-claim this script exists to prevent. Naming them by hand was
+    # the same restated-list trap that made pack_pmd.py and index.html wrong --
+    # a sixth region was added and this block still only knew about Unova.
+    VERIFIED = ('KANTO', 'JOHTO', 'HOENN', 'SINNOH')
+    unchecked = [r for r in all_regions() if r not in VERIFIED]
+    if unchecked:
         print()
-        print('=== UNOVA: NOT VERIFIED')
-        print('  %d trainers written from knowledge, not from a disassembly.' % len(unova))
-        print('  pret has no Gen 5 decomp. If one appears, add it here -- the')
-        print('  same recall produced ten errors in Johto and Hoenn.')
+        for r in unchecked:
+            try:
+                team = ours(r)
+            except Exception:
+                continue
+            print('=== %s: NOT VERIFIED' % r)
+            print('  %d trainers written from knowledge, not from a disassembly.' % len(team))
+        print('  pret has no Gen 5 or Gen 6 decomp -- their work stops at the DS')
+        print('  generation. If one appears, add it here: the same recall')
+        print('  produced ten errors in Johto and Hoenn.')
     return 1 if n else 0
 
 

@@ -1,4 +1,6 @@
 #include "party.h"
+#include <stdlib.h>
+#include <string.h>
 #include "dex.h"
 
 Party party;
@@ -21,6 +23,22 @@ void Party::begin() {
   size_t stored = prefs.getBytesLength("party");
   if (stored == sizeof(slots)) {
     prefs.getBytes("party", slots, sizeof(slots));
+  } else if (stored > sizeof(slots) && stored % sizeof(PartyMon) == 0) {
+    // A blob from a build with MORE SLOTS at our own stride. Only this case is
+    // unambiguous: stored/sizeof(PartyMon) records, each laid out as we lay them
+    // out, so the first PARTY_SLOTS of them are ours to keep. Anything else that
+    // is merely "too long" could equally be the same slot count at a BIGGER
+    // stride, where a prefix read would land slot 1 at the wrong offset and
+    // invent a party out of misaligned bytes -- so that is left empty instead.
+    //
+    // getBytes copies NOTHING when the stored blob exceeds the buffer, so this
+    // has to go through a temporary of the stored size.
+    uint8_t *tmp = (uint8_t *)malloc(stored);
+    if (tmp) {
+      if (prefs.getBytes("party", tmp, stored) == stored)
+        memcpy(slots, tmp, sizeof(slots));
+      free(tmp);
+    }
   } else if (stored && stored % PARTY_SLOTS == 0 && stored < sizeof(slots)) {
     size_t oldStride = stored / PARTY_SLOTS;
     uint8_t old[sizeof(slots)];
@@ -38,8 +56,20 @@ void Party::begin() {
   // The box is a separate key and simply absent on an older save, which leaves
   // it zeroed -- exactly what an empty box is.
   for (auto &s : box) s = PartyMon();
-  if (prefs.getBytesLength("box") == sizeof(box))
+  size_t boxStored = prefs.getBytesLength("box");
+  if (boxStored == sizeof(box)) {
     prefs.getBytes("box", box, sizeof(box));
+  } else if (boxStored > sizeof(box) && boxStored % sizeof(PartyMon) == 0) {
+    // Same as the party above: a later build with more box slots. Keep the
+    // first BOX_SLOTS rather than dropping the whole box on the floor, which is
+    // what happened before -- getBytes refuses an oversized blob outright.
+    uint8_t *tmp = (uint8_t *)malloc(boxStored);
+    if (tmp) {
+      if (prefs.getBytes("box", tmp, boxStored) == boxStored)
+        memcpy(box, tmp, sizeof(box));
+      free(tmp);
+    }
+  }
   for (auto &s : box) {
     if (s.dex < 1 || s.dex > DEX_COUNT) s.dex = 0;
     s.nick[sizeof(s.nick) - 1] = 0;

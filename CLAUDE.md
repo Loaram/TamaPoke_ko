@@ -167,6 +167,16 @@ a VALUE that happens to hold rather than to the RULE.
   **vacuously true** when nothing was locked, and survived deleting the gate
   entirely. Only the negative-check caught it.
 
+**A DIRECTORY IS NOT COVERAGE.** `check_sprites.py` counted `sprite/NNNN`
+existing as "has art" and reported Kalos 100%, while `pack_pmd.py` failed on
+0668 PYROAR -- whose directory holds only the form subdirs `0000`/`0001` with no
+`AnimData.xml` of its own. The table said complete and the packer disagreed;
+the packer was right. It now HEADs the actual sprite per species (curl, in
+parallel -- the git tree API comes back truncated at 19 MB and urllib has no
+cert store here), which also found four more over-reported species in Alola,
+Galar and Paldea. Coverage has to mean "can be drawn", because it decides what
+can hatch.
+
 **A tool that reports a partial fetch as fact is the same disease.**
 `check_sprites.py` paged the GitHub API and `break`'d on any failure, returning
 whatever it had -- so a rate-limited run said an entire generation had no art.
@@ -888,6 +898,18 @@ which build `sdmon.cpp`).
    **B2W2**, since Black/White's Striaton trio depends on your starter and
    Drayden-or-Iris on your version, and a fixed ladder cannot express a choice.
 
+   **Four roster slots are now DELIBERATE SUBSTITUTIONS**, reversing the line
+   above about keeping art-less mons and letting them draw as numbers. Three of
+   the four were the LEAD -- the first creature you see when a fight opens -- so
+   a bare dex number was the opening image of Elesa's, Marlon's, Marshal's and
+   Malva's battles. `roster_test` now FAILS if any team contains a species from
+   `noart.h` and prints which trainer and slot, so a future generation cannot
+   reintroduce it quietly; Alola, Galar and Paldea all carry art-less species.
+   Every stand-in keeps the leader's specialty type and sits near the original's
+   base-stat total. The cost: Unova no longer matches B2W2 exactly, and
+   `verify_rosters.py` cannot catch that, there being no Gen 5 decomp to diff
+   against. `trainers.h` records which four and why.
+
 What changed for 386 species:
 
 - `dex.h`, `moves.h` and the learnsets **regenerate** -- `gen_dex.py` already
@@ -986,6 +1008,28 @@ data change provable.
 The nine species with no same-type attack are listed in that test rather than
 tolerated, because 77 hand-picked moves against a new generation's typings is
 exactly how a creature ends up unable to attack.
+
+### EEVEE is the one evolution the table cannot express
+
+`DexEntry.evolvesTo` is a single field, so only VAPOREON (134) is in the data.
+The other seven live in `EEVEE_BRANCHES` in `dex_data.py`, which `gen_dex.py`
+uses for TWO things at once: it emits `EEVEE_EVOS[]` into `dex.h` for the
+firmware, and it feeds the rarity derivation that marks all eight
+evolution-only. One source, so "can be reached by evolving" and "cannot hatch
+from an egg" can never disagree.
+
+They disagreed for six generations. The branch was hardcoded `134..136` in
+`evolve()` AND again in `lineHasUnregistered()`, while `gen_dex.py` said
+`evolved = {...} | {135, 136}` -- so ESPEON, UMBREON, LEAFEON, GLACEON and
+SYLVEON were nobody's evolution target, came out as rare BASE forms, and hatched
+straight from eggs. Eevee could never become any of them.
+
+**A branch is filtered by `regionAvailable()` and `speciesHasArt()`**, via the
+single `Pet::eeveeOptions()`. Without that a player with only the Kanto pack
+could evolve an Eevee into UMBREON and own a creature that draws as a dex number
+forever -- evolution is one-way. `eevee_test` proves it both ways: 40 evolutions
+with only Kanto installed all stay in Kanto, AND with every pack it does reach
+past Kanto, so the first check cannot pass by the branch being broken.
 
 ### Player-wide vs per-creature state
 
