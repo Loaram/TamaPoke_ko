@@ -36,7 +36,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.6"
+#define FW_VERSION "3.7"
 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
   LCD_CS, LCD_SCLK, LCD_SDIO0, LCD_SDIO1, LCD_SDIO2, LCD_SDIO3);
@@ -4777,6 +4777,20 @@ static int eggRegionTap(int16_t x, int16_t y) {
 #define RPICK_W 318
 #define RPICK_H 62
 #define RPICK_Y(i) (108 + (i) * 72)
+// The page dots sit BETWEEN the last row and the LAN button, not over it.
+// They used to be at y=366, which is inside the LAN button (336..380) and on
+// top of its label -- invisible until a region chooser had more than one page,
+// so it appeared the moment Sinnoh made GYM_REGIONS 4 and went unnoticed
+// because swipe_test drives the paging and never looks at the pixels.
+#define RPICK_DOTS_Y 325
+#define RPICK_DOT_R 5
+// Guards, not decoration: both of these are the collision that shipped, and a
+// static_assert is the only check that cannot be forgotten when somebody moves
+// a button. The dots must clear the LAN button below and the last row above.
+static_assert(RPICK_DOTS_Y + RPICK_DOT_R < LANBTN_Y,
+              "the region-chooser page dots overlap the LAN button");
+static_assert(RPICK_DOTS_Y - RPICK_DOT_R > RPICK_Y(RPICK_PER_PAGE - 1) + RPICK_H,
+              "the region-chooser page dots overlap the last region row");
 
 // How many regions this mode lists. Gyms genuinely only exist for three
 // (GYM_REGIONS); the Pokedex and the starter screen list every REAL region,
@@ -4888,8 +4902,8 @@ static void renderRegionPick(uint8_t mode) {
     int total = pages * 16 - 8;
     for (uint8_t d = 0; d < pages; d++) {
       int cx = CX - total / 2 + d * 16;
-      if (d == rpickPage) gfx->fillCircle(cx, 366, 5, UI_INK);
-      else gfx->drawCircle(cx, 366, 5, UI_TRACK);
+      if (d == rpickPage) gfx->fillCircle(cx, RPICK_DOTS_Y, RPICK_DOT_R, UI_INK);
+      else gfx->drawCircle(cx, RPICK_DOTS_Y, RPICK_DOT_R, UI_TRACK);
     }
   }
   if (mode != RPICK_FOR_START) {          // first boot has nowhere to go back to
