@@ -6,6 +6,7 @@
 
 bool sdReady = false;
 bool sdDirty = false;
+bool sdArtDirty = false;
 SdThumbs thumbs;
 
 bool PmdMon::load(int16_t dexNum, bool shiny) {
@@ -129,7 +130,7 @@ const uint8_t *SdThumbs::get(int16_t dex) const {
 // This NARROWS gRegionArt, which starts as everything. A board with no SD is
 // therefore untouched and keeps today's behaviour, which is the documented
 // requirement -- an empty game would be a worse answer than a graceful one.
-void sdScanRegionArt() {
+void sdScanRegionArt(bool verbose) {
   if (!sdReady) return;                 // no card: leave every region enabled
   uint16_t mask = 0;
   for (uint8_t r = 0; r < REGION_COUNT; r++) {
@@ -144,7 +145,8 @@ void sdScanRegionArt() {
       if (!f) all = false; else f.close();
     }
     if (all) mask |= (uint16_t)(1u << r);
-    Serial.printf("art: %-6s %s\n", rg.name, all ? "si" : "NO (falta el pack)");
+    if (verbose)
+      Serial.printf("art: %-6s %s\n", rg.name, all ? "si" : "NO (falta el pack)");
   }
   gRegionArt = mask;
 }
@@ -272,6 +274,11 @@ bool sdSerialCommand(const String &line) {
     f.close();
     Serial.setTimeout(1000);
     sdDirty = (remaining == 0);
+    // A pack file just landed, so which regions are playable may have changed.
+    // Flag it rather than rescanning here: this runs between the last data block
+    // and the DONE the host is waiting on, and 15 file opens belong nowhere near
+    // that. loop() picks it up.
+    if (remaining == 0) sdArtDirty = true;
     Serial.println(remaining == 0 ? "DONE" : "ERR");
     return true;
   } else if (line == "LS") {

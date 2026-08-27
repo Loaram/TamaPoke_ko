@@ -6,6 +6,37 @@ permanent knowledge.
 
 ---
 
+## 0. Branch `feat/retire-and-release` (v3.6) -- in progress
+
+Four things, all verified in the emulator; **nothing here has run on a board.**
+
+1. **An early retire no longer banks the creature.** It is gone for good, and
+   the next egg is NEUTRAL (`lastEnd = CER_RELEASE`) rather than blessed. It
+   used to bank *and* bless exactly as an earned farewell does, so retiring was
+   the good ending with a small tax: retire, check the egg, retire again, and
+   farm blessed rolls for free. The one-day evolution penalty stays. Retiring
+   one that HAS earned its farewell is unchanged -- it is the farewell.
+2. **RELEASE on the party/box detail sheet** lets a banked creature go for good.
+   It always asks first, and the creature does not fall through into the box.
+   The box gained the same sheet: a box tap used to yank the creature into the
+   party on one tap, and now opens the sheet with TO PARTY on it.
+3. **The 3 s hold is gated on `uiCurrentScreen() == SCR_MAIN`.** It was gated by
+   a list of screens to exclude, so it was live on the party screen -- where the
+   grid overlaps `inPetZone` and the dialog's YES box sits on party slot 4.
+4. **A sprite pack sent over `PUT` now unlocks its region without a reboot.**
+   `sdScanRegionArt()` only ever ran at mount, so a region downloaded from the
+   web installer stayed greyed out reading NEEDS PACK -- which looks exactly
+   like the download having failed. This was reported from the board.
+
+Tests: **34 suites, 34 passing** (`release_test` is new). Every guard was
+negative-checked, and two of those checks were themselves found to be vacuous
+before they were fixed -- see CLAUDE.md section 3.
+
+Not done: a board has not seen any of it, and the installer has not been rebuilt
+(`tools/build_web.sh`), so the published site is still v3.5.
+
+---
+
 ## 1. What is live right now
 
 | | |

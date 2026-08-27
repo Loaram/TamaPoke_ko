@@ -253,6 +253,13 @@ void Pet::snapshotForParty() {
   endedKind = CER_NONE;
   if (isEgg()) return;
   if (ceremony != CER_FAREWELL && ceremony != CER_RELEASE) return;
+  // An EARLY retire gives the creature up for good -- it is not banked at all.
+  // Retiring one that has EARNED its farewell still banks it, because that is
+  // simply the farewell reached by another button. retirePending is still set
+  // here: update() snapshots before newEgg() spends it, and that ordering is
+  // what this depends on, so retire_test drives the real update() rather than
+  // calling the two halves by hand.
+  if (retireIsEarly()) return;
   endedMon = PartyMon();
   endedMon.dex = speciesId;
   endedMon.level = level();
@@ -836,6 +843,18 @@ void Pet::startRetire() {
   retirePending = !canFarewellNow();
   save();
   startFarewell();
+  // An early retire is NOT the good ending and must not pay like one.
+  // startFarewell() sets lastEnd = CER_FAREWELL, which blesses the next egg --
+  // rare 27% -> 45%, legendary 3% -> 10%, shiny 1/48 -> 1/24. Combined with the
+  // creature no longer being banked, that made retiring early a pure SHINY FARM:
+  // retire, check the egg, retire again, with nothing accumulating to regret.
+  // Neutral instead, exactly like a release. The ceremony on screen is still the
+  // farewell -- this was a choice the player made, not a neglected creature
+  // walking out -- but the reward is not.
+  if (retirePending) {
+    lastEnd = CER_RELEASE;
+    save();
+  }
 }
 
 void Pet::startFarewell() {

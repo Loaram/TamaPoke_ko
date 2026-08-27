@@ -59,7 +59,16 @@ struct SdThumbs {
 extern SdThumbs thumbs;
 
 bool sdBegin();                 // monta la SD (SDMMC 1-bit), true si hay tarjeta
-void sdScanRegionArt();         // narrows gRegionArt to the packs actually present
+// Narrows gRegionArt to the packs actually present. `verbose` logs one line per
+// region, which is what the boot report wants; the runtime rescan passes false so
+// its output cannot interleave with the PUT transfer protocol the host is parsing.
+void sdScanRegionArt(bool verbose = true);
 bool sdSerialCommand(const String &line);  // PUT/LS por USB; true si la maneja
 extern bool sdReady;
 extern bool sdDirty;  // true tras recibir archivos: recargar sprite
+// A region's pack can arrive AFTER the card was mounted -- the web installer
+// streams it over PUT into the running firmware -- and gRegionArt was computed
+// once in sdBegin(). Without this the region stayed locked reading NEEDS PACK
+// until the board was rebooted, which looked exactly like the download failing.
+// The main loop rescans when this is set; the transfer itself is never delayed.
+extern bool sdArtDirty;

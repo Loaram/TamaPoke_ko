@@ -36,7 +36,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.5"
+#define FW_VERSION "3.6"
 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
   LCD_CS, LCD_SCLK, LCD_SDIO0, LCD_SDIO1, LCD_SDIO2, LCD_SDIO3);
@@ -132,6 +132,14 @@ bool boxOpen = false;
 uint8_t boxPage = 0;
 uint8_t boxSwapFrom = 0;   // party slot + 1, armed from the party side
 uint8_t boxSel = 0;        // box slot + 1, armed from the box side
+// The box gets the same detail sheet the party has. Tapping a box slot used to
+// yank the creature into the party immediately, which is a surprising amount to
+// happen from one tap -- and left nowhere to put a RELEASE button.
+uint8_t boxDetail = 0;        // box slot + 1 whose sheet is open
+// The RELEASE confirm, on whichever sheet is up. One flag rather than two,
+// because only one sheet can be open at a time and partyDetail/boxDetail
+// already say which.
+bool releaseConfirm = false;
 #define BOX_PER_PAGE 6
 uint32_t partyBannerUntil = 0;   // "<name> joined the party!"
 char partyBannerName[14] = "";
@@ -214,6 +222,15 @@ extern const char *const SCREEN_NAME[SCR_COUNT];   // const is internal linkage 
 // builds; only arduino-cli is.
 void bootReport();
 uint8_t uiCurrentScreen();
+// Declared here because renderMonSheet() and the sheet's tap handlers use both
+// ~4000 lines above where they are defined. The emulator generates a proto.h and
+// would compile it either way; arduino-cli would not, and that has shipped once.
+void uiConfirmRects(int *b1Top, int *b1Bot, int *b2Top, int *b2Bot);
+void renderParty();
+void renderBox();
+void drawConfirmPanel(const char *q, const char *sub1, const char *sub2,
+                      uint16_t subCol, const char *o1, uint16_t c1, uint16_t t1,
+                      const char *o2, uint16_t c2, uint16_t t2);
 const char *const SCREEN_NAME[SCR_COUNT] = {
   "starter", "region", "gallery", "dexpick", "movepick", "box",
   "party", "keyboard", "card", "player", "clock", "gym", "gympick",
@@ -316,6 +333,32 @@ uint8_t btlMyAct = 0;        // host: our own action, latched until theirs lands
 #define PARTYCLOSE_H UI_TAP_MIN
 #define PARTYCLOSE_X 133
 #define PARTYCLOSE_W 200
+
+// The confirm panel, in ONE place. Three callers draw it -- the evolve/farewell/
+// retire dialog on the main screen, and letting a banked creature go from the
+// party or box sheet -- and hit_test asserts against the same numbers through
+// uiConfirmRects(). Copies of this geometry in the tap handler are exactly how
+// a YES button ends up somewhere the drawing is not.
+#define CONFIRM_X 73
+#define CONFIRM_Y 156
+#define CONFIRM_W 320
+#define CONFIRM_H 188
+#define CONFIRM_BTN_X 93
+#define CONFIRM_BTN_W 280
+#define CONFIRM_BTN_H 52
+#define CONFIRM_B1_Y 206
+#define CONFIRM_B2_Y 268
+
+// The two buttons on the party/box detail sheet, side by side. A third
+// full-width row would not fit above BACK, and BRING BACK was h=38 -- under
+// UI_TAP_MIN, which is the shape section 4 of CLAUDE.md keeps warning about.
+// 96..226 and 240..370 centre the pair on 233 with a 14 px dead gap between
+// them, and RELEASE is the irreversible one so the gap is the point.
+#define PDET_BTN_Y 336
+#define PDET_BTN_H 48
+#define PDET_L_X 96
+#define PDET_R_X 240
+#define PDET_BTN_W 130
 
 uint8_t gymRegion = 0;
 uint8_t btlRegion = 0;
@@ -672,6 +715,17 @@ void loop() {
   handleTouch();
   handleSerial();
   ensureMon();
+
+  // A sprite pack can arrive long after the card was mounted: the web installer
+  // streams it over PUT into the FIRMWARE THAT IS ALREADY RUNNING. gRegionArt was
+  // computed once in sdBegin(), so without this the region a player just spent ten
+  // minutes downloading stayed greyed out reading NEEDS PACK until they rebooted --
+  // indistinguishable, from the player's side, from the download having failed.
+  // Quietly, because the host is still parsing this serial stream.
+  if (sdArtDirty) {
+    sdArtDirty = false;
+    sdScanRegionArt(false);
+  }
 
   // A farewell or release just finished: the creature is waiting for a slot.
   // With room it simply joins; with a full party the player is taken straight
@@ -1063,7 +1117,17 @@ void handleTouch() {
     tXl = x;
     tYl = y;
     // pulsacion larga sin moverse sobre el bicho -> dialogo de soltar
-    if (!holdFired && !swallowGesture && !galleryOpen && !cardOpen && !kbOpen && !clockOpen && millis() - tStart > 3000 &&
+    //
+    // Gated on the MAIN screen, not on a hand-maintained list of screens to
+    // exclude. That list had gallery/card/keyboard/clock on it and nothing
+    // else, so the hold still fired on the party, box, gym, battle, player and
+    // menu screens -- every one of which draws something inside inPetZone.
+    // On the party screen it was genuinely dangerous: the grid overlaps the
+    // zone, so holding a party slot opened "release the live pet?", and that
+    // dialog's YES box sits on top of party slot 4. Hold a slot, tap where you
+    // think a creature is, lose the creature you are actually raising.
+    // One question with one answer, so a new screen cannot be forgotten.
+    if (!holdFired && !swallowGesture && uiCurrentScreen() == SCR_MAIN && millis() - tStart > 3000 &&
         abs(tXl - tX0) < 30 && abs(tYl - tY0) < 30 && inPetZone(tX0, tY0) &&
         !pet.isEgg() && !confirmUntil && !pet.ceremony) {
       confirmUntil = millis() + 10000;
@@ -1146,12 +1210,13 @@ void onSwipeV(int dir) {
 // A banked creature's sheet: its moves above all, since typing alone does not
 // tell you whether that Lapras still has ICE BEAM -- and in hard mode that is
 // what decides the fight.
-void renderPartyDetail() {
-  const PartyMon &m = party.slots[partyDetail - 1];
+// The detail sheet, shared by the party and the box so the two cannot drift.
+// `fromBox` picks which action the LEFT button offers; the right one is always
+// RELEASE, which is irreversible and therefore always asks first.
+void renderMonSheet(const PartyMon &m, bool fromBox) {
+  const DexEntry &d = DEX_TBL[m.dex];
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
-  if (m.empty()) { partyDetail = 0; return; }
-  const DexEntry &d = DEX_TBL[m.dex];
   char head[36];
   snprintf(head, sizeof(head), "%s%s Lv.%u", m.shiny ? "*" : "",
            m.nick[0] ? m.nick : d.name, (unsigned)m.level);
@@ -1177,27 +1242,74 @@ void renderPartyDetail() {
   gfx->setTextSize(1);
   gfx->setCursor(CX - (int)strlen(st) * 3, 300);
   gfx->print(st);
+
   // Bringing one back is only offered while an egg is waiting. Otherwise it
   // would silently destroy whatever creature is currently alive, and a rule the
-  // player cannot see is worse than a button they cannot press.
-  bool canRevive = pet.isEgg() && !pet.awaitingStarter();
-  gfx->fillRoundRect(126, 340, 214, 38, 10, canRevive ? UI_BAR_OK : UI_TRACK);
-  gfx->drawRoundRect(126, 340, 214, 38, 10, UI_INK);
-  gfx->setTextColor(canRevive ? UI_BG_DAY : 0x8410);
-  gfx->setTextSize(2);
-  gfx->setCursor(CX - strlen(T(S_REVIVE)) * 6, 351);
-  gfx->print(T(S_REVIVE));
-  if (!canRevive) {
+  // player cannot see is worse than a button they cannot press. A box creature
+  // goes to the party instead, which is always allowed if there is room.
+  bool leftOk = fromBox ? (party.firstFree() >= 0)
+                        : (pet.isEgg() && !pet.awaitingStarter());
+  const char *leftLbl = fromBox ? T(S_BOX_TAKE) : T(S_REVIVE);
+  gfx->fillRoundRect(PDET_L_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10,
+                     leftOk ? UI_BAR_OK : UI_TRACK);
+  gfx->drawRoundRect(PDET_L_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10, UI_INK);
+  gfx->setTextColor(leftOk ? UI_BG_DAY : 0x8410);
+  gfx->setTextSize(1);
+  gfx->setCursor(PDET_L_X + PDET_BTN_W / 2 - (int)strlen(leftLbl) * 3,
+                 PDET_BTN_Y + PDET_BTN_H / 2 - 4);
+  gfx->print(leftLbl);
+
+  gfx->fillRoundRect(PDET_R_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10, UI_BAR_BAD);
+  gfx->drawRoundRect(PDET_R_X, PDET_BTN_Y, PDET_BTN_W, PDET_BTN_H, 10, UI_INK);
+  gfx->setTextColor(UI_WHITE);
+  gfx->setCursor(PDET_R_X + PDET_BTN_W / 2 - (int)strlen(T(S_RELEASE_BTN)) * 3,
+                 PDET_BTN_Y + PDET_BTN_H / 2 - 4);
+  gfx->print(T(S_RELEASE_BTN));
+
+  if (!leftOk && !fromBox) {
     gfx->setTextColor(UI_TRACK);
     gfx->setTextSize(1);
-    gfx->setCursor(CX - (int)strlen(T(S_REVIVE_EGG)) * 3, 384);
+    gfx->setCursor(CX - (int)strlen(T(S_REVIVE_EGG)) * 3, PDET_BTN_Y + PDET_BTN_H + 4);
     gfx->print(T(S_REVIVE_EGG));
   }
   gfx->setTextColor(UI_TRACK);
   gfx->setTextSize(2);
   gfx->setCursor(CX - strlen(T(S_BACK)) * 6, 404);
   gfx->print(T(S_BACK));
+
+  // Asked before it happens, because nothing gets this creature back: it is not
+  // a farewell, it does not join anything, and there is no undo.
+  if (releaseConfirm) {
+    char q[40];
+    snprintf(q, sizeof(q), T(S_RELEASE_FMT), m.nick[0] ? m.nick : d.name);
+    drawConfirmPanel(q, T(S_RELEASE_GONE), nullptr, UI_BAR_BAD,
+                     T(S_YES), UI_BAR_BAD, UI_WHITE, T(S_NO), UI_TRACK, UI_INK);
+  }
   gfx->flush();
+}
+
+void renderPartyDetail() {
+  // An empty slot means the creature was just let go. Fall through to the grid
+  // rather than returning: a bare return draws nothing AND never flushes, which
+  // leaves the previous frame frozen on the panel -- the exact failure
+  // flush_test exists to catch, and invisible to any screenshot.
+  if (party.slots[partyDetail - 1].empty()) {
+    partyDetail = 0;
+    releaseConfirm = false;
+    renderParty();
+    return;
+  }
+  renderMonSheet(party.slots[partyDetail - 1], false);
+}
+
+void renderBoxDetail() {
+  if (party.box[boxDetail - 1].empty()) {
+    boxDetail = 0;
+    releaseConfirm = false;
+    renderBox();
+    return;
+  }
+  renderMonSheet(party.box[boxDetail - 1], true);
 }
 
 // The two buttons' hit areas, so a test can prove they do not overlap without
@@ -1249,24 +1361,67 @@ void partyButtonRects(int *boxTop, int *boxBot, int *closeTop, int *closeBot) {
   if (closeBot) *closeBot = PARTYCLOSE_Y + PARTYCLOSE_H;
 }
 
+// Which of the detail sheet's two buttons a tap landed on. One answer for the
+// party and the box, off the same PDET_* constants the sheet is DRAWN with, so
+// the graphic and the hit area cannot drift apart.
+bool monSheetBtn(int16_t x, int16_t y, bool left) {
+  if (y < PDET_BTN_Y || y > PDET_BTN_Y + PDET_BTN_H) return false;
+  int x0 = left ? PDET_L_X : PDET_R_X;
+  return x >= x0 && x <= x0 + PDET_BTN_W;
+}
+
+// YES / NO on the release confirm. Returns true when the tap was consumed. The
+// caller swallows everything else while it is up: a modal that leaks a miss
+// through to what is drawn underneath is precisely how an irreversible action
+// gets triggered by a fumbled tap, which is the shape CLAUDE.md section 4 keeps
+// warning about.
+bool monSheetConfirmTap(int16_t x, int16_t y, bool fromBox) {
+  int c1t, c1b, c2t, c2b;
+  uiConfirmRects(&c1t, &c1b, &c2t, &c2b);
+  if (x < CONFIRM_BTN_X || x > CONFIRM_BTN_X + CONFIRM_BTN_W) return false;
+  if (y >= c1t && y <= c1b) {            // YES -- and it does not come back
+    if (fromBox) { party.boxReleaseAt(boxDetail - 1); boxDetail = 0; }
+    else { party.releaseAt(partyDetail - 1); partyDetail = 0; }
+    // A half-finished swap named a slot that may now be empty, so disarm both
+    // sides rather than leaving one pointing at a creature that is gone.
+    boxSwapFrom = 0;
+    boxSel = 0;
+    releaseConfirm = false;
+    sfxPlay(SFX_BYE);
+    return true;
+  }
+  if (y >= c2t && y <= c2b) {            // NO
+    releaseConfirm = false;
+    sfxPlay(SFX_TAP);
+    return true;
+  }
+  return false;
+}
+
 void partyTap(int16_t x, int16_t y) {
   if (boxOpen) { boxTap(x, y); return; }
-  if (!partyPick && y >= BOXBTN_Y - BOXBTN_PAD && y <= BOXBTN_Y + BOXBTN_H + BOXBTN_PAD &&
-      x >= BOXBTN_X - BOXBTN_PAD && x <= BOXBTN_X + BOXBTN_W + BOXBTN_PAD) {
-    boxOpen = true;                  // open the box, nothing picked yet
-    boxPage = 0;
-    boxSwapFrom = 0;
-    sfxPlay(SFX_TAP);
-    return;
-  }
+  // The SHEET IS CHECKED FIRST, and that is not cosmetic ordering. It covers the
+  // whole screen, and its RELEASE button (x240..370, y336..384) lands inside the
+  // BOX button's hit area (x138..328, y312..372) below -- so with BOX tested
+  // first, tapping RELEASE opened the box instead. Nothing behind a full-screen
+  // sheet may answer a tap.
   if (partyDetail) {
-    if (y >= 340 && y <= 378 && x >= 126 && x <= 340) {   // BRING BACK
+    // The confirm is modal: while it is up nothing else on the sheet responds,
+    // or a miss on YES would fall through to the move rows underneath it.
+    if (releaseConfirm) { monSheetConfirmTap(x, y, false); return; }
+    if (monSheetBtn(x, y, true)) {           // BRING BACK
       if (!pet.isEgg() || pet.awaitingStarter()) { sfxPlay(SFX_DENY); return; }
       pet.reviveFrom(party.slots[partyDetail - 1]);
       party.releaseAt(partyDetail - 1);      // it is alive now, not banked
       partyDetail = 0;
+      boxSwapFrom = 0;
       partyOpen = false;
       sfxPlay(SFX_HATCH);
+      return;
+    }
+    if (monSheetBtn(x, y, false)) {          // RELEASE -- ask first, always
+      releaseConfirm = true;
+      sfxPlay(SFX_TAP);
       return;
     }
     for (int i = 0; i < MOVE_SLOTS; i++) {   // tap a move to change it
@@ -1280,6 +1435,15 @@ void partyTap(int16_t x, int16_t y) {
       return;
     }
     partyDetail = 0;
+    releaseConfirm = false;
+    sfxPlay(SFX_TAP);
+    return;
+  }
+  if (!partyPick && y >= BOXBTN_Y - BOXBTN_PAD && y <= BOXBTN_Y + BOXBTN_H + BOXBTN_PAD &&
+      x >= BOXBTN_X - BOXBTN_PAD && x <= BOXBTN_X + BOXBTN_W + BOXBTN_PAD) {
+    boxOpen = true;                  // open the box, nothing picked yet
+    boxPage = 0;
+    boxSwapFrom = 0;
     sfxPlay(SFX_TAP);
     return;
   }
@@ -1657,8 +1821,11 @@ void onTap(int16_t x, int16_t y) {
     return;
   }
   if (choiceKind) {          // dialogo de decision: boton accion (arriba) / mantener (abajo)
-    bool b1 = (x >= 93 && x <= 373 && y >= 206 && y <= 258);  // accion
-    bool b2 = (x >= 93 && x <= 373 && y >= 268 && y <= 320);  // mantener / quedaros
+    int c1t, c1b, c2t, c2b;
+    uiConfirmRects(&c1t, &c1b, &c2t, &c2b);
+    const bool inX = (x >= CONFIRM_BTN_X && x <= CONFIRM_BTN_X + CONFIRM_BTN_W);
+    bool b1 = inX && y >= c1t && y <= c1b;   // accion
+    bool b2 = inX && y >= c2t && y <= c2b;   // mantener / quedaros
     if (choiceKind == 1) {                 // evolucion
       if (b1) { int16_t old = pet.speciesId; pet.evolve(); evoPmd.load(old, pet.shiny); }
       else if (b2) pet.declineEvolve();
@@ -1976,8 +2143,10 @@ void render() {
     return;
   }
   if (partyOpen) {
-    if (boxOpen) renderBox();
-    else if (partyDetail) renderPartyDetail();
+    if (boxOpen) {
+      if (boxDetail) renderBoxDetail();
+      else renderBox();
+    } else if (partyDetail) renderPartyDetail();
     else renderParty();
     return;
   }
@@ -5058,6 +5227,28 @@ void renderBox() {
 }
 
 void boxTap(int16_t x, int16_t y) {
+  // The sheet is checked first and is modal in the same way the party's is.
+  if (boxDetail) {
+    if (releaseConfirm) { monSheetConfirmTap(x, y, true); return; }
+    if (monSheetBtn(x, y, true)) {          // TO PARTY
+      int free = party.firstFree();
+      if (free < 0) { sfxPlay(SFX_DENY); return; }
+      party.swapPartyBox((uint8_t)free, boxDetail - 1);
+      boxDetail = 0;
+      boxSel = 0;
+      sfxPlay(SFX_MEDAL);
+      return;
+    }
+    if (monSheetBtn(x, y, false)) {         // RELEASE -- ask first, always
+      releaseConfirm = true;
+      sfxPlay(SFX_TAP);
+      return;
+    }
+    boxDetail = 0;                          // anywhere else backs out
+    releaseConfirm = false;
+    sfxPlay(SFX_TAP);
+    return;
+  }
   for (uint8_t i = 0; i < BOX_PER_PAGE; i++) {
     uint8_t idx = boxPage * BOX_PER_PAGE + i;
     if (idx >= BOX_SLOTS) break;
@@ -5075,23 +5266,25 @@ void boxTap(int16_t x, int16_t y) {
       sfxPlay(SFX_MEDAL);
       return;
     }
-    // otherwise arm from THIS side: if the party has room, send it straight
-    // over; if not, remember it and let the player pick who it replaces
+    // Otherwise open its SHEET. It used to go straight to the party, which is a
+    // lot to happen from one tap and left nowhere to put RELEASE; the sheet
+    // offers TO PARTY explicitly and shows what you are about to move.
     if (party.box[idx].empty()) { sfxPlay(SFX_DENY); return; }
-    int free = party.firstFree();
-    if (free >= 0) {
-      party.swapPartyBox((uint8_t)free, idx);
-      boxSel = 0;
-      sfxPlay(SFX_MEDAL);
+    if (party.firstFree() < 0) {
+      boxSel = idx + 1;          // party is full: go choose who steps out
+      boxOpen = false;
+      sfxPlay(SFX_TAP);
       return;
     }
-    boxSel = idx + 1;            // party is full: go choose who steps out
-    boxOpen = false;
+    boxDetail = idx + 1;
+    releaseConfirm = false;
     sfxPlay(SFX_TAP);
     return;
   }
   boxOpen = false;               // anywhere else backs out
   boxSwapFrom = 0;
+  boxDetail = 0;
+  releaseConfirm = false;
 }
 
 // ---------- party ----------
@@ -5485,8 +5678,54 @@ void drawCeremony() {
 }
 
 // dialogo de decision (2 botones apilados): evolucionar/mantener o despedirse/quedaros
+// The two confirm buttons' hit areas, so a test can hold them to UI_TAP_MIN and
+// prove they do not overlap without restating the numbers.
+void uiConfirmRects(int *b1Top, int *b1Bot, int *b2Top, int *b2Bot) {
+  *b1Top = CONFIRM_B1_Y;
+  *b1Bot = CONFIRM_B1_Y + CONFIRM_BTN_H;
+  *b2Top = CONFIRM_B2_Y;
+  *b2Bot = CONFIRM_B2_Y + CONFIRM_BTN_H;
+}
+
+// Draws the panel and its two buttons. sub1/sub2 are optional lines between the
+// question and the buttons -- what the choice COSTS, which for anything
+// irreversible has to be on screen before the tap, not after it.
+void drawConfirmPanel(const char *q, const char *sub1, const char *sub2,
+                      uint16_t subCol, const char *o1, uint16_t c1, uint16_t t1,
+                      const char *o2, uint16_t c2, uint16_t t2) {
+  gfx->fillRoundRect(CONFIRM_X, CONFIRM_Y, CONFIRM_W, CONFIRM_H, 16, UI_WHITE);
+  gfx->drawRoundRect(CONFIRM_X, CONFIRM_Y, CONFIRM_W, CONFIRM_H, 16, UI_INK);
+  gfx->setTextColor(UI_INK);
+  gfx->setTextSize(2);
+  gfx->setCursor(CX - (int)strlen(q) * 6, 176);
+  gfx->print(q);
+  if (sub1 || sub2) {
+    gfx->setTextSize(1);
+    gfx->setTextColor(subCol);
+    if (sub1) {
+      gfx->setCursor(CX - (int)strlen(sub1) * 3, sub2 ? 188 : 194);
+      gfx->print(sub1);
+    }
+    if (sub2) {
+      gfx->setCursor(CX - (int)strlen(sub2) * 3, 197);
+      gfx->print(sub2);
+    }
+    gfx->setTextSize(2);
+    gfx->setTextColor(UI_INK);
+  }
+  gfx->fillRoundRect(CONFIRM_BTN_X, CONFIRM_B1_Y, CONFIRM_BTN_W, CONFIRM_BTN_H, 12, c1);
+  gfx->setTextColor(t1);
+  gfx->setCursor(CX - (int)strlen(o1) * 6, CONFIRM_B1_Y + 18);
+  gfx->print(o1);
+  gfx->fillRoundRect(CONFIRM_BTN_X, CONFIRM_B2_Y, CONFIRM_BTN_W, CONFIRM_BTN_H, 12, c2);
+  gfx->setTextColor(t2);
+  gfx->setCursor(CX - (int)strlen(o2) * 6, CONFIRM_B2_Y + 18);
+  gfx->print(o2);
+}
+
 void drawChoiceDialog() {
   const char *q, *o1, *o2;
+  const char *sub1 = nullptr, *sub2 = nullptr;
   uint16_t c1, c2, t1, t2;
   if (choiceKind == 1) {  // evolucion
     q = T(S_EVO_Q); o1 = T(S_EVO_TAP); o2 = T(S_EVO_KEEP);
@@ -5494,35 +5733,17 @@ void drawChoiceDialog() {
   } else if (choiceKind == 3) {   // retirada a peticion
     q = T(S_RETIRE_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);
     c1 = UI_BAR_WARN; t1 = UI_INK; c2 = UI_BAR_OK; t2 = UI_WHITE;
+    // The price, spelled out, and only when there is one: retiring a creature
+    // that has already earned its farewell costs nothing and must not claim to.
+    // An EARLY one now costs TWO things and says both -- the creature is not
+    // banked at all, which is the half a player would not otherwise discover
+    // until the party screen came up empty.
+    if (!pet.retireIsFree()) { sub1 = T(S_RETIRE_COST); sub2 = T(S_RETIRE_GONE); }
   } else {                // despedida
     q = T(S_FAR_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);
     c1 = UI_BAR_WARN; t1 = UI_INK; c2 = UI_BAR_OK; t2 = UI_WHITE;
   }
-  gfx->fillRoundRect(73, 156, 320, 188, 16, UI_WHITE);
-  gfx->drawRoundRect(73, 156, 320, 188, 16, UI_INK);
-  gfx->setTextColor(UI_INK);
-  gfx->setTextSize(2);
-  gfx->setCursor(CX - (int)strlen(q) * 6, 176);
-  gfx->print(q);
-  // The price, spelled out, and only when there is one: retiring a creature
-  // that has already earned its farewell costs nothing and must not claim to.
-  if (choiceKind == 3 && !pet.retireIsFree()) {
-    const char *cost = T(S_RETIRE_COST);
-    gfx->setTextSize(1);
-    gfx->setTextColor(UI_BAR_BAD);
-    gfx->setCursor(CX - (int)strlen(cost) * 3, 194);
-    gfx->print(cost);
-    gfx->setTextSize(2);
-    gfx->setTextColor(UI_INK);
-  }
-  gfx->fillRoundRect(93, 206, 280, 52, 12, c1);     // boton accion
-  gfx->setTextColor(t1);
-  gfx->setCursor(CX - (int)strlen(o1) * 6, 224);
-  gfx->print(o1);
-  gfx->fillRoundRect(93, 268, 280, 52, 12, c2);     // boton mantener/quedaros
-  gfx->setTextColor(t2);
-  gfx->setCursor(CX - (int)strlen(o2) * 6, 286);
-  gfx->print(o2);
+  drawConfirmPanel(q, sub1, sub2, UI_BAR_BAD, o1, c1, t1, o2, c2, t2);
 }
 
 // boton-CTA rojo y grande para evolucionar (pulsa para llamar la atencion)

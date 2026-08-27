@@ -123,6 +123,13 @@ enum StrId : uint8_t {
   S_RETIRE_COST,    // what retiring early costs the next creature
   S_EVO_SLOW,       // shown on the card while a creature carries that debt
   S_NEED_PACK,      // region chooser: this region's sprite pack is not on the SD
+  // Letting a BANKED creature go for good, from the party or box detail sheet.
+  // The confirmation itself reuses S_RELEASE_FMT / S_YES / S_NO, which the live
+  // pet's own release dialog already owns -- the question is the same question.
+  S_RELEASE_BTN,    // the button on the detail sheet
+  S_RELEASE_GONE,   // ...and the warning under it: this one does not come back
+  S_BOX_TAKE,       // box detail sheet: move this creature into the party
+  S_RETIRE_GONE,    // retire confirm: an early retire is not banked either
   STR_COUNT
 };
 

@@ -37,6 +37,8 @@ int uiSleepButton(int *cx, int *cy);
 void uiEggPillRect(int *x, int *y, int *w, int *h, bool hitArea);
 bool uiButtonDisabled(int i);
 void uiButtonAt(int i, int *cx, int *cy, int *half);
+bool monSheetBtn(int16_t x, int16_t y, bool left);
+void uiConfirmRects(int *b1Top, int *b1Bot, int *b2Top, int *b2Bot);
 extern Pet pet;
 void onTap(int16_t x, int16_t y);
 
@@ -261,6 +263,57 @@ int main(){
     ck(pet.canRunawayNow(), "total neglect really does make it ready to leave");
     onTap(233, 200);
     ck(pet.ceremony != CER_NONE, "and the tap lets it go, without asking");
+  }
+
+  // ---- the party/box detail sheet, where RELEASE is irreversible
+  //
+  // The bounds are DISCOVERED by probing the firmware's own predicate rather
+  // than restated from the PDET_* constants. A test that copies the numbers
+  // passes happily after somebody moves the button and forgets the test, which
+  // is the failure mode section 3 of CLAUDE.md is about.
+  {
+    int lT=999, lB=-1, lL=999, lR=-1, rT=999, rB=-1, rL=999, rR=-1;
+    for (int y = 250; y < 440; y++) {
+      for (int x = 40; x < 430; x++) {
+        if (monSheetBtn(x, y, true)) {
+          if (y < lT) lT = y;  if (y > lB) lB = y;
+          if (x < lL) lL = x;  if (x > lR) lR = x;
+        }
+        if (monSheetBtn(x, y, false)) {
+          if (y < rT) rT = y;  if (y > rB) rB = y;
+          if (x < rL) rL = x;  if (x > rR) rR = x;
+        }
+      }
+    }
+    ck(lB > lT && rB > rT, "both sheet buttons have a hit area at all");
+    ck((lB - lT) >= 44 && (rB - rT) >= 44,
+       "and both are at least UI_TAP_MIN tall -- BRING BACK used to be 38");
+    ck((lR - lL) >= 44 && (rR - rL) >= 44, "and at least UI_TAP_MIN across");
+    // RELEASE cannot be recovered from, so a finger sliding off BRING BACK must
+    // land on nothing rather than on the destructive one.
+    ck(rL > lR, "they do not overlap");
+    ck(rL - lR >= 8, "and there is a real dead gap between them");
+    // Both must sit on the round panel: the corner furthest from the centre is
+    // the one that falls off a 466 px circle of radius 233.
+    int worst = 0;
+    const int cx = 233, cy = 233;
+    int xs[4] = { lL, lR, rL, rR }, ys[2] = { lT, lB };
+    for (int i = 0; i < 4; i++)
+      for (int j = 0; j < 2; j++) {
+        int dx = xs[i] - cx, dy = ys[j] - cy;
+        int d = (int)(0.5 + __builtin_sqrt((double)(dx*dx + dy*dy)));
+        if (d > worst) worst = d;
+      }
+    ck(worst <= 233, "and every corner is still on the glass");
+  }
+
+  // ---- the confirm panel, which now has three callers
+  {
+    int b1t, b1b, b2t, b2b;
+    uiConfirmRects(&b1t, &b1b, &b2t, &b2b);
+    ck((b1b - b1t) >= 44 && (b2b - b2t) >= 44,
+       "both confirm buttons are at least UI_TAP_MIN tall");
+    ck(b2t > b1b, "and they do not overlap");
   }
 
   printf("%s\n", bad?"FAILURES":"all good");

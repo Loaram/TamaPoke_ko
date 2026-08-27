@@ -304,6 +304,11 @@ public:
   void startRetire();
   bool canRetireNow() const;
   bool retireIsFree() const { return canFarewellNow(); }
+  // Was the retire NOW IN PROGRESS an early one? THE single answer, asked by
+  // snapshotForParty() and by the tests. Distinct from retireIsFree(), which asks
+  // whether a retire started right now WOULD be free: this one remembers what the
+  // retire that is already running actually was, and outlives the moment it began.
+  bool retireIsEarly() const { return retirePending; }
   uint8_t evoPenalty() const { return evoPen; }
   void startRunaway();   // tambien usable desde la consola serie (RUN)
 
