@@ -1303,11 +1303,21 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
                  PDET_BTN_Y + PDET_BTN_H / 2 - 4);
   gfx->print(T(S_RELEASE_BTN));
 
-  if (!leftOk && !fromBox) {
-    gfx->setTextColor(UI_TRACK);
+  // WHY the button is dead, ABOVE it and in a colour that can be read.
+  //
+  // This used to sit BELOW the buttons in UI_TRACK -- pale beige on a pale
+  // background, at the smallest text size, eight pixels above "tap: back". It
+  // was reported as "every time I hit bring back it just buzzes": the refusal
+  // was correct (reviving would destroy the creature you are raising) but the
+  // reason was invisible, so the button read as broken rather than disabled.
+  // Above the button there is clear space between it and the stat line, and
+  // that is also where the eye is already travelling.
+  if (!leftOk) {
+    const char *why = fromBox ? T(S_PARTY_FULL) : T(S_REVIVE_EGG);
+    gfx->setTextColor(UI_BAR_WARN);
     gfx->setTextSize(1);
-    gfx->setCursor(CX - (int)strlen(T(S_REVIVE_EGG)) * 3, PDET_BTN_Y + PDET_BTN_H + 4);
-    gfx->print(T(S_REVIVE_EGG));
+    gfx->setCursor(CX - (int)strlen(why) * 3, PDET_BTN_Y - 14);
+    gfx->print(why);
   }
   gfx->setTextColor(UI_TRACK);
   gfx->setTextSize(2);
