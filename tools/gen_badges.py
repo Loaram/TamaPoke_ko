@@ -219,7 +219,59 @@ def quantise(px, maxc=15):
     return keep, idx
 
 
+def find_badges_grid(w, h, ch, rows):
+    """Isolate badges by CONNECTED COMPONENT rather than by column.
+
+    find_badges() splits the SteGriff sheets, whose badges sit in tidy columns.
+    The Kalos sheet is a 4x2 grid, its two rows overlap vertically, and a faint
+    unfinished shape bridges two of the columns -- so no gap-based split works
+    on it. Components do: each badge is one blob, the ghost falls below the
+    alpha threshold, and this returns exactly 8 on that sheet.
+
+    Sorted row-major, which is the order trainers.h lists the leaders in.
+    """
+    from collections import deque
+    THR = 64
+    seen = bytearray(w * h)
+    comps = []
+    for y0_ in range(h):
+        for x0_ in range(w):
+            if seen[y0_ * w + x0_] or alpha_at(rows, ch, x0_, y0_) <= THR:
+                continue
+            q = deque([(x0_, y0_)])
+            seen[y0_ * w + x0_] = 1
+            x0 = x1 = x0_
+            y0 = y1 = y0_
+            n = 0
+            while q:
+                cx, cy = q.popleft()
+                n += 1
+                if cx < x0: x0 = cx
+                if cx > x1: x1 = cx
+                if cy < y0: y0 = cy
+                if cy > y1: y1 = cy
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = cx + dx, cy + dy
+                    if 0 <= nx < w and 0 <= ny < h and not seen[ny * w + nx] \
+                            and alpha_at(rows, ch, nx, ny) > THR:
+                        seen[ny * w + nx] = 1
+                        q.append((nx, ny))
+            comps.append((n, x0, x1, y0, y1))
+    comps.sort(reverse=True)
+    top = comps[:8]
+    if len(top) < 8:
+        raise SystemExit('only %d badge blobs found, expected 8' % len(top))
+    # row-major: which half of the sheet the blob's centre falls in, then x
+    top.sort(key=lambda c: (0 if (c[3] + c[4]) // 2 < h // 2 else 1, c[1]))
+    return [(x0, x1 + 1, y0, y1 + 1) for _, x0, x1, y0, y1 in top]
+
+
 def render(svg_path, png):
+    if svg_path.lower().endswith('.png'):
+        # already a raster sheet: no rsvg step, and its badges are a grid rather
+        # than columns, so they are isolated by connected component instead
+        w, h, ch, rows = decode_png(svg_path)
+        return w, h, ch, rows, find_badges_grid(w, h, ch, rows)
     subprocess.run(['rsvg-convert', '-w', str(RENDER_W), svg_path, '-o', png],
                    check=True)
     w, h, ch, rows = decode_png(png)
@@ -228,7 +280,15 @@ def render(svg_path, png):
 
 
 def source_for(region):
-    """A local SVG if one was given, else the upstream one."""
+    """A local sheet if one is present, else the upstream SVG.
+
+    KALOS is a PNG, not an SVG: SteGriff's set stops at Unova, and the Kalos art
+    is MarillTachiquin's raster sheet (see CREDITS.md -- the artist asks to be
+    credited, and that credit has to ship with anything built from this).
+    """
+    local_png = os.path.join(HERE, '%s_badges.png' % region.lower())
+    if os.path.exists(local_png):
+        return local_png
     local = os.path.join(HERE, '%s.svg' % region)
     if os.path.exists(local):
         return local
@@ -273,7 +333,8 @@ def main():
                 out.append('  ' + ','.join(str(v) for v in idx[r:r + 32]) + ',')
             out.append('};')
         tmp.append(region)
-        os.remove(png)
+        if os.path.exists(png):
+            os.remove(png)
     out.append('')
     out.append('struct BadgeArt { const uint16_t *pal; const uint8_t *idx; };')
     out.append('static const BadgeArt BADGES_ART[BADGE_REGIONS][8] = {')

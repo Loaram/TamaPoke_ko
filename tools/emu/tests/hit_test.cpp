@@ -338,10 +338,15 @@ int main(){
         for (uint8_t i = 0; i < TRAINER_GYMS; i++)
           if (badgeArtExists(r, i)) leaked = true;
       ck(!leaked, "a region with no art returns none rather than wrapping");
-      // the negative check has to be able to FAIL: if every ladder happens to
-      // have art, the line above is vacuous and must say so rather than pass.
-      ck(GYM_REGIONS > BADGE_REGIONS || BADGE_REGIONS == GYM_REGIONS,
-         "(art covers every ladder, so the wrap check above is not exercised)");
+      // With art for every ladder the loop above is EMPTY and proves nothing,
+      // so the real invariant is checked separately and is exercisable however
+      // the two counts happen to line up: an index past the end is refused
+      // rather than folded back onto region 0 by a modulo.
+      ck(!badgeArtExists(BADGE_REGIONS, 0),
+         "one past the badge art is refused, not wrapped to region 0");
+      ck(!badgeArtExists(GYM_REGIONS, 0),
+         "and so is one past every ladder");
+      ck(!badgeArtExists(250, 0), "and a wildly out-of-range region too");
     }
     ck(!badgeArtExists(0, TRAINER_GYMS), "and an out-of-range gym index is refused");
   }
