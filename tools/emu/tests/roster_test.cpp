@@ -14,6 +14,7 @@
 #include "Arduino.h"
 #include "dex.h"
 #include "trainers.h"
+#include "noart.h"
 #include <cstdio>
 #include <cstring>
 uint32_t g_seed=1; FakeSerial Serial; FakeESP ESP; FakeWire Wire;
@@ -115,6 +116,36 @@ int main(){
     char m[110];
     snprintf(m,sizeof(m),"%s: %d of %d creatures are its own generation", ts.region, own, total);
     ck(own >= 8, m);              // enough to prove it is the right table
+  }
+
+  // ---- no trainer may field a creature that cannot be DRAWN
+  //
+  // noart.h and trainers.h had nothing connecting them, so four roster slots --
+  // three of them the LEAD, which is the first thing you see in a fight -- put a
+  // bare dex number on screen: Elesa's Zebstrika, Marlon's Carracosta,
+  // Marshal's Throh and Malva's Pyroar. Nobody noticed until somebody looked.
+  // Every future generation brings more art-less species (Alola, Galar and
+  // Paldea all have them), so this has to fail the build rather than wait to be
+  // spotted again.
+  {
+    int offenders = 0;
+    for (uint8_t r = 0; r < GYM_REGIONS; r++) {
+      const TrainerSet &ts = TRAINER_SETS[r];
+      for (int i = 0; i < TRAINER_COUNT; i++)
+        for (int k = 0; k < ts.list[i].count; k++) {
+          int16_t d = (int16_t)ts.list[i].team[k].dex;
+          if (!speciesHasArt(d)) {
+            printf("      %s %s slot%d: dex %d has no sprite\n",
+                   ts.region, ts.list[i].name, k, (int)d);
+            offenders++;
+          }
+        }
+    }
+    ck(offenders == 0, "no trainer fields a creature with no sprite art");
+    // and prove the check can actually fire: NO_ART must not be empty, or the
+    // loop above passes by having nothing to test against
+    ck(NO_ART_COUNT > 0, "(and noart.h is non-empty, so that check means something)");
+    ck(!speciesHasArt(NO_ART[0]), "speciesHasArt really does reject an art-less dex");
   }
 
   printf("%s\n", bad?"FAILURES":"all good");

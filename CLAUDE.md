@@ -898,6 +898,18 @@ which build `sdmon.cpp`).
    **B2W2**, since Black/White's Striaton trio depends on your starter and
    Drayden-or-Iris on your version, and a fixed ladder cannot express a choice.
 
+   **Four roster slots are now DELIBERATE SUBSTITUTIONS**, reversing the line
+   above about keeping art-less mons and letting them draw as numbers. Three of
+   the four were the LEAD -- the first creature you see when a fight opens -- so
+   a bare dex number was the opening image of Elesa's, Marlon's, Marshal's and
+   Malva's battles. `roster_test` now FAILS if any team contains a species from
+   `noart.h` and prints which trainer and slot, so a future generation cannot
+   reintroduce it quietly; Alola, Galar and Paldea all carry art-less species.
+   Every stand-in keeps the leader's specialty type and sits near the original's
+   base-stat total. The cost: Unova no longer matches B2W2 exactly, and
+   `verify_rosters.py` cannot catch that, there being no Gen 5 decomp to diff
+   against. `trainers.h` records which four and why.
+
 What changed for 386 species:
 
 - `dex.h`, `moves.h` and the learnsets **regenerate** -- `gen_dex.py` already

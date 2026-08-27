@@ -15,6 +15,35 @@
 // bring whoever you have, so attrition is the difficulty: one strong creature
 // can sweep Brock but will not survive five of Lance's in a row.
 
+// FOUR ROSTER SLOTS ARE DELIBERATE SUBSTITUTIONS, not transcription errors.
+// SpriteCollab has no art for these, so as written they put a bare dex NUMBER on
+// screen where a leader's creature should be -- and three of them LEAD, which is
+// the first thing you see in the fight:
+//
+//   ELESA   ZEBSTRIKA  523 -> GALVANTULA 596   (Bug/Electric, still fast)
+//   MARLON  CARRACOSTA 565 -> SEISMITOAD 537   (bulky Water)
+//   MARSHAL THROH      538 -> HARIYAMA   297   (bulky pure Fighting; see below)
+//   MALVA   PYROAR     668 -> DELPHOX    655   (fast special Fire, Kalos)
+//
+// Each stand-in keeps the leader's specialty type, sits near the original's
+// base-stat total and comes from the same region as the ladder, so the fight
+// still reads as that region's. Levels are unchanged.
+//
+// MARSHAL IS THE ONE EXCEPTION, and deliberately. Unova has no pure Fighting
+// left once Conkeldurr, Sawk and Mienshao are already on his team and Throh has
+// no art: what remains is Gurdurr (BST 405, and Marshal already carries its own
+// evolution), the 580-BST musketeer legendaries, or Scrafty -- which GRIMSLEY
+// already leads with, so the Fighting specialist would inherit the Dark
+// specialist's signature. Hariyama is Hoenn but is what Throh actually was: a
+// slow, enormously bulky pure-Fighting grappler, HP 144 to Throh's 120.
+//
+// This REVERSES the earlier decision to keep art-less mons and let them draw as
+// numbers. That was defensible while it affected mid-team slots; a gym leader
+// leading with a number is not. roster_test now fails if any team contains a
+// species from noart.h, so a future generation cannot reintroduce this quietly.
+// It does mean Unova no longer matches B2W2 exactly -- and verify_rosters.py
+// cannot catch that, since there is no Gen 5 decomp to diff against.
+
 #define TRAINER_TEAM_MAX 6
 // The ladders are levelled to this game's curve, where 100 is the ceiling.
 #define MAX_TRAINER_LEVEL 100
@@ -146,15 +175,15 @@ static const Trainer TRAINERS_UNOVA[TRAINER_COUNT] = {
   { "CHEREN",  "ASPERTIA",  T_NORMAL,   2, { {504,11},{506,13} } },
   { "ROXIE",   "VIRBANK",   T_POISON,   2, { {109,16},{544,18} } },
   { "BURGH",   "CASTELIA",  T_BUG,      3, { {541,21},{557,21},{542,23} } },
-  { "ELESA",   "NIMBASA",   T_ELECTRIC, 3, { {587,25},{180,25},{523,27} } },
+  { "ELESA",   "NIMBASA",   T_ELECTRIC, 3, { {587,25},{180,25},{596,27} } },  // 523 ZEBSTRIKA: no art
   { "CLAY",    "DRIFTVEIL", T_GROUND,   3, { {552,29},{28,29},{530,31} } },
   { "SKYLA",   "MISTRALTON",T_FLYING,   3, { {528,33},{227,33},{581,35} } },
   { "DRAYDEN", "OPELUCID",  T_DRAGON,   3, { {621,43},{330,43},{612,46} } },
-  { "MARLON",  "HUMILAU",   T_WATER,    3, { {565,49},{321,49},{593,51} } },
+  { "MARLON",  "HUMILAU",   T_WATER,    3, { {537,49},{321,49},{593,51} } },  // 565 CARRACOSTA: no art
   { "SHAUNTAL","ELITE 4",   T_GHOST,    4, { {563,56},{426,56},{623,56},{609,58} } },
   { "GRIMSLEY","ELITE 4",   T_DARK,     4, { {510,56},{560,56},{553,56},{625,58} } },
   { "CAITLIN", "ELITE 4",   T_PSYCHIC,  4, { {518,56},{561,56},{579,56},{576,58} } },
-  { "MARSHAL", "ELITE 4",   T_FIGHTING, 4, { {538,56},{539,56},{534,56},{620,58} } },
+  { "MARSHAL", "ELITE 4",   T_FIGHTING, 4, { {297,56},{539,56},{534,56},{620,58} } },  // 538 THROH: no art
   { "IRIS",    "CHAMPION",  T_DRAGON,   6, { {635,59},{621,57},{306,57},{567,57},{131,57},{612,59} } },
 };
 
@@ -174,7 +203,7 @@ static const Trainer TRAINERS_KALOS[TRAINER_COUNT] = {
   { "VALERIE",  "LAVERRE",   T_FAIRY,    3, { {303,38},{122,39},{700,42} } },
   { "OLYMPIA",  "ANISTAR",   T_PSYCHIC,  3, { {561,44},{199,45},{678,48} } },
   { "WULFRIC",  "SNOWBELLE", T_ICE,      3, { {460,56},{615,55},{713,59} } },
-  { "MALVA",    "ELITE 4",   T_FIRE,     4, { {668,63},{324,63},{609,63},{663,65} } },
+  { "MALVA",    "ELITE 4",   T_FIRE,     4, { {655,63},{324,63},{609,63},{663,65} } },  // 668 PYROAR: no art
   { "SIEBOLD",  "ELITE 4",   T_WATER,    4, { {693,63},{130,63},{121,63},{689,65} } },
   { "WIKSTROM", "ELITE 4",   T_STEEL,    4, { {707,63},{476,63},{212,63},{681,65} } },
   { "DRASNA",   "ELITE 4",   T_DRAGON,   4, { {691,63},{621,63},{334,63},{715,65} } },
