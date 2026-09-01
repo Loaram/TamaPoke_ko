@@ -1031,6 +1031,29 @@ forever -- evolution is one-way. `eevee_test` proves it both ways: 40 evolutions
 with only Kanto installed all stay in Kanto, AND with every pack it does reach
 past Kanto, so the first check cannot pass by the branch being broken.
 
+### A scratch Pet shares the player's NVS, and used to overwrite it
+
+`Pet` holds a `Preferences` on the single `"tamapoke"` namespace, and the battle
+code builds its opponent as a throwaway:
+
+    Pet foe; foe.dbgHatchAs(dex, false);      // -> hatch() -> save()
+
+`hatch()` ends in `save()`, so **every gym battle wrote the OPPONENT over the
+player's stored creature** -- species, level, IVs, nickname -- and
+`registerSpecies()` added the opponent to their Pokedex on the way past. The
+live `pet` object in RAM was untouched, so nothing looked wrong until the board
+rebooted or was flashed and came up as the foe.
+
+Reported twice from real boards before it was understood: once as "flashed and
+my current mon got replaced with an older one", and once here, where a single
+`BATTLE 95 14` turned a player's creature into a level 1 ONIX.
+
+**The rule is now on `Pet`, not on the call sites**: `save()` returns early
+unless `begin()` was called, so a Pet nobody opened cannot write. Every future
+scratch Pet is covered without anyone having to remember -- and they will not,
+because the same mistake appeared in a throwaway helper written the same day.
+`foesave_test` pins it and fails loudly with the guard removed.
+
 ### Player-wide vs per-creature state
 
 Badges (easy and hard), the avatar, the daily streak, the Pokedex bitmaps and
