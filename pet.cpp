@@ -39,6 +39,7 @@ static void loadBlob(Preferences &p, const char *key, void *dst, size_t n) {
 
 void Pet::begin() {
   prefs.begin("tamapoke", false);
+  opened = true;
   // Zeroed BEFORE the branch below, not inside load(): getBytes() leaves its
   // destination untouched when the key is missing, and the fresh-install path
   // returns without ever calling load(). Without this a begin() after a factory
@@ -1243,6 +1244,11 @@ PetMood Pet::mood() const {
 }
 
 void Pet::save() {
+  // A Pet nobody opened is a scratch object -- the battle's opponent, a test
+  // fixture, anything built to be read and thrown away. It shares the single
+  // NVS namespace with the real creature, so letting it write means it
+  // OVERWRITES the player's pet. See the note on `opened` in pet.h.
+  if (!opened) return;
   ticksSinceSave = 0;
   pendingSave = false;
   prefs.putUChar("full", fullness);

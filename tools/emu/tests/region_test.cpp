@@ -13,6 +13,7 @@
 #include "Arduino.h"
 #include "Preferences.h"
 #include "pet.h"
+#include "sdmon.h"
 #include "party.h"
 #include "noart.h"   // speciesHasArt / NO_ART_COUNT
 #include <cstdio>
@@ -203,6 +204,41 @@ int main(){
     ck(artless == 0, "no egg ever contains a species with no art");
     // and the guard is real: the list is not empty, so this can actually fail
     ck(NO_ART_COUNT > 0, "and there really are art-less species to exclude");
+  }
+
+  // ---- the probes that decide whether a region's pack is installed
+  //
+  // sdScanRegionArt() declares a region present by finding three specific
+  // sprite files. If a probe lands on a species SpriteCollab has no art for,
+  // that file exists in NO pack and the region can never be detected however
+  // completely it was installed. That is not hypothetical: ALOLA's midpoint is
+  // 765 ORANGURU, and a fully installed Alola reported NEEDS PACK on a board.
+  {
+    int badProbe = 0;
+    for (uint8_t r = 0; r < REGION_COUNT; r++) {
+      if (r == REGION_ALL) continue;
+      for (uint8_t i = 0; i < 3; i++) {
+        int16_t d = sdRegionProbe(r, i);
+        if (d < REGIONS[r].lo || d > REGIONS[r].hi) {
+          printf("      %s probe %u = %d, outside the region\n", REGIONS[r].name, i, d);
+          badProbe++;
+        } else if (!speciesHasArt(d)) {
+          printf("      %s probe %u = %d %s has NO ART -- unreachable\n",
+                 REGIONS[r].name, i, d, DEX_TBL[d].name);
+          badProbe++;
+        }
+      }
+    }
+    ck(badProbe == 0, "every region's install probes land on species that are packed");
+    // and it must be able to fail: at least one region has art-less species,
+    // or this check is vacuous
+    int withGaps = 0;
+    for (uint8_t r = 0; r < REGION_COUNT; r++) {
+      if (r == REGION_ALL) continue;
+      for (int16_t d = REGIONS[r].lo; d <= REGIONS[r].hi; d++)
+        if (!speciesHasArt(d)) { withGaps++; break; }
+    }
+    ck(withGaps > 0, "(and some region does have art gaps, so that check bites)");
   }
 
   printf("%s\n", bad?"FAILURES":"all good");

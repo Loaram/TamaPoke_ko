@@ -419,6 +419,21 @@ public:
 
 private:
   Preferences prefs;
+  // A Pet that was never begin()'d MUST NOT WRITE. Nothing enforced that, and
+  // the battle code builds its opponent as a throwaway Pet:
+  //
+  //     Pet foe; foe.dbgHatchAs(dex, false);   // -> hatch() -> save()
+  //
+  // Every Pet shares the one "tamapoke" NVS namespace, so that save() landed on
+  // the PLAYER'S stored creature -- species, IVs, level, the lot -- and
+  // registerSpecies() put the opponent in their Pokedex on the way past. The
+  // live `pet` object in RAM was untouched, so nothing looked wrong until the
+  // board rebooted or was flashed and loaded the FOE as the player's creature.
+  // That is the "flashed and my mon got replaced with an older one" report.
+  //
+  // The rule belongs here rather than at the call sites: every future throwaway
+  // Pet is covered without anyone having to remember.
+  bool opened = false;
   uint32_t lastTick = 0;
   uint32_t eatUntil = 0;
   uint32_t heartUntil = 0;

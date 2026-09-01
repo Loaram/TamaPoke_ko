@@ -1,4 +1,5 @@
 #include "sdmon.h"
+#include "noart.h"
 #include "pin_config.h"
 #include "pet.h"   // gRegionArt, REGIONS -- the mask this narrows
 #include <FS.h>
@@ -136,7 +137,8 @@ void sdScanRegionArt(bool verbose) {
   for (uint8_t r = 0; r < REGION_COUNT; r++) {
     if (r == REGION_ALL) continue;      // derived from the others, never probed
     const RegionInfo &rg = REGIONS[r];
-    const int16_t probe[3] = { rg.lo, (int16_t)((rg.lo + rg.hi) / 2), rg.hi };
+    const int16_t probe[3] = { sdRegionProbe(r, 0), sdRegionProbe(r, 1),
+                               sdRegionProbe(r, 2) };
     bool all = true;
     for (int i = 0; i < 3 && all; i++) {
       char path[28];
