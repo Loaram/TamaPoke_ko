@@ -1,5 +1,7 @@
 # TamaPoke
 
+Current fork: **Loaram/TamaPoke_ko**, based on DylanPDao/TamaPoke, 809 species and seven regions. Read `HANDOFF.ko.md` for current state, cloud links, validation evidence, and hardware test status. `HANDOVER.md` is historical upstream context.
+
 Gen-1-Pokémon tamagotchi firmware for the **Waveshare ESP32-S3-Touch-AMOLED-1.75**.
 Arduino/C++ firmware + a Python asset pipeline + a browser-based flasher.
 Personal, non-commercial fan project. Code MIT; sprites CC BY-NC (PMD SpriteCollab).
@@ -8,12 +10,13 @@ Personal, non-commercial fan project. Code MIT; sprites CC BY-NC (PMD SpriteColl
 
 | Path | What |
 |---|---|
-| `TamaPoke.ino` | Main sketch (~2.3k LOC): UI, screens, touch, serial console, `FW_VERSION` |
+| `TamaPoke.ino` | Main sketch: UI, screens, touch, serial console, `FW_VERSION` |
 | `pet.cpp/.h` | Game state machine: stats, tick, evolution, eggs, save/load, balance constants |
-| `species.h` / `dex.h` | The 151: names, typings, evolution chains, base stats, rarity tiers, favourite berry |
+| `species.h` / `dex.h` | Canonical species data: names, typings, evolution chains, base stats, rarity tiers, favourite berry; 809 species in this fork |
 | `types.h` | Type-effectiveness helpers over the generated 18x18 chart in `dex.h` |
 | `party.cpp/.h` | The 6 retired pets banked by farewell/release (not runaway) |
-| `i18n.cpp/.h` | 6-language string table (ES/EN/FR/DE/IT/PT) |
+| `i18n.cpp/.h` | 7-language string table (ES/EN/FR/DE/IT/PT/KO); existing indices retained |
+| `korean_text.h` / `korean_font.h` / `korean_names.h` | Shared UTF-8 renderer, generated glyph subset and display-name lookup |
 | `audio.cpp/.h` | ES8311 codec over I2S |
 | `rtcbat.cpp/.h` | PCF85063 RTC + AXP2101 battery/PMU/PWR button |
 | `sdmon.cpp/.h` | SD sprite streaming + USB `PUT` file transfer |
@@ -29,7 +32,7 @@ FQBN="esp32:esp32:esp32s3:CDCOnBoot=cdc,FlashSize=16M,PSRAM=opi,PartitionScheme=
 arduino-cli compile --fqbn "$FQBN" .
 arduino-cli upload -p /dev/cu.usbmodemXXXX --fqbn "$FQBN" .
 
-bash tools/build_web.sh   # recompiles, writes the 4 parts, bumps the manifest, repacks every region
+bash tools/build_web.sh   # checks Korean text, rebuilds the 4 parts and manifest, keeps existing regional packs
 ```
 
 **PSRAM (OPI) is mandatory** — the 466×466×16-bit framebuffer is ~434 KB and lives there.
@@ -37,13 +40,14 @@ Wrong partition scheme (no FAT) or PSRAM off = it builds and then fails on hardw
 
 ## Hard rules
 
-**No accents, ñ, or non-ASCII in any firmware string.** The bitmap font has no glyphs
-for them. This applies to *all six* languages — French, German, Portuguese and Spanish
-strings in `i18n.cpp` are deliberately written unaccented ("Esta", "bano", "Pokedex").
-Adding a proper "é" silently renders as garbage on the panel.
+**All displayed Unicode must have generated glyph coverage.** The Korean fork uses
+`KoreanCanvas` in `korean_text.h`; ASCII retains the original font and Unicode uses
+`korean_font.h`. After changing display strings, run `tools/gen_korean_font.py` and
+`tools/check_korean.py`. Display-name changes also require `tools/gen_korean_names.py`.
+Keep canonical IDs and fixed-size save/radio records separate from translated labels.
 
 **Adding a UI string is a two-file, order-sensitive edit.** Append the `StrId` to the
-enum in `i18n.h`, then add the translation at the *same index* in all 6 rows of
+enum in `i18n.h`, then add the translation at the *same index* in all 7 rows of
 `STRINGS[LANG_COUNT][STR_COUNT]` in `i18n.cpp`. The table is positional — a missing
 entry in one language shifts every string after it in that language.
 
@@ -60,8 +64,9 @@ match the surrounding Spanish: any comment you write or edit goes in English, ev
 in a file that is Spanish everywhere else. Never rewrite a Spanish comment purely to
 translate it — only when you are already changing that code for another reason.
 
-The default *UI* language is English (`LANG_DEFAULT LANG_EN`); UI strings live in
-`i18n.cpp` and are a separate matter from source comments.
+The default *UI* language for a new save is Korean (`LANG_DEFAULT LANG_KO`); existing
+saved language choices are preserved. UI strings live in `i18n.cpp` and are a
+separate matter from source comments.
 
 ## Traps that have caught us more than once
 

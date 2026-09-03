@@ -1,5 +1,7 @@
 # TamaPoke — where things stand
 
+> Historical upstream record. For Loaram's current Korean fork, read [HANDOFF.ko.md](HANDOFF.ko.md). Board versions, save backups, and creature details below describe the upstream maintainer's earlier environment, not the current user's hardware.
+
 Written 2026-08-20, updated through 2026-08-23, so work can resume after a restart.
 Read this with `CLAUDE.md`; this file is the *current* state, that one is the
 permanent knowledge.

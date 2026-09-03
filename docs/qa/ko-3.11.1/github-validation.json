@@ -1,0 +1,164 @@
+{
+  "conclusion": "success",
+  "headSha": "af410d08fd8c470e9f57043ce1839e40946710f4",
+  "jobs": [
+    {
+      "completedAt": "2026-09-03T03:00:43Z",
+      "conclusion": "success",
+      "databaseId": 100505769283,
+      "name": "checks",
+      "startedAt": "2026-09-03T02:56:23Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-03T02:56:25Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-03T02:56:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:56:40Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-09-03T02:56:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:56:40Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@v5",
+          "number": 3,
+          "startedAt": "2026-09-03T02:56:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:56:43Z",
+          "conclusion": "success",
+          "name": "Run pip install Pillow fonttools",
+          "number": 4,
+          "startedAt": "2026-09-03T02:56:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:56:43Z",
+          "conclusion": "success",
+          "name": "Run python tools/check_korean.py",
+          "number": 5,
+          "startedAt": "2026-09-03T02:56:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:56:44Z",
+          "conclusion": "success",
+          "name": "Run python tools/check_web.py",
+          "number": 6,
+          "startedAt": "2026-09-03T02:56:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:56:46Z",
+          "conclusion": "success",
+          "name": "Run node tools/tests/installer.test.cjs",
+          "number": 7,
+          "startedAt": "2026-09-03T02:56:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:57:05Z",
+          "conclusion": "success",
+          "name": "Run sudo apt-get update && sudo apt-get install -y libsdl2-dev",
+          "number": 8,
+          "startedAt": "2026-09-03T02:56:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:57:19Z",
+          "conclusion": "success",
+          "name": "Run python tools/build_emulator.py",
+          "number": 9,
+          "startedAt": "2026-09-03T02:57:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:57:42Z",
+          "conclusion": "success",
+          "name": "Run python tools/test_runtime.py",
+          "number": 10,
+          "startedAt": "2026-09-03T02:57:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:57:43Z",
+          "conclusion": "success",
+          "name": "Run arduino/setup-arduino-cli@v2",
+          "number": 11,
+          "startedAt": "2026-09-03T02:57:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:57:47Z",
+          "conclusion": "success",
+          "name": "Run arduino-cli core update-index --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json",
+          "number": 12,
+          "startedAt": "2026-09-03T02:57:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:58:32Z",
+          "conclusion": "success",
+          "name": "Run arduino-cli core install esp32:esp32@3.3.8 --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json",
+          "number": 13,
+          "startedAt": "2026-09-03T02:57:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T02:58:35Z",
+          "conclusion": "success",
+          "name": "Run arduino-cli lib install \"GFX Library for Arduino@1.6.7\" \"SensorLib@0.4.1\" \"XPowersLib@0.3.3\"",
+          "number": 14,
+          "startedAt": "2026-09-03T02:58:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T03:00:40Z",
+          "conclusion": "success",
+          "name": "Run python tools/build_firmware.py --out build/ci",
+          "number": 15,
+          "startedAt": "2026-09-03T02:58:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T03:00:40Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@v5",
+          "number": 29,
+          "startedAt": "2026-09-03T03:00:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T03:00:41Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 30,
+          "startedAt": "2026-09-03T03:00:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-03T03:00:41Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 31,
+          "startedAt": "2026-09-03T03:00:41Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/Loaram/TamaPoke_ko/actions/runs/33709498914/job/100505769283"
+    }
+  ],
+  "startedAt": "2026-09-03T02:56:19Z",
+  "updatedAt": "2026-09-03T03:00:44Z",
+  "url": "https://github.com/Loaram/TamaPoke_ko/actions/runs/33709498914"
+}

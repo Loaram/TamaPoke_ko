@@ -1,5 +1,7 @@
 # TamaPoke 한국어판
 
+**[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
+
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. 원작은 Quique Tortosa의 [socquique/TamaPoke](https://github.com/socquique/TamaPoke)이며, [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
 
 ## 설치
