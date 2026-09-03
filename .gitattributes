@@ -12,3 +12,6 @@
 *.pak binary
 *.ttf binary
 *.png binary
+docs/qa/**/*.md text eol=lf
+docs/qa/**/*.log text eol=lf
+docs/qa/**/*.txt text eol=lf
