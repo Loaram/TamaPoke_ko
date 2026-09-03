@@ -58,7 +58,7 @@ int main(){
   // --- a young creature can be retired, and it really is banked
   {
     Pet p; Party q; p.begin(); q.begin();
-    young(p, 4, 21);                        // a Charmeleon, nowhere near 3 days
+    young(p, 4, 21);                        // a Charmeleon, nowhere near 2 days
     ck(!p.canFarewellNow(), "a young creature is not offered a farewell");
     ck(p.canRetireNow(), "but it can be retired on demand");
     ck(!p.retireIsFree(), "and the game says that costs something");

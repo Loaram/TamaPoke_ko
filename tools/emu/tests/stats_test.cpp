@@ -33,12 +33,12 @@ int main() {
   p.ivAtk = p.ivDef = p.ivSpe = p.ivHp = 31;
   p.trAtk = p.trDef = p.trSpe = 0;
 
-  // --- level cap. 3 days = 97 (first farewell offer), 3d2h15m = 100, and the
+  // --- level cap. 2 days = 73 (first farewell offer), 2d18h = 100, and the
   // RTC's two-week catch-up must never wrap the uint8_t level.
-  p.ageMinutes = 3UL * 24 * 60;
-  ck(p.level() == 97, "3 days -> level 97");
-  p.ageMinutes = 99UL * MINUTES_PER_LEVEL;   // 3d 2h 15m
-  ck(p.level() == 100, "3d2h15m -> level 100");
+  p.ageMinutes = 2UL * 24 * 60;
+  ck(p.level() == 73, "2 days -> level 73");
+  p.ageMinutes = 99UL * MINUTES_PER_LEVEL;   // 2d 18h
+  ck(p.level() == 100, "2d18h -> level 100");
   p.ageMinutes = 14UL * 24 * 60;             // max RTC offline catch-up
   printf("     two-week catch-up: level=%u (unclamped would exceed uint8_t)\n", p.level());
   ck(p.level() == 100, "two-week catch-up clamps instead of wrapping");

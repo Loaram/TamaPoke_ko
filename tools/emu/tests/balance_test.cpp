@@ -1,4 +1,4 @@
-// Pins the ko.1.0.2 growth and sleep balance against the real Pet code.
+// Pins the ko.1.0.3 growth, farewell and sleep balance against the real Pet code.
 // Sleep recovery has separate live and offline paths, so both must agree.
 #include "Arduino.h"
 #include "Preferences.h"
@@ -33,15 +33,24 @@ static void hatch(Pet &p) {
 int main() {
   Pet growth;
   hatch(growth);
-  growth.ageMinutes = 44;
-  ck(growth.level() == 1, "44 minutes remains level 1");
-  growth.ageMinutes = 45;
-  ck(growth.level() == 2, "45 minutes reaches level 2");
-  growth.ageMinutes = 99UL * 45;
-  ck(growth.level() == 100, "3d 2h 15m reaches level 100");
+  growth.ageMinutes = 39;
+  ck(growth.level() == 1, "39 minutes remains level 1");
+  growth.ageMinutes = 40;
+  ck(growth.level() == 2, "40 minutes reaches level 2");
+  growth.ageMinutes = 99UL * 40;
+  ck(growth.level() == 100, "2d 18h reaches level 100");
   growth.ageMinutes = 14UL * 24 * 60;
   ck(growth.level() == 100, "level still caps at 100");
-  ck(EVO_PENALTY_LEVELS == 32, "early-retire evolution debt remains one day");
+  ck(EVO_PENALTY_LEVELS == 36, "early-retire evolution debt remains one day");
+
+  Pet farewell;
+  farewell.begin();
+  farewell.dbgHatchAs(6, false);      // Charizard is a final form.
+  farewell.ageMinutes = FAREWELL_AGE_MIN - 1;
+  ck(!farewell.canFarewellNow(), "farewell is unavailable one minute before two days");
+  farewell.ageMinutes = FAREWELL_AGE_MIN;
+  ck(farewell.level() == 73, "two days reaches level 73");
+  ck(farewell.canFarewellNow(), "farewell is offered at two days");
 
   Pet live;
   hatch(live);

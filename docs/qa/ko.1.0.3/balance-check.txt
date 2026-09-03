@@ -1,0 +1,12 @@
+PASS  39 minutes remains level 1
+PASS  40 minutes reaches level 2
+PASS  2d 18h reaches level 100
+PASS  level still caps at 100
+PASS  early-retire evolution debt remains one day
+PASS  farewell is unavailable one minute before two days
+PASS  two days reaches level 73
+PASS  farewell is offered at two days
+PASS  live sleep restores 10 energy per minute
+offline: 2 min aplicados (nv.1)
+PASS  offline sleep restores 10 energy per minute
+all good

@@ -6,7 +6,7 @@
 [![Flash in browser](https://img.shields.io/badge/flash-in%20browser-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 [![MakerWorld](https://img.shields.io/badge/MakerWorld-3D%20case-00AE42?logo=bambulab&logoColor=white)](https://makerworld.com/es/models/2937822-tamapoke-a-pokemon-pokeball-tamagotchi)
 ![Board](https://img.shields.io/badge/board-ESP32--S3%20round%20AMOLED-E7352C?logo=espressif&logoColor=white)
-![Firmware](https://img.shields.io/badge/firmware-ko.1.0.2-8A2BE2)
+![Firmware](https://img.shields.io/badge/firmware-ko.1.0.3-8A2BE2)
 ![Code](https://img.shields.io/badge/code-MIT-blue)
 ![Languages](https://img.shields.io/badge/languages-7-FFCB05)
 [![Stars](https://img.shields.io/github/stars/DylanPDao/TamaPoke?style=flat&logo=github&color=yellow)](https://github.com/DylanPDao/TamaPoke/stargazers)
@@ -120,11 +120,11 @@ test. See **Roadmap**.
 A quick reference to how the game really works (values straight from the code).
 
 ### Time & leveling
-- **1 real minute = 1 in-game minute.** Your Pokémon gains **+1 level every 45 minutes**
+- **1 real minute = 1 in-game minute.** Your Pokémon gains **+1 level every 40 minutes**
   of real time. Leveling is purely time-based — caring well doesn't speed it up,
   but neglect *delays evolution*.
-- **Level caps at 100**, reached at 3 days 2 hours 15 minutes. Farewell is only *offered* at
-  3 days (level 97) — **not a deadline**: your Pokémon is still growing, and
+- **Level caps at 100**, reached at 2 days 18 hours. Farewell is only *offered* at
+  2 days (level 73) — **not a deadline**: your Pokémon is still growing, and
   declining it to reach 100 is a real choice. Declining re-offers a day later.
 - It keeps **aging while powered off** (the RTC runs), catching up to **2 weeks** max.
 
@@ -233,7 +233,7 @@ brings ELECTIVIRE, MAGMORTAR and RHYPERIOR waiting on exactly the same thing.
 - *(Gym battles, which is what the party is for: on the roadmap.)*
 
 ### The three endings (you choose & witness each — none auto-fire)
-- 💛 **Farewell** — when it's a **final form** that has lived **3 days**. A button
+- 💛 **Farewell** — when it's a **final form** that has lived **2 days**. A button
   appears; triggering it **blesses your next egg**. You can **postpone** ("stay
   together", re-offered in a day). The good ending.
 - 💔 **Run-away** — if you let **all four stats sit at 0 for a full hour**. A single
@@ -276,12 +276,12 @@ the games: **they cap training.**
 
 | | Effect |
 |---|---|
-| Innate bonus | up to **+30** at level 97 (first farewell offer) |
+| Innate bonus | up to **+22** at level 73 (first farewell offer) |
 | Training ceiling | `70 + (30 × IV)/31` → **77** at IV 8, **100** at IV 31 |
 | Total spread | ~**40 points**, about **15 %** between a great and a poor individual |
 
 - **Rolls are 8–31, never 0.** In the real games a 0 IV is survivable because you can
-  breed hundreds of eggs; here a pet lives 3 days, so a dud would just be a punishment.
+  breed hundreds of eggs; here a pet lives 2 days, so a dud would just be a punishment.
 - **Streak + bond bias the roll upward** (up to +7) — using the *previous* pet's care
   score. Raising one well genuinely improves the next.
 - **Legendaries hatch with 3 of 4 IVs perfect**, exactly as they're guaranteed 3
@@ -302,7 +302,7 @@ table. A **level 1 Squirtle opened with SURF and BLIZZARD and could beat Brock.*
 
 One number rather than a curve: the first five leaders sit at **14–43**, so you
 fight the early ladder on what your species actually learns, and TMs arrive as you
-enter the back half. Farewell is first offered at 97 and level caps at 100.
+enter the back half. Farewell is first offered at 73 and level caps at 100.
 
 That only works because the move table now carries the **cheap early attacks** —
 SCRATCH, PECK, POISON STING, BUBBLE, ABSORB, SPARK, FURY ATTACK and the rest. Before
@@ -329,7 +329,7 @@ retire, check the egg, and retire again, farming blessed rolls at no real cost.
 Giving the creature up is the price now, and the confirm dialog spells out both
 halves before you accept.
 
-The penalty is `EVO_PENALTY_LEVELS` (32 at `MINUTES_PER_LEVEL 45`) added to
+The penalty is `EVO_PENALTY_LEVELS` (36 at `MINUTES_PER_LEVEL 40`) added to
 every evolution threshold, the same sum `careMistakes` moves. It lands on the
 creature that hatches next, is spent by hatching it, and does **not** compound:
 three early retires in a row still cost one day. The creature's card says
@@ -488,7 +488,7 @@ witness it), each opening a two-option dialog:
 
 - **Evolution** (red button): *Evolve* (epic animation: halo, rays, sparkles and
   a **flicker between the old and new form**) or *Keep form* (re-offered next level).
-- **Farewell** (gold button, final form + 3 days): *Say goodbye* (warm farewell,
+- **Farewell** (gold button, final form + 2 days): *Say goodbye* (warm farewell,
   rising hearts → new egg) or *Stay together* (keep your companion; re-offered in
   a day). Tension: a maxed-out friend vs. completing the Pokédex.
 - **Runaway** (dark button, total neglect for 1 h): a somber "feels abandoned"
@@ -626,8 +626,8 @@ always pays off.
 
 ## Life cycle, eggs by rarity, languages
 
-The life cycle lasts **3 days** of play. Three endings (all leave a new egg):
-**farewell** (final form + 3 days), **release** (long press), **runaway** (all 4
+The life cycle lasts **2 days** of play. Three endings (all leave a new egg):
+**farewell** (final form + 2 days), **release** (long press), **runaway** (all 4
 bars at zero for 1 h). Each bred species is recorded in the **bred Pokédex**
 (normal and shiny separately).
 

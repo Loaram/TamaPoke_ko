@@ -611,8 +611,8 @@ source of truth, so `level()` needs no special case. Offered ONLY while an egg
 is waiting -- otherwise it would silently destroy whatever creature is alive,
 and the button says why when it is greyed.
 
-Note for anyone reading the farewell timing: 3 days is when it is first OFFERED
-(level 97), not when the creature is finished -- 100 comes at 3d 2h 15m, and
+Note for anyone reading the farewell timing: 2 days is when it is first OFFERED
+(level 73), not when the creature is finished -- 100 comes at 2d 18h, and
 declining re-offers a day later.
 
 **B2. Multi-region, once the Gen 2/3 expansion is untabled.** These four hang
@@ -1154,8 +1154,8 @@ real movesets. Needs a trainer roster table (~13 trainers x 3-6 mons: species,
 level, moves, IVs) and two AI tiers — easy picks naively, hard reads
 `typeEffPct()`, STAB, stat stages and available KOs.
 
-Level anchor for balancing the ladder: `MINUTES_PER_LEVEL 45` and farewell at
-3 days means a fully-raised pet first gets the offer at **level 97**. Pets banked earlier are
+Level anchor for balancing the ladder: `MINUTES_PER_LEVEL 40` and farewell at
+2 days means a fully-raised pet first gets the offer at **level 73**. Pets banked earlier are
 weaker, so team strength reflects how long each one was raised.
 
 - **The player picks the battle team.** Pool = the live pet plus the 6 banked;
@@ -1169,8 +1169,8 @@ weaker, so team strength reflects how long each one was raised.
   written before both ladders were level-capped; once they were, nothing stopped
   you opening on Lance and simply losing, which reads as a dead end rather than
   a challenge. Attrition still does the work WITHIN a fight.
-- **Level caps at 100** (`MAX_LEVEL`), reached at 3d 2h 15m.
-  `MINUTES_PER_LEVEL` is 45 in the ko.1.0.2 balance patch.
+- **Level caps at 100** (`MAX_LEVEL`), reached at 2d 18h.
+  `MINUTES_PER_LEVEL` is 40 in the ko.1.0.3 balance patch.
 
 Phase 1 turned out to be **already done**: `dex.h` has had `bSpA`/`bSpD` for all
 151 all along. Only the accessors were missing (`Pet::spaStat/spdStat`,
