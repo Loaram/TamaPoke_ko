@@ -32,7 +32,7 @@ int main(){
   {
     Pet p; p.begin();
     p.dbgHatchAs(6, false);              // CHARIZARD
-    p.ageMinutes = 60UL*72;              // level 73
+    p.ageMinutes = 72UL*MINUTES_PER_LEVEL; // level 73
     p.ivAtk=30; p.ivDef=29; p.ivSpe=28; p.ivHp=27;
     p.rename("REAL");
     p.saveNow();
@@ -42,7 +42,7 @@ int main(){
     Pet foe;
     foe.dbgHatchAs(95, false);           // ONIX, as Brock brings
     foe.ivAtk = foe.ivDef = foe.ivSpe = foe.ivHp = 16;
-    foe.ageMinutes = 60UL*13;
+    foe.ageMinutes = 13UL*MINUTES_PER_LEVEL;
     foe.relearnFromLevel();
   }
   // reboot: what does the board come up with?
@@ -58,7 +58,7 @@ int main(){
   // and the guard must not break a real save
   {
     Pet p; p.begin();
-    p.ageMinutes = 60UL*80;
+    p.ageMinutes = 80UL*MINUTES_PER_LEVEL;
     p.saveNow();
     Pet q; q.begin();
     ck(q.level() == 81, "an OPENED pet still saves normally (the guard is not too wide)");

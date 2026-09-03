@@ -6,7 +6,7 @@
 [![Flash in browser](https://img.shields.io/badge/flash-in%20browser-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 [![MakerWorld](https://img.shields.io/badge/MakerWorld-3D%20case-00AE42?logo=bambulab&logoColor=white)](https://makerworld.com/es/models/2937822-tamapoke-a-pokemon-pokeball-tamagotchi)
 ![Board](https://img.shields.io/badge/board-ESP32--S3%20round%20AMOLED-E7352C?logo=espressif&logoColor=white)
-![Firmware](https://img.shields.io/badge/firmware-ko.1.0.1-8A2BE2)
+![Firmware](https://img.shields.io/badge/firmware-ko.1.0.2-8A2BE2)
 ![Code](https://img.shields.io/badge/code-MIT-blue)
 ![Languages](https://img.shields.io/badge/languages-7-FFCB05)
 [![Stars](https://img.shields.io/github/stars/DylanPDao/TamaPoke?style=flat&logo=github&color=yellow)](https://github.com/DylanPDao/TamaPoke/stargazers)
@@ -120,11 +120,11 @@ test. See **Roadmap**.
 A quick reference to how the game really works (values straight from the code).
 
 ### Time & leveling
-- **1 real minute = 1 in-game minute.** Your Pokémon gains **+1 level every hour**
+- **1 real minute = 1 in-game minute.** Your Pokémon gains **+1 level every 45 minutes**
   of real time. Leveling is purely time-based — caring well doesn't speed it up,
   but neglect *delays evolution*.
-- **Level caps at 100**, reached at 4 days 3 hours. Farewell is only *offered* at
-  3 days (level 73) — **not a deadline**: your Pokémon is still growing, and
+- **Level caps at 100**, reached at 3 days 2 hours 15 minutes. Farewell is only *offered* at
+  3 days (level 97) — **not a deadline**: your Pokémon is still growing, and
   declining it to reach 100 is a real choice. Declining re-offers a day later.
 - It keeps **aging while powered off** (the RTC runs), catching up to **2 weeks** max.
 
@@ -138,6 +138,9 @@ While **awake**, per minute:
 | ENE | −1 | −1 extra if overweight (weight > 50 → sluggish) |
 | HYG | −1 | **−4 more per poop** on screen (max 3 poops) |
 | JOY | −1 | **−2 extra** if FOOD < 30, **−2 extra** if HYG < 30 |
+
+While **sleeping**, energy recovers by **+10 per minute**. Food and joy drain
+more slowly and have a floor; hygiene also drains more slowly.
 
 - ~**15 %/min** chance to poop (only if FOOD > 40). Poops tank hygiene fast.
 - **Care slip-up** = letting any stat hit **≤ 10** (60-min cooldown so it counts once).
@@ -273,7 +276,7 @@ the games: **they cap training.**
 
 | | Effect |
 |---|---|
-| Innate bonus | up to **+22** at level 73 (end of a normal life) |
+| Innate bonus | up to **+30** at level 97 (first farewell offer) |
 | Training ceiling | `70 + (30 × IV)/31` → **77** at IV 8, **100** at IV 31 |
 | Total spread | ~**40 points**, about **15 %** between a great and a poor individual |
 
@@ -299,7 +302,7 @@ table. A **level 1 Squirtle opened with SURF and BLIZZARD and could beat Brock.*
 
 One number rather than a curve: the first five leaders sit at **14–43**, so you
 fight the early ladder on what your species actually learns, and TMs arrive as you
-enter the back half. A creature retires at 73 and caps at 100.
+enter the back half. Farewell is first offered at 97 and level caps at 100.
 
 That only works because the move table now carries the **cheap early attacks** —
 SCRATCH, PECK, POISON STING, BUBBLE, ABSORB, SPARK, FURY ATTACK and the rest. Before
@@ -326,7 +329,7 @@ retire, check the egg, and retire again, farming blessed rolls at no real cost.
 Giving the creature up is the price now, and the confirm dialog spells out both
 halves before you accept.
 
-The penalty is `EVO_PENALTY_LEVELS` (24 at `MINUTES_PER_LEVEL 60`) added to
+The penalty is `EVO_PENALTY_LEVELS` (32 at `MINUTES_PER_LEVEL 45`) added to
 every evolution threshold, the same sum `careMistakes` moves. It lands on the
 creature that hatches next, is spent by hatching it, and does **not** compound:
 three early retires in a row still cost one day. The creature's card says

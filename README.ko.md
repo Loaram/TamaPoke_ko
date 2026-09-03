@@ -4,7 +4,7 @@
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. 원작은 Quique Tortosa의 [socquique/TamaPoke](https://github.com/socquique/TamaPoke)이며, [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
 
-현재 배포 버전은 **ko.1.0.1**입니다. 확인창의 제목·안내문·버튼이 겹치던 문제를 수정했습니다.
+현재 배포 버전은 **ko.1.0.2**입니다. 45분마다 1레벨이 오르고, 수면 중 활력이 분당 10 회복됩니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
 

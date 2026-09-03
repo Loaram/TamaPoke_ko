@@ -33,20 +33,20 @@ int main() {
   p.ivAtk = p.ivDef = p.ivSpe = p.ivHp = 31;
   p.trAtk = p.trDef = p.trSpe = 0;
 
-  // --- level cap. 3 days = 73 (first farewell offer), 4d3h = 100, and the
-  // RTC's two-week catch-up used to compute 337 and wrap to 81.
+  // --- level cap. 3 days = 97 (first farewell offer), 3d2h15m = 100, and the
+  // RTC's two-week catch-up must never wrap the uint8_t level.
   p.ageMinutes = 3UL * 24 * 60;
-  ck(p.level() == 73, "3 days -> level 73");
-  p.ageMinutes = 5940;                       // 4d 3h
-  ck(p.level() == 100, "4d3h -> level 100");
+  ck(p.level() == 97, "3 days -> level 97");
+  p.ageMinutes = 99UL * MINUTES_PER_LEVEL;   // 3d 2h 15m
+  ck(p.level() == 100, "3d2h15m -> level 100");
   p.ageMinutes = 14UL * 24 * 60;             // max RTC offline catch-up
-  printf("     two-week catch-up: level=%u (unclamped would be 337 -> wraps to 81)\n", p.level());
+  printf("     two-week catch-up: level=%u (unclamped would exceed uint8_t)\n", p.level());
   ck(p.level() == 100, "two-week catch-up clamps instead of wrapping");
   p.ageMinutes = 60UL * 24 * 60;             // absurd, far past any wrap point
   ck(p.level() == 100, "60 days still clamps");
 
   // --- special split: Alakazam must hit far harder specially than physically.
-  p.ageMinutes = 5940;
+  p.ageMinutes = 99UL * MINUTES_PER_LEVEL;
   uint16_t atk = p.atkStat(), spa = p.spaStat();
   printf("     Alakazam L%u: atk=%u spa=%u (base 50 vs 135)\n", p.level(), atk, spa);
   ck(spa > atk, "Alakazam spaStat beats atkStat");
@@ -55,7 +55,7 @@ int main() {
   m.dbgHatchAs(68, false);      // Machamp: bAtk 130, bSpA 65
   m.ivAtk = m.ivDef = m.ivSpe = m.ivHp = 31;
   m.trAtk = m.trDef = m.trSpe = 0;
-  m.ageMinutes = 5940;
+  m.ageMinutes = 99UL * MINUTES_PER_LEVEL;
   printf("     Machamp  L%u: atk=%u spa=%u (base 130 vs 65)\n",
          m.level(), m.atkStat(), m.spaStat());
   ck(m.atkStat() > m.spaStat(), "Machamp atkStat beats spaStat");

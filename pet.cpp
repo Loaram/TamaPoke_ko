@@ -123,7 +123,7 @@ void Pet::syncClock(uint32_t nowEpoch) {
       continue;
     }
     if (sleeping) {  // descanso: baja lento y con suelo, igual que en vivo
-      energy = clamp100(energy + 6);
+      energy = clamp100(energy + 10);
       if (ageMinutes % 2 == 0) {
         fullness = dropTo(fullness, 1, 30);
         joy = dropTo(joy, 1, 35);
@@ -182,7 +182,7 @@ void Pet::tick() {
   // cero, sin descuidos ni escapadas). despierto: comida -2/min, hig/joy -1/min.
   // El peso aun se quema y el descanso cuenta para la DEF (ver defTick).
   if (sleeping) {
-    energy = clamp100(energy + 6);
+    energy = clamp100(energy + 10);
     if (weight > 0 && ageMinutes % 3 == 0) weight--;
     if (ageMinutes % 2 == 0) {                 // ~4x mas lento que despierto
       fullness = dropTo(fullness, 1, 30);

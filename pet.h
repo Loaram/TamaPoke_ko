@@ -8,10 +8,10 @@
 // 1 tick = 1 minuto de juego. Baja este valor para probar mas rapido
 // (p. ej. 5000UL = las estadisticas caen 12x mas rapido).
 #define PET_TICK_MS 60000UL
-// Minutos de juego por nivel. Con 60, CHARMANDER evoluciona a las ~16 h
+// Minutos de juego por nivel. Con 45, CHARMANDER evoluciona a las ~12 h
 // de juego con cuidado perfecto. Baja a 1 para ver evoluciones al momento.
-#define MINUTES_PER_LEVEL 60
-#define MAX_LEVEL 100              // reached at 4d 3h; see level()
+#define MINUTES_PER_LEVEL 45
+#define MAX_LEVEL 100              // reached at 3d 2h 15m; see level()
 #define EAT_ANIM_MS 2500UL
 #define HEART_MS 1500UL
 #define EVOLVE_ANIM_MS 5200UL              // animacion de evolucion (mas larga = mas epica)
@@ -354,10 +354,10 @@ public:
     hatch();
   }
   // Capped at 100, the series' own ceiling. The cap is not cosmetic: ageMinutes
-  // is never clamped, so without it 1 + ageMinutes/60 overflows this uint8_t
-  // past ~10.6 days -- and the RTC catches up to 2 weeks offline, which lands on
-  // level 337 and wraps to 81. Reached at 4d 3h; farewell is merely *offered* at
-  // 3 days (level 73), so declining it to raise a stronger battler is a real
+  // is never clamped, so without it 1 + ageMinutes/45 overflows this uint8_t
+  // past ~8 days -- and the RTC catches up to 2 weeks offline, which would wrap.
+  // Reached at 3d 2h 15m; farewell is merely *offered* at 3 days (level 97),
+  // so declining it to reach the cap is still a real
   // choice rather than an accident.
   uint8_t level() const {
     uint32_t l = 1 + ageMinutes / MINUTES_PER_LEVEL;
