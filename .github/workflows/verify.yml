@@ -20,4 +20,3 @@ jobs:
       - run: arduino-cli lib install "GFX Library for Arduino@1.6.7" "SensorLib@0.4.1" "XPowersLib@0.3.3"
       - run: python tools/build_firmware.py --out build/ci
 
-
