@@ -1,3 +1,5 @@
+> **한국어판 안내:** [README.ko.md](README.ko.md) — DylanPDao 포크 기반 한국어 UI·이름·설치 페이지.
+
 # TamaPoke
 
 [![Flash in browser](https://img.shields.io/badge/flash-in%20browser-FF6B00?logo=googlechrome&logoColor=white)](https://dylanpdao.github.io/TamaPoke/web/)

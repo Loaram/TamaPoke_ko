@@ -1,0 +1,23 @@
+name: Verify Korean edition
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install Pillow fonttools
+      - run: python tools/check_korean.py
+      - run: python tools/check_web.py
+      - run: node tools/tests/installer.test.cjs
+      - run: sudo apt-get update && sudo apt-get install -y libsdl2-dev
+      - run: python tools/build_emulator.py
+      - run: python tools/test_runtime.py
+      - uses: arduino/setup-arduino-cli@v2
+      - run: arduino-cli core update-index --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+      - run: arduino-cli core install esp32:esp32@3.3.8 --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+      - run: arduino-cli lib install "GFX Library for Arduino@1.6.7" "SensorLib@0.4.1" "XPowersLib@0.3.3"
+      - run: python tools/build_firmware.py --out build/ci
+
+

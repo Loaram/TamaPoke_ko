@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "dex.h"
+#include "i18n.h"
 
 // Type effectiveness helpers. The chart itself (TYPE_FX) and the PkType enum
 // are generated into dex.h by tools/gen_dex.py from tools/dex_types.py.
@@ -38,7 +39,7 @@ static inline const char *typeName(uint8_t t) {
     "POISON", "GROUND", "FLYING", "PSYCHIC", "BUG", "ROCK", "GHOST",
     "DRAGON", "DARK", "STEEL", "FAIRY",
   };
-  return (t < TYPE_COUNT) ? N[t] : "?";
+  return (t < TYPE_COUNT) ? localName(N[t]) : "?";
 }
 
 // One colour per type, for the chips on move rows and the battle grid. The move

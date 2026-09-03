@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+"""Run focused existing firmware regressions and the Korean renderer test."""
+import argparse,os,subprocess
+from pathlib import Path
+R=Path(__file__).resolve().parents[1];E=R/'tools/emu'
+p=argparse.ArgumentParser();p.add_argument('--cxx',default='g++');a=p.parse_args()
+out=R/'build/runtime-tests';out.mkdir(parents=True,exist_ok=True)
+env=os.environ.copy();env['PATH']=str(Path(a.cxx).resolve().parent)+os.pathsep+env.get('PATH','')
+core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp']]
+for test in ['korean','i18n','label','save','upgrade','link']:
+    exe=out/(test+('.exe' if os.name=='nt' else ''))
+    src=[str(E/'tests'/f'{test}_test.cpp'),*core]
+    if test in ('korean','label'):src.append(str(E/'font.cpp'))
+    subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),*src,'-o',str(exe)],env=env,check=True)
+    subprocess.run([str(exe)],cwd=out,env=env,check=True)
+print('PASS: Korean/i18n/label/save/upgrade/link runtime suites')

@@ -21,7 +21,7 @@ void sfxPlay(uint8_t) {}
 #include <cstring>
 
 // STRINGS is file-static, so go through the same accessor the firmware uses.
-static const char *LANG[] = { "ES", "EN", "FR", "DE", "IT", "PT" };
+static const char *LANG[] = { "ES", "EN", "FR", "DE", "IT", "PT", "KO" };
 
 int main() {
   int bad = 0;
@@ -31,7 +31,7 @@ int main() {
       const char *v = T((StrId)s);
       if (!v) { printf("NULL  %s index %d\n", LANG[l], s); bad++; continue; }
       for (const unsigned char *p = (const unsigned char *)v; *p; p++)
-        if (*p > 0x7F) { printf("NON-ASCII  %s index %d: \"%s\"\n", LANG[l], s, v); bad++; break; }
+        if (l != LANG_KO && *p > 0x7F) { printf("NON-ASCII  %s index %d: \"%s\"\n", LANG[l], s, v); bad++; break; }
     }
   printf("%s: %d languages x %d strings\n", bad ? "FAIL" : "PASS", LANG_COUNT, STR_COUNT);
   return bad ? 1 : 0;

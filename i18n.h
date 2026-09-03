@@ -1,10 +1,9 @@
 #pragma once
 #include <Arduino.h>
 
-// Idiomas soportados. La fuente del firmware no tiene acentos: ambos textos van
-// sin tildes ni enes (igual que ya iba el espanol).
-enum Lang : uint8_t { LANG_ES = 0, LANG_EN, LANG_FR, LANG_DE, LANG_IT, LANG_PT, LANG_COUNT };
-#define LANG_DEFAULT LANG_EN  // idioma por defecto: ingles
+// Existing language indices are stable in NVS; Korean is appended at index 6.
+enum Lang : uint8_t { LANG_ES = 0, LANG_EN, LANG_FR, LANG_DE, LANG_IT, LANG_PT, LANG_KO, LANG_COUNT };
+#define LANG_DEFAULT LANG_KO  // Default for a new save: Korean.
 
 extern Lang gLang;  // idioma activo (definido en i18n.cpp)
 
@@ -140,3 +139,6 @@ const char *medalDesc(int i);  // descripcion larga de medalla
 
 void loadLang();             // lee el idioma de NVS (llamar en setup)
 void setLang(Lang l);        // cambia y persiste el idioma
+
+// Localized display names; persisted identifiers and nicknames are unchanged.
+const char *localName(const char *english);

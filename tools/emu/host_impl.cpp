@@ -7,6 +7,16 @@
 #include "linknow.h"
 #include <cstdio>
 #include <string>
+#ifdef _WIN32
+#include <filesystem>
+// Windows CRT fopen uses the system ANSI codepage. The source and --sprites
+// are UTF-8, so a Korean workspace path needs the wide-character entrypoint.
+static FILE *openUtf8(const char *path, const char *mode) {
+  std::wstring wm(mode, mode + strlen(mode));
+  return _wfopen(std::filesystem::u8path(path).c_str(), wm.c_str());
+}
+#define fopen openUtf8
+#endif
 
 // Baked in by build.sh from the repo location; --sprites <dir> overrides it.
 #ifndef SPRITE_DIR
@@ -41,12 +51,14 @@ static uint8_t *slurp(const std::string &path, uint32_t *size) {
 bool PmdMon::load(int16_t dexNum, bool shiny) {
   if (dexNum < 1 || dexNum > 999) return false;
   unload();
-  char p[64];
-  snprintf(p, sizeof(p), "%s/p%s%03u.bin", g_spriteDir.c_str(), shiny ? "s" : "", (unsigned)dexNum);
+  char file[24];
+  snprintf(file, sizeof(file), "/p%s%03u.bin", shiny ? "s" : "", (unsigned)dexNum);
+  std::string p = g_spriteDir + file;
   uint32_t size = 0;
   blob = slurp(p, &size);
   if (!blob) {
-    snprintf(p, sizeof(p), "%s/p%03u.bin", g_spriteDir.c_str(), (unsigned)dexNum);
+    snprintf(file, sizeof(file), "/p%03u.bin", (unsigned)dexNum);
+    p = g_spriteDir + file;
     blob = slurp(p, &size);
   }
   if (!blob) return false;

@@ -3,6 +3,8 @@
 #include <SDL.h>   // sdl2-config puts the SDL2 dir on the include path
 #include "Arduino.h"
 #include "Arduino_GFX_Library.h"
+#include "korean_text.h"
+#include "i18n.h"
 #include "Preferences.h"
 #include "pet.h"
 #include "party.h"
@@ -10,8 +12,13 @@
 #include <chrono>
 #include <string>
 #include <deque>
+#ifdef _WIN32
+#include <conio.h>
+#include <process.h>
+#else
 #include <unistd.h>
 #include <sys/select.h>
+#endif
 
 // --- Arduino runtime globals ---
 uint32_t g_seed = 0xC0FFEE;
@@ -28,6 +35,9 @@ void FakeESP::restart() { Serial.println("emu: ESP.restart() -> exiting"); exit(
 static std::deque<std::string> g_lines;
 static std::string g_partial;
 static void pumpStdin() {
+#ifdef _WIN32
+  while (_kbhit()) { int ch=_getche(); if(ch==13) { g_lines.push_back(g_partial);g_partial.clear(); } else if(ch>=32 && ch<127) g_partial+=(char)ch; }
+#else
   fd_set fds;
   FD_ZERO(&fds);
   FD_SET(0, &fds);
@@ -42,6 +52,7 @@ static void pumpStdin() {
     }
     FD_ZERO(&fds); FD_SET(0, &fds); tv = { 0, 0 };
   }
+#endif
 }
 // --- simulating a crash ---
 //
@@ -66,8 +77,12 @@ static void crashArmAndReexec(int reason) {
   printf("\nemu: simulating a %s -- restarting the way the board would\n\n",
          reason == ESP_RST_PANIC ? "PANIC" : "TASK WATCHDOG");
   fflush(stdout);
+  #ifndef _WIN32
   execv("/proc/self/exe", g_argv);      // linux
   execv(g_argv[0], g_argv);             // macos and anything else
+  #else
+  _execv(g_argv[0], g_argv);
+  #endif
   perror("emu: could not re-exec");
   exit(1);
 }
@@ -145,6 +160,7 @@ void onTap(int16_t x, int16_t y);   // the first-boot shots tap their way in
 extern bool gymOpen, playerOpen;
 extern bool galleryDirty;
 extern uint8_t galleryRegion;
+extern int16_t galleryDetail;
 extern uint8_t gymRegion;
 extern bool gymPick, galleryPick;
 int wavMain(const char *path, const char *demo);
@@ -170,7 +186,7 @@ void startSpeedGame();
 void setup();
 void loop();
 void render();
-extern Arduino_Canvas *gfx;
+extern KoreanCanvas *gfx;
 extern Pet pet;
 extern bool cardOpen, galleryOpen, clockOpen, kbOpen, menuOpen, partyOpen, partyPick, trainOpen, movePickOpen;
 extern uint8_t cardPage;
@@ -211,7 +227,7 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   }
   // dbgHatchAs() clears starterPick, so hatching here would skip the very
   // screen the first-boot shots are trying to photograph.
-  if (pet.isEgg() && !firstBoot && strcmp(screen, "egg")) pet.dbgHatchAs(dex, false);
+  if (!firstBoot && strcmp(screen, "egg")) pet.dbgHatchAs(dex, false);
   if (lvl > 0) pet.ageMinutes = (uint32_t)(lvl - 1) * MINUTES_PER_LEVEL;
   if (iv >= 0) {
     pet.ivAtk = pet.ivDef = pet.ivSpe = pet.ivHp = iv;
@@ -231,13 +247,16 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   if (!strcmp(screen, "battle"))      { cardOpen = true; cardPage = 1; }
   else if (!strcmp(screen, "profile")){ cardOpen = true; cardPage = 0; }
   else if (!strcmp(screen, "medals")) { cardOpen = true; cardPage = 3; }
-  else if (!strcmp(screen, "progress")){cardOpen = true; cardPage = 4; }
+  else if (!strcmp(screen, "progress")){cardOpen = true; cardPage = 3; }
   else if (!strcmp(screen, "gallery")) {
     // The grid is static and guarded by galleryDirty, so setting galleryOpen
     // alone leaves the screenshot black -- the real UI sets both.
     galleryOpen = true;
     galleryDirty = true;
     for (int d = 1; d <= 200; d++) pet.dbgHatchAs(d, false);
+  }
+  else if (!strcmp(screen, "detail")) {
+    galleryOpen=true; galleryDirty=true; galleryDetail=dex;
   }
   else if (!strcmp(screen, "gallery2")) {   // the second region
     galleryOpen = true;
@@ -394,13 +413,16 @@ int main(int argc, char **argv) {
   int scale = 2;
   g_argv = argv;
   const char *save = "tamapoke.nvs";
+  const char *language = nullptr;
+  bool saveSpecified = false;
   const char *shot = nullptr, *shotOut = "shot.ppm";
   const char *wav = nullptr, *demo = nullptr;
   int shotLvl = 0, shotIv = -1, shotDex = 6;
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "--scale") && i + 1 < argc) scale = atoi(argv[++i]);
     else if (!strcmp(argv[i], "--fast") && i + 1 < argc) emuSetTimeScale(atoi(argv[++i]));
-    else if (!strcmp(argv[i], "--save") && i + 1 < argc) save = argv[++i];
+    else if (!strcmp(argv[i], "--save") && i + 1 < argc) { save = argv[++i]; saveSpecified = true; }
+    else if (!strcmp(argv[i], "--lang") && i + 1 < argc) language = argv[++i];
     else if (!strcmp(argv[i], "--wav") && i + 1 < argc) wav = argv[++i];
     else if (!strcmp(argv[i], "--demo") && i + 1 < argc) demo = argv[++i];
     else if (!strcmp(argv[i], "--shot") && i + 1 < argc) shot = argv[++i];
@@ -413,10 +435,17 @@ int main(int argc, char **argv) {
   }
   // Audio preview: no SDL, no board -- just a file you can listen to.
   if (wav) return wavMain(wav, demo);
-  if (shot) return shotMode(shot, shotOut, shotLvl, shotIv, shotDex);   // headless: no SDL at all
+  if (shot) {
+    if (saveSpecified) nvsLoad(save);
+    if (language) setLang(!strcmp(language, "ko") ? LANG_KO : LANG_EN);
+    int result = shotMode(shot, shotOut, shotLvl, shotIv, shotDex);
+    if (saveSpecified) nvsSave(save);
+    return result;
+  }  // headless: no SDL at all
   g_crashFile = std::string(save) + ".crash";
   crashRestore();     // a simulated panic left its breadcrumb here
   nvsLoad(save);
+  if (language) setLang(!strcmp(language, "ko") ? LANG_KO : LANG_EN);
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) { fprintf(stderr, "SDL: %s\n", SDL_GetError()); return 1; }
   SDL_Window *win = SDL_CreateWindow("TamaPoke (emulator)", SDL_WINDOWPOS_CENTERED,

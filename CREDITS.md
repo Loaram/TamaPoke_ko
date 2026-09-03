@@ -135,3 +135,10 @@ the column splitter used for the SVG sheets cannot cut it) and packs them at
 **If this project is ever published in a form that would trouble either artist,
 the honest fix is the one already recommended for the player avatars: ship
 `tools/gen_badges.py` and let each user fetch the art themselves.**
+
+## Korean edition
+
+- Based on DylanPDao/TamaPoke v3.11 (6cd0466), retaining Quique Tortosa's original attribution and existing asset credits.
+- Korean species and move display names: PokeAPI CSV data, https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv (retrieved 2026-09-03). Internal game identifiers are unchanged.
+- Galmuri11 v2.40.3 by quiple: https://github.com/quiple/galmuri, SIL Open Font License 1.1. Bundled source font and full license in tools/fonts/. Generated bitmap subset in korean_font.h.
+- Pokémon remains copyright Nintendo / Game Freak / The Pokémon Company. Unofficial, non-commercial fan project.
