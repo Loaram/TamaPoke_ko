@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Reproducible cross-platform Arduino build and NVS-safe installer packaging."""
 import argparse, hashlib, json, os, re, shutil, subprocess, sys, tempfile
+from contextlib import nullcontext
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
 FQBN='esp32:esp32:esp32s3:CDCOnBoot=cdc,FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB'
@@ -11,13 +12,17 @@ def main():
     p.add_argument('--source-ref');p.add_argument('--publish',action='store_true')
     p.add_argument('--out',type=Path,default=R/'build/korean')
     p.add_argument('--cache',type=Path,help='Persistent ASCII build cache directory')
+    p.add_argument('--stage',type=Path,help='Dedicated persistent ASCII staging root for incremental builds')
     a=p.parse_args()
     if a.source_ref and a.publish: p.error('Reference builds cannot be published')
     out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
     # Arduino requires a directory named after the sketch. An ASCII temporary
     # path also avoids Windows toolchain failures in localized OneDrive paths.
-    with tempfile.TemporaryDirectory(prefix='tamapoke-') as td:
-        stage=Path(td)/'TamaPoke';stage.mkdir()
+    with (nullcontext(str(a.stage.resolve())) if a.stage else tempfile.TemporaryDirectory(prefix='tamapoke-')) as td:
+        stage=Path(td)/'TamaPoke';stage.mkdir(parents=True,exist_ok=True)
+        source_names=set(subprocess.check_output(['git','ls-tree','--name-only',a.source_ref],cwd=R,text=True).splitlines()) if a.source_ref else {f.name for f in R.iterdir() if f.is_file()}
+        for old in stage.iterdir():
+            if old.is_file() and old.suffix in ('.h','.cpp','.ino') and old.name not in source_names: old.unlink()
         if a.source_ref:
             files=subprocess.check_output(['git','ls-tree','--name-only',a.source_ref],cwd=R,text=True).splitlines()
             for name in files:

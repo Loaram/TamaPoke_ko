@@ -266,6 +266,12 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   }
   else if (!strcmp(screen, "clock"))   clockOpen = true;
   else if (!strcmp(screen, "menu"))    menuOpen = true;
+  else if (!strcmp(screen, "retire") || !strcmp(screen, "evolveconfirm") || !strcmp(screen, "farewellconfirm")) {
+    extern uint8_t choiceKind;
+    extern uint32_t choiceUntil;
+    choiceKind = !strcmp(screen, "retire") ? 3 : !strcmp(screen, "evolveconfirm") ? 1 : 2;
+    choiceUntil = millis() + 60000;
+  }
   else if (!strcmp(screen, "train"))   trainOpen = true;
   else if (!strcmp(screen, "moves"))   { cardOpen = true; cardPage = 2; }
   else if (!strcmp(screen, "movepick")) { movePickOpen = true; }

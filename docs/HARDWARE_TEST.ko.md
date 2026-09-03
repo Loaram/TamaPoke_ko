@@ -1,6 +1,6 @@
 # 한국어판 실기 테스트 체크리스트
 
-대상: Waveshare ESP32-S3-Touch-AMOLED-1.75 · 펌웨어 3.11-ko.1.
+대상: Waveshare ESP32-S3-Touch-AMOLED-1.75 · 펌웨어 ko.1.0.1.
 **현재 상태: 모든 실기 항목 미확인.** 아래 체크는 실제 확인 후에만 표시합니다.
 
 결과를 다른 PC에서도 읽을 수 있도록 [GitHub 실기 테스트 결과 양식](https://github.com/Loaram/TamaPoke_ko/issues/new?template=hardware-test.md)에 기록하세요.

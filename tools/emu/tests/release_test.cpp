@@ -48,8 +48,13 @@ bool monSheetBtn(int16_t,int16_t,bool);
 #define SHEET_L_X 160
 #define SHEET_R_X 320
 #define SHEET_BTN_Y (336 + 48/2)
-#define CONF_YES_Y (206 + 52/2)
-#define CONF_NO_Y  (268 + 52/2)
+void uiConfirmRects(int*,int*,int*,int*);
+static int confirmCenter(bool yes){
+  int t1,b1,t2,b2; uiConfirmRects(&t1,&b1,&t2,&b2);
+  return yes ? (t1+b1)/2 : (t2+b2)/2;
+}
+#define CONF_YES_Y confirmCenter(true)
+#define CONF_NO_Y  confirmCenter(false)
 #define CONF_X 233
 
 // handleTouch() self-gates to 50 Hz off millis(), so real time has to pass

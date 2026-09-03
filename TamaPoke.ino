@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.11-ko.1"
+#define FW_VERSION "ko.1.0.1"
 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
   LCD_CS, LCD_SCLK, LCD_SDIO0, LCD_SDIO1, LCD_SDIO2, LCD_SDIO3);
@@ -376,14 +376,14 @@ uint8_t btlMyAct = 0;        // host: our own action, latched until theirs lands
 // uiConfirmRects(). Copies of this geometry in the tap handler are exactly how
 // a YES button ends up somewhere the drawing is not.
 #define CONFIRM_X 73
-#define CONFIRM_Y 156
+#define CONFIRM_Y 140
 #define CONFIRM_W 320
-#define CONFIRM_H 188
+#define CONFIRM_H 220
 #define CONFIRM_BTN_X 93
 #define CONFIRM_BTN_W 280
 #define CONFIRM_BTN_H 52
-#define CONFIRM_B1_Y 206
-#define CONFIRM_B2_Y 268
+#define CONFIRM_B1_Y 226
+#define CONFIRM_B2_Y 288
 
 // The two buttons on the party/box detail sheet. A third full-width row would
 // not fit above BACK, and BRING BACK was h=38 -- under UI_TAP_MIN, the shape
@@ -5793,17 +5793,17 @@ void drawConfirmPanel(const char *q, const char *sub1, const char *sub2,
   gfx->drawRoundRect(CONFIRM_X, CONFIRM_Y, CONFIRM_W, CONFIRM_H, 16, UI_INK);
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
-  gfx->setCursor(CX - textWidthFactor(q, 6), 176);
+  gfx->setCursor(CX - textWidthFactor(q, 6), CONFIRM_Y + 16);
   gfx->print(q);
   if (sub1 || sub2) {
     gfx->setTextSize(1);
     gfx->setTextColor(subCol);
     if (sub1) {
-      gfx->setCursor(CX - textWidthFactor(sub1, 3), sub2 ? 188 : 194);
+      gfx->setCursor(CX - textWidthFactor(sub1, 3), CONFIRM_Y + (sub2 ? 44 : 51));
       gfx->print(sub1);
     }
     if (sub2) {
-      gfx->setCursor(CX - textWidthFactor(sub2, 3), 202);
+      gfx->setCursor(CX - textWidthFactor(sub2, 3), CONFIRM_Y + 62);
       gfx->print(sub2);
     }
     gfx->setTextSize(2);

@@ -10,7 +10,7 @@ assert 'sprites-${region}.pak' in js and 'releases/latest' not in js
 manifest=json.loads((W/'manifest.json').read_text(encoding='utf-8'))
 info=json.loads((W/'firmware/build-info.json').read_text(encoding='utf-8'))
 version=re.search(r'#define FW_VERSION "([^"]+)"',(R/'TamaPoke.ino').read_text(encoding='utf-8'))[1]
-assert manifest['version']==info['version']==version and '-ko.' in version
+assert manifest['version']==info['version']==version and re.fullmatch(r'(?:ko\.\d+\.\d+\.\d+|\d+\.\d+-ko\.\d+)',version)
 for filename,expected in info['files'].items():
     data=(W/'firmware'/filename).read_bytes()
     assert len(data)==expected['size'] and hashlib.sha256(data).hexdigest()==expected['sha256'],filename

@@ -4,6 +4,8 @@
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. 원작은 Quique Tortosa의 [socquique/TamaPoke](https://github.com/socquique/TamaPoke)이며, [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
 
+현재 배포 버전은 **ko.1.0.1**입니다. 확인창의 제목·안내문·버튼이 겹치던 문제를 수정했습니다.
+
 ## 설치
 
 지원 기기는 **Waveshare ESP32-S3-Touch-AMOLED-1.75**입니다. PC용 Chrome 또는 Edge에서 이 저장소의 GitHub Pages 설치 페이지를 이용합니다. 아직 배포하지 않은 경우 아래 개발자 안내로 로컬 설치 페이지를 열 수 있습니다.
@@ -52,7 +54,7 @@ python tools/check_web.py
 node tools/tests/installer.test.cjs
 ```
 
-빌드는 ESP32-S3, 16MB 플래시, OPI PSRAM, USB CDC On Boot, `app3M_fat9M_16MB` 파티션 설정을 사용합니다. Arduino의 스케치 폴더명 요구사항과 Windows 한글 경로 문제는 빌드 스크립트가 임시 스테이징으로 처리합니다. `--cli`로 Arduino CLI 경로, `--cache`로 영문 경로의 빌드 캐시를 지정할 수 있습니다.
+빌드는 ESP32-S3, 16MB 플래시, OPI PSRAM, USB CDC On Boot, `app3M_fat9M_16MB` 파티션 설정을 사용합니다. Arduino의 스케치 폴더명 요구사항과 Windows 한글 경로 문제는 빌드 스크립트가 임시 스테이징으로 처리합니다. `--cli`로 Arduino CLI 경로, `--cache`로 영문 경로의 빌드 캐시를 지정할 수 있습니다. 반복 빌드는 전용 영문 경로를 `--stage`로 함께 지정하면 스케치 경로도 유지됩니다.
 
 macOS/Linux에서는 `bash tools/build_web.sh`도 같은 한국어 빌드·설치 검사를 실행합니다. 기존 지역 팩은 그대로 사용하며, 스프라이트를 수정한 경우에만 기존 생성 도구와 `tools/pack_bundle.py`를 실행합니다.
 
