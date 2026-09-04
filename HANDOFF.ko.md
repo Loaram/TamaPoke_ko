@@ -8,7 +8,7 @@
 |---|---|
 | 작업 저장소 | https://github.com/Loaram/TamaPoke_ko |
 | 작업 기준 | DylanPDao/TamaPoke `6cd04669572fb2980d8520a74ed7f5a4c86dbadb`, 원본 v3.11 |
-| 범위 | 전국도감 1025종·도감 9개 지방, 체육관 7개 지방. ShadowEnemyx Gen 3 소스 사용 안 함 |
+| 범위 | 전국도감 1025종·도감 9개 지방, 체육관 7개 지방.  |
 | 한국어 펌웨어 | **ko.1.1.0a** |
 | 현재 코드·펌웨어 | `ko.1.1.0a` 태그 / `main` |
 | 기본 브랜치 | `main` (한국어 작업 브랜치 `feat/korean`도 보존) |
