@@ -152,6 +152,8 @@ struct Link;
 bool linkNowBegin(Link *) { return false; }
 void linkNowEnd() {}
 bool linkNowUp() { return false; }
+const char *linkNowNetworkName() { return ""; }
+const char *linkNowNetworkPassword() { return ""; }
 void linkNowPoll() {}
 static LinkNowStats gNoStats;
 const LinkNowStats &linkNowStats() { return gNoStats; }

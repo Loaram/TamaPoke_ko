@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.0"
+#define FW_VERSION "ko.1.1.1"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
@@ -4672,6 +4672,21 @@ void renderLan() {
     gfx->setTextSize(2);
     gfx->setCursor(CX - textWidthFactor(T(S_LAN_REMATCH), 6), 240);
     gfx->print(T(S_LAN_REMATCH));
+  }
+  const char *network = linkNowNetworkName();
+  if (network && network[0]) {
+    char wifi[80];
+    snprintf(wifi, sizeof(wifi), "WiFi: %s", network);
+    gfx->setTextColor(UI_TRACK);
+    gfx->setTextSize(1);
+    gfx->setCursor(CX - textWidthFactor(wifi, 3), 318);
+    gfx->print(wifi);
+    const char *password = linkNowNetworkPassword();
+    if (password && password[0]) {
+      snprintf(wifi, sizeof(wifi), "PW: %s", password);
+      gfx->setCursor(CX - textWidthFactor(wifi, 3), 338);
+      gfx->print(wifi);
+    }
   }
   gfx->setTextColor(0x6B4D);
   gfx->setTextSize(2);

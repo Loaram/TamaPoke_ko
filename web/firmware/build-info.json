@@ -1,5 +1,5 @@
 {
-  "version": "ko.1.1.0",
+  "version": "ko.1.1.1",
   "fqbn": "esp32:esp32:esp32s3:CDCOnBoot=cdc,FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB",
   "core": "esp32:esp32@3.3.8",
   "upstream": "DylanPDao/TamaPoke",
@@ -17,8 +17,8 @@
       "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
     },
     "app.bin": {
-      "size": 1885264,
-      "sha256": "378a12f305de94771e85e6f49c39c54b841333fbcd3c5410787cc3ce58dce6d3"
+      "size": 1898080,
+      "sha256": "6879027a8ba0f5ca3eae67f65dd4d8199b54636b3aa8ec3cfe9990938b123347"
     }
   }
 }

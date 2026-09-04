@@ -43,7 +43,7 @@
 // The lossy test reproduces exactly that: with one frame in three dropped and a
 // fixed interval, one squad packet was destroyed on all ten attempts.
 #define LINK_JITTER_MS 200
-#define LINK_PAIR_TIMEOUT_MS 20000    // waiting for a peer that may not exist
+#define LINK_PAIR_TIMEOUT_MS 90000    // allows time to join a hardware Wi-Fi room
 #define LINK_BATTLE_TIMEOUT_MS 12000  // mid-fight, where one is known to be there
 
 // An action is a move slot, or a switch with the high bit set. One message

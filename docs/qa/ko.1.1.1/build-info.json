@@ -1,0 +1,11 @@
+{
+  "version": "ko.1.1.1",
+  "fqbn": "esp32:esp32:esp32s3:CDCOnBoot=cdc,FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB",
+  "core": "esp32:esp32@3.3.8",
+  "programBytes": 1897935,
+  "programPercent": 60,
+  "globalRamBytes": 68684,
+  "globalRamPercent": 20,
+  "applicationBytes": 1898080,
+  "applicationSha256": "6879027a8ba0f5ca3eae67f65dd4d8199b54636b3aa8ec3cfe9990938b123347"
+}

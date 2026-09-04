@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ANDROID = ROOT / "tools" / "android"
-ABIS = {
+ALL_ABIS = {
     "arm64-v8a": "aarch64-linux-android26",
     "x86_64": "x86_64-linux-android26",
 }
@@ -59,8 +59,10 @@ def main() -> int:
         "ANDROID_SDK_ROOT", Path(os.environ.get("LOCALAPPDATA", "")) / "Android" / "Sdk")))
     parser.add_argument("--jdk", type=Path, default=Path(os.environ.get(
         "JAVA_HOME", r"C:\Program Files\Android\Android Studio\jbr")))
-    parser.add_argument("--version-code", type=int, default=1102,
-                        help="must stay greater than the previous APK's 1101")
+    parser.add_argument("--wear", action="store_true",
+                        help="build an ARM64 standalone Wear OS APK for Galaxy Watch4 Classic")
+    parser.add_argument("--version-code", type=int,
+                        help="defaults to 1103 for Android or 1104 for Wear OS")
     parser.add_argument("--android-revision", type=int, default=1)
     parser.add_argument("--output", type=Path,
                         help="defaults to build/android/TamaPoke-<FW_VERSION>-Android-Full-debug.apk")
@@ -88,8 +90,15 @@ def main() -> int:
         raise SystemExit("Missing Android build tools:\n" + "\n".join(missing))
 
     version = firmware_version()
-    version_name = f"{version}-android.{args.android_revision}"
-    output = args.output or ROOT / "build" / "android" / f"TamaPoke-{version}-Android-Full-debug.apk"
+    flavor = "wear" if args.wear else "android"
+    version_code = args.version_code if args.version_code is not None else (1104 if args.wear else 1103)
+    version_name = f"{version}-{flavor}.{args.android_revision}"
+    default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-debug.apk" if args.wear
+                    else f"TamaPoke-{version}-Android-Full-debug.apk")
+    apk_output = args.output or ROOT / "build" / "android" / default_name
+    manifest_source = ANDROID / ("WearManifest.xml" if args.wear else "AndroidManifest.xml")
+    min_sdk = 30 if args.wear else 26
+    abis = {"arm64-v8a": ALL_ABIS["arm64-v8a"]} if args.wear else ALL_ABIS
     # aapt2 on Windows still opens resource paths through a narrow-character
     # code path. Keep intermediates under an ASCII-only directory so this also
     # builds from Korean workspace paths.
@@ -105,10 +114,10 @@ def main() -> int:
     (work / "classes").mkdir()
     (work / "dex").mkdir()
     (work / "generated-java").mkdir()
-    output.parent.mkdir(parents=True, exist_ok=True)
+    apk_output.parent.mkdir(parents=True, exist_ok=True)
     staged_android = work / "android-project"
     shutil.copytree(ANDROID / "res", staged_android / "res")
-    shutil.copy2(ANDROID / "AndroidManifest.xml", staged_android / "AndroidManifest.xml")
+    shutil.copy2(manifest_source, staged_android / "AndroidManifest.xml")
     shutil.copytree(ANDROID / "java", staged_android / "java")
 
     run([sys.executable, str(ROOT / "tools" / "emu" / "genproto.py"), str(ROOT / "TamaPoke.ino")],
@@ -122,7 +131,8 @@ def main() -> int:
         ROOT / "gbsynth.cpp", ROOT / "pet.cpp", ROOT / "i18n.cpp",
         ROOT / "party.cpp", ROOT / "battle.cpp", ROOT / "link.cpp", ROOT / "save.cpp",
         ROOT / "tools" / "emu" / "font.cpp", ROOT / "tools" / "emu" / "clock.cpp",
-        ANDROID / "host_android.cpp", ANDROID / "android_audio.cpp", ANDROID / "android_main.cpp",
+        ANDROID / "host_android.cpp", ANDROID / "android_audio.cpp",
+        ANDROID / "link_udp.cpp", ANDROID / "android_main.cpp",
     ]
     native_outputs: dict[str, Path] = {}
     common = [
@@ -130,20 +140,20 @@ def main() -> int:
         "-DANDROID", "-D__ANDROID__", "-I" + str(ROOT / "tools" / "emu"),
         "-I" + str(ROOT), "-I" + str(ANDROID), "-I" + str(glue_dir),
     ]
-    for abi, target in ABIS.items():
+    for abi, target in abis.items():
         abi_dir = work / "native" / abi
         abi_dir.mkdir()
         glue_obj = abi_dir / "android_native_app_glue.o"
         run([str(clang), f"--target={target}", "-O2", "-fPIC", "-I" + str(glue_dir),
              "-c", str(glue_dir / "android_native_app_glue.c"), "-o", str(glue_obj)])
-        output = abi_dir / "libtamapoke.so"
+        lib_output = abi_dir / "libtamapoke.so"
         run([str(clangxx), f"--target={target}", *common, "-shared",
              "-Wl,--gc-sections", "-Wl,--no-undefined", "-Wl,--build-id=sha1",
              "-Wl,-soname,libtamapoke.so",
              *map(str, cpp_sources), str(glue_obj), "-static-libstdc++",
-             "-landroid", "-laaudio", "-llog", "-latomic", "-lm", "-o", str(output)])
-        run([str(llvm_strip), "--strip-unneeded", str(output)])
-        native_outputs[abi] = output
+             "-landroid", "-laaudio", "-llog", "-latomic", "-lm", "-o", str(lib_output)])
+        run([str(llvm_strip), "--strip-unneeded", str(lib_output)])
+        native_outputs[abi] = lib_output
 
     compiled_res = work / "compiled-res.zip"
     base_apk = work / "base.apk"
@@ -151,8 +161,8 @@ def main() -> int:
          "-o", str(compiled_res)])
     run([str(build_tools / "aapt2.exe"), "link", "-o", str(base_apk),
          "-I", str(android_jar), "--manifest", str(staged_android / "AndroidManifest.xml"),
-         "--java", str(work / "generated-java"), "--min-sdk-version", "26",
-         "--target-sdk-version", "37", "--version-code", str(args.version_code),
+         "--java", str(work / "generated-java"), "--min-sdk-version", str(min_sdk),
+         "--target-sdk-version", "37", "--version-code", str(version_code),
          "--version-name", version_name, str(compiled_res)])
 
     java_sources = [str(staged_android / "java" / "com" / "loaram" / "tamapoke" / "TamaPokeActivity.java")]
@@ -164,7 +174,7 @@ def main() -> int:
     run([str(jdk / "bin" / "jar.exe"), "cf", str(classes_jar), "-C", str(work / "classes"), "."])
     env = os.environ.copy()
     env["JAVA_HOME"] = str(jdk)
-    run(bat(build_tools / "d8.bat", "--min-api", "26", "--output", str(work / "dex"),
+    run(bat(build_tools / "d8.bat", "--min-api", str(min_sdk), "--output", str(work / "dex"),
             str(classes_jar)), env=env)
 
     unaligned = work / "unsigned-unaligned.apk"
@@ -195,11 +205,11 @@ def main() -> int:
             str(signed)), env=env)
     run([str(build_tools / "zipalign.exe"), "-c", "-P", "16", "4", str(signed)])
     run([str(build_tools / "aapt.exe"), "dump", "badging", str(signed)])
-    if output.exists():
-        output.unlink()
-    shutil.copy2(signed, output)
-    print(f"Built {output} ({output.stat().st_size:,} bytes)")
-    print(f"Version {version_name}, versionCode {args.version_code}, ABIs {', '.join(ABIS)}")
+    if apk_output.exists():
+        apk_output.unlink()
+    shutil.copy2(signed, apk_output)
+    print(f"Built {apk_output} ({apk_output.stat().st_size:,} bytes)")
+    print(f"Version {version_name}, versionCode {version_code}, ABIs {', '.join(abis)}")
     return 0
 
 

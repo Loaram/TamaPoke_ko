@@ -39,3 +39,7 @@ tamapoke.nvs
 tamapoke.nvs.*
 tools/_*.svg
 backups/
+
+# Keep generated output out of the repository by default. The finished Wear OS
+# installation guide is explicitly force-added for the ko.1.1.1 release.
+output/

@@ -1,6 +1,8 @@
 package com.loaram.tamapoke;
 
+import android.Manifest;
 import android.app.NativeActivity;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,8 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 
 public final class TamaPokeActivity extends NativeActivity {
+    private static final int LOCAL_NETWORK_REQUEST = 38631;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +22,28 @@ public final class TamaPokeActivity extends NativeActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) hideSystemBars();
+    }
+
+    public boolean hasLocalNetworkPermission() {
+        if (Build.VERSION.SDK_INT < 37
+                || checkSelfPermission(Manifest.permission.ACCESS_LOCAL_NETWORK)
+                        == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean ensureLocalNetworkPermission() {
+        if (hasLocalNetworkPermission()) return true;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                requestPermissions(
+                        new String[] {Manifest.permission.ACCESS_LOCAL_NETWORK},
+                        LOCAL_NETWORK_REQUEST);
+            }
+        });
+        return false;
     }
 
     private void hideSystemBars() {

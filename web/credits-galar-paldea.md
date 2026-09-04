@@ -1,6 +1,6 @@
 # PMDCollab 가라르·팔데아 스프라이트 출처
 
-TamaPoke 한국어판 `ko.1.1.0`의 가라르·팔데아 팩에 실제 포함된 PMDCollab SpriteCollab 스프라이트의 종별 기여자 기록입니다.
+TamaPoke 한국어판 `ko.1.1.1`의 가라르·팔데아 팩에 실제 포함된 PMDCollab SpriteCollab 스프라이트의 종별 기여자 기록입니다.
 
 - 원본: [PMDCollab/SpriteCollab](https://github.com/PMDCollab/SpriteCollab)
 - 라이선스: [Creative Commons Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/)

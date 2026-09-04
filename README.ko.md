@@ -4,14 +4,14 @@
 
 [![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 ![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
-![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.0-8A2BE2)
+![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.1-8A2BE2)
 ![포켓몬](https://img.shields.io/badge/포켓몬-1025종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 기존 게임 기능을 유지하면서 전국도감 1025종과 9개 지방까지 확장했습니다.
 
-현재 배포 버전은 **ko.1.1.0**입니다. 가라르·팔데아 도감과 포켓몬을 추가했으며 체육관은 기존 관동~알로라 7지역을 유지합니다. PMDCollab에 표시용 자료가 없는 48종과 그 종으로 이어지는 진화 계보를 합친 64종은 알에서 나오지 않습니다. 이전 버전에서 이미 해당 계보가 대기 중인 알에 들어 있었다면 업데이트 후 안전한 후보로 자동 교체됩니다. 포켓몬 번호와 이미 부화한 포켓몬·도감 기록은 유지됩니다. 성장 속도는 **20분당 1레벨**이며 레벨 100은 1일 9시간에 도달합니다. 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 **분당 15**입니다. 조기 돌봄 종료는 다음 포켓몬의 진화를 늦추지 않으며, 이전 저장에 남은 진화 지연도 업데이트 후 제거됩니다.
+현재 개발 시험 버전은 **ko.1.1.1**입니다. 가라르·팔데아 도감과 포켓몬을 추가했으며 체육관은 기존 관동~알로라 7지역을 유지합니다. PMDCollab에 표시용 자료가 없는 48종과 그 종으로 이어지는 진화 계보를 합친 64종은 알에서 나오지 않습니다. 이전 버전에서 이미 해당 계보가 대기 중인 알에 들어 있었다면 업데이트 후 안전한 후보로 자동 교체됩니다. 포켓몬 번호와 이미 부화한 포켓몬·도감 기록은 유지됩니다. 성장 속도는 **20분당 1레벨**이며 레벨 100은 1일 9시간에 도달합니다. 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 **분당 15**입니다. 조기 돌봄 종료는 다음 포켓몬의 진화를 늦추지 않으며, 이전 저장에 남은 진화 지연도 업데이트 후 제거됩니다. Android 앱끼리 같은 Wi-Fi에서 대전할 수 있고, 실기가 여는 Wi-Fi 방에 Android를 연결하면 앱과 실기 간에도 대전할 수 있습니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
 
@@ -101,7 +101,17 @@ Android Studio의 SDK·NDK·JBR이 설치된 Windows에서는 현재 펌웨어/�
 .\.venv\Scripts\python.exe tools\build_android.py
 ```
 
-결과는 `build/android/TamaPoke-ko.1.1.0-Android-Full-debug.apk`입니다. 실제 기기용 `arm64-v8a`와 에뮬레이터용 `x86_64`, 9개 지역 스프라이트 팩을 모두 포함합니다. 프로젝트별 디버그 키는 무시되는 `build/android/debug.keystore`에 생성됩니다. 다른 PC의 디버그 키로 서명한 구버전 APK가 이미 설치돼 있으면 서명이 달라 덮어쓸 수 없습니다. 기존 앱을 삭제하면 그 앱의 Android 저장 데이터도 함께 지워지므로, 저장이 중요하면 삭제하지 말고 원래 키스토어로 새 APK를 서명해야 합니다. 이번 키로 후속 APK를 계속 업데이트하려면 `debug.keystore`도 별도로 안전하게 보관해야 합니다.
+결과는 `build/android/TamaPoke-ko.1.1.1-Android-Full-debug.apk`입니다. 실제 기기용 `arm64-v8a`와 에뮬레이터용 `x86_64`, 9개 지역 스프라이트 팩을 모두 포함합니다. 프로젝트별 디버그 키는 무시되는 `build/android/debug.keystore`에 생성됩니다. 다른 PC의 디버그 키로 서명한 구버전 APK가 이미 설치돼 있으면 서명이 달라 덮어쓸 수 없습니다. 기존 앱을 삭제하면 그 앱의 Android 저장 데이터도 함께 지워지므로, 저장이 중요하면 삭제하지 말고 원래 키스토어로 새 APK를 서명해야 합니다. 이번 키로 후속 APK를 계속 업데이트하려면 `debug.keystore`도 별도로 안전하게 보관해야 합니다.
+
+### Wear OS · Galaxy Watch4 Classic
+
+```powershell
+.\.venv\Scripts\python.exe tools\build_android.py --wear
+```
+
+결과는 `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-debug.apk`입니다. Galaxy Watch4 Classic 42mm의 396×396 및 46mm의 450×450 원형 화면에 기존 원형 화면을 비율 유지로 맞추며, 워치가 지원하는 `arm64-v8a`와 9개 지역 팩을 포함합니다. 휴대전화 없이 실행되는 독립형 Wear OS 앱으로 선언되어 있습니다. LAN 대전은 워치의 Wi-Fi를 휴대전화와 같은 공유기에 연결하거나 실기의 `TamaPoke-XXXX` 방에 직접 연결해야 합니다.
+
+앱끼리 대전할 때는 두 기기를 같은 Wi-Fi에 연결한 뒤 양쪽에서 근거리 대전과 팀을 선택합니다. 앱과 실기가 대전할 때는 실기에서 먼저 근거리 대전 팀을 선택하고 화면에 표시되는 `TamaPoke-XXXX` Wi-Fi를 Android 설정에서 선택합니다. 암호는 `tamapoke`입니다. 인터넷 연결이 없다는 Android 안내가 나오면 연결 유지를 선택한 뒤 앱으로 돌아와 근거리 대전 팀을 선택합니다. 방 만들기/참가하기를 양쪽이 똑같이 눌러도 고유 번호로 역할을 자동 조정합니다.
 
 ### 설치 페이지와 GitHub Pages
 

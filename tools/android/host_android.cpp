@@ -118,14 +118,6 @@ bool usbPresent() { return true; }
 void pwrSetup() {}
 bool pwrShortPressed() { return false; }
 
-struct Link;
-bool linkNowBegin(Link *) { return false; }
-void linkNowEnd() {}
-bool linkNowUp() { return false; }
-void linkNowPoll() {}
-static LinkNowStats gNoStats;
-const LinkNowStats &linkNowStats() { return gNoStats; }
-
 static int gResetReason = ESP_RST_POWERON;
 esp_reset_reason_t emuResetReason() { return gResetReason; }
 void emuSetResetReason(int r) { gResetReason = r; }

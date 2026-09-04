@@ -51,6 +51,38 @@ void loop();
 extern KoreanCanvas *gfx;
 void androidAudioSetActive(bool active);
 
+static bool callActivityBoolean(const char *method) {
+  if (!gApp || !gApp->activity || !gApp->activity->vm || !gApp->activity->clazz)
+    return false;
+  JNIEnv *env = nullptr;
+  bool attached = false;
+  if (gApp->activity->vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
+    if (gApp->activity->vm->AttachCurrentThread(&env, nullptr) != JNI_OK) return false;
+    attached = true;
+  }
+  jclass activityClass = env->GetObjectClass(gApp->activity->clazz);
+  jmethodID call = activityClass
+      ? env->GetMethodID(activityClass, method, "()Z")
+      : nullptr;
+  bool result = call && env->CallBooleanMethod(gApp->activity->clazz, call) == JNI_TRUE;
+  if (env->ExceptionCheck()) {
+    env->ExceptionDescribe();
+    env->ExceptionClear();
+    result = false;
+  }
+  if (activityClass) env->DeleteLocalRef(activityClass);
+  if (attached) gApp->activity->vm->DetachCurrentThread();
+  return result;
+}
+
+bool androidEnsureLocalNetworkPermission() {
+  return callActivityBoolean("ensureLocalNetworkPermission");
+}
+
+bool androidHasLocalNetworkPermission() {
+  return callActivityBoolean("hasLocalNetworkPermission");
+}
+
 int FakeSerial::available() { return 0; }
 String FakeSerial::readStringUntil(char) { return String(""); }
 void FakeESP::restart() { if (gApp && gApp->activity) ANativeActivity_finish(gApp->activity); }

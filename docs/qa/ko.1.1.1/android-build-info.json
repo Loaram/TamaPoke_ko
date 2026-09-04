@@ -1,0 +1,31 @@
+{
+  "file": "TamaPoke-ko.1.1.1-Android-Full-debug.apk",
+  "package": "com.loaram.tamapoke",
+  "versionName": "ko.1.1.1-android.1",
+  "versionCode": 1103,
+  "minSdk": 26,
+  "targetSdk": 37,
+  "nativePageAlignmentKb": 16,
+  "abis": ["arm64-v8a", "x86_64"],
+  "spritePacks": 9,
+  "permissions": [
+    "android.permission.INTERNET",
+    "android.permission.ACCESS_LOCAL_NETWORK",
+    "android.permission.ACCESS_NETWORK_STATE",
+    "android.permission.ACCESS_WIFI_STATE"
+  ],
+  "lan": {
+    "transport": "UDP broadcast then locked unicast",
+    "port": 38631,
+    "hardwareSsid": "TamaPoke-XXXX",
+    "hardwarePassword": "tamapoke"
+  },
+  "size": 301278438,
+  "sha256": "0533290f8be228cbafa2d9ed6c206c89344ec87772313a5e1ce79407de76880d",
+  "signing": {
+    "kind": "debug",
+    "schemes": ["v2", "v3"],
+    "signerCertificateSha256": "17aaf3ebfaa9b51599e2b0d0970f99651bd8be6700da981b7f240677535b7f47"
+  },
+  "deviceRuntime": "not run: no authorized Android device was connected"
+}

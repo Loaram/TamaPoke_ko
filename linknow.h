@@ -13,6 +13,12 @@ bool linkNowBegin(Link *l);   // brings up WiFi + ESP-NOW; false if either fails
 void linkNowEnd();            // frees the radio again -- it costs real current
 bool linkNowUp();
 
+// Some transports expose a Wi-Fi room that another device must join before
+// pairing. ESP32 returns its temporary access-point name/password; hosts that
+// already use the current LAN (Android/desktop) return empty strings.
+const char *linkNowNetworkName();
+const char *linkNowNetworkPassword();
+
 // Hands received packets to the Link, on the MAIN loop. The ESP-NOW callback
 // runs on the WiFi task and must not touch protocol state directly, so it only
 // parks bytes in a ring that this drains. Call once a frame, alongside tick().

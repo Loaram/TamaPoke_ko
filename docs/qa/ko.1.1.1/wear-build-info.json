@@ -1,0 +1,32 @@
+{
+  "file": "TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-debug.apk",
+  "deviceTarget": "Samsung Galaxy Watch4 Classic",
+  "displayTargets": [
+    {"caseMm": 42, "width": 396, "height": 396},
+    {"caseMm": 46, "width": 450, "height": 450}
+  ],
+  "package": "com.loaram.tamapoke",
+  "versionName": "ko.1.1.1-wear.1",
+  "versionCode": 1104,
+  "minSdk": 30,
+  "targetSdk": 37,
+  "nativePageAlignmentKb": 16,
+  "abis": ["arm64-v8a"],
+  "spritePacks": 9,
+  "wearFeature": "android.hardware.type.watch",
+  "standalone": true,
+  "lan": {
+    "transport": "UDP broadcast then locked unicast",
+    "port": 38631,
+    "hardwareSsid": "TamaPoke-XXXX",
+    "hardwarePassword": "tamapoke"
+  },
+  "size": 299844767,
+  "sha256": "ff9ecdfb69b43efaa6061c4a80c23b529b425d0ab92c8b977dfbcf7f1b75bbaa",
+  "signing": {
+    "kind": "debug",
+    "schemes": ["v3"],
+    "signerCertificateSha256": "17aaf3ebfaa9b51599e2b0d0970f99651bd8be6700da981b7f240677535b7f47"
+  },
+  "deviceRuntime": "not run: no Galaxy Watch4 Classic was connected"
+}

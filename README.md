@@ -4,14 +4,14 @@
 
 [![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 ![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
-![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.0-8A2BE2)
+![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.1-8A2BE2)
 ![포켓몬](https://img.shields.io/badge/포켓몬-1025종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 기존 게임 기능을 유지하면서 전국도감 1025종과 9개 지방까지 확장했습니다.
 
-현재 배포 버전은 **ko.1.1.0**입니다. 가라르·팔데아 도감과 포켓몬을 추가했으며 체육관은 기존 관동~알로라 7지역을 유지합니다. PMDCollab에 표시용 자료가 없는 48종과 그 종으로 이어지는 진화 계보를 합친 64종은 알에서 나오지 않습니다. 이전 버전에서 이미 해당 계보가 대기 중인 알에 들어 있었다면 업데이트 후 안전한 후보로 자동 교체됩니다. 포켓몬 번호와 이미 부화한 포켓몬·도감 기록은 유지됩니다. 성장 속도는 **20분당 1레벨**이며 레벨 100은 1일 9시간에 도달합니다. 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 **분당 15**입니다. 조기 돌봄 종료는 다음 포켓몬의 진화를 늦추지 않으며, 이전 저장에 남은 진화 지연도 업데이트 후 제거됩니다.
+현재 개발 시험 버전은 **ko.1.1.1**입니다. 가라르·팔데아 도감과 포켓몬을 추가했으며 체육관은 기존 관동~알로라 7지역을 유지합니다. PMDCollab에 표시용 자료가 없는 48종과 그 종으로 이어지는 진화 계보를 합친 64종은 알에서 나오지 않습니다. 이전 버전에서 이미 해당 계보가 대기 중인 알에 들어 있었다면 업데이트 후 안전한 후보로 자동 교체됩니다. 포켓몬 번호와 이미 부화한 포켓몬·도감 기록은 유지됩니다. 성장 속도는 **20분당 1레벨**이며 레벨 100은 1일 9시간에 도달합니다. 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 **분당 15**입니다. 조기 돌봄 종료는 다음 포켓몬의 진화를 늦추지 않으며, 이전 저장에 남은 진화 지연도 업데이트 후 제거됩니다. Android 앱끼리 같은 Wi-Fi에서 대전할 수 있고, 실기가 여는 Wi-Fi 방에 Android를 연결하면 앱과 실기 간에도 대전할 수 있습니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
 
@@ -92,6 +92,22 @@ build/emulator/tamapoke-emu --shot main --dex 25 --out preview.ppm
 Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64-w64-mingw32 디렉터리를 지정합니다. 에뮬레이터의 기본 창은 실기 패널과 같은 **466×466픽셀**이며, 크게 볼 때만 `--scale 2`처럼 확대할 수 있습니다. 실제 펌웨어 소스를 사용하지만 터치·SD·오디오·전원·무선 전송은 하드웨어 검증을 대체하지 않습니다.
 
 개발용 도감 완성판은 `python tools/build_emulator.py --full-dex`, 이로치 도감 완성판은 `python tools/build_emulator.py --full-shiny`로 만듭니다. 실행 파일 버전은 각각 `-dex`, `-shiny`가 붙습니다. 두 판은 `tamapoke-dex.nvs`, `tamapoke-shiny.nvs`라는 별도 저장 파일을 사용하며 공개 릴리스와 설치 페이지에는 포함하지 않습니다.
+
+### Android Full 디버그 APK
+
+```powershell
+.\.venv\Scripts\python.exe tools\build_android.py
+```
+
+결과는 `build/android/TamaPoke-ko.1.1.1-Android-Full-debug.apk`이며 실제 기기용 ARM64, 에뮬레이터용 x86_64와 9개 지역 팩을 포함합니다.
+
+### Wear OS · Galaxy Watch4 Classic
+
+```powershell
+.\.venv\Scripts\python.exe tools\build_android.py --wear
+```
+
+결과는 `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-debug.apk`입니다. Galaxy Watch4 Classic 42mm의 396×396 및 46mm의 450×450 원형 화면에 맞추고, ARM64와 9개 지역 팩을 포함하는 독립형 Wear OS 앱입니다. LAN 대전은 워치 Wi-Fi를 휴대전화와 같은 공유기 또는 실기의 `TamaPoke-XXXX` 방에 연결해 사용합니다.
 
 ### 설치 페이지와 GitHub Pages
 
