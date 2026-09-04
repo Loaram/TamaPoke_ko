@@ -34,7 +34,7 @@ static const char AP_PASSWORD[] = "tamapoke";
 
 // ESP-NOW receives on the WiFi task, so it parks frames for the main loop.
 #define RING_SLOTS 8
-#define RING_SLOT_BYTES (sizeof(LinkMon) + 16)
+#define RING_SLOT_BYTES (2 + LINK_MAX_PAYLOAD)
 struct RingSlot { uint8_t len; uint8_t buf[RING_SLOT_BYTES]; };
 static RingSlot gRing[RING_SLOTS];
 static volatile uint8_t gHead = 0, gTail = 0;

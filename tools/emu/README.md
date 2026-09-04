@@ -70,7 +70,8 @@ sips -s format png shot.ppm --out shot.png     # macOS; or use ImageMagick
 ```
 
 `--shot` accepts `main`, `battle`, `profile`, `medals`, `progress`, `gallery`,
-`clock`, `menu`, `party`, `partyfull`, `egg`, `starter`. `--lvl`, `--iv` and
+`clock`, `menu`, `party`, `partyfull`, `egg`, `starter`, `lan`, `savereceive`,
+`saveconfirm`. `--lvl`, `--iv` and
 `--dex` set up the pet first.
 
 ## How it works

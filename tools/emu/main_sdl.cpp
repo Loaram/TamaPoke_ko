@@ -294,6 +294,14 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   else if (!strcmp(screen, "gymsj")) { gymOpen = true; gymRegion = 1; }
   else if (!strcmp(screen, "gymsh")) { gymOpen = true; gymRegion = 2; }
   else if (!strcmp(screen, "lan")) { lanOpen = true; lan.state = LINK_OFF; }
+  else if (!strcmp(screen, "savereceive") || !strcmp(screen, "saveconfirm")) {
+    lan.beginSave(false, "DYLAN");
+    lan.id = 0x1111; lan.peerId = 0x8888;
+    snprintf(lan.peerName, sizeof(lan.peerName), "%s", "MISTY");
+    lan.savePeerSize = 1542; lan.saveOffset = 1542; lan.saveCode = 314159;
+    lan.state = LINK_SAVE_READY; lanOpen = true;
+    if (!strcmp(screen, "saveconfirm")) onTap(233, 260);
+  }
   else if (!strcmp(screen, "lanpick")) {
     static const int f[]={9,25,143,94,131,3};
     for(int i=0;i<6;i++){ PartyMon m; m.dex=f[i]; m.level=40+i*5;

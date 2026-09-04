@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.1"
+#define FW_VERSION "ko.1.1.2"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
@@ -310,6 +310,8 @@ bool gymHard = false;   // which ladder the list is showing
 // normal battle screen takes over with btlLink set.
 bool lanOpen = false;
 Link lan;
+static uint8_t saveTransferScratch[SAVE_MAX_BYTES];
+static bool saveApplyArmed = false;
 // What the shared region chooser is being used FOR. It only changes the
 // subtitle and whether there is a way back: at first boot every count would
 // read zero, which tells the player nothing, and there is nowhere to go back to.
@@ -441,6 +443,7 @@ bool pickOpen = false;
 // each other can bring what they like.
 #define PICK_LAN 0xFF
 static void lanOffer(bool host);
+static void lanSaveStart(bool sender);
 uint8_t pickTrainer = 0;
 bool pickHard = false;
 bool lanWantHost = true;   // which button opened the picker
@@ -4607,10 +4610,16 @@ void renderLan() {
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
-  gfx->setCursor(CX - textWidthFactor(T(S_LAN), 6), 44);
-  gfx->print(T(S_LAN));
+  bool saveActive = lan.saveMode && lan.state != LINK_OFF &&
+                    lan.state != LINK_REFUSED && lan.state != LINK_LOST &&
+                    lan.state != LINK_SAVE_INVALID;
+  const char *title = saveActive ? T(S_SAVE_TITLE) : T(S_LAN);
+  gfx->setCursor(CX - textWidthFactor(title, 6), 44);
+  gfx->print(title);
 
   const char *msg = T(S_LAN_PICK);
+  char status[96];
+  status[0] = 0;
   switch (lan.state) {
     case LINK_HANDSHAKE:
     case LINK_LISTENING: msg = T(S_LAN_WAIT); break;
@@ -4619,25 +4628,86 @@ void renderLan() {
     case LINK_REFUSED:   msg = T(S_LAN_REFUSED); break;
     case LINK_LOST:      msg = T(S_LAN_GONE); break;
     case LINK_DONE:      msg = lan.youWon ? T(S_BTL_WIN) : T(S_BTL_LOSE); break;
+    case LINK_SAVE_LISTENING:
+    case LINK_SAVE_HANDSHAKE: msg = T(S_LAN_WAIT); break;
+    case LINK_SAVE_SENDING:
+      snprintf(status, sizeof(status), T(S_SAVE_SENDING_FMT), lan.saveProgress());
+      msg = status;
+      break;
+    case LINK_SAVE_RECEIVING:
+      snprintf(status, sizeof(status), T(S_SAVE_RECEIVING_FMT), lan.saveProgress());
+      msg = status;
+      break;
+    case LINK_SAVE_READY: msg = T(S_SAVE_READY); break;
+    case LINK_SAVE_DONE:  msg = T(S_SAVE_DONE); break;
+    case LINK_SAVE_INVALID: msg = T(S_SAVE_INVALID); break;
     default: break;
   }
-  gfx->setTextColor((lan.state == LINK_REFUSED || lan.state == LINK_LOST)
+  gfx->setTextColor((lan.state == LINK_REFUSED || lan.state == LINK_LOST ||
+                     lan.state == LINK_SAVE_INVALID)
                       ? UI_BAR_BAD : UI_TRACK);
   gfx->setTextSize(1);
   gfx->setCursor(CX - textWidthFactor(msg, 3), 76);
   gfx->print(msg);
 
   if (lan.state == LINK_OFF || lan.state == LINK_REFUSED ||
-      lan.state == LINK_LOST) {
-    const char *lab[2] = { T(S_LAN_HOST), T(S_LAN_JOIN) };
-    for (int i = 0; i < 2; i++) {
-      int y = 120 + i * 70;
-      gfx->fillRoundRect(90, y, 286, 56, 12, UI_BG_DAY);
-      gfx->drawRoundRect(90, y, 286, 56, 12, UI_INK);
+      lan.state == LINK_LOST || lan.state == LINK_SAVE_INVALID) {
+    char battleHost[64], battleJoin[64];
+    snprintf(battleHost, sizeof(battleHost), "%s: %s", T(S_LAN), T(S_LAN_HOST));
+    snprintf(battleJoin, sizeof(battleJoin), "%s: %s", T(S_LAN), T(S_LAN_JOIN));
+    const char *lab[4] = { battleHost, battleJoin, T(S_SAVE_SEND), T(S_SAVE_RECEIVE) };
+    for (int i = 0; i < 4; i++) {
+      int y = 92 + i * 60;
+      gfx->fillRoundRect(90, y, 286, 48, 12, UI_BG_DAY);
+      gfx->drawRoundRect(90, y, 286, 48, 12, UI_INK);
       gfx->setTextColor(UI_INK);
       gfx->setTextSize(2);
-      gfx->setCursor(CX - textWidthFactor(lab[i], 6), y + 20);
+      gfx->setCursor(CX - textWidthFactor(lab[i], 6), y + 16);
       gfx->print(lab[i]);
+    }
+  } else if (lan.saveMode) {
+    if (lan.peerName[0]) {
+      gfx->setTextColor(UI_INK);
+      gfx->setTextSize(2);
+      gfx->setCursor(CX - textWidthFactor(lan.peerName, 6), 116);
+      gfx->print(lan.peerName);
+    }
+    if (lan.peerId) {
+      char code[64];
+      snprintf(code, sizeof(code), T(S_SAVE_CODE_FMT), (unsigned long)lan.saveCode);
+      gfx->setTextColor(UI_TRACK);
+      gfx->setTextSize(2);
+      gfx->setCursor(CX - textWidthFactor(code, 6), 150);
+      gfx->print(code);
+    }
+    uint8_t progress = lan.saveProgress();
+    gfx->drawRoundRect(93, 186, 280, 22, 10, UI_INK);
+    if (progress) gfx->fillRoundRect(97, 190, (int)(272u * progress / 100u), 14, 7,
+                                     UI_BAR_OK);
+    if (lan.state == LINK_SAVE_READY) {
+      if (!saveApplyArmed) {
+        gfx->fillRoundRect(120, 236, 226, 56, 12, UI_BAR_OK);
+        gfx->drawRoundRect(120, 236, 226, 56, 12, UI_INK);
+        gfx->setTextColor(UI_BG_DAY);
+        gfx->setTextSize(2);
+        gfx->setCursor(CX - textWidthFactor(T(S_SAVE_APPLY), 6), 256);
+        gfx->print(T(S_SAVE_APPLY));
+      } else {
+        gfx->setTextColor(UI_BAR_BAD);
+        gfx->setTextSize(1);
+        gfx->setCursor(CX - textWidthFactor(T(S_SAVE_OVERWRITE), 3), 226);
+        gfx->print(T(S_SAVE_OVERWRITE));
+        const char *labs[2] = { T(S_YES), T(S_NO) };
+        for (int i = 0; i < 2; i++) {
+          int bx = 93 + i * 150;
+          gfx->fillRoundRect(bx, 250, 130, 52, 12, i ? UI_BG_DAY : UI_BAR_BAD);
+          gfx->drawRoundRect(bx, 250, 130, 52, 12, UI_INK);
+          gfx->setTextColor(i ? UI_INK : UI_BG_DAY);
+          gfx->setTextSize(2);
+          gfx->setCursor(bx + 65 - textWidthFactor(labs[i], 6), 268);
+          gfx->print(labs[i]);
+        }
+      }
     }
   } else if (lan.state == LINK_READY) {
     char l[120];
@@ -4679,12 +4749,12 @@ void renderLan() {
     snprintf(wifi, sizeof(wifi), "WiFi: %s", network);
     gfx->setTextColor(UI_TRACK);
     gfx->setTextSize(1);
-    gfx->setCursor(CX - textWidthFactor(wifi, 3), 318);
+    gfx->setCursor(CX - textWidthFactor(wifi, 3), 340);
     gfx->print(wifi);
     const char *password = linkNowNetworkPassword();
     if (password && password[0]) {
       snprintf(wifi, sizeof(wifi), "PW: %s", password);
-      gfx->setCursor(CX - textWidthFactor(wifi, 3), 338);
+      gfx->setCursor(CX - textWidthFactor(wifi, 3), 358);
       gfx->print(wifi);
     }
   }
@@ -4702,6 +4772,8 @@ void lanLeave() {
   if (lan.live()) lan.sendBye();
   linkNowEnd();
   lan.state = LINK_OFF;
+  lan.saveMode = false;
+  saveApplyArmed = false;
 }
 
 static void lanOffer(bool host) {
@@ -4710,7 +4782,6 @@ static void lanOffer(bool host) {
   // on whether the radio comes up -- doing it the other way round meant a
   // failed radio skipped the squad entirely and left nothing to inspect.
   lan.begin(host, pet.trainerName);
-  snprintf(lan.peerName, sizeof(lan.peerName), "%s", pet.trainerName);
   buildSquad(0, TRAINER_TEAM_MAX, squadMask);
   for (uint8_t i = 0; i < btlSquadN; i++) {
     LinkMon m;
@@ -4728,21 +4799,75 @@ static void lanOffer(bool host) {
   lan.start();
 }
 
+static void lanSaveStart(bool sender) {
+  saveApplyArmed = false;
+  size_t n = 0;
+  if (sender) {
+    pet.flushSave();
+    n = saveExport(saveTransferScratch, sizeof(saveTransferScratch));
+    if (!n) {
+      lan.state = LINK_SAVE_INVALID;
+      lan.saveMode = true;
+      return;
+    }
+  }
+  if (!lan.beginSave(sender, pet.trainerName,
+                     sender ? saveTransferScratch : nullptr, (uint16_t)n)) return;
+  if (!linkNowBegin(&lan)) {
+    lan.state = LINK_REFUSED;
+    return;
+  }
+  lan.start();
+}
+
 void lanTap(int16_t x, int16_t y) {
   if (lan.state == LINK_OFF || lan.state == LINK_REFUSED ||
-      lan.state == LINK_LOST) {
-    for (int i = 0; i < 2; i++) {
-      int by = 120 + i * 70;
-      if (x < 90 || x > 376 || y < by || y > by + 56) continue;
+      lan.state == LINK_LOST || lan.state == LINK_SAVE_INVALID) {
+    for (int i = 0; i < 4; i++) {
+      int by = 92 + i * 60;
+      if (x < 90 || x > 376 || y < by || y > by + 48) continue;
       sfxPlay(SFX_TAP);
-      lanWantHost = (i == 0);
-      lanOpen = false;
-      pickTrainer = PICK_LAN;
-      pickHard = false;
-      pickPage = 0;
-      pickDefault(squadCap(PICK_LAN, false));
-      pickOpen = true;
+      if (i < 2) {
+        lanWantHost = (i == 0);
+        lanOpen = false;
+        pickTrainer = PICK_LAN;
+        pickHard = false;
+        pickPage = 0;
+        pickDefault(squadCap(PICK_LAN, false));
+        pickOpen = true;
+      } else {
+        lanSaveStart(i == 2);
+      }
       return;
+    }
+  } else if (lan.state == LINK_SAVE_READY) {
+    if (!saveApplyArmed && x >= 120 && x <= 346 && y >= 236 && y <= 292) {
+      saveApplyArmed = true;
+      sfxPlay(SFX_TAP);
+      return;
+    }
+    if (saveApplyArmed && y >= 250 && y <= 302) {
+      if (x >= 243 && x <= 373) {
+        saveApplyArmed = false;
+        sfxPlay(SFX_TAP);
+        return;
+      }
+      if (x >= 93 && x <= 223) {
+        size_t backupN = saveExport(saveTransferScratch, sizeof(saveTransferScratch));
+        bool ok = saveImport(lan.saveData, lan.savePeerSize);
+        if (!ok && backupN) saveImport(saveTransferScratch, backupN);
+        if (!ok) {
+          lan.state = LINK_SAVE_INVALID;
+          saveApplyArmed = false;
+          sfxPlay(SFX_DENY);
+          return;
+        }
+        sfxPlay(SFX_MEDAL);
+        linkNowEnd();
+        delay(100);
+        ESP.restart();
+        return;
+      }
     }
   } else if (lan.state == LINK_READY) {
     if (x >= 120 && x <= 346 && y >= 220 && y <= 276) {

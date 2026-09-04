@@ -129,6 +129,11 @@ enum StrId : uint8_t {
   S_RELEASE_GONE,   // ...and the warning under it: this one does not come back
   S_BOX_TAKE,       // box detail sheet: move this creature into the party
   S_RETIRE_GONE,    // retire confirm: an early retire is not banked either
+  // Save transfer shared by ESP32, Android and Wear OS.
+  S_SAVE_TITLE, S_SAVE_SEND, S_SAVE_RECEIVE,
+  S_SAVE_SENDING_FMT, S_SAVE_RECEIVING_FMT,
+  S_SAVE_READY, S_SAVE_APPLY, S_SAVE_OVERWRITE,
+  S_SAVE_DONE, S_SAVE_INVALID, S_SAVE_CODE_FMT,
   STR_COUNT
 };
 

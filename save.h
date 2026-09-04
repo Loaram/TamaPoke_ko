@@ -23,6 +23,7 @@
 #define SAVE_MAGIC3 'S'
 #define SAVE_VERSION 1
 #define SAVE_HDR 8
+#define SAVE_MAX_BYTES 2048
 
 enum SaveKind : uint8_t {
   SK_U8 = 1, SK_I8, SK_BOOL, SK_U16, SK_I16, SK_U32, SK_BYTES, SK_STR,
@@ -38,6 +39,11 @@ extern const uint16_t SAVE_FIELD_COUNT;
 // Serialises the live save. Returns the number of bytes written, or 0 if it
 // would not fit in cap.
 size_t saveExport(uint8_t *out, size_t cap);
+
+// Checks the complete envelope, version, field layout and CRC without touching
+// the live save. Wireless restore uses this while the received data is still
+// only a preview awaiting the player's explicit confirmation.
+bool saveValidate(const uint8_t *in, size_t n);
 
 // Restores one. VALIDATES THE WHOLE BLOB FIRST and only then touches NVS: a
 // half-applied restore over a good save would be worse than no backup at all.

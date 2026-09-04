@@ -171,5 +171,16 @@
   "S_RELEASE_BTN": "놓아주기",
   "S_RELEASE_GONE": "영원히 떠나요",
   "S_BOX_TAKE": "파티로",
-  "S_RETIRE_GONE": "파티에 남지 않아요"
+  "S_RETIRE_GONE": "파티에 남지 않아요",
+  "S_SAVE_TITLE": "세이브 전송",
+  "S_SAVE_SEND": "세이브 보내기",
+  "S_SAVE_RECEIVE": "세이브 받기",
+  "S_SAVE_SENDING_FMT": "보내는 중 %u%%",
+  "S_SAVE_RECEIVING_FMT": "받는 중 %u%%",
+  "S_SAVE_READY": "받기 완료",
+  "S_SAVE_APPLY": "세이브 적용",
+  "S_SAVE_OVERWRITE": "현재 세이브를 덮어씁니다",
+  "S_SAVE_DONE": "전송 완료",
+  "S_SAVE_INVALID": "잘못된 세이브",
+  "S_SAVE_CODE_FMT": "확인 코드 %06lu"
 }

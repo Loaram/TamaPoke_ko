@@ -18,6 +18,17 @@
 #define HB_NAME 7         // LINK_NAME_LEN bytes
 #define HB_LEN (HB_NAME + LINK_NAME_LEN)
 
+// Save hello is a different message from the battle hello so opening the
+// wrong screen on one peer is rejected instead of silently exchanging data.
+#define SH_PROTO 0
+#define SH_ROLE 1          // 1 = sender, 0 = receiver
+#define SH_SAVE_VERSION 2
+#define SH_ID 3            // 2 bytes
+#define SH_SIZE 5          // 2 bytes; zero from a receiver
+#define SH_CRC 7           // 2 bytes; zero from a receiver
+#define SH_NAME 9
+#define SH_LEN (SH_NAME + LINK_NAME_LEN)
+
 uint16_t linkBuildTag() {
   // Deliberately made of sizes and counts, not a version string: these are
   // exactly the things that change how a packet is READ. Two builds agreeing on
@@ -99,8 +110,41 @@ static void sendHello(Link &l) {
   uint16_t tag = linkBuildTag();
   b[HB_BUILD] = (uint8_t)(tag & 0xFF);
   b[HB_BUILD + 1] = (uint8_t)(tag >> 8);
-  memcpy(b + HB_NAME, l.peerName, LINK_NAME_LEN);
+  memcpy(b + HB_NAME, l.myName, LINK_NAME_LEN);
   put(l, LM_HELLO, b, HB_LEN);
+}
+
+static void sendSaveHello(Link &l) {
+  uint8_t b[SH_LEN];
+  memset(b, 0, sizeof(b));
+  b[SH_PROTO] = LINK_PROTO;
+  b[SH_ROLE] = l.saveSender ? 1 : 0;
+  b[SH_SAVE_VERSION] = SAVE_VERSION;
+  b[SH_ID] = (uint8_t)(l.id & 0xFF);
+  b[SH_ID + 1] = (uint8_t)(l.id >> 8);
+  if (l.saveSender) {
+    b[SH_SIZE] = (uint8_t)(l.saveSize & 0xFF);
+    b[SH_SIZE + 1] = (uint8_t)(l.saveSize >> 8);
+    uint16_t crc = l.saveSize >= 2
+                     ? (uint16_t)l.saveData[l.saveSize - 2] |
+                         ((uint16_t)l.saveData[l.saveSize - 1] << 8)
+                     : 0;
+    b[SH_CRC] = (uint8_t)(crc & 0xFF);
+    b[SH_CRC + 1] = (uint8_t)(crc >> 8);
+  }
+  memcpy(b + SH_NAME, l.myName, LINK_NAME_LEN);
+  put(l, LM_SAVE_HELLO, b, SH_LEN);
+}
+
+static void requestSaveChunk(Link &l, uint16_t chunk) {
+  uint8_t b[2] = { (uint8_t)(chunk & 0xFF), (uint8_t)(chunk >> 8) };
+  put(l, LM_SAVE_REQUEST, b, sizeof(b), true);
+}
+
+static void rejectSave(Link &l) {
+  uint8_t reason = 1;
+  put(l, LM_SAVE_REJECT, &reason, 1, true);
+  l.state = LINK_SAVE_INVALID;
 }
 
 // The order ROTATES between attempts, and that is load-bearing. A repeated
@@ -142,8 +186,31 @@ void Link::begin(bool host, const char *myName) {
   lastRx = 0;
   sawRx = false;
   armed = false;
+  this->myName[0] = 0;
+  if (myName) snprintf(this->myName, sizeof(this->myName), "%s", myName);
   peerName[0] = 0;
-  (void)myName;
+  saveMode = false;
+  saveSender = false;
+  saveSize = savePeerSize = saveOffset = saveChunk = saveChunks = 0;
+  savePeerCrc = 0;
+  saveCode = 0;
+}
+
+bool Link::beginSave(bool sender, const char *name,
+                     const uint8_t *data, uint16_t len) {
+  begin(sender, name);
+  saveMode = true;
+  saveSender = sender;
+  state = LINK_SAVE_LISTENING;
+  if (!sender) return true;
+  if (!data || len > SAVE_MAX_BYTES || !saveValidate(data, len)) {
+    state = LINK_SAVE_INVALID;
+    return false;
+  }
+  memcpy(saveData, data, len);
+  saveSize = len;
+  saveChunks = (uint16_t)((len + LINK_SAVE_CHUNK - 1) / LINK_SAVE_CHUNK);
+  return true;
 }
 
 void Link::addMon(const LinkMon &m) {
@@ -156,8 +223,21 @@ void Link::start() {
   // tests, and a fast radio can re-enter too -- so a reply can arrive before
   // this function returns. Sending first left us still LISTENING when the
   // answer landed, and each side answered the other's hello forever.
-  state = LINK_HANDSHAKE;
-  sendHello(*this);
+  if (saveMode) {
+    state = LINK_SAVE_HANDSHAKE;
+    sendSaveHello(*this);
+  } else {
+    state = LINK_HANDSHAKE;
+    sendHello(*this);
+  }
+}
+
+uint8_t Link::saveProgress() const {
+  if (!saveMode) return 0;
+  uint16_t total = saveSender ? saveSize : savePeerSize;
+  if (!total) return 0;
+  uint16_t done = saveOffset > total ? total : saveOffset;
+  return (uint8_t)(((uint32_t)done * 100u) / total);
 }
 
 void Link::sendAct(uint8_t act) {
@@ -214,7 +294,11 @@ void Link::rearm() {
 // Resend what we last said, and give up on a peer that has gone quiet. Called
 // once a frame; `now` is passed in so a test can drive time directly.
 void Link::tick(uint32_t now) {
-  if (!live() || state == LINK_DONE) return;
+  if (!live() || state == LINK_DONE || state == LINK_SAVE_DONE) return;
+  // Once a receiver has acknowledged the final blob it waits for the player to
+  // confirm the overwrite. That can take any amount of time and is not a lost
+  // connection. Until the sender's ACK arrives, however, keep the receipt live.
+  if (state == LINK_SAVE_READY && !txLive) return;
   if (!armed) { armed = true; lastRx = now; txAt = now; }
   if (sawRx) { sawRx = false; lastRx = now; }
 
@@ -235,7 +319,9 @@ void Link::tick(uint32_t now) {
   if (now - txAt < wait) return;
   txAt = now;
   resendSeq++;
-  if (state == LINK_HANDSHAKE) {
+  if (state == LINK_SAVE_HANDSHAKE) {
+    sendSaveHello(*this);
+  } else if (state == LINK_HANDSHAKE) {
     sendHello(*this);
   } else if (state == LINK_SQUADS) {
     sendHello(*this);       // as a set: a squad is only useful complete
@@ -254,7 +340,132 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
   sawRx = true;    // proof of life. onPacket has no clock, so tick() stamps it
 
   switch (type) {
+    case LM_SAVE_HELLO: {
+      if (!saveMode || n < SH_LEN) { state = LINK_REFUSED; return; }
+      protoTheirs = body[SH_PROTO];
+      if (protoTheirs != LINK_PROTO || body[SH_SAVE_VERSION] != SAVE_VERSION) {
+        state = LINK_REFUSED;
+        return;
+      }
+      bool theySend = body[SH_ROLE] != 0;
+      peerId = (uint16_t)body[SH_ID] | ((uint16_t)body[SH_ID + 1] << 8);
+      if (theySend == saveSender || peerId == id) {
+        state = LINK_REFUSED;
+        return;
+      }
+      memcpy(peerName, body + SH_NAME, LINK_NAME_LEN);
+      peerName[LINK_NAME_LEN - 1] = 0;
+      uint16_t lo = id < peerId ? id : peerId;
+      uint16_t hi = id < peerId ? peerId : id;
+      saveCode = ((uint32_t)lo * 8191u + (uint32_t)hi * 131u +
+                  (uint32_t)SAVE_VERSION * 17u) % 1000000u;
+
+      bool answer = state == LINK_SAVE_LISTENING;
+      if (saveSender) {
+        if (state == LINK_SAVE_DONE) return;
+        state = LINK_SAVE_SENDING;
+        // Their hello is also their retry signal. Always answer it: if the
+        // receiver opened first and our first reply vanished, it otherwise has
+        // no way to learn the save size and no chunk request can ever begin.
+        sendSaveHello(*this);
+      } else {
+        if (state == LINK_SAVE_READY) return;
+        savePeerSize = (uint16_t)body[SH_SIZE] |
+                       ((uint16_t)body[SH_SIZE + 1] << 8);
+        savePeerCrc = (uint16_t)body[SH_CRC] |
+                      ((uint16_t)body[SH_CRC + 1] << 8);
+        if (!savePeerSize || savePeerSize > SAVE_MAX_BYTES) {
+          rejectSave(*this);
+          return;
+        }
+        saveChunks = (uint16_t)((savePeerSize + LINK_SAVE_CHUNK - 1) /
+                                LINK_SAVE_CHUNK);
+        state = LINK_SAVE_RECEIVING;
+        if (answer) sendSaveHello(*this);
+        // sendSaveHello can synchronously complete a transfer in tests (and a
+        // fast transport can re-enter too). Do not request one-past-the-end as
+        // the outer call unwinds after that completion.
+        if (state == LINK_SAVE_RECEIVING) requestSaveChunk(*this, saveChunk);
+      }
+      return;
+    }
+    case LM_SAVE_REQUEST: {
+      if (!saveMode || !saveSender || n != 2) return;
+      uint16_t chunk = (uint16_t)body[0] | ((uint16_t)body[1] << 8);
+      if (chunk >= saveChunks) { rejectSave(*this); return; }
+      uint16_t at = (uint16_t)(chunk * LINK_SAVE_CHUNK);
+      uint16_t left = (uint16_t)(saveSize - at);
+      uint8_t part = left > LINK_SAVE_CHUNK ? LINK_SAVE_CHUNK : (uint8_t)left;
+      uint8_t b[2 + LINK_SAVE_CHUNK];
+      b[0] = (uint8_t)(chunk & 0xFF);
+      b[1] = (uint8_t)(chunk >> 8);
+      memcpy(b + 2, saveData + at, part);
+      saveChunk = chunk;
+      saveOffset = at;
+      state = LINK_SAVE_SENDING;
+      put(*this, LM_SAVE_CHUNK, b, (uint8_t)(part + 2), true);
+      return;
+    }
+    case LM_SAVE_CHUNK: {
+      if (!saveMode || saveSender || n < 2 || !savePeerSize) return;
+      uint16_t chunk = (uint16_t)body[0] | ((uint16_t)body[1] << 8);
+      if (chunk < saveChunk) {
+        requestSaveChunk(*this, saveChunk);
+        return;
+      }
+      if (chunk != saveChunk) return;
+      uint16_t left = (uint16_t)(savePeerSize - saveOffset);
+      uint8_t part = left > LINK_SAVE_CHUNK ? LINK_SAVE_CHUNK : (uint8_t)left;
+      if (n != (uint8_t)(part + 2) || saveOffset + part > SAVE_MAX_BYTES) {
+        rejectSave(*this);
+        return;
+      }
+      memcpy(saveData + saveOffset, body + 2, part);
+      saveOffset = (uint16_t)(saveOffset + part);
+      saveChunk++;
+      txLive = false;
+      if (saveOffset == savePeerSize) {
+        uint16_t crc = savePeerSize >= 2
+                         ? (uint16_t)saveData[savePeerSize - 2] |
+                             ((uint16_t)saveData[savePeerSize - 1] << 8)
+                         : 0;
+        if (crc != savePeerCrc || !saveValidate(saveData, savePeerSize)) {
+          rejectSave(*this);
+          return;
+        }
+        uint8_t b[2] = { (uint8_t)(crc & 0xFF), (uint8_t)(crc >> 8) };
+        state = LINK_SAVE_READY;
+        put(*this, LM_SAVE_RECEIVED, b, sizeof(b), true);
+      } else {
+        requestSaveChunk(*this, saveChunk);
+      }
+      return;
+    }
+    case LM_SAVE_RECEIVED: {
+      if (!saveMode || !saveSender || n != 2) return;
+      uint16_t crc = (uint16_t)body[0] | ((uint16_t)body[1] << 8);
+      uint16_t ours = saveSize >= 2
+                        ? (uint16_t)saveData[saveSize - 2] |
+                            ((uint16_t)saveData[saveSize - 1] << 8)
+                        : 0;
+      if (crc != ours) { rejectSave(*this); return; }
+      put(*this, LM_SAVE_ACK, nullptr, 0);
+      txLive = false;
+      saveOffset = saveSize;
+      state = LINK_SAVE_DONE;
+      return;
+    }
+    case LM_SAVE_ACK:
+      if (saveMode && !saveSender && state == LINK_SAVE_READY) txLive = false;
+      return;
+    case LM_SAVE_REJECT:
+      if (saveMode) {
+        txLive = false;
+        state = LINK_SAVE_INVALID;
+      }
+      return;
     case LM_HELLO: {
+      if (saveMode) { state = LINK_REFUSED; return; }
       if (n < HB_LEN) return;
       protoTheirs = body[HB_PROTO];
       // A version mismatch is REFUSED, loudly. A silent desync mid-battle is
@@ -296,6 +507,7 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
       return;
     }
     case LM_SQUAD: {
+      if (saveMode) return;
       if (n < 1 + sizeof(LinkMon)) return;
       uint8_t idx = body[0];
       if (idx >= TRAINER_TEAM_MAX) return;
@@ -315,6 +527,7 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
       return;
     }
     case LM_ACT:
+      if (saveMode) return;
       if (!isHost || n < 2) return;    // only the host acts on an action
       // A resend of a turn already resolved is not a new choice. Without this
       // the retransmissions that make the link reliable would themselves
@@ -324,6 +537,7 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
       pendingAct = body[1];
       return;
     case LM_RESULT: {
+      if (saveMode) return;
       if (isHost || n < 1) return;     // the host never receives results
       uint8_t t = body[0];
       // Absolute state, so a result from a LATER turn is still safe to apply:
@@ -339,6 +553,7 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
       return;
     }
     case LM_END:
+      if (saveMode) return;
       if (n < 1) return;
       youWon = isHost ? (body[0] != 0) : (body[0] == 0);
       txLive = false;
@@ -349,6 +564,7 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
       state = LINK_LOST;
       return;
     case LM_REMATCH:
+      if (saveMode) return;
       if (!theirsN || !mineN) return;
       rearm();
       return;

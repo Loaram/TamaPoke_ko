@@ -158,7 +158,7 @@ static const SaveField *fieldFor(const char *key, uint8_t kind) {
   return nullptr;
 }
 
-bool saveImport(const uint8_t *in, size_t n) {
+bool saveValidate(const uint8_t *in, size_t n) {
   if (n < SAVE_HDR + 2) return false;
   if (in[0] != SAVE_MAGIC0 || in[1] != SAVE_MAGIC1 ||
       in[2] != SAVE_MAGIC2 || in[3] != SAVE_MAGIC3) return false;
@@ -167,9 +167,7 @@ bool saveImport(const uint8_t *in, size_t n) {
   uint16_t want = (uint16_t)in[n - 2] | ((uint16_t)in[n - 1] << 8);
   if (crc16(in, n - 2) != want) return false;
 
-  // PASS ONE: walk the whole thing and prove it parses. Nothing is written
-  // yet -- a restore that fell over halfway would leave a save that is neither
-  // the old one nor the new one, which is the one outcome worse than no backup.
+  // Walk the whole thing and prove it parses. Nothing is written here.
   size_t at = SAVE_HDR;
   uint16_t seen = 0;
   while (at + 4 <= n - 2) {
@@ -186,13 +184,20 @@ bool saveImport(const uint8_t *in, size_t n) {
     seen++;
   }
   if (at != n - 2 || seen != count) return false;
+  return true;
+}
+
+bool saveImport(const uint8_t *in, size_t n) {
+  // PASS ONE is deliberately separate so the wireless receiver can validate a
+  // complete preview and ask the player before this committing pass runs.
+  if (!saveValidate(in, n)) return false;
 
   // PASS TWO: it parses, so commit. Cleared first, or keys the backup does not
   // contain would survive from whatever save happened to be on the device.
   Preferences p;
   p.begin("tamapoke", false);
   p.clear();
-  at = SAVE_HDR;
+  size_t at = SAVE_HDR;
   while (at + 4 <= n - 2) {
     uint8_t klen = in[at];
     char key[16] = {0};

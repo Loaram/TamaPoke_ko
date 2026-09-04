@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "battle.h"
+#include "save.h"
 #include "trainers.h"   // TRAINER_TEAM_MAX: a link team is the same size
 
 // Peer-to-peer battles.
@@ -32,9 +33,10 @@
 // whole handshake without a radio, and a deliberately lossy transport exercises
 // all of the above. Only the radio itself is unverifiable here.
 
-#define LINK_PROTO 2        // bump on ANY wire change; a mismatch is refused
+#define LINK_PROTO 3        // bump on ANY wire change; a mismatch is refused
 #define LINK_MAX_PAYLOAD 200
 #define LINK_NAME_LEN 12
+#define LINK_SAVE_CHUNK 192
 
 #define LINK_RESEND_MS 400
 // Resends are jittered, and that is not decoration. A fixed interval can lock
@@ -70,6 +72,13 @@ enum LinkState : uint8_t {
   LINK_DONE,         // somebody won
   LINK_REFUSED,      // incompatible -- loudly, never a silent desync
   LINK_LOST,         // peer went quiet, or said goodbye
+  LINK_SAVE_LISTENING,
+  LINK_SAVE_HANDSHAKE,
+  LINK_SAVE_SENDING,
+  LINK_SAVE_RECEIVING,
+  LINK_SAVE_READY,   // complete and valid, but not written until user confirms
+  LINK_SAVE_DONE,
+  LINK_SAVE_INVALID,
 };
 
 enum LinkMsg : uint8_t {
@@ -80,6 +89,12 @@ enum LinkMsg : uint8_t {
   LM_END,
   LM_BYE,        // leaving on purpose, so the peer need not wait for a timeout
   LM_REMATCH,    // go again with the same squads
+  LM_SAVE_HELLO,
+  LM_SAVE_REQUEST,
+  LM_SAVE_CHUNK,
+  LM_SAVE_RECEIVED,
+  LM_SAVE_ACK,
+  LM_SAVE_REJECT,
 };
 
 // A creature on the wire. Deliberately not `Combatant` itself: that carries
@@ -116,7 +131,22 @@ struct Link {
   uint16_t buildTheirs = 0;
   uint16_t id = 0;             // breaks the tie when both sides offer to host
   uint16_t peerId = 0;
+  char myName[LINK_NAME_LEN] = "";
   char peerName[LINK_NAME_LEN] = "";
+
+  // Save handoff uses the same radio and discovery layer as battles, but a
+  // separate stop-and-wait protocol. One 2 KiB buffer is enough because a
+  // sender and receiver never need both copies at once.
+  bool saveMode = false;
+  bool saveSender = false;
+  uint16_t saveSize = 0;
+  uint16_t savePeerSize = 0;
+  uint16_t saveOffset = 0;
+  uint16_t saveChunk = 0;
+  uint16_t saveChunks = 0;
+  uint16_t savePeerCrc = 0;
+  uint32_t saveCode = 0;
+  uint8_t saveData[SAVE_MAX_BYTES];
 
   LinkMon mine[TRAINER_TEAM_MAX];
   uint8_t mineN = 0;
@@ -150,6 +180,8 @@ struct Link {
   void *ctx = nullptr;
 
   void begin(bool host, const char *myName);
+  bool beginSave(bool sender, const char *myName,
+                 const uint8_t *data = nullptr, uint16_t len = 0);
   void addMon(const LinkMon &m);
   void start();                       // announce: hello, then squad
   void onPacket(const uint8_t *buf, uint8_t len);
@@ -161,6 +193,9 @@ struct Link {
   void sendBye();                     // leaving deliberately
   void sendRematch();
   void rearm();                       // same squads, fresh fight
+
+  uint8_t saveProgress() const;
+  bool saveReady() const { return saveMode && state == LINK_SAVE_READY; }
 
   bool ready() const { return state == LINK_READY; }
   bool live() const {
