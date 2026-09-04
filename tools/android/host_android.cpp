@@ -5,6 +5,7 @@
 #include "rtcbat.h"
 #include "linknow.h"
 #include <chrono>
+#include <ctime>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -102,14 +103,23 @@ void SdMon::unload() { if (data) { free(data); data = nullptr; } loaded = false;
 bool sdBegin() { return true; }
 bool sdSerialCommand(const String &) { return false; }
 
-static int64_t gRtcOffset = 0;
 static uint32_t systemEpoch() {
   using namespace std::chrono;
   return (uint32_t)duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
 }
 bool rtcBegin() { return true; }
-uint32_t rtcEpoch() { return (uint32_t)((int64_t)systemEpoch() + gRtcOffset); }
-void rtcSetEpoch(uint32_t e) { gRtcOffset = (int64_t)e - systemEpoch(); }
+uint32_t androidUtcEpoch() { return systemEpoch(); }
+uint32_t rtcEpoch() {
+  time_t utc = (time_t)systemEpoch();
+  tm local{};
+  localtime_r(&utc, &local);
+  int64_t localEpoch = (int64_t)utc + (int64_t)local.tm_gmtoff;
+  return localEpoch > 0 && localEpoch <= UINT32_MAX ? (uint32_t)localEpoch : 0;
+}
+void rtcSetEpoch(uint32_t) {
+  // Android owns date/time. Keeping a process-local offset here made the app
+  // jump when that offset disappeared after a restart.
+}
 bool batBegin() { return true; }
 void pmuEnablePanel() {}
 int batPercent() { return 87; }

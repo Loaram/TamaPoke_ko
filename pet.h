@@ -130,6 +130,10 @@ public:
 
   void begin();                 // carga estado de NVS (o crea el primer huevo)
   void update(uint32_t nowMs);  // llamar en cada loop()
+  // Android has no separate hardware RTC: its device clock is authoritative.
+  // Drive game minutes from that wall clock so activity pause/resume and a
+  // device-time correction cannot leave the display and growth on two clocks.
+  void updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch);
 
   // Acciones (botones tactiles)
   void feed();              // baya roja (compatibilidad)
@@ -426,6 +430,8 @@ private:
   // Pet is covered without anyone having to remember.
   bool opened = false;
   uint32_t lastTick = 0;
+  uint32_t deviceProgressEpoch = 0;
+  uint32_t deviceClockRemainder = 0;
   uint32_t eatUntil = 0;
   uint32_t heartUntil = 0;
   uint32_t evolveUntil = 0;

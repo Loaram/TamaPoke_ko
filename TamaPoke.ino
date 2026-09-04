@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.2"
+#define FW_VERSION "ko.1.1.3"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
@@ -759,7 +759,11 @@ void ensureMon() {
 
 void loop() {
   uint32_t now = millis();
+#ifdef ANDROID
+  pet.updateDeviceClock(now, rtcEpoch(), androidUtcEpoch());
+#else
   pet.update(now);
+#endif
 
   // The link is pumped here rather than from the LAN screen, because it has to
   // keep running through the battle too: linkNowPoll() drains what the radio
@@ -837,13 +841,16 @@ void loop() {
     pet.flushSave();
   }
 
-  // anota la hora real cada 30 s (se persiste en cada save del juego)
+  // anota la hora real cada 30 s (se persiste en cada save del juego). Android
+  // already refreshes this every frame while driving progression from it.
+#ifndef ANDROID
   static uint32_t lastClock = 0;
   if (now - lastClock > 30000) {
     lastClock = now;
     uint32_t e = rtcEpoch();
     if (e) pet.lastSeenEpoch = e;
   }
+#endif
 
   // latido de salud cada 5 min (para el soak test; se descarta si no hay monitor)
   static uint32_t lastHealth = 0;
@@ -2823,10 +2830,17 @@ void openClock() {
 }
 
 void applyClock() {
+#ifdef ANDROID
+  // Android always follows Settings > Date & time. The in-app clock editor is
+  // retained as the sound/language settings screen, but cannot create a second
+  // private time offset.
+  pet.setClock(rtcEpoch());
+#else
   uint32_t base = pet.lastSeenEpoch ? pet.lastSeenEpoch : rtcEpoch();
   uint32_t e = (base / 86400) * 86400 + (uint32_t)clockH * 3600 + (uint32_t)clockM * 60;
   rtcSetEpoch(e);
   pet.setClock(e);
+#endif
   clockOpen = false;
 }
 
@@ -2852,6 +2866,16 @@ void drawClockBtn(int x, int y, const char *l) {
 static const char *const LANG_CODES[LANG_COUNT] = { "ES", "EN", "FR", "DE", "IT", "PT", "한국어" };
 
 void renderClock() {
+#ifdef ANDROID
+  // This screen used to snapshot the hour in openClock() and then look frozen.
+  // Refresh it from Android Settings on every frame so the minute visibly
+  // changes without closing and reopening the screen.
+  uint32_t deviceEpoch = rtcEpoch();
+  if (deviceEpoch) {
+    clockH = (deviceEpoch / 3600) % 24;
+    clockM = (deviceEpoch / 60) % 60;
+  }
+#endif
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
   gfx->setTextColor(UI_INK);
@@ -2865,10 +2889,12 @@ void renderClock() {
   gfx->setCursor(CX - 105, 108);
   gfx->print(t);
 
+#ifndef ANDROID
   drawClockBtn(104, 190, "-");  // hora -
   drawClockBtn(170, 190, "+");  // hora +
   drawClockBtn(252, 190, "-");  // min -
   drawClockBtn(318, 190, "+");  // min +
+#endif
   gfx->setTextSize(2);
   gfx->setTextColor(0x6B4D);
   gfx->setCursor(120, 256);
@@ -2943,6 +2969,7 @@ void renderClock() {
 }
 
 void clockTap(int16_t x, int16_t y) {
+#ifndef ANDROID
   if (y >= 190 && y <= 248) {  // fila de botones +/-
     if (x >= 104 && x < 162) clockH = (clockH + 23) % 24;
     else if (x >= 170 && x < 228) clockH = (clockH + 1) % 24;
@@ -2950,6 +2977,7 @@ void clockTap(int16_t x, int16_t y) {
     else if (x >= 318 && x < 376) clockM = (clockM + 1) % 60;
     return;
   }
+#endif
   if (y >= LANG_PILL_Y && y <= LANG_PILL_Y + LANG_PILL_H) {
     if (x >= 34 && x < 130) {                  // interruptor de sonido
       audioSetEnabled(!audioEnabled());

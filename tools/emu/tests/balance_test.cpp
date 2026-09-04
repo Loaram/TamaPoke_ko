@@ -67,6 +67,29 @@ int main() {
   offline.syncClock(100120);
   ck(offline.energy == 50, "offline sleep restores 15 energy per minute");
 
+  Pet deviceClock;
+  hatch(deviceClock);
+  deviceClock.ageMinutes = MINUTES_PER_LEVEL - 1;
+  deviceClock.setClock(100000);
+  deviceClock.updateDeviceClock(0, 100000, 100000);
+  deviceClock.updateDeviceClock(59000, 100059, 100059);
+  ck(deviceClock.level() == 1, "device clock does not tick before 60 elapsed seconds");
+  deviceClock.updateDeviceClock(60000, 100060, 100060);
+  ck(deviceClock.level() == 2, "device clock advances growth at the minute boundary");
+  uint32_t ageBeforeBackwards = deviceClock.ageMinutes;
+  deviceClock.updateDeviceClock(61000, 99000, 99000);
+  ck(deviceClock.ageMinutes == ageBeforeBackwards,
+     "backward device clock correction cannot trigger a huge unsigned catch-up");
+  deviceClock.updateDeviceClock(121000, 99060, 99060);
+  ck(deviceClock.ageMinutes == ageBeforeBackwards + 1,
+     "growth continues normally after a backward clock correction");
+  uint32_t ageBeforeTimezone = deviceClock.ageMinutes;
+  deviceClock.updateDeviceClock(122000, 99060 + 9 * 3600, 99061);
+  ck(deviceClock.ageMinutes == ageBeforeTimezone,
+     "timezone display changes do not become extra growth time");
+  ck(deviceClock.lastSeenEpoch == 99060 + 9 * 3600,
+     "clock display follows the new device-local timezone");
+
   printf("%s\n", bad ? "FAILURES" : "all good");
   return bad ? 1 : 0;
 }

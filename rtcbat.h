@@ -5,6 +5,9 @@
 bool rtcBegin();
 uint32_t rtcEpoch();             // segundos unix; 0 si el RTC no es valido
 void rtcSetEpoch(uint32_t e);
+#ifdef ANDROID
+uint32_t androidUtcEpoch();   // elapsed wall time, independent of timezone
+#endif
 
 // PMU AXP2101: estado de la bateria
 bool batBegin();

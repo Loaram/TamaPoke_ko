@@ -114,12 +114,16 @@ static uint8_t dropTo(uint8_t v, uint8_t d, uint8_t fl) {
 
 void Pet::setClock(uint32_t nowEpoch) {
   lastSeenEpoch = nowEpoch;
+#ifndef ANDROID
+  deviceClockRemainder = 0;
+#endif
   if (nowEpoch) save();  // persiste ya: un corte de luz no pierde la referencia
 }
 
 void Pet::syncClock(uint32_t nowEpoch) {
   uint32_t seen = prefs.getUInt("seen", 0);
   lastSeenEpoch = nowEpoch;
+  deviceClockRemainder = 0;
   if (nowEpoch == 0) return;
   uint32_t mins = (seen && nowEpoch > seen) ? (nowEpoch - seen) / 60 : 0;
   if (mins < 2 || ceremony != CER_NONE || starterPick) {
@@ -171,6 +175,39 @@ void Pet::update(uint32_t nowMs) {
     lastTick += PET_TICK_MS;
     tick();
   }
+}
+
+void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch) {
+  // Animations still use the monotonic clock; only care/growth minutes follow
+  // Android's user-visible device clock.
+  if (ceremony != CER_NONE && millis() > ceremonyUntil) {
+    snapshotForParty();
+    newEgg();
+    lastTick = nowMs;
+    return;
+  }
+  if (!localEpoch || !utcEpoch) {
+    update(nowMs);  // defensive fallback if Android ever supplies no wall time
+    return;
+  }
+  lastSeenEpoch = localEpoch;  // display, bedtime and care-day use device local time
+  if (!deviceProgressEpoch || utcEpoch < deviceProgressEpoch) {
+    // A timezone/automatic-time correction backwards must never become an
+    // unsigned multi-year catch-up. Rebase and continue from the new setting.
+    deviceProgressEpoch = utcEpoch;
+    deviceClockRemainder = 0;
+    lastTick = nowMs;
+    return;
+  }
+
+  uint32_t elapsed = utcEpoch - deviceProgressEpoch;
+  deviceProgressEpoch = utcEpoch;
+  lastTick = nowMs;          // do not later replay the same pause via millis()
+  uint64_t accumulated = (uint64_t)deviceClockRemainder + elapsed;
+  uint32_t mins = (uint32_t)(accumulated / 60);
+  deviceClockRemainder = (uint32_t)(accumulated % 60);
+  if (mins > 14UL * 24 * 60) mins = 14UL * 24 * 60;
+  while (mins--) tick();
 }
 
 void Pet::tick() {
@@ -1316,6 +1353,9 @@ void Pet::save() {
   prefs.putBool("sleep", sleeping);
   prefs.putUChar("lend", lastEnd);
   if (lastSeenEpoch) prefs.putUInt("seen", lastSeenEpoch);
+#ifdef ANDROID
+  if (deviceProgressEpoch) prefs.putUInt("aseen", deviceProgressEpoch);
+#endif
   prefs.putBytes("dexreg", dexReg, sizeof(dexReg));
   prefs.putUShort("strk", streak);
   prefs.putUShort("bstrk", bestStreak);
@@ -1331,6 +1371,9 @@ void Pet::save() {
 }
 
 void Pet::load() {
+#ifdef ANDROID
+  deviceProgressEpoch = prefs.getUInt("aseen", 0);
+#endif
   fullness = prefs.getUChar("full", 80);
   joy = prefs.getUChar("joy", 80);
   energy = prefs.getUChar("ene", 80);

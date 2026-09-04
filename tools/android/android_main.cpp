@@ -20,6 +20,7 @@
 #include "Arduino_GFX_Library.h"
 #include "Preferences.h"
 #include "korean_text.h"
+#include "pet.h"
 
 #define LOG_TAG "TamaPoke"
 #define PANEL 466
@@ -38,6 +39,10 @@ static bool gActive = false;
 static std::string gSavePath;
 static NvsStore gLastSaved;
 static uint32_t gLastSaveCheck = 0;
+static bool gGameReady = false;
+extern Pet pet;
+uint32_t rtcEpoch();
+uint32_t androidUtcEpoch();
 
 struct PackedFile {
   std::string pack;
@@ -229,6 +234,13 @@ static void saveIfDirty(bool force) {
   }
 }
 
+static void checkpointGame() {
+  if (!gGameReady) return;
+  pet.updateDeviceClock(millis(), rtcEpoch(), androidUtcEpoch());
+  pet.saveNow();
+  saveIfDirty(true);
+}
+
 static bool mapTouch(float x, float y, int *outX, int *outY) {
   if (!gWindow) return false;
   int width = ANativeWindow_getWidth(gWindow), height = ANativeWindow_getHeight(gWindow);
@@ -279,7 +291,7 @@ static void onCommand(android_app *app, int32_t command) {
       configureWindow();
       break;
     case APP_CMD_TERM_WINDOW:
-      saveIfDirty(true);
+      checkpointGame();
       gWindow = nullptr;
       break;
     case APP_CMD_GAINED_FOCUS:
@@ -292,7 +304,7 @@ static void onCommand(android_app *app, int32_t command) {
     case APP_CMD_STOP:
       gActive = false;
       androidAudioSetActive(false);
-      saveIfDirty(true);
+      checkpointGame();
       break;
     default:
       break;
@@ -345,7 +357,32 @@ void android_main(android_app *app) {
 
   gSavePath = std::string(app->activity->internalDataPath) + "/tamapoke.nvs";
   nvsLoad(gSavePath.c_str());
+  // ko.1.1.2 and earlier could persist an app-private RTC offset. On the first
+  // fixed launch, preserve the saved level/state and rebase only its timestamp
+  // to the phone/watch clock instead of interpreting the old offset as offline
+  // play and jumping dozens of levels.
+  Preferences clockMigration;
+  clockMigration.begin("tamapoke", false);
+  uint32_t localNow = rtcEpoch();
+  uint32_t utcNow = androidUtcEpoch();
+  uint32_t savedUtc = clockMigration.getUInt("aseen", 0);
+  bool migrated = clockMigration.getBool("andclk1", false);
+  if (localNow && utcNow) {
+    if (migrated && savedUtc && utcNow > savedUtc) {
+      uint32_t elapsed = utcNow - savedUtc;
+      uint32_t cap = 14UL * 24 * 60 * 60;
+      if (elapsed > cap) elapsed = cap;
+      clockMigration.putUInt("seen", localNow > elapsed ? localNow - elapsed : localNow);
+    } else {
+      // First fixed launch (or a clock correction backwards): keep the saved
+      // level and establish a safe current-time baseline.
+      clockMigration.putUInt("seen", localNow);
+    }
+    clockMigration.putUInt("aseen", utcNow);
+    clockMigration.putBool("andclk1", true);
+  }
   setup();
+  gGameReady = true;
 
   while (!app->destroyRequested) {
     int events = 0;
@@ -367,5 +404,5 @@ void android_main(android_app *app) {
     }
   }
   androidAudioSetActive(false);
-  saveIfDirty(true);
+  checkpointGame();
 }
