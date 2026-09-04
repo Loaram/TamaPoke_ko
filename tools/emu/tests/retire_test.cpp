@@ -68,7 +68,7 @@ int main(){
     p.ageMinutes = FAREWELL_AGE_MIN + 60;
     p.fullness=p.joy=p.energy=p.hygiene=100;
     ck(p.canFarewellNow() && p.retireIsFree(),
-       "a final-form creature past two days has earned its farewell");
+       "a final-form creature past one day has earned its farewell");
     p.startRetire();
     ck(!p.retireIsEarly(), "an earned retirement is not early");
     finish(p, q);

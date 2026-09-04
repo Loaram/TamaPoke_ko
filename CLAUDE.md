@@ -611,8 +611,8 @@ source of truth, so `level()` needs no special case. Offered ONLY while an egg
 is waiting -- otherwise it would silently destroy whatever creature is alive,
 and the button says why when it is greyed.
 
-Note for anyone reading the farewell timing: 2 days is when it is first OFFERED
-(level 73), not when the creature is finished -- 100 comes at 2d 18h, and
+Note for anyone reading the farewell timing: 1 day is when it is first OFFERED
+(level 73), not when the creature is finished -- 100 comes at 1d 9h, and
 declining re-offers a day later.
 
 **B2. Multi-region, once the Gen 2/3 expansion is untabled.** These four hang

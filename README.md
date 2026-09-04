@@ -4,14 +4,14 @@
 
 [![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 ![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
-![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.3-8A2BE2)
+![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.4-8A2BE2)
 ![포켓몬](https://img.shields.io/badge/포켓몬-1025종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 기존 게임 기능을 유지하면서 전국도감 1025종과 9개 지방까지 확장했습니다.
 
-현재 개발 시험 버전은 **ko.1.1.3**입니다. Android·Wear OS의 성장 시간과 시계 화면이 휴대전화·워치의 날짜 및 시간 설정을 직접 따르도록 고쳤습니다. 이전 앱의 내부 시각 기준은 첫 실행 때 현재 레벨을 유지한 채 안전하게 기기 시각으로 바뀌며, 시각을 뒤로 조정해도 잘못된 대량 레벨업이 발생하지 않습니다. Android·Wear OS·ESP32 사이의 세이브 전송, 전국도감 1025종, 20분당 1레벨, 수면 중 활력 분당 15 회복, 조기 돌봄 종료 패널티 제거와 LAN 대전도 그대로 포함합니다.
+현재 정식 버전은 **ko.1.1.4**입니다. 성장 속도 20분당 1레벨에 맞춰 최종 진화 포켓몬의 작별 제안 시점을 2일에서 **1일(24시간, 레벨 73)**로 줄였습니다. Android·Wear OS의 성장 시간과 시계 화면은 휴대전화·워치의 날짜 및 시간 설정을 직접 따르며, 시각을 뒤로 조정해도 잘못된 대량 레벨업이 발생하지 않습니다. Android·Wear OS·ESP32 사이의 세이브 전송, 전국도감 1025종, 수면 중 활력 분당 15 회복, 조기 돌봄 종료 패널티 제거와 LAN 대전도 그대로 포함합니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
 
@@ -64,7 +64,7 @@
 
 - UI 문자열 184개, 포켓몬 1025종 이름, 기술 테이블 136개 항목(빈 기술 포함), 18개 타입, 지방·트레이너·장소 표시.
 - 메뉴, 도감, 상태, 성장, 기술 선택, 배틀, 파티, 박스, 체육관, 근거리 대전·세이브 전송, 언어 설정.
-- 기존 6개 언어와 저장 데이터 형식을 유지합니다. ko.1.1.3의 무선 규격은 프로토콜 3이며 ko.1.1.2와 호환됩니다. 프로토콜 2 이하 버전과의 LAN 연결은 거부됩니다.
+- 기존 6개 언어와 저장 데이터 형식을 유지합니다. ko.1.1.4의 무선 규격은 프로토콜 3이며 ko.1.1.2~ko.1.1.3과 호환됩니다. 프로토콜 2 이하 버전과의 LAN 연결은 거부됩니다.
 - Galmuri11의 필요한 글자만 펌웨어에 포함. UTF-8 디코딩과 픽셀 폭 계산을 에뮬레이터·실기에서 공유합니다.
 - 별명 입력은 원본 영문 키보드를 사용합니다. 사용자 별명을 자동 번역하지 않습니다.
 - ESP Web Tools의 설치 팝업은 영어이며, 한국어 페이지에서 버튼 순서를 설명합니다.
@@ -108,7 +108,7 @@ Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64
 .\.venv\Scripts\python.exe tools\build_android.py
 ```
 
-결과는 `build/android/TamaPoke-ko.1.1.3-Android-Full-debug.apk`이며 실제 기기용 ARM64, 에뮬레이터용 x86_64와 9개 지역 팩을 포함합니다. 성장과 시계 화면은 Android 설정의 날짜 및 시간을 직접 따릅니다.
+결과는 `build/android/TamaPoke-ko.1.1.4-Android-Full-debug.apk`이며 실제 기기용 ARM64, 에뮬레이터용 x86_64와 9개 지역 팩을 포함합니다. 성장과 시계 화면은 Android 설정의 날짜 및 시간을 직접 따릅니다.
 
 ### Wear OS · Galaxy Watch4~9 통합판
 
@@ -116,7 +116,7 @@ Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64
 .\.venv\Scripts\python.exe tools\build_android.py --wear
 ```
 
-결과는 `build/android/TamaPoke-ko.1.1.3-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지 대응하도록 32비트 `armeabi-v7a`와 64비트 `arm64-v8a`를 함께 넣었으며, 워치가 자신에게 맞는 실행 파일을 자동 선택합니다. 실제 원형 화면 해상도에 맞춰 화면과 터치 좌표를 자동 조정하고 9개 지역 팩을 포함하는 독립형 Wear OS 앱입니다. 성장과 시계 화면은 워치의 날짜 및 시간 설정을 따릅니다. LAN 대전과 세이브 전송은 워치 Wi-Fi를 휴대전화와 같은 공유기 또는 실기의 `TamaPoke-XXXX` 방에 연결해 사용합니다.
+결과는 `build/android/TamaPoke-ko.1.1.4-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지 대응하도록 32비트 `armeabi-v7a`와 64비트 `arm64-v8a`를 함께 넣었으며, 워치가 자신에게 맞는 실행 파일을 자동 선택합니다. 실제 원형 화면 해상도에 맞춰 화면과 터치 좌표를 자동 조정하고 9개 지역 팩을 포함하는 독립형 Wear OS 앱입니다. 성장과 시계 화면은 워치의 날짜 및 시간 설정을 따릅니다. LAN 대전과 세이브 전송은 워치 Wi-Fi를 휴대전화와 같은 공유기 또는 실기의 `TamaPoke-XXXX` 방에 연결해 사용합니다.
 
 ### 설치 페이지와 GitHub Pages
 

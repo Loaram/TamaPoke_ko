@@ -45,10 +45,10 @@ int main() {
   farewell.begin();
   farewell.dbgHatchAs(6, false);      // Charizard is a final form.
   farewell.ageMinutes = FAREWELL_AGE_MIN - 1;
-  ck(!farewell.canFarewellNow(), "farewell is unavailable one minute before two days");
+  ck(!farewell.canFarewellNow(), "farewell is unavailable one minute before one day");
   farewell.ageMinutes = FAREWELL_AGE_MIN;
-  ck(farewell.level() == 100, "two days remains capped at level 100");
-  ck(farewell.canFarewellNow(), "farewell is offered at two days");
+  ck(farewell.level() == 73, "one day reaches level 73 at 20 minutes per level");
+  ck(farewell.canFarewellNow(), "farewell is offered at one day");
 
   Pet live;
   hatch(live);
