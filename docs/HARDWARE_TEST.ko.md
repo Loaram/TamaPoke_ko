@@ -52,9 +52,10 @@
 
 공유기에서 기기 간 통신 차단 또는 게스트 Wi-Fi 격리가 켜져 있으면 Android끼리 서로 찾지 못할 수 있습니다. 이 경우 일반 Wi-Fi나 휴대전화 핫스팟으로 다시 확인합니다.
 
-## Galaxy Watch4 Classic
+## Galaxy Watch4~9
 
-- [ ] 42mm(396×396) 또는 46mm(450×450) 모델에 Wear OS APK가 설치되고 앱 목록에서 실행됨.
+- [ ] 시험할 Galaxy Watch의 정확한 모델명·크기·Wear OS·One UI Watch 버전과 `adb shell getprop ro.product.cpu.abilist` 결과를 기록함.
+- [ ] Watch4~9 통합 Wear OS APK가 설치되고 앱 목록에서 실행됨.
 - [ ] 원형 화면에서 제목·상태·하단 버튼이 잘리지 않고 터치 위치가 표시와 일치함.
 - [ ] 앱을 닫았다 다시 열어도 포켓몬·파티·도감·설정이 유지됨.
 - [ ] 워치 Wi-Fi와 휴대전화를 같은 공유기에 연결하면 워치↔휴대전화 LAN 대전이 연결됨.

@@ -103,13 +103,13 @@ Android Studio의 SDK·NDK·JBR이 설치된 Windows에서는 현재 펌웨어/�
 
 결과는 `build/android/TamaPoke-ko.1.1.1-Android-Full-debug.apk`입니다. 실제 기기용 `arm64-v8a`와 에뮬레이터용 `x86_64`, 9개 지역 스프라이트 팩을 모두 포함합니다. 프로젝트별 디버그 키는 무시되는 `build/android/debug.keystore`에 생성됩니다. 다른 PC의 디버그 키로 서명한 구버전 APK가 이미 설치돼 있으면 서명이 달라 덮어쓸 수 없습니다. 기존 앱을 삭제하면 그 앱의 Android 저장 데이터도 함께 지워지므로, 저장이 중요하면 삭제하지 말고 원래 키스토어로 새 APK를 서명해야 합니다. 이번 키로 후속 APK를 계속 업데이트하려면 `debug.keystore`도 별도로 안전하게 보관해야 합니다.
 
-### Wear OS · Galaxy Watch4 Classic
+### Wear OS · Galaxy Watch4~9 통합판
 
 ```powershell
 .\.venv\Scripts\python.exe tools\build_android.py --wear
 ```
 
-결과는 `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-debug.apk`입니다. Galaxy Watch4 Classic 42mm의 396×396 및 46mm의 450×450 원형 화면에 기존 원형 화면을 비율 유지로 맞추며, 워치가 지원하는 `arm64-v8a`와 9개 지역 팩을 포함합니다. 휴대전화 없이 실행되는 독립형 Wear OS 앱으로 선언되어 있습니다. LAN 대전은 워치의 Wi-Fi를 휴대전화와 같은 공유기에 연결하거나 실기의 `TamaPoke-XXXX` 방에 직접 연결해야 합니다.
+결과는 `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지의 기기별 Wear OS ABI 차이에 대응하도록 `armeabi-v7a`와 `arm64-v8a`를 함께 넣었습니다. 설치할 때 워치가 자신에게 맞는 네이티브 실행 파일을 자동으로 선택하므로 모델별 APK를 따로 고를 필요가 없습니다. 466×466 원형 화면은 실제 워치 해상도에 맞춰 비율 유지로 자동 조정되며, 9개 지역 팩을 포함한 독립형 Wear OS 앱입니다. LAN 대전은 워치의 Wi-Fi를 휴대전화와 같은 공유기에 연결하거나 실기의 `TamaPoke-XXXX` 방에 직접 연결해야 합니다.
 
 앱끼리 대전할 때는 두 기기를 같은 Wi-Fi에 연결한 뒤 양쪽에서 근거리 대전과 팀을 선택합니다. 앱과 실기가 대전할 때는 실기에서 먼저 근거리 대전 팀을 선택하고 화면에 표시되는 `TamaPoke-XXXX` Wi-Fi를 Android 설정에서 선택합니다. 암호는 `tamapoke`입니다. 인터넷 연결이 없다는 Android 안내가 나오면 연결 유지를 선택한 뒤 앱으로 돌아와 근거리 대전 팀을 선택합니다. 방 만들기/참가하기를 양쪽이 똑같이 눌러도 고유 번호로 역할을 자동 조정합니다.
 

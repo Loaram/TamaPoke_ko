@@ -101,13 +101,13 @@ Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64
 
 결과는 `build/android/TamaPoke-ko.1.1.1-Android-Full-debug.apk`이며 실제 기기용 ARM64, 에뮬레이터용 x86_64와 9개 지역 팩을 포함합니다.
 
-### Wear OS · Galaxy Watch4 Classic
+### Wear OS · Galaxy Watch4~9 통합판
 
 ```powershell
 .\.venv\Scripts\python.exe tools\build_android.py --wear
 ```
 
-결과는 `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-debug.apk`입니다. Galaxy Watch4 Classic 42mm의 396×396 및 46mm의 450×450 원형 화면에 맞추고, ARM64와 9개 지역 팩을 포함하는 독립형 Wear OS 앱입니다. LAN 대전은 워치 Wi-Fi를 휴대전화와 같은 공유기 또는 실기의 `TamaPoke-XXXX` 방에 연결해 사용합니다.
+결과는 `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지 대응하도록 32비트 `armeabi-v7a`와 64비트 `arm64-v8a`를 함께 넣었으며, 워치가 자신에게 맞는 실행 파일을 자동 선택합니다. 실제 원형 화면 해상도에 맞춰 화면과 터치 좌표를 자동 조정하고 9개 지역 팩을 포함하는 독립형 Wear OS 앱입니다. LAN 대전은 워치 Wi-Fi를 휴대전화와 같은 공유기 또는 실기의 `TamaPoke-XXXX` 방에 연결해 사용합니다.
 
 ### 설치 페이지와 GitHub Pages
 

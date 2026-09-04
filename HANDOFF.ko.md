@@ -149,7 +149,7 @@ ko.1.1.1 한국어 앱 파일은 1,898,080바이트입니다. 스케치는 1,897
 - 대상 SDK 37에 맞춰 Android 17의 로컬 네트워크 권한을 선언하고 근거리 대전을 처음 시작할 때 권한을 요청합니다.
 - Android APK는 `ko.1.1.1-android.1`(versionCode 1103), 301,278,438바이트입니다. 같은 ko.1.1.0 서명 키를 사용하므로 직전 APK에 덮어설치할 수 있습니다.
 - Android 실제 기기와 ESP32 실기를 동시에 연결하는 최종 대전은 아직 실행하지 못했습니다. 사용자 실기 테스트가 필요합니다.
-- Galaxy Watch4 Classic용 독립형 Wear OS 빌드를 추가했습니다. 42mm 396×396과 46mm 450×450 원형 화면에 대응하며 ARM64와 9개 지역 팩을 포함합니다. `tools/build_android.py --wear`로 만들며, APK는 299,844,767바이트입니다.
+- Galaxy Watch4~9 통합 독립형 Wear OS 빌드를 추가했습니다. `armeabi-v7a`와 `arm64-v8a`를 함께 넣어 기기별 ABI 차이에 대응하고 실제 원형 화면 해상도에 맞춰 화면·터치 좌표를 자동 조정합니다. `tools/build_android.py --wear`로 만들며, `ko.1.1.1-wear.2` APK는 300,991,723바이트입니다.
 - 검사·빌드 기록: [docs/qa/ko.1.1.1](docs/qa/ko.1.1.1/README.md).
 
 ## 다른 PC에서 시작

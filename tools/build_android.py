@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the full two-ABI Android debug APK without requiring Gradle."""
+"""Build Android and universal Galaxy Watch Wear OS debug APKs without Gradle."""
 from __future__ import annotations
 
 import argparse
@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ANDROID = ROOT / "tools" / "android"
 ALL_ABIS = {
+    "armeabi-v7a": "armv7a-linux-androideabi26",
     "arm64-v8a": "aarch64-linux-android26",
     "x86_64": "x86_64-linux-android26",
 }
@@ -60,10 +61,11 @@ def main() -> int:
     parser.add_argument("--jdk", type=Path, default=Path(os.environ.get(
         "JAVA_HOME", r"C:\Program Files\Android\Android Studio\jbr")))
     parser.add_argument("--wear", action="store_true",
-                        help="build an ARM64 standalone Wear OS APK for Galaxy Watch4 Classic")
+                        help="build a standalone ARM32/ARM64 Wear OS APK for Galaxy Watch4-9")
     parser.add_argument("--version-code", type=int,
-                        help="defaults to 1103 for Android or 1104 for Wear OS")
-    parser.add_argument("--android-revision", type=int, default=1)
+                        help="defaults to 1103 for Android or 1105 for Wear OS")
+    parser.add_argument("--android-revision", type=int,
+                        help="defaults to 1 for Android or 2 for the universal Wear OS build")
     parser.add_argument("--output", type=Path,
                         help="defaults to build/android/TamaPoke-<FW_VERSION>-Android-Full-debug.apk")
     args = parser.parse_args()
@@ -91,14 +93,17 @@ def main() -> int:
 
     version = firmware_version()
     flavor = "wear" if args.wear else "android"
-    version_code = args.version_code if args.version_code is not None else (1104 if args.wear else 1103)
-    version_name = f"{version}-{flavor}.{args.android_revision}"
-    default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-debug.apk" if args.wear
+    version_code = args.version_code if args.version_code is not None else (1105 if args.wear else 1103)
+    revision = args.android_revision if args.android_revision is not None else (2 if args.wear else 1)
+    version_name = f"{version}-{flavor}.{revision}"
+    default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk" if args.wear
                     else f"TamaPoke-{version}-Android-Full-debug.apk")
     apk_output = args.output or ROOT / "build" / "android" / default_name
     manifest_source = ANDROID / ("WearManifest.xml" if args.wear else "AndroidManifest.xml")
     min_sdk = 30 if args.wear else 26
-    abis = {"arm64-v8a": ALL_ABIS["arm64-v8a"]} if args.wear else ALL_ABIS
+    abis = ({abi: ALL_ABIS[abi] for abi in ("armeabi-v7a", "arm64-v8a")}
+            if args.wear else
+            {abi: ALL_ABIS[abi] for abi in ("arm64-v8a", "x86_64")})
     # aapt2 on Windows still opens resource paths through a narrow-character
     # code path. Keep intermediates under an ASCII-only directory so this also
     # builds from Korean workspace paths.

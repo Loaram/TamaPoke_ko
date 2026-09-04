@@ -24,18 +24,19 @@ connection despite its lack of Internet, then start LAN pairing in the app.
 Android 17 also asks for local-network access the first time LAN pairing starts;
 allow it and the waiting screen continues automatically.
 
-## Wear OS / Galaxy Watch4 Classic
+## Wear OS / Galaxy Watch4 through Watch9
 
-Build the standalone ARM64 Wear OS edition with:
+Build the standalone universal ARM Wear OS edition with:
 
 ```powershell
 .\.venv\Scripts\python.exe tools\build_android.py --wear
 ```
 
-The output is `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-debug.apk`.
-It targets the 396 x 396 (42 mm) and 450 x 450 (46 mm) round displays by scaling
-the existing 466 x 466 round canvas without changing its aspect ratio. The APK
-declares `android.hardware.type.watch`, is standalone, and contains only the
-Galaxy Watch4-compatible `arm64-v8a` native library. LAN battles require the
-watch Wi-Fi to be connected to the same network as the phone, or directly to
-the `TamaPoke-XXXX` hardware network.
+The output is `build/android/TamaPoke-ko.1.1.1-WearOS-GalaxyWatch4-9-debug.apk`.
+It scales the existing 466 x 466 round canvas and touch coordinates to the
+device's actual square surface without changing the aspect ratio. The APK
+declares `android.hardware.type.watch`, is standalone, and contains both
+`armeabi-v7a` and `arm64-v8a` so that Galaxy Watch generations with different
+Wear OS ABIs can select the matching native library automatically. LAN battles
+require the watch Wi-Fi to be connected to the same network as the phone, or
+directly to the `TamaPoke-XXXX` hardware network.
