@@ -9,9 +9,9 @@
 // Re-run after any expansion, and again if upstream adds art.
 #pragma once
 
-#define NO_ART_COUNT 19
+#define NO_ART_COUNT 48
 static const int16_t NO_ART[NO_ART_COUNT ? NO_ART_COUNT : 1] = {
-  514, 516, 520, 522, 523, 538, 558, 564, 565, 591, 592, 616, 626, 668, 732, 735, 741, 756, 765
+  514, 516, 520, 522, 523, 538, 558, 564, 565, 591, 592, 616, 626, 668, 732, 735, 741, 756, 765, 837, 838, 839, 847, 866, 870, 878, 893, 896, 931, 942, 943, 944, 947, 949, 950, 954, 956, 962, 973, 986, 993, 999, 1001, 1002, 1008, 1014, 1022, 1023
 };
 
 static inline bool speciesHasArt(int16_t d) {
@@ -22,9 +22,9 @@ static inline bool speciesHasArt(int16_t d) {
 
 // Species that cannot hatch: the art-less entries above plus every
 // earlier member whose evolution line can reach one of them.
-#define NO_HATCH_COUNT 28
+#define NO_HATCH_COUNT 64
 static const int16_t NO_HATCH[NO_HATCH_COUNT ? NO_HATCH_COUNT : 1] = {
-  513, 514, 515, 516, 519, 520, 522, 523, 538, 557, 558, 564, 565, 590, 591, 592, 616, 626, 667, 668, 731, 732, 734, 735, 741, 755, 756, 765
+  122, 439, 513, 514, 515, 516, 519, 520, 522, 523, 538, 557, 558, 564, 565, 590, 591, 592, 616, 626, 667, 668, 731, 732, 734, 735, 741, 755, 756, 765, 837, 838, 839, 846, 847, 866, 870, 878, 893, 896, 931, 942, 943, 944, 946, 947, 948, 949, 950, 953, 954, 955, 956, 962, 973, 986, 993, 999, 1001, 1002, 1008, 1014, 1022, 1023
 };
 
 static inline bool speciesCanHatch(int16_t d) {

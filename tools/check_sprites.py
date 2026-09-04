@@ -22,6 +22,7 @@ import os
 import shutil
 import subprocess
 import sys
+import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 API = ('https://api.github.com/repos/PMDCollab/SpriteCollab/contents/sprite'
@@ -130,10 +131,9 @@ def local():
     if not os.path.isdir(d):
         return have
     for f in os.listdir(d):
-        if f.startswith('p') and f[1:4].isdigit() and f.endswith('.bin'):
-            have.add(int(f[1:4]))
-        elif f.startswith('ps') and f[2:5].isdigit():
-            have.add(int(f[2:5]))
+        m = re.fullmatch(r'p(?:s)?(\d+)\.bin', f)
+        if m:
+            have.add(int(m.group(1)))
     return have
 
 

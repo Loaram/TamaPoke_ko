@@ -42,16 +42,16 @@
   progress{width:100%;height:18px;accent-color:#258441} details{margin:1rem 0}summary{cursor:pointer;font-weight:600}
   footer{margin-top:2rem;border-top:1px solid #d7dbe5;padding-top:1rem} @media(max-width:420px){.step{padding:1rem}.wrap{padding:1.2rem .8rem}.pack-grid{grid-template-columns:1fr}}
 </style></head><body><main class="wrap">
-<h1>TamaPoke 한국어판</h1><p class="sub">DylanPDao 포크 기반 · 809종 · 7개 지방<br>Waveshare ESP32-S3-Touch-AMOLED-1.75 전용</p>
+<h1>TamaPoke 한국어판</h1><p class="sub">DylanPDao 포크 기반 · 1025종 · 9개 지방<br>Waveshare ESP32-S3-Touch-AMOLED-1.75 전용</p>
 <section class="step guide" id="play-guide" aria-labelledby="guide-title">
 <h2 id="guide-title">한국어 플레이 설명서</h2>
 <p>한국어 게임 화면으로 배우는 14쪽 가이드입니다. 기본 조작부터 도감·육성·파티·배틀·저장 데이터 옮기기까지 담았습니다.</p>
-<p><b>ko.1.0.7 변경:</b> 그림이 없는 19종과 해당 진화 계보의 앞 단계 9종을 알 후보에서 제외 · 기존 대기 알도 안전한 후보로 자동 교체</p>
+<p><b>ko.1.1.0a 변경:</b> 가라르·팔데아 도감과 포켓몬 추가 · PMDCollab 자료가 없는 48종과 해당 진화 계보를 알 후보에서 제외</p>
 <div class="row">
 <a class="download-link primary" href="guides/TamaPoke-ko.1.0.3-Play-Guide-KO.pdf" download>PDF 설명서 받기 · 402KB</a>
 <a class="download-link" href="guides/TamaPoke-ko.1.0.3-Play-Guide-KO-Images.zip" download>이미지 14장 받기 · ZIP 1.8MB</a>
 </div>
-<p class="note">ko.1.0.3 제작, ko.1.0.7 호환 · 기본 조작 3쪽 · 도감 사용법 4~5쪽<br><a href="guides/TamaPoke-ko.1.0.3-Play-Guide-KO.pdf" target="_blank" rel="noopener">PDF 바로 열어보기</a></p>
+<p class="note">ko.1.0.3 제작, ko.1.1.0a 호환 · 기본 조작 3쪽 · 도감 사용법 4~5쪽<br><a href="guides/TamaPoke-ko.1.0.3-Play-Guide-KO.pdf" target="_blank" rel="noopener">PDF 바로 열어보기</a></p>
 </section>
 <p id="unsupported" class="unsupported">PC용 Chrome 또는 Edge에서 열어 주세요. 이 브라우저는 USB 연결을 지원하지 않습니다.</p>
 <section class="step"><h2><span class="num">1</span>한국어 펌웨어 설치 <span class="version" id="version"></span></h2>
@@ -66,7 +66,7 @@
 <section class="step"><h2><span class="num">2</span>스프라이트 설치</h2>
 <p>기기에 microSD를 넣고, 1단계 설치 창을 닫은 뒤 연결하세요. 원하는 지방만 설치해도 되고 나중에 추가할 수도 있습니다.</p>
 <div class="row"><button id="connect">기기 연결</button><button id="disconnect" disabled>연결 해제</button></div>
-<div class="pack-grid" id="packs"><button data-region="kanto" disabled>관동 · 40.5MB</button><button data-region="johto" disabled>성도 · 27.6MB</button><button data-region="hoenn" disabled>호연 · 38.6MB</button><button data-region="sinnoh" disabled>신오 · 33.3MB</button><button data-region="unova" disabled>하나 · 40.1MB</button><button data-region="kalos" disabled>칼로스 · 21.0MB</button><button data-region="alola" disabled>알로라 · 27.5MB</button></div><button id="all" disabled>7개 지방 전체 설치</button>
+<div class="pack-grid" id="packs"><button data-region="kanto" disabled>관동 · 40.7MB</button><button data-region="johto" disabled>성도 · 27.8MB</button><button data-region="hoenn" disabled>호연 · 38.8MB</button><button data-region="sinnoh" disabled>신오 · 33.5MB</button><button data-region="unova" disabled>하나 · 40.3MB</button><button data-region="kalos" disabled>칼로스 · 21.2MB</button><button data-region="alola" disabled>알로라 · 27.7MB</button><button data-region="galar" disabled>가라르 · 25.5MB</button><button data-region="paldea" disabled>팔데아 · 28.9MB</button></div><button id="all" disabled>9개 지방 전체 설치</button>
 <p class="note">USB 전송은 시간이 걸립니다. 관동 팩은 약 10~15분이 걸릴 수 있어요. 전송 중에는 케이블과 SD 카드를 빼지 말고 이 페이지를 열어 두세요.</p>
 <p id="status" role="status" aria-live="polite">기기를 연결하면 설치할 지방을 선택할 수 있습니다.</p>
 <progress id="progress" value="0" max="100" aria-label="스프라이트 설치 진행률" hidden></progress>
@@ -77,5 +77,5 @@
 <p class="note">기존 별명과 저장 데이터는 그대로 유지됩니다. 이름 입력 키보드는 원본의 영문 키보드를 사용합니다.</p></section>
 <details><summary>기본 조작</summary><p>포켓몬을 눌러 쓰다듬고, 아래 아이콘으로 먹이·수면·목욕·훈련을 선택하세요. 이름을 누르면 메뉴가 열립니다. 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다. PWR 버튼을 짧게 누르면 화면을 끄고, 길게 누르면 전원을 끕니다.</p></details>
 <footer class="note"><p>원작: <a href="https://github.com/socquique/TamaPoke">Quique Tortosa · socquique/TamaPoke</a><br>기반 포크: <a href="https://github.com/DylanPDao/TamaPoke">DylanPDao/TamaPoke</a></p>
-<p>스프라이트: <a href="https://github.com/PMDCollab/SpriteCollab">PMD SpriteCollab</a> (CC BY-NC). 코드 MIT. 한글 글꼴 Galmuri11 (SIL OFL 1.1). Pokémon © Nintendo / Game Freak / The Pokémon Company. 비공식·비상업 팬 프로젝트입니다.</p></footer>
+<p>스프라이트: <a href="https://github.com/PMDCollab/SpriteCollab">PMD SpriteCollab</a> (CC BY-NC) · <a href="credits-galar-paldea.md">가라르·팔데아 종별 기여자</a>. 코드 MIT. 한글 글꼴 Galmuri11 (SIL OFL 1.1). Pokémon © Nintendo / Game Freak / The Pokémon Company. 비공식·비상업 팬 프로젝트입니다.</p></footer>
 </main><script type="module" src="https://unpkg.com/esp-web-tools@10.1.1/dist/web/install-button.js"></script><script src="installer.js" defer></script></body></html>

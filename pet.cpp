@@ -393,10 +393,6 @@ uint8_t Pet::eggRarity() const {
 
 // elige la especie del huevo: tirada de rareza (mejorada por una despedida
 // completa, castigada por una escapada) y sesgo hacia lineas incompletas
-// Room for the candidate list. A whole rarity tier of a 386-species dex is far
-// more than the 80 the Kanto-only build needed.
-#define CAND_MAX 260
-
 uint16_t gRegionArt = 0xFFFF;   // everything, until the SD narrows it
 
 bool regionAvailable(uint8_t r) {
@@ -459,9 +455,12 @@ int16_t Pet::pickEggSpecies() {
   // si la pokedex del tier esta completa, vale cualquiera del tier
   for (int pass = 0; pass < 2; pass++) {
     for (int t = tier; t >= R_COMUN; t--) {
-      int16_t cand[CAND_MAX];
-      int n = 0;
-      for (int16_t d = rg.lo; d <= rg.hi && n < CAND_MAX; d++) {
+      // Reservoir sampling keeps every eligible species equally likely without
+      // a fixed candidate array. The old 260-entry cap silently cut late
+      // generations out of the ALL/common pool once the dex grew past 809.
+      int16_t picked = 0;
+      uint16_t n = 0;
+      for (int16_t d = rg.lo; d <= rg.hi; d++) {
         if (DEX_TBL[d].rarity != t) continue;
         if (pass == 0 && !lineHasUnregistered(d)) continue;
         // ALL spans every region, so filter per species: a missing Sinnoh pack
@@ -471,9 +470,10 @@ int16_t Pet::pickEggSpecies() {
         // can reach it, never hatches. Dex numbers and existing saves stay
         // untouched; the incomplete family is only removed from new eggs.
         if (!speciesCanHatch(d)) continue;
-        cand[n++] = d;
+        n++;
+        if (random(n) == 0) picked = d;
       }
-      if (n > 0) return cand[random(n)];
+      if (n > 0) return picked;
     }
   }
   return rg.starters[random(rg.starterCount)];  // inalcanzable, por si acaso
@@ -485,12 +485,15 @@ int16_t Pet::pickEggSpecies() {
 int16_t Pet::rollInRegion(uint8_t r, uint8_t tier) {
   const RegionInfo &rg = REGIONS[eggRegionFallback(r % REGION_COUNT)];
   for (int t = tier; t >= R_COMUN; t--) {
-    int16_t cand[CAND_MAX];
-    int n = 0;
-    for (int16_t d = rg.lo; d <= rg.hi && n < CAND_MAX; d++)
+    int16_t picked = 0;
+    uint16_t n = 0;
+    for (int16_t d = rg.lo; d <= rg.hi; d++)
       if (DEX_TBL[d].rarity == t && regionAvailable(regionOfDex(d)) &&
-          speciesCanHatch(d)) cand[n++] = d;
-    if (n) return cand[random(n)];
+          speciesCanHatch(d)) {
+        n++;
+        if (random(n) == 0) picked = d;
+      }
+    if (n) return picked;
   }
   return rg.starters[0];      // a region with nothing in it cannot happen
 }

@@ -86,7 +86,7 @@ int main() {
       struggleBug = true;
   ck(struggleBug, "Wimpod starts with STRUGGLE BUG");
 
-  // Full-dex guard: every one of the 809 table entries can be reached through
+  // Full-dex guard: every one of the 1025 table entries can be reached through
   // hatching, evolution, party restore or the debug tools. None may arrive at
   // battle with an empty or invalid set, even when its signature move is not
   // part of the compact move table.
@@ -102,8 +102,8 @@ int main() {
         if (all.moves[s] >= MOVE_COUNT) invalidAny++;
     }
   }
-  ck(emptyL1 == 0, "all 809 species have a usable move at level 1");
-  ck(emptyL100 == 0, "all 809 species have a usable move at level 100");
+  ck(emptyL1 == 0, "all 1025 species have a usable move at level 1");
+  ck(emptyL100 == 0, "all 1025 species have a usable move at level 100");
   ck(invalidAny == 0, "all full-dex move slots stay inside MOVE_TBL");
 
   Pet magikarp;

@@ -49,7 +49,7 @@ static uint8_t *slurp(const std::string &path, uint32_t *size) {
 }
 
 bool PmdMon::load(int16_t dexNum, bool shiny) {
-  if (dexNum < 1 || dexNum > 999) return false;
+  if (dexNum < 1 || dexNum > DEX_COUNT) return false;
   unload();
   char file[24];
   snprintf(file, sizeof(file), "/p%s%03u.bin", shiny ? "s" : "", (unsigned)dexNum);

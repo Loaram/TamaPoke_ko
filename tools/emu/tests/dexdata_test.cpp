@@ -78,8 +78,11 @@ int main(){
   // because it learns no damaging move of its own type in the games either:
   // its whole gimmick is Counter and Recover. COSMOG and COSMOEM are the nebula
   // stages, which know Splash, Teleport and Cosmic Power and nothing else.
+  // Applin is the later equivalent: its only damaging level-up move is the
+  // Ghost-type Astonish. Giving it an invented Grass attack would contradict
+  // the source data, so it is the one known non-STAB attacker.
   static const int16_t NO_ATTACK[] = { 11, 14, 132, 201, 202, 235, 266, 268, 360,
-                                       771, 789, 790 };
+                                       771, 789, 790, 840 };
   static const int16_t NO_LEARNSET[] = { 11, 14, 132, 201, 235, 789, 790 };
   auto known = [](const int16_t *a, size_t n, int16_t d) {
     for (size_t i = 0; i < n; i++) if (a[i] == d) return true;
@@ -108,7 +111,7 @@ int main(){
     if (noStab) printf("      %d species have no same-type attack, first is %s (%d)\n",
                        noStab, DEX_TBL[first].name, first);
     ck(noStab == 0,
-       "every species can learn an attack of its own type, bar the known twelve");
+       "every species can learn an attack of its own type, bar known source exceptions");
   }
 
   // --- and everything it can learn is a real move

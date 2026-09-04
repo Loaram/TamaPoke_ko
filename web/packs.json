@@ -3,42 +3,54 @@
     "id": "kanto",
     "name": "관동",
     "path": "sprites-kanto.pak",
-    "bytes": 42440298
+    "bytes": 42648206
   },
   {
     "id": "johto",
     "name": "성도",
     "path": "sprites-johto.pak",
-    "bytes": 28989371
+    "bytes": 29197279
   },
   {
     "id": "hoenn",
     "name": "호연",
     "path": "sprites-hoenn.pak",
-    "bytes": 40490974
+    "bytes": 40698882
   },
   {
     "id": "sinnoh",
     "name": "신오",
     "path": "sprites-sinnoh.pak",
-    "bytes": 34919634
+    "bytes": 35127542
   },
   {
     "id": "unova",
     "name": "하나",
     "path": "sprites-unova.pak",
-    "bytes": 42050748
+    "bytes": 42258656
   },
   {
     "id": "kalos",
     "name": "칼로스",
     "path": "sprites-kalos.pak",
-    "bytes": 22043168
+    "bytes": 22251076
   },
   {
     "id": "alola",
     "name": "알로라",
     "path": "sprites-alola.pak",
-    "bytes": 28884786
+    "bytes": 29092694
+  },
+  {
+    "id": "galar",
+    "name": "가라르",
+    "path": "sprites-galar.pak",
+    "bytes": 26765330
+  },
+  {
+    "id": "paldea",
+    "name": "팔데아",
+    "path": "sprites-paldea.pak",
+    "bytes": 30347810
   }
 ]

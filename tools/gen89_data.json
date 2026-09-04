@@ -1,0 +1,10212 @@
+{
+  "provenance": {
+    "retrieved": "2026-09-04",
+    "species_names_types_numbers": "https://pokemon.fandom.com/ko/wiki/전국도감",
+    "base_stats": "https://pokemon.fandom.com/ko/wiki/종족값_목록",
+    "move_details": "Individual Korean Pokémon Wiki move pages recorded per move below",
+    "note": "Official Korean display names and level-up move data; game evolution conditions are adapted to levels/branches."
+  },
+  "regions": [
+    [
+      "GALAR",
+      810,
+      905,
+      [
+        810,
+        813,
+        816
+      ]
+    ],
+    [
+      "PALDEA",
+      906,
+      1025,
+      [
+        906,
+        909,
+        912
+      ]
+    ]
+  ],
+  "old_direct_evolutions": {
+    "57": [
+      979,
+      30
+    ],
+    "83": [
+      865,
+      30
+    ],
+    "122": [
+      866,
+      42
+    ],
+    "203": [
+      981,
+      30
+    ],
+    "206": [
+      982,
+      30
+    ],
+    "211": [
+      904,
+      30
+    ],
+    "217": [
+      901,
+      30
+    ],
+    "222": [
+      864,
+      38
+    ],
+    "234": [
+      899,
+      30
+    ],
+    "264": [
+      862,
+      35
+    ],
+    "550": [
+      902,
+      30
+    ],
+    "625": [
+      983,
+      30
+    ]
+  },
+  "branches": {
+    "52": [
+      53,
+      863
+    ],
+    "123": [
+      212,
+      900
+    ],
+    "194": [
+      195,
+      980
+    ],
+    "215": [
+      461,
+      903
+    ],
+    "562": [
+      563,
+      867
+    ],
+    "840": [
+      841,
+      842,
+      1011
+    ],
+    "935": [
+      936,
+      937
+    ]
+  },
+  "legendary": [
+    888,
+    889,
+    890,
+    891,
+    892,
+    893,
+    894,
+    895,
+    896,
+    897,
+    898,
+    905,
+    1001,
+    1002,
+    1003,
+    1004,
+    1007,
+    1008,
+    1014,
+    1015,
+    1016,
+    1017,
+    1024,
+    1025
+  ],
+  "rare_extra": [
+    840,
+    845,
+    848,
+    871,
+    874,
+    875,
+    876,
+    877,
+    880,
+    881,
+    882,
+    883,
+    884,
+    885,
+    984,
+    985,
+    986,
+    987,
+    988,
+    989,
+    990,
+    991,
+    992,
+    993,
+    994,
+    995,
+    1005,
+    1006,
+    1009,
+    1010,
+    1020,
+    1021,
+    1022,
+    1023
+  ],
+  "moves": [
+    {
+      "display": "RAPID SPIN",
+      "slug": "rapid-spin",
+      "ko": "고속스핀",
+      "type": "normal",
+      "category": "physical",
+      "power": 50,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EA%B3%A0%EC%86%8D%EC%8A%A4%ED%95%80_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "ROLLOUT",
+      "slug": "rollout",
+      "ko": "구르기",
+      "type": "rock",
+      "category": "physical",
+      "power": 30,
+      "accuracy": 90,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EA%B5%AC%EB%A5%B4%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "SUCKER PUNCH",
+      "slug": "sucker-punch",
+      "ko": "기습",
+      "type": "dark",
+      "category": "physical",
+      "power": 70,
+      "accuracy": 100,
+      "effect": "priority",
+      "param": 1,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EA%B8%B0%EC%8A%B5_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "WRAP",
+      "slug": "wrap",
+      "ko": "김밥말이",
+      "type": "normal",
+      "category": "physical",
+      "power": 15,
+      "accuracy": 90,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EA%B9%80%EB%B0%A5%EB%A7%90%EC%9D%B4_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "LEAFAGE",
+      "slug": "leafage",
+      "ko": "나뭇잎",
+      "type": "grass",
+      "category": "physical",
+      "power": 40,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%82%98%EB%AD%87%EC%9E%8E_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "ASTONISH",
+      "slug": "astonish",
+      "ko": "놀래키기",
+      "type": "ghost",
+      "category": "physical",
+      "power": 30,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%86%80%EB%9E%98%ED%82%A4%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "AVALANCHE",
+      "slug": "avalanche",
+      "ko": "눈사태",
+      "type": "ice",
+      "category": "physical",
+      "power": 60,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%88%88%EC%82%AC%ED%83%9C_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "POWDER SNOW",
+      "slug": "powder-snow",
+      "ko": "눈싸라기",
+      "type": "ice",
+      "category": "special",
+      "power": 40,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%88%88%EC%8B%B8%EB%9D%BC%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "DOUBLE KICK",
+      "slug": "double-kick",
+      "ko": "두번차기",
+      "type": "fighting",
+      "category": "physical",
+      "power": 30,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%91%90%EB%B2%88%EC%B0%A8%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "DRAIN KISS",
+      "slug": "draining-kiss",
+      "ko": "드레인키스",
+      "type": "fairy",
+      "category": "special",
+      "power": 50,
+      "accuracy": 100,
+      "effect": "drain",
+      "param": 75,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%93%9C%EB%A0%88%EC%9D%B8%ED%82%A4%EC%8A%A4_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "BULLDOZE",
+      "slug": "bulldoze",
+      "ko": "땅고르기",
+      "type": "ground",
+      "category": "physical",
+      "power": 60,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%95%85%EA%B3%A0%EB%A5%B4%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "MAGIC LEAF",
+      "slug": "magical-leaf",
+      "ko": "매지컬리프",
+      "type": "grass",
+      "category": "special",
+      "power": 60,
+      "accuracy": 0,
+      "effect": "never_miss",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%A7%A4%EC%A7%80%EC%BB%AC%EB%A6%AC%ED%94%84_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "POISON FANG",
+      "slug": "poison-fang",
+      "ko": "맹독엄니",
+      "type": "poison",
+      "category": "physical",
+      "power": 50,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "poison",
+      "ailment_chance": 50,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%A7%B9%EB%8F%85%EC%97%84%EB%8B%88_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "METAL CLAW",
+      "slug": "metal-claw",
+      "ko": "메탈클로",
+      "type": "steel",
+      "category": "physical",
+      "power": 50,
+      "accuracy": 95,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%A9%94%ED%83%88%ED%81%B4%EB%A1%9C_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "WATER PULSE",
+      "slug": "water-pulse",
+      "ko": "물의파동",
+      "type": "water",
+      "category": "special",
+      "power": 60,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%AC%BC%EC%9D%98%ED%8C%8C%EB%8F%99_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "SNARL",
+      "slug": "snarl",
+      "ko": "바크아웃",
+      "type": "dark",
+      "category": "special",
+      "power": 55,
+      "accuracy": 95,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B0%94%ED%81%AC%EC%95%84%EC%9B%83_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "HEADBUTT",
+      "slug": "headbutt",
+      "ko": "박치기",
+      "type": "normal",
+      "category": "physical",
+      "power": 70,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B0%95%EC%B9%98%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "SLASH",
+      "slug": "slash",
+      "ko": "베어가르기",
+      "type": "normal",
+      "category": "physical",
+      "power": 70,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B2%A0%EC%96%B4%EA%B0%80%EB%A5%B4%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "PAYBACK",
+      "slug": "payback",
+      "ko": "보복",
+      "type": "dark",
+      "category": "physical",
+      "power": 50,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B3%B4%EB%B3%B5_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "NUZZLE",
+      "slug": "nuzzle",
+      "ko": "볼부비부비",
+      "type": "electric",
+      "category": "physical",
+      "power": 20,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "para",
+      "ailment_chance": 100,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B3%BC%EB%B6%80%EB%B9%84%EB%B6%80%EB%B9%84_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "INCINERATE",
+      "slug": "incinerate",
+      "ko": "불태우기",
+      "type": "fire",
+      "category": "special",
+      "power": 60,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B6%88%ED%83%9C%EC%9A%B0%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "BRAVE BIRD",
+      "slug": "brave-bird",
+      "ko": "브레이브버드",
+      "type": "flying",
+      "category": "physical",
+      "power": 120,
+      "accuracy": 100,
+      "effect": "recoil",
+      "param": 3,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EB%B8%8C%EB%A0%88%EC%9D%B4%EB%B8%8C%EB%B2%84%EB%93%9C_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "FAKE OUT",
+      "slug": "fake-out",
+      "ko": "속이기",
+      "type": "normal",
+      "category": "physical",
+      "power": 40,
+      "accuracy": 100,
+      "effect": "priority",
+      "param": 3,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%86%8D%EC%9D%B4%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "SMOG",
+      "slug": "smog",
+      "ko": "스모그",
+      "type": "poison",
+      "category": "special",
+      "power": 30,
+      "accuracy": 70,
+      "effect": "none",
+      "param": 0,
+      "ailment": "poison",
+      "ailment_chance": 40,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%8A%A4%EB%AA%A8%EA%B7%B8_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "ASSURANCE",
+      "slug": "assurance",
+      "ko": "승부굳히기",
+      "type": "dark",
+      "category": "physical",
+      "power": 60,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%8A%B9%EB%B6%80%EA%B5%B3%ED%9E%88%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "BULLET SEED",
+      "slug": "bullet-seed",
+      "ko": "씨기관총",
+      "type": "grass",
+      "category": "physical",
+      "power": 25,
+      "accuracy": 100,
+      "effect": "multi",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%94%A8%EA%B8%B0%EA%B4%80%EC%B4%9D_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "AQUA JET",
+      "slug": "aqua-jet",
+      "ko": "아쿠아제트",
+      "type": "water",
+      "category": "physical",
+      "power": 40,
+      "accuracy": 100,
+      "effect": "priority",
+      "param": 1,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%95%84%EC%BF%A0%EC%95%84%EC%A0%9C%ED%8A%B8_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "MALIGN CHAIN",
+      "slug": "malignant-chain",
+      "ko": "악독사슬",
+      "type": "poison",
+      "category": "special",
+      "power": 100,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "poison",
+      "ailment_chance": 50,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%95%85%EB%8F%85%EC%82%AC%EC%8A%AC_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "SUPERPOWER",
+      "slug": "superpower",
+      "ko": "엄청난힘",
+      "type": "fighting",
+      "category": "physical",
+      "power": 120,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%97%84%EC%B2%AD%EB%82%9C%ED%9E%98_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "INFESTATION",
+      "slug": "infestation",
+      "ko": "엉겨붙기",
+      "type": "bug",
+      "category": "special",
+      "power": 20,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%97%89%EA%B2%A8%EB%B6%99%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "ENERGY BALL",
+      "slug": "energy-ball",
+      "ko": "에너지볼",
+      "type": "grass",
+      "category": "special",
+      "power": 90,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%97%90%EB%84%88%EC%A7%80%EB%B3%BC_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "DRAGON PULSE",
+      "slug": "dragon-pulse",
+      "ko": "용의파동",
+      "type": "dragon",
+      "category": "special",
+      "power": 85,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%9A%A9%EC%9D%98%ED%8C%8C%EB%8F%99_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "CLOSE COMBAT",
+      "slug": "close-combat",
+      "ko": "인파이트",
+      "type": "fighting",
+      "category": "physical",
+      "power": 120,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%9D%B8%ED%8C%8C%EC%9D%B4%ED%8A%B8_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "BIND",
+      "slug": "bind",
+      "ko": "조이기",
+      "type": "normal",
+      "category": "physical",
+      "power": 15,
+      "accuracy": 85,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%A1%B0%EC%9D%B4%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "MUD-SLAP",
+      "slug": "mud-slap",
+      "ko": "진흙뿌리기",
+      "type": "ground",
+      "category": "special",
+      "power": 20,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%A7%84%ED%9D%99%EB%BF%8C%EB%A6%AC%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "STOMP",
+      "slug": "stomp",
+      "ko": "짓밟기",
+      "type": "normal",
+      "category": "physical",
+      "power": 65,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%A7%93%EB%B0%9F%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "CHARGE BEAM",
+      "slug": "charge-beam",
+      "ko": "차지빔",
+      "type": "electric",
+      "category": "special",
+      "power": 50,
+      "accuracy": 90,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%EC%B0%A8%EC%A7%80%EB%B9%94_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "MUDDY WATER",
+      "slug": "muddy-water",
+      "ko": "탁류",
+      "type": "water",
+      "category": "special",
+      "power": 90,
+      "accuracy": 85,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%83%81%EB%A5%98_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "KNOCK OFF",
+      "slug": "knock-off",
+      "ko": "탁쳐서떨구기",
+      "type": "dark",
+      "category": "physical",
+      "power": 65,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%83%81%EC%B3%90%EC%84%9C%EB%96%A8%EA%B5%AC%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "BELCH",
+      "slug": "belch",
+      "ko": "트림",
+      "type": "poison",
+      "category": "special",
+      "power": 120,
+      "accuracy": 90,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%8A%B8%EB%A6%BC_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "POWER GEM",
+      "slug": "power-gem",
+      "ko": "파워젬",
+      "type": "rock",
+      "category": "special",
+      "power": 80,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%8C%8C%EC%9B%8C%EC%A0%AC_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "HYPER VOICE",
+      "slug": "hyper-voice",
+      "ko": "하이퍼보이스",
+      "type": "normal",
+      "category": "special",
+      "power": 90,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%95%98%EC%9D%B4%ED%8D%BC%EB%B3%B4%EC%9D%B4%EC%8A%A4_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "TWISTER",
+      "slug": "twister",
+      "ko": "회오리",
+      "type": "dragon",
+      "category": "special",
+      "power": 40,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%9A%8C%EC%98%A4%EB%A6%AC_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "FIRE SPIN",
+      "slug": "fire-spin",
+      "ko": "회오리불꽃",
+      "type": "fire",
+      "category": "special",
+      "power": 35,
+      "accuracy": 85,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%9A%8C%EC%98%A4%EB%A6%AC%EB%B6%88%EA%BD%83_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "SLAM",
+      "slug": "slam",
+      "ko": "힘껏치기",
+      "type": "normal",
+      "category": "physical",
+      "power": 80,
+      "accuracy": 75,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokemon.fandom.com/ko/wiki/%ED%9E%98%EA%BB%8F%EC%B9%98%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    }
+  ],
+  "species": [
+    {
+      "dex": 810,
+      "slug": "grookey",
+      "display": "GROOKEY",
+      "ko": "흥나숭",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        50,
+        65,
+        50,
+        65,
+        40,
+        40
+      ],
+      "evolves_to": 811,
+      "evolve_level": 16,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "razor-leaf",
+          12
+        ],
+        [
+          "knock-off",
+          20
+        ],
+        [
+          "slam",
+          24
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/흥나숭_%28포켓몬%29"
+    },
+    {
+      "dex": 811,
+      "slug": "thwackey",
+      "display": "THWACKEY",
+      "ko": "채키몽",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        70,
+        85,
+        70,
+        80,
+        55,
+        60
+      ],
+      "evolves_to": 812,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "razor-leaf",
+          12
+        ],
+        [
+          "knock-off",
+          24
+        ],
+        [
+          "slam",
+          30
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/채키몽_%28포켓몬%29"
+    },
+    {
+      "dex": 812,
+      "slug": "rillaboom",
+      "display": "RILLABOOM",
+      "ko": "고릴타",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        100,
+        125,
+        90,
+        85,
+        60,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "razor-leaf",
+          12
+        ],
+        [
+          "knock-off",
+          24
+        ],
+        [
+          "slam",
+          30
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/고릴타_%28포켓몬%29"
+    },
+    {
+      "dex": 813,
+      "slug": "scorbunny",
+      "display": "SCORBUNNY",
+      "ko": "염버니",
+      "type1": "fire",
+      "type2": null,
+      "accent_type": "fuego",
+      "stats": [
+        50,
+        71,
+        40,
+        69,
+        40,
+        40
+      ],
+      "evolves_to": 814,
+      "evolve_level": 16,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "ember",
+          6
+        ],
+        [
+          "quick-attack",
+          8
+        ],
+        [
+          "double-kick",
+          12
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "double-edge",
+          36
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/염버니_%28포켓몬%29"
+    },
+    {
+      "dex": 814,
+      "slug": "raboot",
+      "display": "RABOOT",
+      "ko": "래비풋",
+      "type1": "fire",
+      "type2": null,
+      "accent_type": "fuego",
+      "stats": [
+        65,
+        86,
+        60,
+        94,
+        55,
+        60
+      ],
+      "evolves_to": 815,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "ember",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "double-kick",
+          12
+        ],
+        [
+          "headbutt",
+          30
+        ],
+        [
+          "double-edge",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/래비풋_%28포켓몬%29"
+    },
+    {
+      "dex": 815,
+      "slug": "cinderace",
+      "display": "CINDERACE",
+      "ko": "에이스번",
+      "type1": "fire",
+      "type2": null,
+      "accent_type": "fuego",
+      "stats": [
+        80,
+        116,
+        75,
+        119,
+        65,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "ember",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "double-kick",
+          12
+        ],
+        [
+          "headbutt",
+          30
+        ],
+        [
+          "double-edge",
+          54
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/에이스번_%28포켓몬%29"
+    },
+    {
+      "dex": 816,
+      "slug": "sobble",
+      "display": "SOBBLE",
+      "ko": "울머기",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        50,
+        40,
+        40,
+        70,
+        70,
+        40
+      ],
+      "evolves_to": 817,
+      "evolve_level": 16,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "water-gun",
+          6
+        ],
+        [
+          "bind",
+          8
+        ],
+        [
+          "water-pulse",
+          12
+        ],
+        [
+          "sucker-punch",
+          20
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/울머기_%28포켓몬%29"
+    },
+    {
+      "dex": 817,
+      "slug": "drizzile",
+      "display": "DRIZZILE",
+      "ko": "누겔레온",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        65,
+        60,
+        55,
+        90,
+        95,
+        55
+      ],
+      "evolves_to": 818,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "bind",
+          1
+        ],
+        [
+          "water-pulse",
+          12
+        ],
+        [
+          "sucker-punch",
+          24
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/누겔레온_%28포켓몬%29"
+    },
+    {
+      "dex": 818,
+      "slug": "inteleon",
+      "display": "INTELEON",
+      "ko": "인텔리레온",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        70,
+        85,
+        65,
+        120,
+        125,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "bind",
+          1
+        ],
+        [
+          "water-pulse",
+          12
+        ],
+        [
+          "sucker-punch",
+          24
+        ],
+        [
+          "hydro-pump",
+          62
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/인텔리레온_%28포켓몬%29"
+    },
+    {
+      "dex": 819,
+      "slug": "skwovet",
+      "display": "SKWOVET",
+      "ko": "탐리스",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        70,
+        55,
+        55,
+        25,
+        35,
+        35
+      ],
+      "evolves_to": 820,
+      "evolve_level": 24,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "bite",
+          5
+        ],
+        [
+          "body-slam",
+          20
+        ],
+        [
+          "bullet-seed",
+          35
+        ],
+        [
+          "belch",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/탐리스_%28포켓몬%29"
+    },
+    {
+      "dex": 820,
+      "slug": "greedent",
+      "display": "GREEDENT",
+      "ko": "요씽리스",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        120,
+        95,
+        95,
+        20,
+        55,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "body-slam",
+          20
+        ],
+        [
+          "bullet-seed",
+          41
+        ],
+        [
+          "belch",
+          55
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/요씽리스_%28포켓몬%29"
+    },
+    {
+      "dex": 821,
+      "slug": "rookidee",
+      "display": "ROOKIDEE",
+      "ko": "파라꼬",
+      "type1": "flying",
+      "type2": null,
+      "accent_type": "volador",
+      "stats": [
+        38,
+        47,
+        35,
+        57,
+        33,
+        35
+      ],
+      "evolves_to": 822,
+      "evolve_level": 18,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "fury-attack",
+          12
+        ],
+        [
+          "drill-peck",
+          28
+        ],
+        [
+          "brave-bird",
+          36
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파라꼬_%28포켓몬%29"
+    },
+    {
+      "dex": 822,
+      "slug": "corvisquire",
+      "display": "CORVISQUIRE",
+      "ko": "파크로우",
+      "type1": "flying",
+      "type2": null,
+      "accent_type": "volador",
+      "stats": [
+        68,
+        67,
+        55,
+        77,
+        43,
+        55
+      ],
+      "evolves_to": 823,
+      "evolve_level": 38,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "fury-attack",
+          12
+        ],
+        [
+          "drill-peck",
+          34
+        ],
+        [
+          "brave-bird",
+          46
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파크로우_%28포켓몬%29"
+    },
+    {
+      "dex": 823,
+      "slug": "corviknight",
+      "display": "CORVIKNIGHT",
+      "ko": "아머까오",
+      "type1": "flying",
+      "type2": "steel",
+      "accent_type": "volador",
+      "stats": [
+        98,
+        87,
+        105,
+        67,
+        53,
+        85
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "fury-attack",
+          12
+        ],
+        [
+          "drill-peck",
+          34
+        ],
+        [
+          "brave-bird",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/아머까오_%28포켓몬%29"
+    },
+    {
+      "dex": 824,
+      "slug": "blipbug",
+      "display": "BLIPBUG",
+      "ko": "두루지벌레",
+      "type1": "bug",
+      "type2": null,
+      "accent_type": "bicho",
+      "stats": [
+        25,
+        20,
+        20,
+        45,
+        25,
+        45
+      ],
+      "evolves_to": 825,
+      "evolve_level": 10,
+      "learnset": [
+        [
+          "struggle-bug",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/두루지벌레_%28포켓몬%29"
+    },
+    {
+      "dex": 825,
+      "slug": "dottler",
+      "display": "DOTTLER",
+      "ko": "레돔벌레",
+      "type1": "bug",
+      "type2": "psychic",
+      "accent_type": "bicho",
+      "stats": [
+        50,
+        35,
+        80,
+        30,
+        50,
+        90
+      ],
+      "evolves_to": 826,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "struggle-bug",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/레돔벌레_%28포켓몬%29"
+    },
+    {
+      "dex": 826,
+      "slug": "orbeetle",
+      "display": "ORBEETLE",
+      "ko": "이올브",
+      "type1": "bug",
+      "type2": "psychic",
+      "accent_type": "bicho",
+      "stats": [
+        60,
+        45,
+        110,
+        90,
+        80,
+        120
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "struggle-bug",
+          1
+        ],
+        [
+          "psybeam",
+          16
+        ],
+        [
+          "bug-buzz",
+          28
+        ],
+        [
+          "psychic",
+          36
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/이올브_%28포켓몬%29"
+    },
+    {
+      "dex": 827,
+      "slug": "nickit",
+      "display": "NICKIT",
+      "ko": "훔처우",
+      "type1": "dark",
+      "type2": null,
+      "accent_type": "siniestro",
+      "stats": [
+        40,
+        28,
+        28,
+        50,
+        47,
+        52
+      ],
+      "evolves_to": 828,
+      "evolve_level": 18,
+      "learnset": [
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "snarl",
+          12
+        ],
+        [
+          "assurance",
+          16
+        ],
+        [
+          "sucker-punch",
+          24
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/훔처우_%28포켓몬%29"
+    },
+    {
+      "dex": 828,
+      "slug": "thievul",
+      "display": "THIEVUL",
+      "ko": "폭슬라이",
+      "type1": "dark",
+      "type2": null,
+      "accent_type": "siniestro",
+      "stats": [
+        70,
+        58,
+        58,
+        90,
+        87,
+        92
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "snarl",
+          12
+        ],
+        [
+          "assurance",
+          16
+        ],
+        [
+          "sucker-punch",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/폭슬라이_%28포켓몬%29"
+    },
+    {
+      "dex": 829,
+      "slug": "gossifleur",
+      "display": "GOSSIFLEUR",
+      "ko": "꼬모카",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        40,
+        40,
+        60,
+        10,
+        40,
+        60
+      ],
+      "evolves_to": 830,
+      "evolve_level": 20,
+      "learnset": [
+        [
+          "leafage",
+          1
+        ],
+        [
+          "rapid-spin",
+          4
+        ],
+        [
+          "razor-leaf",
+          12
+        ],
+        [
+          "hyper-voice",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/꼬모카_%28포켓몬%29"
+    },
+    {
+      "dex": 830,
+      "slug": "eldegoss",
+      "display": "ELDEGOSS",
+      "ko": "백솜모카",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        60,
+        50,
+        90,
+        60,
+        80,
+        120
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "leafage",
+          1
+        ],
+        [
+          "rapid-spin",
+          1
+        ],
+        [
+          "razor-leaf",
+          12
+        ],
+        [
+          "hyper-voice",
+          34
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/백솜모카_%28포켓몬%29"
+    },
+    {
+      "dex": 831,
+      "slug": "wooloo",
+      "display": "WOOLOO",
+      "ko": "우르",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        42,
+        40,
+        55,
+        48,
+        40,
+        45
+      ],
+      "evolves_to": 832,
+      "evolve_level": 24,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "double-kick",
+          16
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "double-edge",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/우르_%28포켓몬%29"
+    },
+    {
+      "dex": 832,
+      "slug": "dubwool",
+      "display": "DUBWOOL",
+      "ko": "배우르",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        72,
+        80,
+        100,
+        88,
+        60,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "double-kick",
+          16
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "double-edge",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/배우르_%28포켓몬%29"
+    },
+    {
+      "dex": 833,
+      "slug": "chewtle",
+      "display": "CHEWTLE",
+      "ko": "깨물부기",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        50,
+        64,
+        50,
+        44,
+        38,
+        38
+      ],
+      "evolves_to": 834,
+      "evolve_level": 22,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "bite",
+          7
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "body-slam",
+          49
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/깨물부기_%28포켓몬%29"
+    },
+    {
+      "dex": 834,
+      "slug": "drednaw",
+      "display": "DREDNAW",
+      "ko": "갈가부기",
+      "type1": "water",
+      "type2": "rock",
+      "accent_type": "agua",
+      "stats": [
+        90,
+        115,
+        90,
+        74,
+        48,
+        68
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "crunch",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "body-slam",
+          57
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/갈가부기_%28포켓몬%29"
+    },
+    {
+      "dex": 835,
+      "slug": "yamper",
+      "display": "YAMPER",
+      "ko": "멍파치",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        59,
+        45,
+        50,
+        26,
+        40,
+        50
+      ],
+      "evolves_to": 836,
+      "evolve_level": 25,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "nuzzle",
+          5
+        ],
+        [
+          "bite",
+          10
+        ],
+        [
+          "spark",
+          20
+        ],
+        [
+          "crunch",
+          30
+        ],
+        [
+          "play-rough",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/멍파치_%28포켓몬%29"
+    },
+    {
+      "dex": 836,
+      "slug": "boltund",
+      "display": "BOLTUND",
+      "ko": "펄스멍",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        69,
+        90,
+        60,
+        121,
+        90,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "nuzzle",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "spark",
+          20
+        ],
+        [
+          "crunch",
+          34
+        ],
+        [
+          "play-rough",
+          55
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/펄스멍_%28포켓몬%29"
+    },
+    {
+      "dex": 837,
+      "slug": "rolycoly",
+      "display": "ROLYCOLY",
+      "ko": "탄동",
+      "type1": "rock",
+      "type2": null,
+      "accent_type": "roca",
+      "stats": [
+        30,
+        40,
+        50,
+        30,
+        40,
+        50
+      ],
+      "evolves_to": 838,
+      "evolve_level": 18,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rapid-spin",
+          5
+        ],
+        [
+          "ancient-power",
+          20
+        ],
+        [
+          "incinerate",
+          25
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/탄동_%28포켓몬%29"
+    },
+    {
+      "dex": 838,
+      "slug": "carkol",
+      "display": "CARKOL",
+      "ko": "탄차곤",
+      "type1": "rock",
+      "type2": "fire",
+      "accent_type": "roca",
+      "stats": [
+        80,
+        60,
+        90,
+        50,
+        60,
+        70
+      ],
+      "evolves_to": 839,
+      "evolve_level": 34,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rapid-spin",
+          1
+        ],
+        [
+          "ancient-power",
+          20
+        ],
+        [
+          "incinerate",
+          27
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/탄차곤_%28포켓몬%29"
+    },
+    {
+      "dex": 839,
+      "slug": "coalossal",
+      "display": "COALOSSAL",
+      "ko": "석탄산",
+      "type1": "rock",
+      "type2": "fire",
+      "accent_type": "roca",
+      "stats": [
+        110,
+        80,
+        120,
+        30,
+        80,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rapid-spin",
+          1
+        ],
+        [
+          "ancient-power",
+          20
+        ],
+        [
+          "incinerate",
+          27
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/석탄산_%28포켓몬%29"
+    },
+    {
+      "dex": 840,
+      "slug": "applin",
+      "display": "APPLIN",
+      "ko": "과사삭벌레",
+      "type1": "grass",
+      "type2": "dragon",
+      "accent_type": "planta",
+      "stats": [
+        40,
+        40,
+        80,
+        20,
+        40,
+        40
+      ],
+      "evolves_to": 841,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/과사삭벌레_%28포켓몬%29"
+    },
+    {
+      "dex": 841,
+      "slug": "flapple",
+      "display": "FLAPPLE",
+      "ko": "애프룡",
+      "type1": "grass",
+      "type2": "dragon",
+      "accent_type": "planta",
+      "stats": [
+        70,
+        110,
+        80,
+        70,
+        95,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "twister",
+          1
+        ],
+        [
+          "dragon-pulse",
+          28
+        ],
+        [
+          "fly",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/애프룡_%28포켓몬%29"
+    },
+    {
+      "dex": 842,
+      "slug": "appletun",
+      "display": "APPLETUN",
+      "ko": "단지래플",
+      "type1": "grass",
+      "type2": "dragon",
+      "accent_type": "planta",
+      "stats": [
+        110,
+        85,
+        80,
+        30,
+        100,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "stomp",
+          8
+        ],
+        [
+          "bullet-seed",
+          20
+        ],
+        [
+          "body-slam",
+          32
+        ],
+        [
+          "dragon-pulse",
+          40
+        ],
+        [
+          "energy-ball",
+          44
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/단지래플_%28포켓몬%29"
+    },
+    {
+      "dex": 843,
+      "slug": "silicobra",
+      "display": "SILICOBRA",
+      "ko": "모래뱀",
+      "type1": "ground",
+      "type2": null,
+      "accent_type": "tierra",
+      "stats": [
+        52,
+        57,
+        75,
+        46,
+        35,
+        50
+      ],
+      "evolves_to": 844,
+      "evolve_level": 36,
+      "learnset": [
+        [
+          "wrap",
+          1
+        ],
+        [
+          "bulldoze",
+          15
+        ],
+        [
+          "headbutt",
+          20
+        ],
+        [
+          "dig",
+          30
+        ],
+        [
+          "slam",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/모래뱀_%28포켓몬%29"
+    },
+    {
+      "dex": 844,
+      "slug": "sandaconda",
+      "display": "SANDACONDA",
+      "ko": "사다이사",
+      "type1": "ground",
+      "type2": null,
+      "accent_type": "tierra",
+      "stats": [
+        72,
+        107,
+        125,
+        71,
+        65,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "wrap",
+          1
+        ],
+        [
+          "bulldoze",
+          15
+        ],
+        [
+          "headbutt",
+          20
+        ],
+        [
+          "dig",
+          30
+        ],
+        [
+          "slam",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/사다이사_%28포켓몬%29"
+    },
+    {
+      "dex": 845,
+      "slug": "cramorant",
+      "display": "CRAMORANT",
+      "ko": "윽우지",
+      "type1": "flying",
+      "type2": "water",
+      "accent_type": "volador",
+      "stats": [
+        70,
+        85,
+        55,
+        85,
+        85,
+        95
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "water-gun",
+          7
+        ],
+        [
+          "fury-attack",
+          14
+        ],
+        [
+          "drill-peck",
+          35
+        ],
+        [
+          "hydro-pump",
+          56
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/윽우지_%28포켓몬%29"
+    },
+    {
+      "dex": 846,
+      "slug": "arrokuda",
+      "display": "ARROKUDA",
+      "ko": "찌로꼬치",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        41,
+        63,
+        40,
+        66,
+        40,
+        30
+      ],
+      "evolves_to": 847,
+      "evolve_level": 26,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "aqua-jet",
+          1
+        ],
+        [
+          "fury-attack",
+          6
+        ],
+        [
+          "bite",
+          12
+        ],
+        [
+          "crunch",
+          36
+        ],
+        [
+          "double-edge",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/찌로꼬치_%28포켓몬%29"
+    },
+    {
+      "dex": 847,
+      "slug": "barraskewda",
+      "display": "BARRASKEWDA",
+      "ko": "꼬치조",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        61,
+        123,
+        60,
+        136,
+        60,
+        50
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "aqua-jet",
+          1
+        ],
+        [
+          "fury-attack",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "crunch",
+          40
+        ],
+        [
+          "double-edge",
+          56
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/꼬치조_%28포켓몬%29"
+    },
+    {
+      "dex": 848,
+      "slug": "toxel",
+      "display": "TOXEL",
+      "ko": "일레즌",
+      "type1": "electric",
+      "type2": "poison",
+      "accent_type": "electrico",
+      "stats": [
+        40,
+        38,
+        35,
+        40,
+        54,
+        35
+      ],
+      "evolves_to": 849,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "belch",
+          1
+        ],
+        [
+          "nuzzle",
+          1
+        ],
+        [
+          "acid",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/일레즌_%28포켓몬%29"
+    },
+    {
+      "dex": 849,
+      "slug": "toxtricity",
+      "display": "TOXTRICITY",
+      "ko": "스트린더",
+      "type1": "electric",
+      "type2": "poison",
+      "accent_type": "electrico",
+      "stats": [
+        75,
+        98,
+        70,
+        75,
+        114,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "belch",
+          1
+        ],
+        [
+          "nuzzle",
+          1
+        ],
+        [
+          "acid",
+          1
+        ],
+        [
+          "thunder-shock",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/스트린더_%28포켓몬%29"
+    },
+    {
+      "dex": 850,
+      "slug": "sizzlipede",
+      "display": "SIZZLIPEDE",
+      "ko": "태우지네",
+      "type1": "fire",
+      "type2": "bug",
+      "accent_type": "fuego",
+      "stats": [
+        50,
+        65,
+        45,
+        45,
+        50,
+        50
+      ],
+      "evolves_to": 851,
+      "evolve_level": 28,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "wrap",
+          5
+        ],
+        [
+          "bite",
+          10
+        ],
+        [
+          "slam",
+          30
+        ],
+        [
+          "fire-spin",
+          35
+        ],
+        [
+          "crunch",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/태우지네_%28포켓몬%29"
+    },
+    {
+      "dex": 851,
+      "slug": "centiskorch",
+      "display": "CENTISKORCH",
+      "ko": "다태우지네",
+      "type1": "fire",
+      "type2": "bug",
+      "accent_type": "fuego",
+      "stats": [
+        100,
+        115,
+        65,
+        65,
+        90,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "wrap",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "slam",
+          32
+        ],
+        [
+          "fire-spin",
+          39
+        ],
+        [
+          "crunch",
+          46
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/다태우지네_%28포켓몬%29"
+    },
+    {
+      "dex": 852,
+      "slug": "clobbopus",
+      "display": "CLOBBOPUS",
+      "ko": "때때무노",
+      "type1": "fighting",
+      "type2": null,
+      "accent_type": "lucha",
+      "stats": [
+        50,
+        68,
+        60,
+        32,
+        50,
+        50
+      ],
+      "evolves_to": 853,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "rock-smash",
+          1
+        ],
+        [
+          "bind",
+          10
+        ],
+        [
+          "submission",
+          30
+        ],
+        [
+          "superpower",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/때때무노_%28포켓몬%29"
+    },
+    {
+      "dex": 853,
+      "slug": "grapploct",
+      "display": "GRAPPLOCT",
+      "ko": "케오퍼스",
+      "type1": "fighting",
+      "type2": null,
+      "accent_type": "lucha",
+      "stats": [
+        80,
+        118,
+        90,
+        42,
+        70,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-smash",
+          1
+        ],
+        [
+          "bind",
+          1
+        ],
+        [
+          "submission",
+          30
+        ],
+        [
+          "superpower",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/케오퍼스_%28포켓몬%29"
+    },
+    {
+      "dex": 854,
+      "slug": "sinistea",
+      "display": "SINISTEA",
+      "ko": "데인차",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        40,
+        45,
+        45,
+        50,
+        74,
+        54
+      ],
+      "evolves_to": 855,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "mega-drain",
+          12
+        ],
+        [
+          "sucker-punch",
+          24
+        ],
+        [
+          "shadow-ball",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/데인차_%28포켓몬%29"
+    },
+    {
+      "dex": 855,
+      "slug": "polteageist",
+      "display": "POLTEAGEIST",
+      "ko": "포트데스",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        60,
+        65,
+        65,
+        70,
+        134,
+        114
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "mega-drain",
+          1
+        ],
+        [
+          "sucker-punch",
+          24
+        ],
+        [
+          "shadow-ball",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/포트데스_%28포켓몬%29"
+    },
+    {
+      "dex": 856,
+      "slug": "hatenna",
+      "display": "HATENNA",
+      "ko": "몸지브림",
+      "type1": "psychic",
+      "type2": null,
+      "accent_type": "psiquico",
+      "stats": [
+        42,
+        30,
+        45,
+        39,
+        56,
+        53
+      ],
+      "evolves_to": 857,
+      "evolve_level": 32,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "psybeam",
+          20
+        ],
+        [
+          "dazzling-gleam",
+          30
+        ],
+        [
+          "psychic",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/몸지브림_%28포켓몬%29"
+    },
+    {
+      "dex": 857,
+      "slug": "hattrem",
+      "display": "HATTREM",
+      "ko": "손지브림",
+      "type1": "psychic",
+      "type2": null,
+      "accent_type": "psiquico",
+      "stats": [
+        57,
+        40,
+        65,
+        49,
+        86,
+        73
+      ],
+      "evolves_to": 858,
+      "evolve_level": 42,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "psybeam",
+          20
+        ],
+        [
+          "dazzling-gleam",
+          30
+        ],
+        [
+          "psychic",
+          44
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/손지브림_%28포켓몬%29"
+    },
+    {
+      "dex": 858,
+      "slug": "hatterene",
+      "display": "HATTERENE",
+      "ko": "브리무음",
+      "type1": "psychic",
+      "type2": "fairy",
+      "accent_type": "psiquico",
+      "stats": [
+        57,
+        90,
+        95,
+        29,
+        136,
+        103
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "psybeam",
+          20
+        ],
+        [
+          "dazzling-gleam",
+          30
+        ],
+        [
+          "psychic",
+          46
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/브리무음_%28포켓몬%29"
+    },
+    {
+      "dex": 859,
+      "slug": "impidimp",
+      "display": "IMPIDIMP",
+      "ko": "메롱꿍",
+      "type1": "dark",
+      "type2": "fairy",
+      "accent_type": "siniestro",
+      "stats": [
+        45,
+        45,
+        30,
+        50,
+        55,
+        40
+      ],
+      "evolves_to": 860,
+      "evolve_level": 32,
+      "learnset": [
+        [
+          "fake-out",
+          1
+        ],
+        [
+          "bite",
+          4
+        ],
+        [
+          "assurance",
+          16
+        ],
+        [
+          "sucker-punch",
+          24
+        ],
+        [
+          "dark-pulse",
+          33
+        ],
+        [
+          "play-rough",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/메롱꿍_%28포켓몬%29"
+    },
+    {
+      "dex": 860,
+      "slug": "morgrem",
+      "display": "MORGREM",
+      "ko": "쏘겨모",
+      "type1": "dark",
+      "type2": "fairy",
+      "accent_type": "siniestro",
+      "stats": [
+        65,
+        60,
+        45,
+        70,
+        75,
+        55
+      ],
+      "evolves_to": 861,
+      "evolve_level": 42,
+      "learnset": [
+        [
+          "fake-out",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "assurance",
+          16
+        ],
+        [
+          "sucker-punch",
+          24
+        ],
+        [
+          "dark-pulse",
+          35
+        ],
+        [
+          "play-rough",
+          46
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/쏘겨모_%28포켓몬%29"
+    },
+    {
+      "dex": 861,
+      "slug": "grimmsnarl",
+      "display": "GRIMMSNARL",
+      "ko": "오롱털",
+      "type1": "dark",
+      "type2": "fairy",
+      "accent_type": "siniestro",
+      "stats": [
+        95,
+        120,
+        65,
+        60,
+        95,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "fake-out",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "assurance",
+          16
+        ],
+        [
+          "sucker-punch",
+          24
+        ],
+        [
+          "dark-pulse",
+          35
+        ],
+        [
+          "play-rough",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/오롱털_%28포켓몬%29"
+    },
+    {
+      "dex": 862,
+      "slug": "obstagoon",
+      "display": "OBSTAGOON",
+      "ko": "가로막구리",
+      "type1": "dark",
+      "type2": "normal",
+      "accent_type": "siniestro",
+      "stats": [
+        93,
+        90,
+        101,
+        95,
+        60,
+        81
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "submission",
+          1
+        ],
+        [
+          "pin-missile",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          1
+        ],
+        [
+          "snarl",
+          9
+        ],
+        [
+          "headbutt",
+          12
+        ],
+        [
+          "double-edge",
+          56
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/가로막구리_%28포켓몬%29"
+    },
+    {
+      "dex": 863,
+      "slug": "perrserker",
+      "display": "PERRSERKER",
+      "ko": "나이킹",
+      "type1": "steel",
+      "type2": null,
+      "accent_type": "acero",
+      "stats": [
+        70,
+        110,
+        100,
+        50,
+        50,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "fake-out",
+          1
+        ],
+        [
+          "scratch",
+          1
+        ],
+        [
+          "metal-claw",
+          16
+        ],
+        [
+          "slash",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/나이킹_%28포켓몬%29"
+    },
+    {
+      "dex": 864,
+      "slug": "cursola",
+      "display": "CURSOLA",
+      "ko": "산호르곤",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        60,
+        95,
+        50,
+        30,
+        145,
+        130
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "ancient-power",
+          20
+        ],
+        [
+          "power-gem",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/산호르곤_%28포켓몬%29"
+    },
+    {
+      "dex": 865,
+      "slug": "sirfetch-d",
+      "display": "SIRFETCH'D",
+      "ko": "창파나이트",
+      "type1": "fighting",
+      "type2": null,
+      "accent_type": "lucha",
+      "stats": [
+        62,
+        135,
+        95,
+        65,
+        68,
+        82
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "rock-smash",
+          15
+        ],
+        [
+          "knock-off",
+          30
+        ],
+        [
+          "slam",
+          50
+        ],
+        [
+          "brave-bird",
+          65
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/창파나이트_%28포켓몬%29"
+    },
+    {
+      "dex": 866,
+      "slug": "mr-rime",
+      "display": "MR. RIME",
+      "ko": "마임꽁꽁",
+      "type1": "ice",
+      "type2": "psychic",
+      "accent_type": "hielo",
+      "stats": [
+        80,
+        85,
+        75,
+        70,
+        110,
+        100
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "dazzling-gleam",
+          1
+        ],
+        [
+          "pound",
+          1
+        ],
+        [
+          "rapid-spin",
+          1
+        ],
+        [
+          "confusion",
+          12
+        ],
+        [
+          "double-kick",
+          24
+        ],
+        [
+          "psybeam",
+          28
+        ],
+        [
+          "sucker-punch",
+          40
+        ],
+        [
+          "psychic",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/마임꽁꽁_%28포켓몬%29"
+    },
+    {
+      "dex": 867,
+      "slug": "runerigus",
+      "display": "RUNERIGUS",
+      "ko": "데스판",
+      "type1": "ground",
+      "type2": "ghost",
+      "accent_type": "tierra",
+      "stats": [
+        58,
+        95,
+        145,
+        30,
+        50,
+        105
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "slam",
+          32
+        ],
+        [
+          "shadow-ball",
+          44
+        ],
+        [
+          "earthquake",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/데스판_%28포켓몬%29"
+    },
+    {
+      "dex": 868,
+      "slug": "milcery",
+      "display": "MILCERY",
+      "ko": "마빌크",
+      "type1": "fairy",
+      "type2": null,
+      "accent_type": "hada",
+      "stats": [
+        45,
+        40,
+        40,
+        34,
+        50,
+        61
+      ],
+      "evolves_to": 869,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "draining-kiss",
+          15
+        ],
+        [
+          "dazzling-gleam",
+          35
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/마빌크_%28포켓몬%29"
+    },
+    {
+      "dex": 869,
+      "slug": "alcremie",
+      "display": "ALCREMIE",
+      "ko": "마휘핑",
+      "type1": "fairy",
+      "type2": null,
+      "accent_type": "hada",
+      "stats": [
+        65,
+        60,
+        75,
+        64,
+        110,
+        121
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "draining-kiss",
+          15
+        ],
+        [
+          "dazzling-gleam",
+          35
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/마휘핑_%28포켓몬%29"
+    },
+    {
+      "dex": 870,
+      "slug": "falinks",
+      "display": "FALINKS",
+      "ko": "대여르",
+      "type1": "fighting",
+      "type2": null,
+      "accent_type": "lucha",
+      "stats": [
+        65,
+        100,
+        100,
+        75,
+        70,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rock-smash",
+          5
+        ],
+        [
+          "headbutt",
+          15
+        ],
+        [
+          "close-combat",
+          50
+        ],
+        [
+          "megahorn",
+          55
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/대여르_%28포켓몬%29"
+    },
+    {
+      "dex": 871,
+      "slug": "pincurchin",
+      "display": "PINCURCHIN",
+      "ko": "찌르성게",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        48,
+        101,
+        95,
+        15,
+        91,
+        85
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "water-gun",
+          5
+        ],
+        [
+          "fury-attack",
+          15
+        ],
+        [
+          "spark",
+          20
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/찌르성게_%28포켓몬%29"
+    },
+    {
+      "dex": 872,
+      "slug": "snom",
+      "display": "SNOM",
+      "ko": "누니머기",
+      "type1": "ice",
+      "type2": "bug",
+      "accent_type": "hielo",
+      "stats": [
+        30,
+        25,
+        35,
+        20,
+        45,
+        30
+      ],
+      "evolves_to": 873,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "struggle-bug",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/누니머기_%28포켓몬%29"
+    },
+    {
+      "dex": 873,
+      "slug": "frosmoth",
+      "display": "FROSMOTH",
+      "ko": "모스노우",
+      "type1": "ice",
+      "type2": "bug",
+      "accent_type": "hielo",
+      "stats": [
+        70,
+        65,
+        60,
+        65,
+        125,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "struggle-bug",
+          1
+        ],
+        [
+          "infestation",
+          8
+        ],
+        [
+          "aurora-beam",
+          24
+        ],
+        [
+          "bug-buzz",
+          32
+        ],
+        [
+          "blizzard",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/모스노우_%28포켓몬%29"
+    },
+    {
+      "dex": 874,
+      "slug": "stonjourner",
+      "display": "STONJOURNER",
+      "ko": "돌헨진",
+      "type1": "rock",
+      "type2": null,
+      "accent_type": "roca",
+      "stats": [
+        100,
+        125,
+        135,
+        70,
+        20,
+        20
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-throw",
+          1
+        ],
+        [
+          "stomp",
+          24
+        ],
+        [
+          "rock-slide",
+          36
+        ],
+        [
+          "body-slam",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/돌헨진_%28포켓몬%29"
+    },
+    {
+      "dex": 875,
+      "slug": "eiscue",
+      "display": "EISCUE",
+      "ko": "빙큐보",
+      "type1": "ice",
+      "type2": null,
+      "accent_type": "hielo",
+      "stats": [
+        75,
+        80,
+        110,
+        50,
+        65,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "surf",
+          54
+        ],
+        [
+          "blizzard",
+          60
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/빙큐보_%28포켓몬%29"
+    },
+    {
+      "dex": 876,
+      "slug": "indeedee",
+      "display": "INDEEDEE",
+      "ko": "에써르",
+      "type1": "psychic",
+      "type2": "normal",
+      "accent_type": "psiquico",
+      "stats": [
+        60,
+        65,
+        55,
+        95,
+        105,
+        95
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "psybeam",
+          15
+        ],
+        [
+          "psychic",
+          35
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/에써르_%28포켓몬%29"
+    },
+    {
+      "dex": 877,
+      "slug": "morpeko",
+      "display": "MORPEKO",
+      "ko": "모르페코",
+      "type1": "electric",
+      "type2": "dark",
+      "accent_type": "electrico",
+      "stats": [
+        58,
+        95,
+        58,
+        97,
+        70,
+        58
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "quick-attack",
+          15
+        ],
+        [
+          "bite",
+          25
+        ],
+        [
+          "spark",
+          30
+        ],
+        [
+          "bullet-seed",
+          45
+        ],
+        [
+          "crunch",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/모르페코_%28포켓몬%29"
+    },
+    {
+      "dex": 878,
+      "slug": "cufant",
+      "display": "CUFANT",
+      "ko": "끼리동",
+      "type1": "steel",
+      "type2": null,
+      "accent_type": "acero",
+      "stats": [
+        72,
+        80,
+        49,
+        40,
+        40,
+        49
+      ],
+      "evolves_to": 879,
+      "evolve_level": 34,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rollout",
+          5
+        ],
+        [
+          "rock-smash",
+          10
+        ],
+        [
+          "bulldoze",
+          15
+        ],
+        [
+          "stomp",
+          20
+        ],
+        [
+          "dig",
+          30
+        ],
+        [
+          "iron-head",
+          40
+        ],
+        [
+          "play-rough",
+          45
+        ],
+        [
+          "superpower",
+          55
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/끼리동_%28포켓몬%29"
+    },
+    {
+      "dex": 879,
+      "slug": "copperajah",
+      "display": "COPPERAJAH",
+      "ko": "대왕끼리동",
+      "type1": "steel",
+      "type2": null,
+      "accent_type": "acero",
+      "stats": [
+        122,
+        130,
+        69,
+        30,
+        80,
+        69
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rollout",
+          1
+        ],
+        [
+          "rock-smash",
+          1
+        ],
+        [
+          "bulldoze",
+          15
+        ],
+        [
+          "stomp",
+          20
+        ],
+        [
+          "dig",
+          30
+        ],
+        [
+          "iron-head",
+          44
+        ],
+        [
+          "play-rough",
+          51
+        ],
+        [
+          "superpower",
+          65
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/대왕끼리동_%28포켓몬%29"
+    },
+    {
+      "dex": 880,
+      "slug": "dracozolt",
+      "display": "DRACOZOLT",
+      "ko": "파치래곤",
+      "type1": "electric",
+      "type2": "dragon",
+      "accent_type": "electrico",
+      "stats": [
+        90,
+        100,
+        90,
+        75,
+        80,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "ancient-power",
+          21
+        ],
+        [
+          "stomp",
+          42
+        ],
+        [
+          "slam",
+          49
+        ],
+        [
+          "dragon-pulse",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파치래곤_%28포켓몬%29"
+    },
+    {
+      "dex": 881,
+      "slug": "arctozolt",
+      "display": "ARCTOZOLT",
+      "ko": "파치르돈",
+      "type1": "electric",
+      "type2": "ice",
+      "accent_type": "electrico",
+      "stats": [
+        90,
+        100,
+        90,
+        55,
+        90,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "ancient-power",
+          21
+        ],
+        [
+          "avalanche",
+          35
+        ],
+        [
+          "slam",
+          49
+        ],
+        [
+          "blizzard",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파치르돈_%28포켓몬%29"
+    },
+    {
+      "dex": 882,
+      "slug": "dracovish",
+      "display": "DRACOVISH",
+      "ko": "어래곤",
+      "type1": "water",
+      "type2": "dragon",
+      "accent_type": "agua",
+      "stats": [
+        90,
+        90,
+        100,
+        75,
+        70,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "ancient-power",
+          21
+        ],
+        [
+          "bite",
+          28
+        ],
+        [
+          "stomp",
+          42
+        ],
+        [
+          "crunch",
+          56
+        ],
+        [
+          "dragon-pulse",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/어래곤_%28포켓몬%29"
+    },
+    {
+      "dex": 883,
+      "slug": "arctovish",
+      "display": "ARCTOVISH",
+      "ko": "어치르돈",
+      "type1": "water",
+      "type2": "ice",
+      "accent_type": "agua",
+      "stats": [
+        90,
+        90,
+        100,
+        55,
+        80,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "ancient-power",
+          21
+        ],
+        [
+          "bite",
+          28
+        ],
+        [
+          "crunch",
+          56
+        ],
+        [
+          "blizzard",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/어치르돈_%28포켓몬%29"
+    },
+    {
+      "dex": 884,
+      "slug": "duraludon",
+      "display": "DURALUDON",
+      "ko": "두랄루돈",
+      "type1": "steel",
+      "type2": "dragon",
+      "accent_type": "acero",
+      "stats": [
+        70,
+        95,
+        115,
+        85,
+        120,
+        50
+      ],
+      "evolves_to": 1018,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "metal-claw",
+          1
+        ],
+        [
+          "rock-smash",
+          6
+        ],
+        [
+          "dragon-claw",
+          48
+        ],
+        [
+          "flash-cannon",
+          54
+        ],
+        [
+          "hyper-beam",
+          66
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/두랄루돈_%28포켓몬%29"
+    },
+    {
+      "dex": 885,
+      "slug": "dreepy",
+      "display": "DREEPY",
+      "ko": "드라꼰",
+      "type1": "dragon",
+      "type2": "ghost",
+      "accent_type": "dragon",
+      "stats": [
+        28,
+        60,
+        30,
+        82,
+        40,
+        30
+      ],
+      "evolves_to": 886,
+      "evolve_level": 50,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "infestation",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "bite",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/드라꼰_%28포켓몬%29"
+    },
+    {
+      "dex": 886,
+      "slug": "drakloak",
+      "display": "DRAKLOAK",
+      "ko": "드래런치",
+      "type1": "dragon",
+      "type2": "ghost",
+      "accent_type": "dragon",
+      "stats": [
+        68,
+        80,
+        50,
+        102,
+        60,
+        50
+      ],
+      "evolves_to": 887,
+      "evolve_level": 60,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "infestation",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "assurance",
+          12
+        ],
+        [
+          "double-edge",
+          66
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/드래런치_%28포켓몬%29"
+    },
+    {
+      "dex": 887,
+      "slug": "dragapult",
+      "display": "DRAGAPULT",
+      "ko": "드래펄트",
+      "type1": "dragon",
+      "type2": "ghost",
+      "accent_type": "dragon",
+      "stats": [
+        88,
+        120,
+        75,
+        142,
+        100,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "infestation",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "assurance",
+          12
+        ],
+        [
+          "double-edge",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/드래펄트_%28포켓몬%29"
+    },
+    {
+      "dex": 888,
+      "slug": "zacian",
+      "display": "ZACIAN",
+      "ko": "자시안",
+      "type1": "fairy",
+      "type2": null,
+      "accent_type": "hada",
+      "stats": [
+        92,
+        130,
+        115,
+        138,
+        80,
+        115
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "metal-claw",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "slash",
+          11
+        ],
+        [
+          "iron-head",
+          33
+        ],
+        [
+          "crunch",
+          55
+        ],
+        [
+          "moonblast",
+          66
+        ],
+        [
+          "close-combat",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/자시안_%28포켓몬%29"
+    },
+    {
+      "dex": 889,
+      "slug": "zamazenta",
+      "display": "ZAMAZENTA",
+      "ko": "자마젠타",
+      "type1": "fighting",
+      "type2": null,
+      "accent_type": "lucha",
+      "stats": [
+        92,
+        130,
+        115,
+        138,
+        80,
+        115
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "metal-claw",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "bite",
+          1
+        ],
+        [
+          "slash",
+          11
+        ],
+        [
+          "iron-head",
+          33
+        ],
+        [
+          "crunch",
+          55
+        ],
+        [
+          "moonblast",
+          66
+        ],
+        [
+          "close-combat",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/자마젠타_%28포켓몬%29"
+    },
+    {
+      "dex": 890,
+      "slug": "eternatus",
+      "display": "ETERNATUS",
+      "ko": "무한다이노",
+      "type1": "poison",
+      "type2": "dragon",
+      "accent_type": "veneno",
+      "stats": [
+        140,
+        85,
+        95,
+        130,
+        145,
+        95
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "dragon-pulse",
+          40
+        ],
+        [
+          "flamethrower",
+          48
+        ],
+        [
+          "hyper-beam",
+          80
+        ],
+        [
+          "outrage",
+          88
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무한다이노_%28포켓몬%29"
+    },
+    {
+      "dex": 891,
+      "slug": "kubfu",
+      "display": "KUBFU",
+      "ko": "치고마",
+      "type1": "fighting",
+      "type2": null,
+      "accent_type": "lucha",
+      "stats": [
+        60,
+        90,
+        60,
+        72,
+        53,
+        50
+      ],
+      "evolves_to": 892,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "rock-smash",
+          1
+        ],
+        [
+          "headbutt",
+          20
+        ],
+        [
+          "iron-head",
+          36
+        ],
+        [
+          "close-combat",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/치고마_%28포켓몬%29"
+    },
+    {
+      "dex": 892,
+      "slug": "urshifu",
+      "display": "URSHIFU",
+      "ko": "우라오스",
+      "type1": "fighting",
+      "type2": "dark",
+      "accent_type": "lucha",
+      "stats": [
+        100,
+        130,
+        100,
+        97,
+        63,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "sucker-punch",
+          1
+        ],
+        [
+          "rock-smash",
+          1
+        ],
+        [
+          "headbutt",
+          20
+        ],
+        [
+          "iron-head",
+          36
+        ],
+        [
+          "close-combat",
+          48
+        ],
+        [
+          "aqua-jet",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/우라오스_%28포켓몬%29"
+    },
+    {
+      "dex": 893,
+      "slug": "zarude",
+      "display": "ZARUDE",
+      "ko": "자루도",
+      "type1": "dark",
+      "type2": "grass",
+      "accent_type": "siniestro",
+      "stats": [
+        105,
+        120,
+        105,
+        105,
+        70,
+        95
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "bind",
+          1
+        ],
+        [
+          "scratch",
+          1
+        ],
+        [
+          "vine-whip",
+          12
+        ],
+        [
+          "bite",
+          42
+        ],
+        [
+          "energy-ball",
+          60
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/자루도_%28포켓몬%29"
+    },
+    {
+      "dex": 894,
+      "slug": "regieleki",
+      "display": "REGIELEKI",
+      "ko": "레지에레키",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        80,
+        100,
+        50,
+        200,
+        100,
+        50
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "rapid-spin",
+          1
+        ],
+        [
+          "ancient-power",
+          12
+        ],
+        [
+          "thunderbolt",
+          42
+        ],
+        [
+          "hyper-beam",
+          72
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/레지에레키_%28포켓몬%29"
+    },
+    {
+      "dex": 895,
+      "slug": "regidrago",
+      "display": "REGIDRAGO",
+      "ko": "레지드래고",
+      "type1": "dragon",
+      "type2": null,
+      "accent_type": "dragon",
+      "stats": [
+        200,
+        100,
+        50,
+        80,
+        100,
+        50
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "twister",
+          1
+        ],
+        [
+          "bite",
+          6
+        ],
+        [
+          "ancient-power",
+          12
+        ],
+        [
+          "crunch",
+          30
+        ],
+        [
+          "dragon-claw",
+          36
+        ],
+        [
+          "hyper-beam",
+          72
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/레지드래고_%28포켓몬%29"
+    },
+    {
+      "dex": 896,
+      "slug": "glastrier",
+      "display": "GLASTRIER",
+      "ko": "블리자포스",
+      "type1": "ice",
+      "type2": null,
+      "accent_type": "hielo",
+      "stats": [
+        100,
+        145,
+        130,
+        30,
+        65,
+        110
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "double-kick",
+          6
+        ],
+        [
+          "avalanche",
+          12
+        ],
+        [
+          "stomp",
+          18
+        ],
+        [
+          "double-edge",
+          66
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/블리자포스_%28포켓몬%29"
+    },
+    {
+      "dex": 897,
+      "slug": "spectrier",
+      "display": "SPECTRIER",
+      "ko": "레이스포스",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        100,
+        65,
+        60,
+        130,
+        145,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "double-kick",
+          6
+        ],
+        [
+          "stomp",
+          18
+        ],
+        [
+          "shadow-ball",
+          36
+        ],
+        [
+          "double-edge",
+          66
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/레이스포스_%28포켓몬%29"
+    },
+    {
+      "dex": 898,
+      "slug": "calyrex",
+      "display": "CALYREX",
+      "ko": "버드렉스",
+      "type1": "psychic",
+      "type2": "grass",
+      "accent_type": "psiquico",
+      "stats": [
+        100,
+        80,
+        80,
+        80,
+        80,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "mega-drain",
+          1
+        ],
+        [
+          "confusion",
+          1
+        ],
+        [
+          "energy-ball",
+          48
+        ],
+        [
+          "psychic",
+          56
+        ],
+        [
+          "solar-beam",
+          80
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "double-kick",
+          1
+        ],
+        [
+          "avalanche",
+          1
+        ],
+        [
+          "stomp",
+          1
+        ],
+        [
+          "double-edge",
+          1
+        ],
+        [
+          "shadow-ball",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/버드렉스_%28포켓몬%29"
+    },
+    {
+      "dex": 899,
+      "slug": "wyrdeer",
+      "display": "WYRDEER",
+      "ko": "신비록",
+      "type1": "normal",
+      "type2": "psychic",
+      "accent_type": "normal",
+      "stats": [
+        103,
+        105,
+        72,
+        65,
+        105,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "astonish",
+          7
+        ],
+        [
+          "stomp",
+          13
+        ],
+        [
+          "double-edge",
+          55
+        ],
+        [
+          "megahorn",
+          62
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/신비록_%28포켓몬%29"
+    },
+    {
+      "dex": 900,
+      "slug": "kleavor",
+      "display": "KLEAVOR",
+      "ko": "사마자르",
+      "type1": "bug",
+      "type2": "rock",
+      "accent_type": "bicho",
+      "stats": [
+        70,
+        130,
+        95,
+        85,
+        45,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "slash",
+          24
+        ],
+        [
+          "rock-slide",
+          36
+        ],
+        [
+          "x-scissor",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/사마자르_%28포켓몬%29"
+    },
+    {
+      "dex": 901,
+      "slug": "ursaluna",
+      "display": "URSALUNA",
+      "ko": "다투곰",
+      "type1": "ground",
+      "type2": "normal",
+      "accent_type": "tierra",
+      "stats": [
+        130,
+        140,
+        105,
+        50,
+        45,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "lick",
+          1
+        ],
+        [
+          "payback",
+          13
+        ],
+        [
+          "slash",
+          22
+        ],
+        [
+          "play-rough",
+          29
+        ],
+        [
+          "moonblast",
+          56
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/다투곰_%28포켓몬%29"
+    },
+    {
+      "dex": 902,
+      "slug": "basculegion",
+      "display": "BASCULEGION",
+      "ko": "대쓰여너",
+      "type1": "water",
+      "type2": "ghost",
+      "accent_type": "agua",
+      "stats": [
+        120,
+        112,
+        65,
+        78,
+        80,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "shadow-ball",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "tackle",
+          4
+        ],
+        [
+          "aqua-jet",
+          12
+        ],
+        [
+          "bite",
+          16
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "crunch",
+          32
+        ],
+        [
+          "double-edge",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/대쓰여너_%28포켓몬%29"
+    },
+    {
+      "dex": 903,
+      "slug": "sneasler",
+      "display": "SNEASLER",
+      "ko": "포푸니크",
+      "type1": "fighting",
+      "type2": "poison",
+      "accent_type": "lucha",
+      "stats": [
+        80,
+        130,
+        60,
+        120,
+        40,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "rock-smash",
+          1
+        ],
+        [
+          "quick-attack",
+          12
+        ],
+        [
+          "metal-claw",
+          18
+        ],
+        [
+          "slash",
+          42
+        ],
+        [
+          "close-combat",
+          60
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/포푸니크_%28포켓몬%29"
+    },
+    {
+      "dex": 904,
+      "slug": "overqwil",
+      "display": "OVERQWIL",
+      "ko": "장침바루",
+      "type1": "dark",
+      "type2": "poison",
+      "accent_type": "siniestro",
+      "stats": [
+        85,
+        115,
+        95,
+        85,
+        65,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "poison-sting",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "bite",
+          8
+        ],
+        [
+          "pin-missile",
+          32
+        ],
+        [
+          "crunch",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/장침바루_%28포켓몬%29"
+    },
+    {
+      "dex": 905,
+      "slug": "enamorus",
+      "display": "ENAMORUS",
+      "ko": "러브로스",
+      "type1": "fairy",
+      "type2": "flying",
+      "accent_type": "hada",
+      "stats": [
+        74,
+        115,
+        70,
+        106,
+        135,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "twister",
+          15
+        ],
+        [
+          "draining-kiss",
+          20
+        ],
+        [
+          "dazzling-gleam",
+          40
+        ],
+        [
+          "superpower",
+          55
+        ],
+        [
+          "moonblast",
+          65
+        ],
+        [
+          "outrage",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/러브로스_%28포켓몬%29"
+    },
+    {
+      "dex": 906,
+      "slug": "sprigatito",
+      "display": "SPRIGATITO",
+      "ko": "나오하",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        40,
+        61,
+        54,
+        65,
+        45,
+        45
+      ],
+      "evolves_to": 907,
+      "evolve_level": 16,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "leafage",
+          1
+        ],
+        [
+          "bite",
+          7
+        ],
+        [
+          "magical-leaf",
+          13
+        ],
+        [
+          "quick-attack",
+          15
+        ],
+        [
+          "slash",
+          28
+        ],
+        [
+          "energy-ball",
+          32
+        ],
+        [
+          "play-rough",
+          36
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/나오하_%28포켓몬%29"
+    },
+    {
+      "dex": 907,
+      "slug": "floragato",
+      "display": "FLORAGATO",
+      "ko": "나로테",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        61,
+        80,
+        63,
+        83,
+        60,
+        63
+      ],
+      "evolves_to": 908,
+      "evolve_level": 36,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "leafage",
+          1
+        ],
+        [
+          "bite",
+          7
+        ],
+        [
+          "magical-leaf",
+          13
+        ],
+        [
+          "quick-attack",
+          15
+        ],
+        [
+          "slash",
+          33
+        ],
+        [
+          "energy-ball",
+          38
+        ],
+        [
+          "play-rough",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/나로테_%28포켓몬%29"
+    },
+    {
+      "dex": 908,
+      "slug": "meowscarada",
+      "display": "MEOWSCARADA",
+      "ko": "마스카나",
+      "type1": "grass",
+      "type2": "dark",
+      "accent_type": "planta",
+      "stats": [
+        76,
+        110,
+        70,
+        123,
+        81,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "leafage",
+          1
+        ],
+        [
+          "bite",
+          7
+        ],
+        [
+          "magical-leaf",
+          13
+        ],
+        [
+          "quick-attack",
+          15
+        ],
+        [
+          "slash",
+          33
+        ],
+        [
+          "energy-ball",
+          42
+        ],
+        [
+          "play-rough",
+          47
+        ],
+        [
+          "knock-off",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/마스카나_%28포켓몬%29"
+    },
+    {
+      "dex": 909,
+      "slug": "fuecoco",
+      "display": "FUECOCO",
+      "ko": "뜨아거",
+      "type1": "fire",
+      "type2": null,
+      "accent_type": "fuego",
+      "stats": [
+        67,
+        45,
+        59,
+        36,
+        63,
+        40
+      ],
+      "evolves_to": 910,
+      "evolve_level": 16,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "ember",
+          1
+        ],
+        [
+          "bite",
+          12
+        ],
+        [
+          "incinerate",
+          15
+        ],
+        [
+          "snarl",
+          21
+        ],
+        [
+          "flamethrower",
+          28
+        ],
+        [
+          "hyper-voice",
+          32
+        ],
+        [
+          "fire-blast",
+          36
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/뜨아거_%28포켓몬%29"
+    },
+    {
+      "dex": 910,
+      "slug": "crocalor",
+      "display": "CROCALOR",
+      "ko": "악뜨거",
+      "type1": "fire",
+      "type2": null,
+      "accent_type": "fuego",
+      "stats": [
+        81,
+        55,
+        78,
+        49,
+        90,
+        58
+      ],
+      "evolves_to": 911,
+      "evolve_level": 36,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "ember",
+          1
+        ],
+        [
+          "lick",
+          7
+        ],
+        [
+          "bite",
+          12
+        ],
+        [
+          "incinerate",
+          17
+        ],
+        [
+          "snarl",
+          24
+        ],
+        [
+          "flamethrower",
+          32
+        ],
+        [
+          "hyper-voice",
+          38
+        ],
+        [
+          "fire-blast",
+          47
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/악뜨거_%28포켓몬%29"
+    },
+    {
+      "dex": 911,
+      "slug": "skeledirge",
+      "display": "SKELEDIRGE",
+      "ko": "라우드본",
+      "type1": "fire",
+      "type2": "ghost",
+      "accent_type": "fuego",
+      "stats": [
+        104,
+        75,
+        100,
+        66,
+        110,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "ember",
+          1
+        ],
+        [
+          "lick",
+          7
+        ],
+        [
+          "bite",
+          15
+        ],
+        [
+          "incinerate",
+          17
+        ],
+        [
+          "snarl",
+          24
+        ],
+        [
+          "flamethrower",
+          32
+        ],
+        [
+          "shadow-ball",
+          38
+        ],
+        [
+          "hyper-voice",
+          42
+        ],
+        [
+          "fire-blast",
+          58
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/라우드본_%28포켓몬%29"
+    },
+    {
+      "dex": 912,
+      "slug": "quaxly",
+      "display": "QUAXLY",
+      "ko": "꾸왁스",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        55,
+        65,
+        45,
+        50,
+        50,
+        45
+      ],
+      "evolves_to": 913,
+      "evolve_level": 16,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "wing-attack",
+          10
+        ],
+        [
+          "aqua-jet",
+          13
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/꾸왁스_%28포켓몬%29"
+    },
+    {
+      "dex": 913,
+      "slug": "quaxwell",
+      "display": "QUAXWELL",
+      "ko": "아꾸왁",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        70,
+        85,
+        65,
+        65,
+        65,
+        60
+      ],
+      "evolves_to": 914,
+      "evolve_level": 36,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "wing-attack",
+          10
+        ],
+        [
+          "aqua-jet",
+          13
+        ],
+        [
+          "water-pulse",
+          17
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/아꾸왁_%28포켓몬%29"
+    },
+    {
+      "dex": 914,
+      "slug": "quaquaval",
+      "display": "QUAQUAVAL",
+      "ko": "웨이니발",
+      "type1": "water",
+      "type2": "fighting",
+      "accent_type": "agua",
+      "stats": [
+        85,
+        120,
+        80,
+        85,
+        85,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "wing-attack",
+          10
+        ],
+        [
+          "aqua-jet",
+          13
+        ],
+        [
+          "water-pulse",
+          17
+        ],
+        [
+          "close-combat",
+          58
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/웨이니발_%28포켓몬%29"
+    },
+    {
+      "dex": 915,
+      "slug": "lechonk",
+      "display": "LECHONK",
+      "ko": "맛보돈",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        54,
+        45,
+        40,
+        35,
+        35,
+        45
+      ],
+      "evolves_to": 916,
+      "evolve_level": 18,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "dig",
+          17
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "double-edge",
+          35
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/맛보돈_%28포켓몬%29"
+    },
+    {
+      "dex": 916,
+      "slug": "oinkologne",
+      "display": "OINKOLOGNE",
+      "ko": "퍼퓨돈",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        110,
+        100,
+        75,
+        65,
+        59,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "dig",
+          17
+        ],
+        [
+          "headbutt",
+          23
+        ],
+        [
+          "double-edge",
+          42
+        ],
+        [
+          "belch",
+          54
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/퍼퓨돈_%28포켓몬%29"
+    },
+    {
+      "dex": 917,
+      "slug": "tarountula",
+      "display": "TAROUNTULA",
+      "ko": "타랜툴라",
+      "type1": "bug",
+      "type2": null,
+      "accent_type": "bicho",
+      "stats": [
+        35,
+        41,
+        45,
+        20,
+        29,
+        40
+      ],
+      "evolves_to": 918,
+      "evolve_level": 15,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "struggle-bug",
+          5
+        ],
+        [
+          "assurance",
+          8
+        ],
+        [
+          "bug-bite",
+          14
+        ],
+        [
+          "headbutt",
+          25
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/타랜툴라_%28포켓몬%29"
+    },
+    {
+      "dex": 918,
+      "slug": "spidops",
+      "display": "SPIDOPS",
+      "ko": "트래피더",
+      "type1": "bug",
+      "type2": null,
+      "accent_type": "bicho",
+      "stats": [
+        60,
+        79,
+        92,
+        35,
+        52,
+        86
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "struggle-bug",
+          5
+        ],
+        [
+          "assurance",
+          8
+        ],
+        [
+          "bug-bite",
+          14
+        ],
+        [
+          "headbutt",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/트래피더_%28포켓몬%29"
+    },
+    {
+      "dex": 919,
+      "slug": "nymble",
+      "display": "NYMBLE",
+      "ko": "콩알뚜기",
+      "type1": "bug",
+      "type2": null,
+      "accent_type": "bicho",
+      "stats": [
+        33,
+        46,
+        40,
+        45,
+        21,
+        25
+      ],
+      "evolves_to": 920,
+      "evolve_level": 24,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "struggle-bug",
+          4
+        ],
+        [
+          "astonish",
+          6
+        ],
+        [
+          "assurance",
+          9
+        ],
+        [
+          "double-kick",
+          11
+        ],
+        [
+          "bug-bite",
+          22
+        ],
+        [
+          "sucker-punch",
+          38
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/콩알뚜기_%28포켓몬%29"
+    },
+    {
+      "dex": 920,
+      "slug": "lokix",
+      "display": "LOKIX",
+      "ko": "엑스레그",
+      "type1": "bug",
+      "type2": "dark",
+      "accent_type": "bicho",
+      "stats": [
+        71,
+        102,
+        78,
+        92,
+        52,
+        55
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "struggle-bug",
+          4
+        ],
+        [
+          "astonish",
+          6
+        ],
+        [
+          "assurance",
+          9
+        ],
+        [
+          "double-kick",
+          11
+        ],
+        [
+          "bug-bite",
+          22
+        ],
+        [
+          "sucker-punch",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/엑스레그_%28포켓몬%29"
+    },
+    {
+      "dex": 921,
+      "slug": "pawmi",
+      "display": "PAWMI",
+      "ko": "빠모",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        45,
+        50,
+        20,
+        60,
+        40,
+        25
+      ],
+      "evolves_to": 922,
+      "evolve_level": 18,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "thunder-shock",
+          3
+        ],
+        [
+          "quick-attack",
+          6
+        ],
+        [
+          "nuzzle",
+          12
+        ],
+        [
+          "dig",
+          15
+        ],
+        [
+          "bite",
+          19
+        ],
+        [
+          "spark",
+          23
+        ],
+        [
+          "slam",
+          35
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/빠모_%28포켓몬%29"
+    },
+    {
+      "dex": 922,
+      "slug": "pawmo",
+      "display": "PAWMO",
+      "ko": "빠모트",
+      "type1": "electric",
+      "type2": "fighting",
+      "accent_type": "electrico",
+      "stats": [
+        60,
+        75,
+        40,
+        85,
+        50,
+        40
+      ],
+      "evolves_to": 923,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "thunder-shock",
+          3
+        ],
+        [
+          "quick-attack",
+          6
+        ],
+        [
+          "nuzzle",
+          12
+        ],
+        [
+          "dig",
+          15
+        ],
+        [
+          "bite",
+          19
+        ],
+        [
+          "spark",
+          23
+        ],
+        [
+          "slam",
+          32
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/빠모트_%28포켓몬%29"
+    },
+    {
+      "dex": 923,
+      "slug": "pawmot",
+      "display": "PAWMOT",
+      "ko": "빠르모트",
+      "type1": "electric",
+      "type2": "fighting",
+      "accent_type": "electrico",
+      "stats": [
+        70,
+        115,
+        70,
+        105,
+        70,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "thunder-shock",
+          3
+        ],
+        [
+          "quick-attack",
+          6
+        ],
+        [
+          "nuzzle",
+          12
+        ],
+        [
+          "dig",
+          15
+        ],
+        [
+          "bite",
+          19
+        ],
+        [
+          "spark",
+          23
+        ],
+        [
+          "slam",
+          33
+        ],
+        [
+          "close-combat",
+          44
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/빠르모트_%28포켓몬%29"
+    },
+    {
+      "dex": 924,
+      "slug": "tandemaus",
+      "display": "TANDEMAUS",
+      "ko": "두리쥐",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        50,
+        50,
+        45,
+        75,
+        40,
+        45
+      ],
+      "evolves_to": 925,
+      "evolve_level": 25,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "bullet-seed",
+          18
+        ],
+        [
+          "play-rough",
+          26
+        ],
+        [
+          "hyper-voice",
+          30
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/두리쥐_%28포켓몬%29"
+    },
+    {
+      "dex": 925,
+      "slug": "maushold",
+      "display": "MAUSHOLD",
+      "ko": "파밀리쥐",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        74,
+        75,
+        70,
+        111,
+        65,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "bullet-seed",
+          18
+        ],
+        [
+          "play-rough",
+          29
+        ],
+        [
+          "hyper-voice",
+          33
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파밀리쥐_%28포켓몬%29"
+    },
+    {
+      "dex": 926,
+      "slug": "fidough",
+      "display": "FIDOUGH",
+      "ko": "쫀도기",
+      "type1": "fairy",
+      "type2": null,
+      "accent_type": "hada",
+      "stats": [
+        37,
+        55,
+        70,
+        65,
+        30,
+        55
+      ],
+      "evolves_to": 927,
+      "evolve_level": 26,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          3
+        ],
+        [
+          "bite",
+          11
+        ],
+        [
+          "play-rough",
+          18
+        ],
+        [
+          "double-edge",
+          33
+        ],
+        [
+          "crunch",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/쫀도기_%28포켓몬%29"
+    },
+    {
+      "dex": 927,
+      "slug": "dachsbun",
+      "display": "DACHSBUN",
+      "ko": "바우첼",
+      "type1": "fairy",
+      "type2": null,
+      "accent_type": "hada",
+      "stats": [
+        57,
+        80,
+        115,
+        95,
+        50,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          3
+        ],
+        [
+          "bite",
+          11
+        ],
+        [
+          "play-rough",
+          18
+        ],
+        [
+          "double-edge",
+          38
+        ],
+        [
+          "crunch",
+          47
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/바우첼_%28포켓몬%29"
+    },
+    {
+      "dex": 928,
+      "slug": "smoliv",
+      "display": "SMOLIV",
+      "ko": "미니브",
+      "type1": "grass",
+      "type2": "normal",
+      "accent_type": "planta",
+      "stats": [
+        41,
+        35,
+        45,
+        30,
+        58,
+        51
+      ],
+      "evolves_to": 929,
+      "evolve_level": 25,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "absorb",
+          5
+        ],
+        [
+          "razor-leaf",
+          10
+        ],
+        [
+          "mega-drain",
+          20
+        ],
+        [
+          "energy-ball",
+          30
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/미니브_%28포켓몬%29"
+    },
+    {
+      "dex": 929,
+      "slug": "dolliv",
+      "display": "DOLLIV",
+      "ko": "올리뇨",
+      "type1": "grass",
+      "type2": "normal",
+      "accent_type": "planta",
+      "stats": [
+        52,
+        53,
+        60,
+        33,
+        78,
+        78
+      ],
+      "evolves_to": 930,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "absorb",
+          5
+        ],
+        [
+          "razor-leaf",
+          10
+        ],
+        [
+          "mega-drain",
+          20
+        ],
+        [
+          "energy-ball",
+          34
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/올리뇨_%28포켓몬%29"
+    },
+    {
+      "dex": 930,
+      "slug": "arboliva",
+      "display": "ARBOLIVA",
+      "ko": "올리르바",
+      "type1": "grass",
+      "type2": "normal",
+      "accent_type": "planta",
+      "stats": [
+        78,
+        69,
+        90,
+        39,
+        125,
+        109
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "absorb",
+          5
+        ],
+        [
+          "razor-leaf",
+          10
+        ],
+        [
+          "mega-drain",
+          20
+        ],
+        [
+          "energy-ball",
+          34
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/올리르바_%28포켓몬%29"
+    },
+    {
+      "dex": 931,
+      "slug": "squawkabilly",
+      "display": "SQUAWKABILLY",
+      "ko": "시비꼬",
+      "type1": "normal",
+      "type2": "flying",
+      "accent_type": "normal",
+      "stats": [
+        82,
+        96,
+        51,
+        92,
+        45,
+        51
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "quick-attack",
+          6
+        ],
+        [
+          "fury-attack",
+          17
+        ],
+        [
+          "fly",
+          30
+        ],
+        [
+          "brave-bird",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/시비꼬_%28포켓몬%29"
+    },
+    {
+      "dex": 932,
+      "slug": "nacli",
+      "display": "NACLI",
+      "ko": "베베솔트",
+      "type1": "rock",
+      "type2": null,
+      "accent_type": "roca",
+      "stats": [
+        55,
+        55,
+        75,
+        25,
+        35,
+        35
+      ],
+      "evolves_to": 933,
+      "evolve_level": 24,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rock-throw",
+          5
+        ],
+        [
+          "headbutt",
+          16
+        ],
+        [
+          "rock-slide",
+          30
+        ],
+        [
+          "earthquake",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/베베솔트_%28포켓몬%29"
+    },
+    {
+      "dex": 933,
+      "slug": "naclstack",
+      "display": "NACLSTACK",
+      "ko": "스태솔트",
+      "type1": "rock",
+      "type2": null,
+      "accent_type": "roca",
+      "stats": [
+        60,
+        60,
+        100,
+        35,
+        35,
+        65
+      ],
+      "evolves_to": 934,
+      "evolve_level": 38,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rock-throw",
+          5
+        ],
+        [
+          "headbutt",
+          16
+        ],
+        [
+          "rock-slide",
+          34
+        ],
+        [
+          "earthquake",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/스태솔트_%28포켓몬%29"
+    },
+    {
+      "dex": 934,
+      "slug": "garganacl",
+      "display": "GARGANACL",
+      "ko": "콜로솔트",
+      "type1": "rock",
+      "type2": null,
+      "accent_type": "roca",
+      "stats": [
+        100,
+        100,
+        130,
+        35,
+        45,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rock-throw",
+          5
+        ],
+        [
+          "headbutt",
+          16
+        ],
+        [
+          "rock-slide",
+          34
+        ],
+        [
+          "earthquake",
+          49
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/콜로솔트_%28포켓몬%29"
+    },
+    {
+      "dex": 935,
+      "slug": "charcadet",
+      "display": "CHARCADET",
+      "ko": "카르본",
+      "type1": "fire",
+      "type2": null,
+      "accent_type": "fuego",
+      "stats": [
+        40,
+        50,
+        40,
+        35,
+        50,
+        40
+      ],
+      "evolves_to": 936,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "fire-spin",
+          12
+        ],
+        [
+          "incinerate",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/카르본_%28포켓몬%29"
+    },
+    {
+      "dex": 936,
+      "slug": "armarouge",
+      "display": "ARMAROUGE",
+      "ko": "카디나르마",
+      "type1": "fire",
+      "type2": "psychic",
+      "accent_type": "fuego",
+      "stats": [
+        85,
+        60,
+        100,
+        75,
+        125,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "fire-spin",
+          12
+        ],
+        [
+          "incinerate",
+          28
+        ],
+        [
+          "flamethrower",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/카디나르마_%28포켓몬%29"
+    },
+    {
+      "dex": 937,
+      "slug": "ceruledge",
+      "display": "CERULEDGE",
+      "ko": "파라블레이즈",
+      "type1": "fire",
+      "type2": "ghost",
+      "accent_type": "fuego",
+      "stats": [
+        75,
+        125,
+        80,
+        85,
+        60,
+        100
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "fire-spin",
+          12
+        ],
+        [
+          "incinerate",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파라블레이즈_%28포켓몬%29"
+    },
+    {
+      "dex": 938,
+      "slug": "tadbulb",
+      "display": "TADBULB",
+      "ko": "빈나두",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        61,
+        31,
+        41,
+        45,
+        59,
+        35
+      ],
+      "evolves_to": 939,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "mud-slap",
+          1
+        ],
+        [
+          "thunder-shock",
+          7
+        ],
+        [
+          "water-gun",
+          11
+        ],
+        [
+          "spark",
+          21
+        ],
+        [
+          "sucker-punch",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/빈나두_%28포켓몬%29"
+    },
+    {
+      "dex": 939,
+      "slug": "bellibolt",
+      "display": "BELLIBOLT",
+      "ko": "찌리배리",
+      "type1": "electric",
+      "type2": null,
+      "accent_type": "electrico",
+      "stats": [
+        109,
+        64,
+        91,
+        45,
+        103,
+        83
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "mud-slap",
+          1
+        ],
+        [
+          "thunder-shock",
+          7
+        ],
+        [
+          "water-gun",
+          11
+        ],
+        [
+          "spark",
+          21
+        ],
+        [
+          "sucker-punch",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/찌리배리_%28포켓몬%29"
+    },
+    {
+      "dex": 940,
+      "slug": "wattrel",
+      "display": "WATTREL",
+      "ko": "찌리비",
+      "type1": "electric",
+      "type2": "flying",
+      "accent_type": "electrico",
+      "stats": [
+        40,
+        40,
+        35,
+        70,
+        55,
+        40
+      ],
+      "evolves_to": 941,
+      "evolve_level": 25,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "thunder-shock",
+          4
+        ],
+        [
+          "quick-attack",
+          7
+        ],
+        [
+          "spark",
+          15
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/찌리비_%28포켓몬%29"
+    },
+    {
+      "dex": 941,
+      "slug": "kilowattrel",
+      "display": "KILOWATTREL",
+      "ko": "찌리비크",
+      "type1": "electric",
+      "type2": "flying",
+      "accent_type": "electrico",
+      "stats": [
+        70,
+        70,
+        60,
+        125,
+        105,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "thunder-shock",
+          4
+        ],
+        [
+          "quick-attack",
+          7
+        ],
+        [
+          "spark",
+          15
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/찌리비크_%28포켓몬%29"
+    },
+    {
+      "dex": 942,
+      "slug": "maschiff",
+      "display": "MASCHIFF",
+      "ko": "오라티프",
+      "type1": "dark",
+      "type2": null,
+      "accent_type": "siniestro",
+      "stats": [
+        60,
+        78,
+        60,
+        51,
+        40,
+        51
+      ],
+      "evolves_to": 943,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          4
+        ],
+        [
+          "snarl",
+          7
+        ],
+        [
+          "bite",
+          14
+        ],
+        [
+          "headbutt",
+          22
+        ],
+        [
+          "payback",
+          26
+        ],
+        [
+          "crunch",
+          31
+        ],
+        [
+          "double-edge",
+          49
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/오라티프_%28포켓몬%29"
+    },
+    {
+      "dex": 943,
+      "slug": "mabosstiff",
+      "display": "MABOSSTIFF",
+      "ko": "마피티프",
+      "type1": "dark",
+      "type2": null,
+      "accent_type": "siniestro",
+      "stats": [
+        80,
+        120,
+        90,
+        85,
+        60,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          4
+        ],
+        [
+          "snarl",
+          7
+        ],
+        [
+          "bite",
+          14
+        ],
+        [
+          "headbutt",
+          22
+        ],
+        [
+          "payback",
+          26
+        ],
+        [
+          "crunch",
+          34
+        ],
+        [
+          "double-edge",
+          55
+        ],
+        [
+          "outrage",
+          60
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/마피티프_%28포켓몬%29"
+    },
+    {
+      "dex": 944,
+      "slug": "shroodle",
+      "display": "SHROODLE",
+      "ko": "땃쭈르",
+      "type1": "poison",
+      "type2": "normal",
+      "accent_type": "veneno",
+      "stats": [
+        40,
+        65,
+        35,
+        75,
+        40,
+        35
+      ],
+      "evolves_to": 945,
+      "evolve_level": 28,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "bite",
+          8
+        ],
+        [
+          "poison-fang",
+          14
+        ],
+        [
+          "slash",
+          21
+        ],
+        [
+          "knock-off",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/땃쭈르_%28포켓몬%29"
+    },
+    {
+      "dex": 945,
+      "slug": "grafaiai",
+      "display": "GRAFAIAI",
+      "ko": "태깅구르",
+      "type1": "poison",
+      "type2": "normal",
+      "accent_type": "veneno",
+      "stats": [
+        63,
+        95,
+        65,
+        110,
+        80,
+        72
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "poison-fang",
+          14
+        ],
+        [
+          "slash",
+          21
+        ],
+        [
+          "knock-off",
+          45
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/태깅구르_%28포켓몬%29"
+    },
+    {
+      "dex": 946,
+      "slug": "bramblin",
+      "display": "BRAMBLIN",
+      "ko": "그푸리",
+      "type1": "grass",
+      "type2": "ghost",
+      "accent_type": "planta",
+      "stats": [
+        40,
+        65,
+        30,
+        60,
+        45,
+        35
+      ],
+      "evolves_to": 947,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "rollout",
+          1
+        ],
+        [
+          "absorb",
+          5
+        ],
+        [
+          "rapid-spin",
+          9
+        ],
+        [
+          "bullet-seed",
+          13
+        ],
+        [
+          "infestation",
+          17
+        ],
+        [
+          "mega-drain",
+          25
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/그푸리_%28포켓몬%29"
+    },
+    {
+      "dex": 947,
+      "slug": "brambleghast",
+      "display": "BRAMBLEGHAST",
+      "ko": "공푸리",
+      "type1": "grass",
+      "type2": "ghost",
+      "accent_type": "planta",
+      "stats": [
+        55,
+        115,
+        70,
+        90,
+        80,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "rollout",
+          1
+        ],
+        [
+          "absorb",
+          5
+        ],
+        [
+          "rapid-spin",
+          9
+        ],
+        [
+          "bullet-seed",
+          13
+        ],
+        [
+          "infestation",
+          17
+        ],
+        [
+          "mega-drain",
+          25
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/공푸리_%28포켓몬%29"
+    },
+    {
+      "dex": 948,
+      "slug": "toedscool",
+      "display": "TOEDSCOOL",
+      "ko": "들눈해",
+      "type1": "ground",
+      "type2": "grass",
+      "accent_type": "tierra",
+      "stats": [
+        40,
+        40,
+        35,
+        70,
+        50,
+        100
+      ],
+      "evolves_to": 949,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "wrap",
+          1
+        ],
+        [
+          "mud-slap",
+          1
+        ],
+        [
+          "absorb",
+          4
+        ],
+        [
+          "tackle",
+          15
+        ],
+        [
+          "mega-drain",
+          16
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/들눈해_%28포켓몬%29"
+    },
+    {
+      "dex": 949,
+      "slug": "toedscruel",
+      "display": "TOEDSCRUEL",
+      "ko": "육파리",
+      "type1": "ground",
+      "type2": "grass",
+      "accent_type": "tierra",
+      "stats": [
+        80,
+        70,
+        65,
+        100,
+        80,
+        120
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "wrap",
+          1
+        ],
+        [
+          "mud-slap",
+          1
+        ],
+        [
+          "absorb",
+          4
+        ],
+        [
+          "tackle",
+          15
+        ],
+        [
+          "mega-drain",
+          16
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/육파리_%28포켓몬%29"
+    },
+    {
+      "dex": 950,
+      "slug": "klawf",
+      "display": "KLAWF",
+      "ko": "절벼게",
+      "type1": "rock",
+      "type2": null,
+      "accent_type": "roca",
+      "stats": [
+        70,
+        100,
+        115,
+        75,
+        35,
+        55
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-throw",
+          1
+        ],
+        [
+          "rock-smash",
+          9
+        ],
+        [
+          "metal-claw",
+          17
+        ],
+        [
+          "x-scissor",
+          29
+        ],
+        [
+          "rock-slide",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/절벼게_%28포켓몬%29"
+    },
+    {
+      "dex": 951,
+      "slug": "capsakid",
+      "display": "CAPSAKID",
+      "ko": "캡싸이",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        50,
+        62,
+        40,
+        50,
+        62,
+        40
+      ],
+      "evolves_to": 952,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "leafage",
+          1
+        ],
+        [
+          "bite",
+          4
+        ],
+        [
+          "razor-leaf",
+          13
+        ],
+        [
+          "bullet-seed",
+          21
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "crunch",
+          38
+        ],
+        [
+          "solar-beam",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/캡싸이_%28포켓몬%29"
+    },
+    {
+      "dex": 952,
+      "slug": "scovillain",
+      "display": "SCOVILLAIN",
+      "ko": "스코빌런",
+      "type1": "grass",
+      "type2": "fire",
+      "accent_type": "planta",
+      "stats": [
+        65,
+        108,
+        65,
+        75,
+        108,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "flamethrower",
+          1
+        ],
+        [
+          "leafage",
+          1
+        ],
+        [
+          "bite",
+          4
+        ],
+        [
+          "razor-leaf",
+          13
+        ],
+        [
+          "bullet-seed",
+          21
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "crunch",
+          38
+        ],
+        [
+          "solar-beam",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/스코빌런_%28포켓몬%29"
+    },
+    {
+      "dex": 953,
+      "slug": "rellor",
+      "display": "RELLOR",
+      "ko": "구르데",
+      "type1": "bug",
+      "type2": null,
+      "accent_type": "bicho",
+      "stats": [
+        41,
+        50,
+        60,
+        30,
+        31,
+        58
+      ],
+      "evolves_to": 954,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "struggle-bug",
+          7
+        ],
+        [
+          "rollout",
+          11
+        ],
+        [
+          "bug-bite",
+          20
+        ],
+        [
+          "dig",
+          29
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/구르데_%28포켓몬%29"
+    },
+    {
+      "dex": 954,
+      "slug": "rabsca",
+      "display": "RABSCA",
+      "ko": "베라카스",
+      "type1": "bug",
+      "type2": "psychic",
+      "accent_type": "bicho",
+      "stats": [
+        75,
+        50,
+        85,
+        45,
+        115,
+        100
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "struggle-bug",
+          7
+        ],
+        [
+          "rollout",
+          11
+        ],
+        [
+          "psybeam",
+          15
+        ],
+        [
+          "bug-bite",
+          20
+        ],
+        [
+          "bug-buzz",
+          45
+        ],
+        [
+          "psychic",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/베라카스_%28포켓몬%29"
+    },
+    {
+      "dex": 955,
+      "slug": "flittle",
+      "display": "FLITTLE",
+      "ko": "하느라기",
+      "type1": "psychic",
+      "type2": null,
+      "accent_type": "psiquico",
+      "stats": [
+        30,
+        35,
+        30,
+        75,
+        55,
+        30
+      ],
+      "evolves_to": 956,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "confusion",
+          5
+        ],
+        [
+          "quick-attack",
+          15
+        ],
+        [
+          "psybeam",
+          19
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/하느라기_%28포켓몬%29"
+    },
+    {
+      "dex": 956,
+      "slug": "espathra",
+      "display": "ESPATHRA",
+      "ko": "클레스퍼트라",
+      "type1": "psychic",
+      "type2": null,
+      "accent_type": "psiquico",
+      "stats": [
+        95,
+        60,
+        60,
+        105,
+        101,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "drill-peck",
+          1
+        ],
+        [
+          "peck",
+          1
+        ],
+        [
+          "confusion",
+          5
+        ],
+        [
+          "quick-attack",
+          15
+        ],
+        [
+          "psybeam",
+          19
+        ],
+        [
+          "dazzling-gleam",
+          43
+        ],
+        [
+          "psychic",
+          49
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/클레스퍼트라_%28포켓몬%29"
+    },
+    {
+      "dex": 957,
+      "slug": "tinkatink",
+      "display": "TINKATINK",
+      "ko": "어리짱",
+      "type1": "fairy",
+      "type2": "steel",
+      "accent_type": "hada",
+      "stats": [
+        50,
+        45,
+        45,
+        58,
+        35,
+        64
+      ],
+      "evolves_to": 958,
+      "evolve_level": 24,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "metal-claw",
+          8
+        ],
+        [
+          "rock-smash",
+          14
+        ],
+        [
+          "draining-kiss",
+          17
+        ],
+        [
+          "slam",
+          27
+        ],
+        [
+          "flash-cannon",
+          31
+        ],
+        [
+          "play-rough",
+          35
+        ],
+        [
+          "fake-out",
+          39
+        ],
+        [
+          "knock-off",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/어리짱_%28포켓몬%29"
+    },
+    {
+      "dex": 958,
+      "slug": "tinkatuff",
+      "display": "TINKATUFF",
+      "ko": "벼리짱",
+      "type1": "fairy",
+      "type2": "steel",
+      "accent_type": "hada",
+      "stats": [
+        65,
+        55,
+        55,
+        78,
+        45,
+        82
+      ],
+      "evolves_to": 959,
+      "evolve_level": 38,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "metal-claw",
+          8
+        ],
+        [
+          "rock-smash",
+          14
+        ],
+        [
+          "draining-kiss",
+          17
+        ],
+        [
+          "slam",
+          27
+        ],
+        [
+          "flash-cannon",
+          31
+        ],
+        [
+          "play-rough",
+          35
+        ],
+        [
+          "fake-out",
+          39
+        ],
+        [
+          "knock-off",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/벼리짱_%28포켓몬%29"
+    },
+    {
+      "dex": 959,
+      "slug": "tinkaton",
+      "display": "TINKATON",
+      "ko": "두드리짱",
+      "type1": "fairy",
+      "type2": "steel",
+      "accent_type": "hada",
+      "stats": [
+        85,
+        75,
+        77,
+        94,
+        70,
+        105
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "metal-claw",
+          8
+        ],
+        [
+          "rock-smash",
+          14
+        ],
+        [
+          "draining-kiss",
+          17
+        ],
+        [
+          "slam",
+          27
+        ],
+        [
+          "flash-cannon",
+          31
+        ],
+        [
+          "play-rough",
+          35
+        ],
+        [
+          "fake-out",
+          39
+        ],
+        [
+          "knock-off",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/두드리짱_%28포켓몬%29"
+    },
+    {
+      "dex": 960,
+      "slug": "wiglett",
+      "display": "WIGLETT",
+      "ko": "바다그다",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        10,
+        55,
+        25,
+        95,
+        35,
+        25
+      ],
+      "evolves_to": 961,
+      "evolve_level": 26,
+      "learnset": [
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "mud-slap",
+          4
+        ],
+        [
+          "wrap",
+          8
+        ],
+        [
+          "aqua-jet",
+          12
+        ],
+        [
+          "slam",
+          20
+        ],
+        [
+          "water-pulse",
+          20
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "dig",
+          28
+        ],
+        [
+          "sucker-punch",
+          32
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/바다그다_%28포켓몬%29"
+    },
+    {
+      "dex": 961,
+      "slug": "wugtrio",
+      "display": "WUGTRIO",
+      "ko": "바닥트리오",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        35,
+        100,
+        50,
+        120,
+        50,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "mud-slap",
+          1
+        ],
+        [
+          "wrap",
+          1
+        ],
+        [
+          "aqua-jet",
+          12
+        ],
+        [
+          "slam",
+          16
+        ],
+        [
+          "water-pulse",
+          20
+        ],
+        [
+          "headbutt",
+          24
+        ],
+        [
+          "dig",
+          36
+        ],
+        [
+          "sucker-punch",
+          42
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/바닥트리오_%28포켓몬%29"
+    },
+    {
+      "dex": 962,
+      "slug": "bombirdier",
+      "display": "BOMBIRDIER",
+      "ko": "떨구새",
+      "type1": "flying",
+      "type2": "dark",
+      "accent_type": "volador",
+      "stats": [
+        70,
+        103,
+        85,
+        82,
+        60,
+        85
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "wing-attack",
+          1
+        ],
+        [
+          "peck",
+          1
+        ],
+        [
+          "rock-throw",
+          11
+        ],
+        [
+          "payback",
+          36
+        ],
+        [
+          "rock-slide",
+          47
+        ],
+        [
+          "knock-off",
+          53
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/떨구새_%28포켓몬%29"
+    },
+    {
+      "dex": 963,
+      "slug": "finizen",
+      "display": "FINIZEN",
+      "ko": "맨돌핀",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        70,
+        45,
+        40,
+        75,
+        45,
+        40
+      ],
+      "evolves_to": 964,
+      "evolve_level": 38,
+      "learnset": [
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "astonish",
+          7
+        ],
+        [
+          "aqua-jet",
+          13
+        ],
+        [
+          "hydro-pump",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/맨돌핀_%28포켓몬%29"
+    },
+    {
+      "dex": 964,
+      "slug": "palafin",
+      "display": "PALAFIN",
+      "ko": "돌핀맨",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        100,
+        70,
+        72,
+        100,
+        53,
+        62
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "astonish",
+          7
+        ],
+        [
+          "aqua-jet",
+          13
+        ],
+        [
+          "hydro-pump",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/돌핀맨_%28포켓몬%29"
+    },
+    {
+      "dex": 965,
+      "slug": "varoom",
+      "display": "VAROOM",
+      "ko": "부르롱",
+      "type1": "poison",
+      "type2": "steel",
+      "accent_type": "veneno",
+      "stats": [
+        45,
+        70,
+        63,
+        47,
+        30,
+        45
+      ],
+      "evolves_to": 966,
+      "evolve_level": 40,
+      "learnset": [
+        [
+          "lick",
+          1
+        ],
+        [
+          "smog",
+          4
+        ],
+        [
+          "assurance",
+          10
+        ],
+        [
+          "sludge",
+          13
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "iron-head",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/부르롱_%28포켓몬%29"
+    },
+    {
+      "dex": 966,
+      "slug": "revavroom",
+      "display": "REVAVROOM",
+      "ko": "부르르룸",
+      "type1": "poison",
+      "type2": "steel",
+      "accent_type": "veneno",
+      "stats": [
+        80,
+        119,
+        90,
+        90,
+        54,
+        67
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "lick",
+          1
+        ],
+        [
+          "smog",
+          4
+        ],
+        [
+          "assurance",
+          10
+        ],
+        [
+          "sludge",
+          13
+        ],
+        [
+          "headbutt",
+          21
+        ],
+        [
+          "iron-head",
+          28
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/부르르룸_%28포켓몬%29"
+    },
+    {
+      "dex": 967,
+      "slug": "cyclizar",
+      "display": "CYCLIZAR",
+      "ko": "모토마",
+      "type1": "dragon",
+      "type2": "normal",
+      "accent_type": "dragon",
+      "stats": [
+        70,
+        95,
+        65,
+        121,
+        85,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "rapid-spin",
+          7
+        ],
+        [
+          "quick-attack",
+          18
+        ],
+        [
+          "bite",
+          23
+        ],
+        [
+          "dragon-claw",
+          36
+        ],
+        [
+          "dragon-pulse",
+          45
+        ],
+        [
+          "double-edge",
+          51
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/모토마_%28포켓몬%29"
+    },
+    {
+      "dex": 968,
+      "slug": "orthworm",
+      "display": "ORTHWORM",
+      "ko": "꿈트렁",
+      "type1": "steel",
+      "type2": null,
+      "accent_type": "acero",
+      "stats": [
+        70,
+        85,
+        145,
+        65,
+        60,
+        55
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "wrap",
+          1
+        ],
+        [
+          "mud-slap",
+          7
+        ],
+        [
+          "bulldoze",
+          16
+        ],
+        [
+          "iron-head",
+          21
+        ],
+        [
+          "dig",
+          30
+        ],
+        [
+          "earthquake",
+          47
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/꿈트렁_%28포켓몬%29"
+    },
+    {
+      "dex": 969,
+      "slug": "glimmet",
+      "display": "GLIMMET",
+      "ko": "초롱순",
+      "type1": "rock",
+      "type2": "poison",
+      "accent_type": "roca",
+      "stats": [
+        48,
+        35,
+        42,
+        60,
+        105,
+        60
+      ],
+      "evolves_to": 970,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "rock-throw",
+          1
+        ],
+        [
+          "ancient-power",
+          11
+        ],
+        [
+          "rock-slide",
+          33
+        ],
+        [
+          "power-gem",
+          37
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/초롱순_%28포켓몬%29"
+    },
+    {
+      "dex": 970,
+      "slug": "glimmora",
+      "display": "GLIMMORA",
+      "ko": "킬라플로르",
+      "type1": "rock",
+      "type2": "poison",
+      "accent_type": "roca",
+      "stats": [
+        83,
+        55,
+        90,
+        86,
+        130,
+        81
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-throw",
+          1
+        ],
+        [
+          "ancient-power",
+          11
+        ],
+        [
+          "rock-slide",
+          33
+        ],
+        [
+          "power-gem",
+          39
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/킬라플로르_%28포켓몬%29"
+    },
+    {
+      "dex": 971,
+      "slug": "greavard",
+      "display": "GREAVARD",
+      "ko": "망망이",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        50,
+        61,
+        60,
+        34,
+        30,
+        55
+      ],
+      "evolves_to": 972,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          3
+        ],
+        [
+          "bite",
+          6
+        ],
+        [
+          "headbutt",
+          12
+        ],
+        [
+          "dig",
+          16
+        ],
+        [
+          "crunch",
+          28
+        ],
+        [
+          "play-rough",
+          32
+        ],
+        [
+          "double-edge",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/망망이_%28포켓몬%29"
+    },
+    {
+      "dex": 972,
+      "slug": "houndstone",
+      "display": "HOUNDSTONE",
+      "ko": "묘두기",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        72,
+        101,
+        100,
+        68,
+        50,
+        97
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "lick",
+          3
+        ],
+        [
+          "bite",
+          6
+        ],
+        [
+          "headbutt",
+          12
+        ],
+        [
+          "dig",
+          16
+        ],
+        [
+          "crunch",
+          28
+        ],
+        [
+          "play-rough",
+          36
+        ],
+        [
+          "double-edge",
+          58
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/묘두기_%28포켓몬%29"
+    },
+    {
+      "dex": 973,
+      "slug": "flamigo",
+      "display": "FLAMIGO",
+      "ko": "꼬이밍고",
+      "type1": "flying",
+      "type2": "fighting",
+      "accent_type": "volador",
+      "stats": [
+        82,
+        115,
+        74,
+        90,
+        75,
+        64
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "peck",
+          1
+        ],
+        [
+          "double-kick",
+          5
+        ],
+        [
+          "wing-attack",
+          12
+        ],
+        [
+          "payback",
+          27
+        ],
+        [
+          "brave-bird",
+          54
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/꼬이밍고_%28포켓몬%29"
+    },
+    {
+      "dex": 974,
+      "slug": "cetoddle",
+      "display": "CETODDLE",
+      "ko": "터벅고래",
+      "type1": "ice",
+      "type2": null,
+      "accent_type": "hielo",
+      "stats": [
+        108,
+        68,
+        45,
+        43,
+        30,
+        40
+      ],
+      "evolves_to": 975,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "avalanche",
+          27
+        ],
+        [
+          "body-slam",
+          36
+        ],
+        [
+          "double-edge",
+          49
+        ],
+        [
+          "blizzard",
+          53
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/터벅고래_%28포켓몬%29"
+    },
+    {
+      "dex": 975,
+      "slug": "cetitan",
+      "display": "CETITAN",
+      "ko": "우락고래",
+      "type1": "ice",
+      "type2": null,
+      "accent_type": "hielo",
+      "stats": [
+        170,
+        113,
+        65,
+        73,
+        45,
+        55
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "avalanche",
+          27
+        ],
+        [
+          "body-slam",
+          36
+        ],
+        [
+          "double-edge",
+          49
+        ],
+        [
+          "blizzard",
+          53
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/우락고래_%28포켓몬%29"
+    },
+    {
+      "dex": 976,
+      "slug": "veluza",
+      "display": "VELUZA",
+      "ko": "가비루사",
+      "type1": "water",
+      "type2": "psychic",
+      "accent_type": "agua",
+      "stats": [
+        90,
+        102,
+        73,
+        70,
+        78,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "aqua-jet",
+          1
+        ],
+        [
+          "water-pulse",
+          11
+        ],
+        [
+          "slash",
+          20
+        ],
+        [
+          "crunch",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/가비루사_%28포켓몬%29"
+    },
+    {
+      "dex": 977,
+      "slug": "dondozo",
+      "display": "DONDOZO",
+      "ko": "어써러셔",
+      "type1": "water",
+      "type2": null,
+      "accent_type": "agua",
+      "stats": [
+        150,
+        100,
+        115,
+        35,
+        65,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "body-slam",
+          35
+        ],
+        [
+          "double-edge",
+          60
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/어써러셔_%28포켓몬%29"
+    },
+    {
+      "dex": 978,
+      "slug": "tatsugiri",
+      "display": "TATSUGIRI",
+      "ko": "싸리용",
+      "type1": "dragon",
+      "type2": "water",
+      "accent_type": "dragon",
+      "stats": [
+        68,
+        50,
+        60,
+        82,
+        120,
+        95
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "water-gun",
+          1
+        ],
+        [
+          "water-pulse",
+          17
+        ],
+        [
+          "muddy-water",
+          39
+        ],
+        [
+          "dragon-pulse",
+          52
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/싸리용_%28포켓몬%29"
+    },
+    {
+      "dex": 979,
+      "slug": "annihilape",
+      "display": "ANNIHILAPE",
+      "ko": "저승갓숭",
+      "type1": "fighting",
+      "type2": "ghost",
+      "accent_type": "lucha",
+      "stats": [
+        110,
+        115,
+        80,
+        90,
+        50,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "assurance",
+          26
+        ],
+        [
+          "close-combat",
+          39
+        ],
+        [
+          "outrage",
+          53
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/저승갓숭_%28포켓몬%29"
+    },
+    {
+      "dex": 980,
+      "slug": "clodsire",
+      "display": "CLODSIRE",
+      "ko": "토오",
+      "type1": "poison",
+      "type2": "ground",
+      "accent_type": "veneno",
+      "stats": [
+        130,
+        75,
+        60,
+        20,
+        45,
+        100
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "poison-sting",
+          1
+        ],
+        [
+          "slam",
+          16
+        ],
+        [
+          "megahorn",
+          36
+        ],
+        [
+          "earthquake",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/토오_%28포켓몬%29"
+    },
+    {
+      "dex": 981,
+      "slug": "farigiraf",
+      "display": "FARIGIRAF",
+      "ko": "키키링",
+      "type1": "normal",
+      "type2": "psychic",
+      "accent_type": "normal",
+      "stats": [
+        120,
+        90,
+        70,
+        60,
+        110,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ],
+        [
+          "confusion",
+          5
+        ],
+        [
+          "assurance",
+          10
+        ],
+        [
+          "stomp",
+          14
+        ],
+        [
+          "psybeam",
+          19
+        ],
+        [
+          "crunch",
+          37
+        ],
+        [
+          "psychic",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/키키링_%28포켓몬%29"
+    },
+    {
+      "dex": 982,
+      "slug": "dudunsparce",
+      "display": "DUDUNSPARCE",
+      "ko": "노고고치",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        125,
+        100,
+        80,
+        55,
+        85,
+        75
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "mud-slap",
+          4
+        ],
+        [
+          "rollout",
+          8
+        ],
+        [
+          "ancient-power",
+          20
+        ],
+        [
+          "double-edge",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/노고고치_%28포켓몬%29"
+    },
+    {
+      "dex": 983,
+      "slug": "kingambit",
+      "display": "KINGAMBIT",
+      "ko": "대도각참",
+      "type1": "dark",
+      "type2": "steel",
+      "accent_type": "siniestro",
+      "stats": [
+        100,
+        135,
+        120,
+        50,
+        60,
+        85
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "metal-claw",
+          1
+        ],
+        [
+          "scratch",
+          1
+        ],
+        [
+          "assurance",
+          25
+        ],
+        [
+          "slash",
+          35
+        ],
+        [
+          "iron-head",
+          57
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/대도각참_%28포켓몬%29"
+    },
+    {
+      "dex": 984,
+      "slug": "great-tusk",
+      "display": "GREAT TUSK",
+      "ko": "위대한엄니",
+      "type1": "ground",
+      "type2": "fighting",
+      "accent_type": "tierra",
+      "stats": [
+        115,
+        131,
+        131,
+        87,
+        53,
+        53
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rollout",
+          1
+        ],
+        [
+          "bulldoze",
+          7
+        ],
+        [
+          "rapid-spin",
+          21
+        ],
+        [
+          "knock-off",
+          42
+        ],
+        [
+          "earthquake",
+          49
+        ],
+        [
+          "close-combat",
+          63
+        ],
+        [
+          "megahorn",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/위대한엄니_%28포켓몬%29"
+    },
+    {
+      "dex": 985,
+      "slug": "scream-tail",
+      "display": "SCREAM TAIL",
+      "ko": "우렁찬꼬리",
+      "type1": "fairy",
+      "type2": "psychic",
+      "accent_type": "hada",
+      "stats": [
+        115,
+        65,
+        99,
+        111,
+        65,
+        115
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "pound",
+          1
+        ],
+        [
+          "bite",
+          21
+        ],
+        [
+          "body-slam",
+          28
+        ],
+        [
+          "play-rough",
+          42
+        ],
+        [
+          "hyper-voice",
+          49
+        ],
+        [
+          "crunch",
+          63
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/우렁찬꼬리_%28포켓몬%29"
+    },
+    {
+      "dex": 986,
+      "slug": "brute-bonnet",
+      "display": "BRUTE BONNET",
+      "ko": "사나운버섯",
+      "type1": "grass",
+      "type2": "dark",
+      "accent_type": "planta",
+      "stats": [
+        111,
+        127,
+        99,
+        55,
+        79,
+        99
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "absorb",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "mega-drain",
+          14
+        ],
+        [
+          "payback",
+          35
+        ],
+        [
+          "sucker-punch",
+          56
+        ],
+        [
+          "solar-beam",
+          91
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/사나운버섯_%28포켓몬%29"
+    },
+    {
+      "dex": 987,
+      "slug": "flutter-mane",
+      "display": "FLUTTER MANE",
+      "ko": "날개치는머리",
+      "type1": "ghost",
+      "type2": "fairy",
+      "accent_type": "fantasma",
+      "stats": [
+        55,
+        55,
+        55,
+        135,
+        135,
+        135
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "psybeam",
+          7
+        ],
+        [
+          "dazzling-gleam",
+          35
+        ],
+        [
+          "shadow-ball",
+          42
+        ],
+        [
+          "power-gem",
+          56
+        ],
+        [
+          "moonblast",
+          84
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/날개치는머리_%28포켓몬%29"
+    },
+    {
+      "dex": 988,
+      "slug": "slither-wing",
+      "display": "SLITHER WING",
+      "ko": "땅을기는날개",
+      "type1": "bug",
+      "type2": "fighting",
+      "accent_type": "bicho",
+      "stats": [
+        85,
+        135,
+        79,
+        81,
+        85,
+        105
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "bug-bite",
+          1
+        ],
+        [
+          "stomp",
+          21
+        ],
+        [
+          "superpower",
+          49
+        ],
+        [
+          "leech-life",
+          84
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/땅을기는날개_%28포켓몬%29"
+    },
+    {
+      "dex": 989,
+      "slug": "sandy-shocks",
+      "display": "SANDY SHOCKS",
+      "ko": "모래털가죽",
+      "type1": "electric",
+      "type2": "ground",
+      "accent_type": "electrico",
+      "stats": [
+        85,
+        81,
+        97,
+        101,
+        121,
+        85
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "spark",
+          7
+        ],
+        [
+          "bulldoze",
+          14
+        ],
+        [
+          "charge-beam",
+          21
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/모래털가죽_%28포켓몬%29"
+    },
+    {
+      "dex": 990,
+      "slug": "iron-treads",
+      "display": "IRON TREADS",
+      "ko": "무쇠바퀴",
+      "type1": "ground",
+      "type2": "steel",
+      "accent_type": "tierra",
+      "stats": [
+        90,
+        112,
+        120,
+        106,
+        72,
+        70
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rollout",
+          1
+        ],
+        [
+          "bulldoze",
+          7
+        ],
+        [
+          "rapid-spin",
+          21
+        ],
+        [
+          "iron-head",
+          28
+        ],
+        [
+          "knock-off",
+          42
+        ],
+        [
+          "earthquake",
+          49
+        ],
+        [
+          "megahorn",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠바퀴_%28포켓몬%29"
+    },
+    {
+      "dex": 991,
+      "slug": "iron-bundle",
+      "display": "IRON BUNDLE",
+      "ko": "무쇠보따리",
+      "type1": "ice",
+      "type2": "water",
+      "accent_type": "hielo",
+      "stats": [
+        56,
+        80,
+        114,
+        136,
+        124,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "powder-snow",
+          7
+        ],
+        [
+          "drill-peck",
+          28
+        ],
+        [
+          "ice-beam",
+          56
+        ],
+        [
+          "hydro-pump",
+          77
+        ],
+        [
+          "blizzard",
+          91
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠보따리_%28포켓몬%29"
+    },
+    {
+      "dex": 992,
+      "slug": "iron-hands",
+      "display": "IRON HANDS",
+      "ko": "무쇠손",
+      "type1": "fighting",
+      "type2": "electric",
+      "accent_type": "lucha",
+      "stats": [
+        154,
+        140,
+        108,
+        50,
+        50,
+        68
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "fake-out",
+          7
+        ],
+        [
+          "thunder-punch",
+          21
+        ],
+        [
+          "slam",
+          28
+        ],
+        [
+          "close-combat",
+          63
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠손_%28포켓몬%29"
+    },
+    {
+      "dex": 993,
+      "slug": "iron-jugulis",
+      "display": "IRON JUGULIS",
+      "ko": "무쇠머리",
+      "type1": "dark",
+      "type2": "flying",
+      "accent_type": "siniestro",
+      "stats": [
+        94,
+        80,
+        86,
+        108,
+        122,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "assurance",
+          14
+        ],
+        [
+          "snarl",
+          28
+        ],
+        [
+          "crunch",
+          35
+        ],
+        [
+          "hyper-voice",
+          42
+        ],
+        [
+          "knock-off",
+          63
+        ],
+        [
+          "dark-pulse",
+          70
+        ],
+        [
+          "outrage",
+          77
+        ],
+        [
+          "dragon-pulse",
+          84
+        ],
+        [
+          "hyper-beam",
+          91
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠머리_%28포켓몬%29"
+    },
+    {
+      "dex": 994,
+      "slug": "iron-moth",
+      "display": "IRON MOTH",
+      "ko": "무쇠독나방",
+      "type1": "fire",
+      "type2": "poison",
+      "accent_type": "fuego",
+      "stats": [
+        80,
+        70,
+        60,
+        110,
+        140,
+        110
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "struggle-bug",
+          7
+        ],
+        [
+          "fire-spin",
+          14
+        ],
+        [
+          "bug-buzz",
+          84
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠독나방_%28포켓몬%29"
+    },
+    {
+      "dex": 995,
+      "slug": "iron-thorns",
+      "display": "IRON THORNS",
+      "ko": "무쇠가시",
+      "type1": "rock",
+      "type2": "electric",
+      "accent_type": "roca",
+      "stats": [
+        100,
+        134,
+        110,
+        72,
+        70,
+        84
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-throw",
+          1
+        ],
+        [
+          "bite",
+          28
+        ],
+        [
+          "rock-slide",
+          42
+        ],
+        [
+          "pin-missile",
+          63
+        ],
+        [
+          "earthquake",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠가시_%28포켓몬%29"
+    },
+    {
+      "dex": 996,
+      "slug": "frigibax",
+      "display": "FRIGIBAX",
+      "ko": "드니차",
+      "type1": "dragon",
+      "type2": "ice",
+      "accent_type": "dragon",
+      "stats": [
+        65,
+        75,
+        45,
+        55,
+        35,
+        45
+      ],
+      "evolves_to": 997,
+      "evolve_level": 35,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "bite",
+          24
+        ],
+        [
+          "dragon-claw",
+          32
+        ],
+        [
+          "ice-beam",
+          40
+        ],
+        [
+          "crunch",
+          44
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/드니차_%28포켓몬%29"
+    },
+    {
+      "dex": 997,
+      "slug": "arctibax",
+      "display": "ARCTIBAX",
+      "ko": "드니꽁",
+      "type1": "dragon",
+      "type2": "ice",
+      "accent_type": "dragon",
+      "stats": [
+        90,
+        95,
+        66,
+        62,
+        45,
+        65
+      ],
+      "evolves_to": 998,
+      "evolve_level": 54,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "bite",
+          24
+        ],
+        [
+          "ice-beam",
+          45
+        ],
+        [
+          "crunch",
+          50
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/드니꽁_%28포켓몬%29"
+    },
+    {
+      "dex": 998,
+      "slug": "baxcalibur",
+      "display": "BAXCALIBUR",
+      "ko": "드닐레이브",
+      "type1": "dragon",
+      "type2": "ice",
+      "accent_type": "dragon",
+      "stats": [
+        115,
+        145,
+        92,
+        87,
+        75,
+        86
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "bite",
+          24
+        ],
+        [
+          "dragon-claw",
+          35
+        ],
+        [
+          "ice-beam",
+          48
+        ],
+        [
+          "crunch",
+          55
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/드닐레이브_%28포켓몬%29"
+    },
+    {
+      "dex": 999,
+      "slug": "gimmighoul",
+      "display": "GIMMIGHOUL",
+      "ko": "모으령",
+      "type1": "ghost",
+      "type2": null,
+      "accent_type": "fantasma",
+      "stats": [
+        45,
+        30,
+        70,
+        10,
+        75,
+        70
+      ],
+      "evolves_to": 1000,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "tackle",
+          1
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/모으령_%28포켓몬%29"
+    },
+    {
+      "dex": 1000,
+      "slug": "gholdengo",
+      "display": "GHOLDENGO",
+      "ko": "타부자고",
+      "type1": "steel",
+      "type2": "ghost",
+      "accent_type": "acero",
+      "stats": [
+        87,
+        60,
+        95,
+        84,
+        133,
+        91
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "tackle",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "shadow-ball",
+          35
+        ],
+        [
+          "power-gem",
+          49
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/타부자고_%28포켓몬%29"
+    },
+    {
+      "dex": 1001,
+      "slug": "wo-chien",
+      "display": "WO-CHIEN",
+      "ko": "총지엔",
+      "type1": "dark",
+      "type2": "grass",
+      "accent_type": "siniestro",
+      "stats": [
+        85,
+        85,
+        100,
+        70,
+        95,
+        135
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "absorb",
+          1
+        ],
+        [
+          "payback",
+          10
+        ],
+        [
+          "mega-drain",
+          20
+        ],
+        [
+          "dark-pulse",
+          40
+        ],
+        [
+          "knock-off",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/총지엔_%28포켓몬%29"
+    },
+    {
+      "dex": 1002,
+      "slug": "chien-pao",
+      "display": "CHIEN-PAO",
+      "ko": "파오젠",
+      "type1": "dark",
+      "type2": "ice",
+      "accent_type": "siniestro",
+      "stats": [
+        80,
+        120,
+        80,
+        135,
+        90,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "powder-snow",
+          1
+        ],
+        [
+          "payback",
+          10
+        ],
+        [
+          "dark-pulse",
+          40
+        ],
+        [
+          "sucker-punch",
+          55
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/파오젠_%28포켓몬%29"
+    },
+    {
+      "dex": 1003,
+      "slug": "ting-lu",
+      "display": "TING-LU",
+      "ko": "딩루",
+      "type1": "dark",
+      "type2": "ground",
+      "accent_type": "siniestro",
+      "stats": [
+        155,
+        110,
+        125,
+        45,
+        55,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "payback",
+          10
+        ],
+        [
+          "stomp",
+          15
+        ],
+        [
+          "bulldoze",
+          20
+        ],
+        [
+          "dark-pulse",
+          40
+        ],
+        [
+          "rock-slide",
+          60
+        ],
+        [
+          "earthquake",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/딩루_%28포켓몬%29"
+    },
+    {
+      "dex": 1004,
+      "slug": "chi-yu",
+      "display": "CHI-YU",
+      "ko": "위유이",
+      "type1": "dark",
+      "type2": "fire",
+      "accent_type": "siniestro",
+      "stats": [
+        55,
+        80,
+        80,
+        100,
+        135,
+        120
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "ember",
+          1
+        ],
+        [
+          "payback",
+          10
+        ],
+        [
+          "incinerate",
+          25
+        ],
+        [
+          "dark-pulse",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/위유이_%28포켓몬%29"
+    },
+    {
+      "dex": 1005,
+      "slug": "roaring-moon",
+      "display": "ROARING MOON",
+      "ko": "고동치는달",
+      "type1": "dragon",
+      "type2": "dark",
+      "accent_type": "dragon",
+      "stats": [
+        105,
+        139,
+        71,
+        119,
+        55,
+        101
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "bite",
+          1
+        ],
+        [
+          "incinerate",
+          7
+        ],
+        [
+          "headbutt",
+          14
+        ],
+        [
+          "dragon-claw",
+          28
+        ],
+        [
+          "flamethrower",
+          42
+        ],
+        [
+          "fly",
+          70
+        ],
+        [
+          "double-edge",
+          91
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/고동치는달_%28포켓몬%29"
+    },
+    {
+      "dex": 1006,
+      "slug": "iron-valiant",
+      "display": "IRON VALIANT",
+      "ko": "무쇠무인",
+      "type1": "fairy",
+      "type2": "fighting",
+      "accent_type": "hada",
+      "stats": [
+        74,
+        130,
+        90,
+        116,
+        120,
+        60
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "dazzling-gleam",
+          28
+        ],
+        [
+          "moonblast",
+          56
+        ],
+        [
+          "close-combat",
+          63
+        ],
+        [
+          "knock-off",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠무인_%28포켓몬%29"
+    },
+    {
+      "dex": 1007,
+      "slug": "koraidon",
+      "display": "KORAIDON",
+      "ko": "코라이돈",
+      "type1": "fighting",
+      "type2": "dragon",
+      "accent_type": "lucha",
+      "stats": [
+        100,
+        135,
+        115,
+        135,
+        85,
+        100
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-smash",
+          7
+        ],
+        [
+          "ancient-power",
+          14
+        ],
+        [
+          "dragon-claw",
+          42
+        ],
+        [
+          "flamethrower",
+          49
+        ],
+        [
+          "outrage",
+          77
+        ],
+        [
+          "close-combat",
+          84
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/코라이돈_%28포켓몬%29"
+    },
+    {
+      "dex": 1008,
+      "slug": "miraidon",
+      "display": "MIRAIDON",
+      "ko": "미라이돈",
+      "type1": "electric",
+      "type2": "dragon",
+      "accent_type": "electrico",
+      "stats": [
+        100,
+        85,
+        100,
+        135,
+        135,
+        115
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "thunder-shock",
+          1
+        ],
+        [
+          "dragon-pulse",
+          42
+        ],
+        [
+          "outrage",
+          77
+        ],
+        [
+          "thunder",
+          84
+        ],
+        [
+          "hyper-beam",
+          98
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/미라이돈_%28포켓몬%29"
+    },
+    {
+      "dex": 1009,
+      "slug": "walking-wake",
+      "display": "WALKING WAKE",
+      "ko": "굽이치는물결",
+      "type1": "water",
+      "type2": "dragon",
+      "accent_type": "agua",
+      "stats": [
+        99,
+        83,
+        91,
+        109,
+        125,
+        83
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "twister",
+          1
+        ],
+        [
+          "aqua-jet",
+          1
+        ],
+        [
+          "bite",
+          7
+        ],
+        [
+          "water-pulse",
+          14
+        ],
+        [
+          "dragon-pulse",
+          63
+        ],
+        [
+          "outrage",
+          70
+        ],
+        [
+          "flamethrower",
+          77
+        ],
+        [
+          "hydro-pump",
+          84
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/굽이치는물결_%28포켓몬%29"
+    },
+    {
+      "dex": 1010,
+      "slug": "iron-leaves",
+      "display": "IRON LEAVES",
+      "ko": "무쇠잎새",
+      "type1": "grass",
+      "type2": "psychic",
+      "accent_type": "planta",
+      "stats": [
+        90,
+        130,
+        88,
+        104,
+        70,
+        108
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "magical-leaf",
+          7
+        ],
+        [
+          "close-combat",
+          63
+        ],
+        [
+          "megahorn",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠잎새_%28포켓몬%29"
+    },
+    {
+      "dex": 1011,
+      "slug": "dipplin",
+      "display": "DIPPLIN",
+      "ko": "과미르",
+      "type1": "grass",
+      "type2": "dragon",
+      "accent_type": "planta",
+      "stats": [
+        80,
+        80,
+        110,
+        40,
+        95,
+        80
+      ],
+      "evolves_to": 1019,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "bullet-seed",
+          20
+        ],
+        [
+          "dragon-pulse",
+          32
+        ],
+        [
+          "energy-ball",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/과미르_%28포켓몬%29"
+    },
+    {
+      "dex": 1012,
+      "slug": "poltchageist",
+      "display": "POLTCHAGEIST",
+      "ko": "차데스",
+      "type1": "grass",
+      "type2": "ghost",
+      "accent_type": "planta",
+      "stats": [
+        40,
+        45,
+        45,
+        50,
+        74,
+        54
+      ],
+      "evolves_to": 1013,
+      "evolve_level": 30,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "absorb",
+          6
+        ],
+        [
+          "mega-drain",
+          24
+        ],
+        [
+          "shadow-ball",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/차데스_%28포켓몬%29"
+    },
+    {
+      "dex": 1013,
+      "slug": "sinistcha",
+      "display": "SINISTCHA",
+      "ko": "그우린차",
+      "type1": "grass",
+      "type2": "ghost",
+      "accent_type": "planta",
+      "stats": [
+        71,
+        60,
+        106,
+        70,
+        121,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "absorb",
+          6
+        ],
+        [
+          "mega-drain",
+          24
+        ],
+        [
+          "shadow-ball",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/그우린차_%28포켓몬%29"
+    },
+    {
+      "dex": 1014,
+      "slug": "okidogi",
+      "display": "OKIDOGI",
+      "ko": "조타구",
+      "type1": "poison",
+      "type2": "fighting",
+      "accent_type": "veneno",
+      "stats": [
+        88,
+        128,
+        115,
+        80,
+        58,
+        86
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "bite",
+          1
+        ],
+        [
+          "poison-fang",
+          16
+        ],
+        [
+          "crunch",
+          56
+        ],
+        [
+          "superpower",
+          64
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/조타구_%28포켓몬%29"
+    },
+    {
+      "dex": 1015,
+      "slug": "munkidori",
+      "display": "MUNKIDORI",
+      "ko": "이야후",
+      "type1": "poison",
+      "type2": "psychic",
+      "accent_type": "veneno",
+      "stats": [
+        88,
+        75,
+        66,
+        106,
+        130,
+        90
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "scratch",
+          1
+        ],
+        [
+          "confusion",
+          1
+        ],
+        [
+          "fake-out",
+          1
+        ],
+        [
+          "psybeam",
+          24
+        ],
+        [
+          "psychic",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/이야후_%28포켓몬%29"
+    },
+    {
+      "dex": 1016,
+      "slug": "fezandipiti",
+      "display": "FEZANDIPITI",
+      "ko": "기로치",
+      "type1": "poison",
+      "type2": "fairy",
+      "accent_type": "veneno",
+      "stats": [
+        88,
+        91,
+        82,
+        99,
+        70,
+        125
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "double-kick",
+          1
+        ],
+        [
+          "peck",
+          1
+        ],
+        [
+          "quick-attack",
+          16
+        ],
+        [
+          "wing-attack",
+          32
+        ],
+        [
+          "moonblast",
+          72
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/기로치_%28포켓몬%29"
+    },
+    {
+      "dex": 1017,
+      "slug": "ogerpon",
+      "display": "OGERPON",
+      "ko": "오거폰",
+      "type1": "grass",
+      "type2": null,
+      "accent_type": "planta",
+      "stats": [
+        80,
+        120,
+        84,
+        110,
+        60,
+        96
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "vine-whip",
+          1
+        ],
+        [
+          "quick-attack",
+          1
+        ],
+        [
+          "slam",
+          18
+        ],
+        [
+          "superpower",
+          60
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/오거폰_%28포켓몬%29"
+    },
+    {
+      "dex": 1018,
+      "slug": "archaludon",
+      "display": "ARCHALUDON",
+      "ko": "브리두라스",
+      "type1": "steel",
+      "type2": "dragon",
+      "accent_type": "acero",
+      "stats": [
+        90,
+        105,
+        130,
+        85,
+        125,
+        65
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "metal-claw",
+          1
+        ],
+        [
+          "rock-smash",
+          6
+        ],
+        [
+          "dragon-claw",
+          48
+        ],
+        [
+          "flash-cannon",
+          54
+        ],
+        [
+          "hyper-beam",
+          66
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/브리두라스_%28포켓몬%29"
+    },
+    {
+      "dex": 1019,
+      "slug": "hydrapple",
+      "display": "HYDRAPPLE",
+      "ko": "과미드라",
+      "type1": "grass",
+      "type2": "dragon",
+      "accent_type": "planta",
+      "stats": [
+        106,
+        80,
+        110,
+        44,
+        120,
+        80
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "astonish",
+          1
+        ],
+        [
+          "bullet-seed",
+          20
+        ],
+        [
+          "dragon-pulse",
+          32
+        ],
+        [
+          "energy-ball",
+          40
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/과미드라_%28포켓몬%29"
+    },
+    {
+      "dex": 1020,
+      "slug": "gouging-fire",
+      "display": "GOUGING FIRE",
+      "ko": "꿰뚫는화염",
+      "type1": "fire",
+      "type2": "dragon",
+      "accent_type": "fuego",
+      "stats": [
+        105,
+        115,
+        121,
+        91,
+        65,
+        93
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "stomp",
+          1
+        ],
+        [
+          "incinerate",
+          1
+        ],
+        [
+          "bite",
+          21
+        ],
+        [
+          "dragon-claw",
+          28
+        ],
+        [
+          "fire-blast",
+          63
+        ],
+        [
+          "outrage",
+          77
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/꿰뚫는화염_%28포켓몬%29"
+    },
+    {
+      "dex": 1021,
+      "slug": "raging-bolt",
+      "display": "RAGING BOLT",
+      "ko": "날뛰는우레",
+      "type1": "electric",
+      "type2": "dragon",
+      "accent_type": "electrico",
+      "stats": [
+        125,
+        73,
+        91,
+        75,
+        137,
+        89
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "twister",
+          1
+        ],
+        [
+          "stomp",
+          1
+        ],
+        [
+          "dragon-pulse",
+          70
+        ],
+        [
+          "thunder",
+          91
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/날뛰는우레_%28포켓몬%29"
+    },
+    {
+      "dex": 1022,
+      "slug": "iron-boulder",
+      "display": "IRON BOULDER",
+      "ko": "무쇠암석",
+      "type1": "rock",
+      "type2": "psychic",
+      "accent_type": "roca",
+      "stats": [
+        90,
+        120,
+        80,
+        124,
+        68,
+        108
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rock-throw",
+          1
+        ],
+        [
+          "quick-attack",
+          7
+        ],
+        [
+          "slash",
+          14
+        ],
+        [
+          "megahorn",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠암석_%28포켓몬%29"
+    },
+    {
+      "dex": 1023,
+      "slug": "iron-crown",
+      "display": "IRON CROWN",
+      "ko": "무쇠감투",
+      "type1": "steel",
+      "type2": "psychic",
+      "accent_type": "acero",
+      "stats": [
+        90,
+        72,
+        100,
+        98,
+        122,
+        108
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "confusion",
+          1
+        ],
+        [
+          "metal-claw",
+          1
+        ],
+        [
+          "slash",
+          14
+        ],
+        [
+          "flash-cannon",
+          42
+        ],
+        [
+          "hyper-beam",
+          91
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/무쇠감투_%28포켓몬%29"
+    },
+    {
+      "dex": 1024,
+      "slug": "terapagos",
+      "display": "TERAPAGOS",
+      "ko": "테라파고스",
+      "type1": "normal",
+      "type2": null,
+      "accent_type": "normal",
+      "stats": [
+        90,
+        65,
+        85,
+        60,
+        65,
+        85
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "rapid-spin",
+          1
+        ],
+        [
+          "ancient-power",
+          10
+        ],
+        [
+          "headbutt",
+          20
+        ],
+        [
+          "double-edge",
+          70
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/테라파고스_%28포켓몬%29"
+    },
+    {
+      "dex": 1025,
+      "slug": "pecharunt",
+      "display": "PECHARUNT",
+      "ko": "복숭악동",
+      "type1": "poison",
+      "type2": "ghost",
+      "accent_type": "veneno",
+      "stats": [
+        88,
+        88,
+        160,
+        88,
+        88,
+        88
+      ],
+      "evolves_to": 0,
+      "evolve_level": 0,
+      "learnset": [
+        [
+          "smog",
+          1
+        ],
+        [
+          "astonish",
+          1
+        ],
+        [
+          "shadow-ball",
+          40
+        ],
+        [
+          "malignant-chain",
+          48
+        ]
+      ],
+      "source": "https://pokemon.fandom.com/ko/wiki/복숭악동_%28포켓몬%29"
+    }
+  ]
+}

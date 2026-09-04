@@ -814,3 +814,10 @@ LEARNSETS = {
     808: [('thunderbolt', 0), ('thunder-shock', 27), ('flash-cannon', 40)],
     809: [('body-slam', 0), ('earthquake', 0), ('ice-beam', 0), ('ice-punch', 0), ('iron-head', 0), ('rock-slide', 0), ('solar-beam', 0), ('thunder', 0), ('thunderbolt', 0), ('thunder-punch', 1), ('thunder-shock', 27), ('flash-cannon', 40), ('hyper-beam', 90)],
 }
+
+
+# GEN89_DATA_LOADER
+import json as _json, os as _os
+_G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.json'), encoding='utf-8'))
+LEARNSETS.update({_s['dex']: [tuple(x) for x in _s['learnset']] for _s in _G89['species']})
+del _G89

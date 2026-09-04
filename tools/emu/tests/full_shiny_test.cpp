@@ -27,8 +27,8 @@ int main(){
     if(!p.isRegistered(d)) allNormal=false;
     if(!p.isShinyRegistered(d)) allShiny=false;
   }
-  ck(allNormal,"all 809 normal species entries are unlocked");
-  ck(allShiny,"all 809 shiny species entries are unlocked");
+  ck(allNormal,"all 1025 normal species entries are unlocked");
+  ck(allShiny,"all 1025 shiny species entries are unlocked");
   ck(p.awaitingStarter(),"a fresh test save still offers the normal starter choice");
   printf("%s\n",bad?"FAILURES":"all good");
   return bad?1:0;

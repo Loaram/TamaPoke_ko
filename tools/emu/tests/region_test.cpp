@@ -54,12 +54,14 @@ int main(){
   {
     Pet p; seed(p);
     p.setRegion(REGION_ALL);
-    bool gen[3]={false,false,false};
-    for (int i=0;i<900;i++){
+    bool gen[REGION_COUNT]={false};
+    for (int i=0;i<2400;i++){
       int16_t d = p.pickEggSpecies();
-      gen[d<=151?0:(d<=251?1:2)] = true;
+      gen[regionOfDex(d)] = true;
     }
-    ck(gen[0]&&gen[1]&&gen[2], "ALL draws from all three generations");
+    bool all=true;
+    for(uint8_t r=0;r<REGION_ALL;r++) if(!gen[r]) all=false;
+    ck(all, "ALL draws from all nine regional ranges");
   }
 
   // --- a first egg gives a starter from the chosen region

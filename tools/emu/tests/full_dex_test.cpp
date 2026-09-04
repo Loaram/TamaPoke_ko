@@ -1,4 +1,4 @@
-// The private -dex emulator must expose the complete 809-species catalogue
+// The private -dex emulator must expose the complete 1025-species catalogue
 // without inventing shiny registrations or changing the normal build.
 #include "Arduino.h"
 #include "Preferences.h"
@@ -28,7 +28,7 @@ int main(){
     if(!p.isRegistered(d)) all=false;
     if(p.isShinyRegistered(d)) shiny=true;
   }
-  ck(all,"all 809 species entries are unlocked");
+  ck(all,"all 1025 species entries are unlocked");
   ck(!shiny,"normal completion does not fabricate shiny entries");
   ck(p.awaitingStarter(),"a fresh test save still offers the normal starter choice");
   printf("%s\n",bad?"FAILURES":"all good");

@@ -15,7 +15,7 @@ bool PmdMon::load(int16_t dexNum, bool shiny) {
   // everything from 256 up wrapped into Kanto: MARSHTOMP (258) opened
   // p002.bin and drew an IVYSAUR. Same trap that caught DexEntry::evolvesTo
   // and TrainerMon::dex when the expansion landed.
-  if (dexNum < 1 || dexNum > 999) return false;
+  if (dexNum < 1 || dexNum > DEX_COUNT) return false;
   unload();
   if (!sdReady) return false;
 
@@ -167,7 +167,7 @@ bool sdBegin() {
 }
 
 bool SdMon::load(int16_t dexNum, bool shiny) {
-  if (dexNum < 1 || dexNum > 999) return false;
+  if (dexNum < 1 || dexNum > DEX_COUNT) return false;
   unload();
   if (!sdReady) return false;
 

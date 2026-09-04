@@ -1,4 +1,4 @@
-// Every multi-result evolution in the 1..809 Pokedex follows the same
+// Every multi-result evolution in the 1..1025 Pokedex follows the same
 // collection rule: prefer an incomplete path, then randomise when complete.
 #include "Arduino.h"
 #include "Preferences.h"
@@ -27,6 +27,9 @@ static const int16_t WANT[][EVO_BRANCH_MAX+2] = {
   {236,3,106,107,237}, {265,2,266,268}, {281,2,282,475},
   {290,2,291,292}, {361,2,362,478}, {366,2,367,368},
   {412,2,413,414}, {790,2,791,792},
+  {52,2,53,863}, {123,2,212,900}, {194,2,195,980},
+  {215,2,461,903}, {562,2,563,867}, {840,3,841,842,1011},
+  {935,2,936,937},
 };
 
 static void fillDex(Pet &p){
@@ -39,7 +42,7 @@ static void clearDex(Pet &p,int16_t d){
 
 int main(){
   ck(EVO_BRANCH_COUNT==sizeof(WANT)/sizeof(WANT[0]),
-     "all 12 branched families are generated");
+     "all 19 branched families are generated");
   bool exact=true, evolutionOnly=true;
   for(uint8_t b=0;b<EVO_BRANCH_COUNT;b++){
     if(EVO_BRANCHES[b].base!=WANT[b][0] || EVO_BRANCHES[b].count!=WANT[b][1]) exact=false;
@@ -48,7 +51,7 @@ int main(){
       if(DEX_TBL[EVO_BRANCHES[b].targets[i]].rarity!=R_EVO) evolutionOnly=false;
     }
   }
-  ck(exact,"the generated branch map matches every 1..809 split evolution");
+  ck(exact,"the generated branch map matches every 1..1025 split evolution");
   ck(evolutionOnly,"alternate evolutions no longer hatch as unrelated base forms");
 
   gRegionArt=0xFFFF;

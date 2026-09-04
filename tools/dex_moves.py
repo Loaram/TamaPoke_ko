@@ -230,3 +230,18 @@ MOVES = [
 # accuracy stages are a whole second stage system for one marginal effect.
 
 SLUG_TO_NAME = {slug: name for name, slug, *_ in MOVES if slug}
+
+
+# GEN89_DATA_LOADER: official Korean move details in gen89_data.json.
+import json as _json, os as _os
+_G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.json'), encoding='utf-8'))
+_CATS = {'physical': MC_PHYS, 'special': MC_SPEC}
+_EFFECTS = {'none': EF_NONE, 'recoil': EF_RECOIL, 'drain': EF_DRAIN,
+            'priority': EF_PRIORITY, 'never_miss': EF_NEVER_MISS, 'multi': EF_MULTI}
+_AILS = {'none': AIL_NONE, 'para': AIL_PARA, 'poison': AIL_POISON}
+for _m in _G89['moves']:
+    MOVES.append((_m['display'], _m['slug'], _m['type'], _CATS[_m['category']],
+                  _m['power'], _m['accuracy'], _EFFECTS[_m['effect']], _m['param'],
+                  0, 0, TG_FOE, _AILS[_m['ailment']], _m['ailment_chance']))
+SLUG_TO_NAME = {slug: name for name, slug, *_ in MOVES if slug}
+del _G89, _m, _CATS, _EFFECTS, _AILS

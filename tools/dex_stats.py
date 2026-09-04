@@ -813,3 +813,9 @@ BASE_STATS = {
     808: (46, 65, 65, 34, 55, 35),
     809: (135, 143, 143, 34, 80, 65),
 }
+
+# GEN89_DATA_LOADER
+import json as _json, os as _os
+_G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.json'), encoding='utf-8'))
+BASE_STATS.update({_s['dex']: tuple(_s['stats']) for _s in _G89['species']})
+del _G89

@@ -4,14 +4,14 @@
 
 [![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 ![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
-![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.0.7-8A2BE2)
-![포켓몬](https://img.shields.io/badge/포켓몬-809종-FFCB05)
+![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.1.0a-8A2BE2)
+![포켓몬](https://img.shields.io/badge/포켓몬-1025종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
-**DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
+**DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 기존 게임 기능을 유지하면서 전국도감 1025종과 9개 지방까지 확장했습니다.
 
-현재 배포 버전은 **ko.1.0.7**입니다. 그림이 없는 19종과 그 진화 계보의 앞 단계 9종은 알에서 나오지 않습니다. 이전 버전에서 이미 해당 계보가 대기 중인 알에 들어 있었다면 업데이트 후 안전한 후보로 자동 교체됩니다. 포켓몬 번호와 이미 부화한 포켓몬·도감 기록은 유지됩니다. 성장 속도는 40분당 1레벨, 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 분당 10입니다.
+현재 배포 버전은 **ko.1.1.0a**입니다. 가라르·팔데아 도감과 포켓몬을 추가했으며 체육관은 기존 관동~알로라 7지역을 유지합니다. PMDCollab에 표시용 자료가 없는 48종과 그 종으로 이어지는 진화 계보를 합친 64종은 알에서 나오지 않습니다. 이전 버전에서 이미 해당 계보가 대기 중인 알에 들어 있었다면 업데이트 후 안전한 후보로 자동 교체됩니다. 포켓몬 번호와 이미 부화한 포켓몬·도감 기록은 유지됩니다. 성장 속도는 40분당 1레벨, 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 분당 10입니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
 
@@ -35,7 +35,7 @@
 2. **한국어 펌웨어 설치**를 누르고 포트를 고릅니다.
 3. 업데이트라면 **Erase device를 선택하지 않고 Next**를 누릅니다.
 4. 펌웨어 설치 창을 닫습니다. 기기에 microSD를 넣고 **기기 연결**을 누릅니다.
-5. 관동·성도·호연·신오·하나·칼로스·알로라 중 원하는 팩이나 전체 설치를 선택합니다.
+5. 관동·성도·호연·신오·하나·칼로스·알로라·가라르·팔데아 중 원하는 팩이나 전체 설치를 선택합니다.
 6. 완료 후 연결을 해제하고 기기를 재시작합니다.
 
 새 게임은 한국어로 시작합니다. 기존 세이브의 언어는 그대로 유지되므로 **설정의 언어 버튼을 눌러 한국어**를 선택하세요. 선택은 NVS에 저장됩니다.
@@ -53,7 +53,7 @@
 
 ## 한국어 지원 범위
 
-- UI 문자열 173개, 포켓몬 809종 이름, 기술 테이블 91개 항목(빈 기술 포함), 18개 타입, 지방·트레이너·장소 표시.
+- UI 문자열 173개, 포켓몬 1025종 이름, 기술 테이블 136개 항목(빈 기술 포함), 18개 타입, 지방·트레이너·장소 표시.
 - 메뉴, 도감, 상태, 성장, 기술 선택, 배틀, 파티, 박스, 체육관, 근거리 대전, 언어 설정.
 - 기존 6개 언어와 저장 데이터·무선 통신 형식 유지.
 - Galmuri11의 필요한 글자만 펌웨어에 포함. UTF-8 디코딩과 픽셀 폭 계산을 에뮬레이터·실기에서 공유합니다.
@@ -101,8 +101,8 @@ python -m http.server 8765 --bind 127.0.0.1 --directory web
 
 브라우저에서 `http://127.0.0.1:8765`를 엽니다. GitHub에서는 본인 포크의 **Settings → Pages → Source: GitHub Actions**를 선택하고 **Deploy installer to GitHub Pages** 워크플로를 실행합니다. `main`의 웹 파일 변경도 배포를 실행합니다. 다른 브랜치에서 수동 실행할 때는 github-pages 환경의 배포 브랜치 정책도 해당 브랜치를 허용해야 합니다.
 
-페이지 URL은 실제 배포가 성공하면 Actions 결과에 표시됩니다. `web` 전체를 배포하므로 펌웨어와 7개 지역 팩을 같은 HTTPS 주소에서 가져옵니다. GitHub Release의 CORS에 의존하지 않습니다. 배포 구성은 [GitHub Pages 공식 안내](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)를 참고하세요.
+페이지 URL은 실제 배포가 성공하면 Actions 결과에 표시됩니다. `web` 전체를 배포하므로 펌웨어와 9개 지역 팩을 같은 HTTPS 주소에서 가져옵니다. GitHub Release의 CORS에 의존하지 않습니다. 배포 구성은 [GitHub Pages 공식 안내](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)를 참고하세요.
 
 ## 라이선스와 출처
 
-기존 [LICENSE](LICENSE)와 [CREDITS.md](CREDITS.md)를 유지합니다. 코드 MIT, PMD SpriteCollab 스프라이트 CC BY-NC, Galmuri11 SIL OFL 1.1입니다. 포켓몬·기술 한국어 이름은 [PokeAPI 데이터](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv)를 기준으로 연결했습니다. Pokémon © Nintendo / Game Freak / The Pokémon Company. 비공식·비상업 팬 프로젝트입니다.
+기존 [LICENSE](LICENSE)와 [CREDITS.md](CREDITS.md)를 유지합니다. 코드 MIT, PMD SpriteCollab 스프라이트 CC BY-NC, Galmuri11 SIL OFL 1.1입니다. 가라르·팔데아의 종별 스프라이트 기여자는 [별도 출처표](docs/PMDCOLLAB_GALAR_PALDEA_CREDITS.md)에 기록했습니다. 해당 세대의 포켓몬·기술 한국어 이름과 게임 데이터는 [한국어 포켓몬 위키](https://pokemon.fandom.com/ko/wiki/전국도감)를 기준으로 연결했습니다. Pokémon © Nintendo / Game Freak / The Pokémon Company. 비공식·비상업 팬 프로젝트입니다.

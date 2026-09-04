@@ -51,12 +51,12 @@ clipped on real hardware.
 ## Private full-Pokedex build
 
 `python tools/build_emulator.py --full-dex` creates a developer-only build whose
-version and executable name end in `-dex`. It unlocks all 809 normal Pokedex
+version and executable name end in `-dex`. It unlocks all 1025 normal Pokedex
 entries and uses `tamapoke-dex.nvs`, keeping its progress separate from the
 regular emulator. Keep this build local; it is not a release or Pages asset.
 
 `python tools/build_emulator.py --full-shiny` creates the matching `-shiny`
-edition. It unlocks all 809 normal and shiny entries, renders shiny art in the
+edition. It unlocks all 1025 normal and shiny entries, renders shiny art in the
 detail view, and uses its own `tamapoke-shiny.nvs`. Keep it local as well.
 
 ### Headless captures

@@ -796,3 +796,10 @@ TYPES = {
     808: ('steel', None),
     809: ('steel', None),
 }
+
+
+# GEN89_DATA_LOADER
+import json as _json, os as _os
+_G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.json'), encoding='utf-8'))
+TYPES.update({_s['dex']: (_s['type1'], _s['type2']) for _s in _G89['species']})
+del _G89

@@ -856,8 +856,9 @@ CLASSIC = [1, 4, 7, 25, 133]
 # games do. ALL is not a fourth region, it is the union, and it is generated
 # from the others rather than written out.
 #
-# Extending to a fourth generation means adding a row here and nothing else.
-# Every branched evolution whose targets are inside this 1..809 edition.
+# Regional ranges added before Gen 8 live in this table; Gen 8/9 are loaded
+# from the sourced Korean snapshot below.
+# Every branched evolution whose targets are inside this 1..1025 edition.
 #
 # DexEntry carries one evolvesTo, so alternate targets cannot live in the main
 # row. Keep them once here: gen_dex.py emits this map for the firmware and uses
@@ -900,5 +901,23 @@ RARE = {58, 77, 83, 88, 95, 106, 107, 108, 111, 113, 114, 115, 122, 123, 124, 12
 LEGENDARY = {144, 145, 146, 150, 151,
         # generated:
         243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 716, 717, 718, 719, 720, 721, 772, 773, 785, 786, 787, 788, 789, 790, 791, 792, 800, 801, 802, 807, 808, 809}
+
+
+# GEN89_DATA_LOADER: Galar/Paldea data and provenance live in gen89_data.json.
+import json as _json, os as _os
+_G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.json'), encoding='utf-8'))
+for _s in _G89['species']:
+    DEX.append((_s['dex'], _s['slug'], _s['display'], _s['accent_type'],
+                _s['evolves_to'], _s['evolve_level']))
+for _d, (_to, _lv) in ((int(k), v) for k, v in _G89['old_direct_evolutions'].items()):
+    _i = _d - 1
+    _r = DEX[_i]
+    DEX[_i] = (_r[0], _r[1], _r[2], _r[3], _to, _lv)
+for _base, _targets in _G89['branches'].items():
+    EVOLUTION_BRANCHES[int(_base)] = _targets
+REGIONS.extend(tuple(x) for x in _G89['regions'])
+RARE.update(_G89['rare_extra'])
+LEGENDARY.update(_G89['legendary'])
+del _G89, _s, _d, _to, _lv, _i, _r, _base, _targets
 
 SLUGS = {n: s for n, s, *_ in DEX}

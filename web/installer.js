@@ -1,7 +1,7 @@
 'use strict';
 const el = id => document.getElementById(id);
 const enc = new TextEncoder();
-const regionNames = {kanto:'관동',johto:'성도',hoenn:'호연',sinnoh:'신오',unova:'하나',kalos:'칼로스',alola:'알로라'};
+const regionNames = {kanto:'관동',johto:'성도',hoenn:'호연',sinnoh:'신오',unova:'하나',kalos:'칼로스',alola:'알로라',galar:'가라르',paldea:'팔데아'};
 let port, reader, writer, pendingRead, decoder = new TextDecoder(), lineBuf = '', busy = false, firmwareReady = false;
 const regionButtons = [...document.querySelectorAll('[data-region]')];
 function log(message) { el('log').style.display='block'; el('log').textContent+=message+'\n'; el('log').scrollTop=el('log').scrollHeight; }
@@ -136,7 +136,7 @@ if('serial' in navigator) navigator.serial.addEventListener('disconnect',async()
 controls();
 Promise.all(['manifest.json','firmware/build-info.json'].map(url=>fetch(url).then(r=>{if(!r.ok)throw Error();return r.json();})))
   .then(([m,info])=>{
-    if(!/^(?:ko\.\d+\.\d+\.\d+|\d+\.\d+-ko\.\d+)$/.test(m.version) || info.version!==m.version || m.new_install_prompt_erase!==true) throw Error();
+    if(!/^(?:ko\.\d+\.\d+\.\d+[a-z]?|\d+\.\d+-ko\.\d+)$/.test(m.version) || info.version!==m.version || m.new_install_prompt_erase!==true) throw Error();
     const expected=[['firmware/bootloader.bin',0],['firmware/partitions.bin',32768],['firmware/boot_app0.bin',57344],['firmware/app.bin',65536]];
     const parts=m.builds?.[0]?.parts;
     if(!parts || parts.length!==4 || parts.some((p,i)=>p.path!==expected[i][0]||p.offset!==expected[i][1])) throw Error();

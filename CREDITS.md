@@ -9,7 +9,7 @@ this repository is a fork that builds on them.
 
 Everything added in this fork — the move-based battle system, the gym ladders,
 the party and box, the peer-to-peer link, the save backup, the Game Boy synth
-and the expansion to 386 species — sits on top of that foundation and would not
+and the expansion to 1025 species — sits on top of that foundation and would not
 exist without it.
 
 
@@ -25,7 +25,7 @@ This project is not affiliated with or endorsed by any of those companies.
 | Resource | Source | Use in the project |
 |---|---|---|
 | **All sprites** (idle, walk, sleep, eat, hurt, attack…) | [PMD Sprite Collaboration (PMDCollab/SpriteCollab)](https://github.com/PMDCollab/SpriteCollab) | Mystery-Dungeon-style animated sprites used everywhere: main screen, stat card, minigame, and the Pokédex grid + detail view |
-| **Base stats and learnsets** | [PokéAPI](https://pokeapi.co) | Real stats and level-up moves for all 386 |
+| **Base stats and learnsets** | [PokéAPI](https://pokeapi.co), [Korean Pokémon Wiki](https://pokemon.fandom.com/ko/wiki/전국도감) | Existing data plus official Korean names, stats and level-up move details for Galar and Paldea |
 | **Gym badges** (all three regions) | [SteGriff/pokemon-badges](https://github.com/SteGriff/pokemon-badges) | `badges.h`, via `tools/gen_badges.py` — Stephen Griffiths 2011, **CC BY 3.0**, traced from Bulbapedia |
 | **Gym leader teams** (Johto, Hoenn) | [pret/pokecrystal](https://github.com/pret/pokecrystal), [pret/pokeemerald](https://github.com/pret/pokeemerald) | Verified against the games' own trainer tables by `tools/verify_rosters.py` — no art is taken, only the team data |
 
@@ -34,6 +34,11 @@ own terms (Creative Commons Attribution-NonCommercial 4.0). Per-species/per-auth
 credit is in the original repository's
 [tracker.json](https://github.com/PMDCollab/SpriteCollab/blob/master/tracker.json).
 Huge thanks to that whole community for an enormous amount of work.
+
+The Galar and Paldea packs carry a per-species, per-author attribution table in
+[`docs/PMDCOLLAB_GALAR_PALDEA_CREDITS.md`](docs/PMDCOLLAB_GALAR_PALDEA_CREDITS.md),
+generated from each included asset's `credits.txt` and SpriteCollab's
+`credit_names.txt`. Species without usable art are not packaged or hatched.
 
 > **Important if you reuse this repo:** the packaged sprite files
 > (`tools/sdcard/mons/*.bin`) are derived from the sources above. Don't
