@@ -89,7 +89,7 @@ python tools/build_emulator.py
 build/emulator/tamapoke-emu --shot main --dex 25 --out preview.ppm
 ```
 
-Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64-w64-mingw32 디렉터리를 지정합니다. 실제 펌웨어 소스를 사용하지만 터치·SD·오디오·전원·무선 전송은 하드웨어 검증을 대체하지 않습니다.
+Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64-w64-mingw32 디렉터리를 지정합니다. 에뮬레이터의 기본 창은 실기 패널과 같은 **466×466픽셀**이며, 크게 볼 때만 `--scale 2`처럼 확대할 수 있습니다. 실제 펌웨어 소스를 사용하지만 터치·SD·오디오·전원·무선 전송은 하드웨어 검증을 대체하지 않습니다.
 
 ### 설치 페이지와 GitHub Pages
 

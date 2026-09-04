@@ -236,7 +236,7 @@ sources — including `TamaPoke.ino` — into a clickable SDL app:
 
 ```bash
 brew install sdl2 && bash tools/emu/build.sh
-tools/emu/tamapoke-emu --scale 2 --fast 60      # clickable, serial on stdin
+tools/emu/tamapoke-emu --scale 1 --fast 60      # clickable, serial on stdin; physical 466x466 resolution
 tools/emu/tamapoke-emu --shot battle --out s.ppm  # headless screenshot
 ```
 

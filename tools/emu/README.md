@@ -7,7 +7,7 @@ Runs the **real firmware** on your computer, in a window you can click.
 ```bash
 brew install sdl2          # macOS   (Debian: apt install libsdl2-dev)
 bash tools/emu/build.sh
-tools/emu/tamapoke-emu --scale 2 --fast 60
+tools/emu/tamapoke-emu --scale 1 --fast 60
 ```
 
 It compiles `TamaPoke.ino`, `pet.cpp`, `i18n.cpp` and `party.cpp` **unmodified**.
@@ -42,7 +42,7 @@ clipped on real hardware.
 
 | Flag | Meaning |
 |---|---|
-| `--scale N` | window zoom (default 2) |
+| `--scale N` | window zoom (default 1, matching the physical 466×466 panel resolution) |
 | `--fast N` | run the clock N× faster — `--fast 60` turns an in-game minute into a second, so a full 3-day life takes about an hour. The speed-up is **suspended while you are touching the panel**: the firmware times taps and swipes off the same `millis()`, so scaling it during a gesture would shrink the tap window (`dt < 1500`) to `1500/N` real ms and make the screen unclickable |
 | `--save FILE` | where to persist NVS (default `tamapoke.nvs` in the cwd) |
 | `--wipe` | delete the save first |

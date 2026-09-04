@@ -416,7 +416,9 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
 }
 
 int main(int argc, char **argv) {
-  int scale = 2;
+  // Match the physical 466x466 panel by default.  Larger integer zoom levels
+  // remain available through --scale for high-DPI or presentation use.
+  int scale = 1;
   g_argv = argv;
   const char *save = "tamapoke.nvs";
   const char *language = nullptr;
