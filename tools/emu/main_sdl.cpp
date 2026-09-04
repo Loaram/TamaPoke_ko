@@ -420,7 +420,9 @@ int main(int argc, char **argv) {
   // remain available through --scale for high-DPI or presentation use.
   int scale = 1;
   g_argv = argv;
-  #ifdef TAMAPOKE_FULL_DEX
+  #if defined(TAMAPOKE_FULL_SHINY)
+  const char *save = "tamapoke-shiny.nvs";
+  #elif defined(TAMAPOKE_FULL_DEX)
   const char *save = "tamapoke-dex.nvs";
   #else
   const char *save = "tamapoke.nvs";
@@ -460,7 +462,9 @@ int main(int argc, char **argv) {
   if (language) setLang(!strcmp(language, "ko") ? LANG_KO : LANG_EN);
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) { fprintf(stderr, "SDL: %s\n", SDL_GetError()); return 1; }
-  #ifdef TAMAPOKE_FULL_DEX
+  #if defined(TAMAPOKE_FULL_SHINY)
+  const char *windowTitle = "TamaPoke -shiny (emulator)";
+  #elif defined(TAMAPOKE_FULL_DEX)
   const char *windowTitle = "TamaPoke -dex (emulator)";
   #else
   const char *windowTitle = "TamaPoke (emulator)";
