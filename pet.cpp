@@ -350,33 +350,41 @@ void Pet::defTick(bool resting) {
   if (trDef < trMaxDef()) trDef++;
 }
 
-// quedan miembros sin registrar en la linea evolutiva de esta base?
-bool Pet::lineHasUnregistered(int16_t base) const {
-  int16_t cur = base;
-  for (int guard = 0; cur >= 1 && cur <= DEX_COUNT && guard < 6; guard++) {
-    if (!isRegistered(cur)) return true;
-    if (cur == DEX_EEVEE) {
-      int16_t opts[EEVEE_EVO_COUNT];
-      uint8_t n = eeveeOptions(opts);
-      for (uint8_t i = 0; i < n; i++)
-        if (!isRegistered(opts[i])) return true;
-      return false;
-    }
-    cur = DEX_TBL[cur].evolvesTo;
-  }
-  return false;
-}
-
-uint8_t Pet::eeveeOptions(int16_t *out) const {
+uint8_t Pet::evolutionOptions(int16_t base, int16_t *out) const {
   uint8_t n = 0;
-  for (uint8_t i = 0; i < EEVEE_EVO_COUNT; i++) {
-    int16_t b = EEVEE_EVOS[i];
-    if (b < 1 || b > DEX_COUNT) continue;
-    if (!speciesHasArt(b)) continue;                     // no art anywhere
-    if (!regionAvailable(regionOfDex(b))) continue;      // pack not on the card
-    out[n++] = b;
+  for (uint8_t branch = 0; branch < EVO_BRANCH_COUNT; branch++) {
+    if (EVO_BRANCHES[branch].base != base) continue;
+    for (uint8_t i = 0; i < EVO_BRANCHES[branch].count; i++) {
+      int16_t target = EVO_BRANCHES[branch].targets[i];
+      if (target < 1 || target > DEX_COUNT) continue;
+      if (!speciesHasArt(target)) continue;                    // no art anywhere
+      if (!regionAvailable(regionOfDex(target))) continue;     // pack not on the card
+      out[n++] = target;
+    }
+    break;
   }
   return n;
+}
+
+// A branch can lead into another ordinary evolution (Wurmple is the useful
+// example), so collection completeness must walk every path, not merely look at
+// the immediate choices.
+static bool lineMissingFrom(const Pet &pet, int16_t cur, uint8_t depth) {
+  if (cur < 1 || cur > DEX_COUNT || depth >= 8) return false;
+  if (!pet.isRegistered(cur)) return true;
+  int16_t opts[EVO_BRANCH_MAX];
+  uint8_t n = pet.evolutionOptions(cur, opts);
+  if (n) {
+    for (uint8_t i = 0; i < n; i++)
+      if (lineMissingFrom(pet, opts[i], depth + 1)) return true;
+    return false;
+  }
+  return lineMissingFrom(pet, DEX_TBL[cur].evolvesTo, depth + 1);
+}
+
+// quedan miembros sin registrar en la linea evolutiva de esta base?
+bool Pet::lineHasUnregistered(int16_t base) const {
+  return lineMissingFrom(*this, base, 0);
 }
 
 uint8_t Pet::eggRarity() const {
@@ -1002,21 +1010,18 @@ void Pet::evolve() {
   const DexEntry &d = DEX_TBL[speciesId];
   prevSpeciesId = speciesId;
   int16_t next = d.evolvesTo;
-  if (speciesId == DEX_EEVEE) {
-    // Eevee's branch: all eight, preferring one still missing from the Pokedex,
-    // which is what makes raising Eevees a collection goal rather than a
-    // coin flip. Only ones this player can actually be shown -- see
-    // eeveeOptions(). If none qualify the table's own 134 stands, so a card with
-    // no packs at all still evolves rather than freezing.
-    int16_t opts[EEVEE_EVO_COUNT];
-    uint8_t n = eeveeOptions(opts);
-    if (n) {
-      int16_t fresh[EEVEE_EVO_COUNT];
-      uint8_t m = 0;
-      for (uint8_t i = 0; i < n; i++)
-        if (!isRegistered(opts[i])) fresh[m++] = opts[i];
-      next = m ? fresh[random(m)] : opts[random(n)];
-    }
+  // Every multi-result family uses Eevee's collection rule: prefer a branch
+  // whose line still has an unseen member, then choose randomly once all paths
+  // are complete. If no target has installed art, the table's primary result
+  // remains the fallback so evolution never freezes.
+  int16_t opts[EVO_BRANCH_MAX];
+  uint8_t n = evolutionOptions(speciesId, opts);
+  if (n) {
+    int16_t fresh[EVO_BRANCH_MAX];
+    uint8_t m = 0;
+    for (uint8_t i = 0; i < n; i++)
+      if (lineHasUnregistered(opts[i])) fresh[m++] = opts[i];
+    next = m ? fresh[random(m)] : opts[random(n)];
   }
   speciesId = next;
   registerSpecies(speciesId);

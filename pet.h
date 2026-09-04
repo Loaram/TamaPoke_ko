@@ -378,16 +378,16 @@ public:
   // to see which creature a switch landed on.
   int16_t eggPeek() const { return eggTarget; }
   int16_t rollInRegion(uint8_t r, uint8_t tier);
-  // Which of EEVEE's branches this player can actually be handed right now.
-  // THE single answer: evolve() picks from it and lineHasUnregistered() asks it
-  // whether the line is finished, and those two having their own opinions is how
-  // the branch stayed at 134-136 while five more Eeveelutions sat in the dex.
+  // Which branches this player can actually be handed right now. This covers
+  // every multi-result evolution in the 809-species table, including Eevee and
+  // Cosmoem. evolve() and lineHasUnregistered() both use this one answer.
   //
   // Filtered by the sprite pack AND by whether the species has art at all --
   // evolving into something that can only draw as a dex number is the same fault
   // just removed from the gym rosters, and here it would be permanent. `out`
-  // must hold EEVEE_EVO_COUNT; returns how many were written.
-  uint8_t eeveeOptions(int16_t *out) const;
+  // `out` must hold EVO_BRANCH_MAX; returns how many were written.
+  uint8_t evolutionOptions(int16_t base, int16_t *out) const;
+  uint8_t eeveeOptions(int16_t *out) const { return evolutionOptions(DEX_EEVEE, out); }
   uint8_t lowestStat() const { return min(min(fullness, joy), min(energy, hygiene)); }
   PetMood mood() const;
   // progreso de la ceremonia de despedida/escapada, 0..1 (para animarla)

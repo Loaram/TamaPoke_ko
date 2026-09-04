@@ -7,7 +7,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from dex_data import DEX, TYPE_ACCENTS, CLASSIC, RARE, LEGENDARY, REGIONS, EEVEE_BRANCHES
+from dex_data import DEX, TYPE_ACCENTS, CLASSIC, RARE, LEGENDARY, REGIONS, EVOLUTION_BRANCHES
 from dex_stats import BASE_STATS
 from dex_types import TYPES, TYPE_ORDER, CHART
 
@@ -41,16 +41,30 @@ def main():
     out.append("#pragma once\n#include <stdint.h>\n\n")
     out.append("// GENERADO por tools/gen_dex.py desde tools/dex_data.py - no editar\n\n")
     out.append("#define DEX_COUNT %d\n" % len(DEX))
+    max_branch = max(map(len, EVOLUTION_BRANCHES.values()))
     out.append("#define DEX_EEVEE 133\n")
-    # Emitted rather than written into the firmware by hand: gen_dex.py uses this
-    # same list to decide which species are evolution-only, so a branch that can
-    # be reached must also be one that cannot hatch, and vice versa.
-    out.append("// EEVEE's branches. DexEntry holds ONE evolvesTo (134), so the other\n"
-               "// seven cannot live in the table. Generated from EEVEE_BRANCHES in\n"
-               "// dex_data.py, which is also what marks all eight evolution-only.\n")
-    out.append("#define EEVEE_EVO_COUNT %d\n" % len(EEVEE_BRANCHES))
+    out.append("// Branched evolutions. DexEntry holds one evolvesTo, so alternate\n"
+               "// targets live here. The same generated map also marks every target\n"
+               "// evolution-only, keeping the evolution and egg pools consistent.\n"
+               "struct EvolutionBranch {\n"
+               "  uint16_t base;\n"
+               "  uint8_t count;\n"
+               "  int16_t targets[%d];\n"
+               "};\n" % max_branch)
+    out.append("#define EVO_BRANCH_MAX %d\n" % max_branch)
+    out.append("#define EVO_BRANCH_COUNT %d\n" % len(EVOLUTION_BRANCHES))
+    out.append("static const EvolutionBranch EVO_BRANCHES[EVO_BRANCH_COUNT] = {\n")
+    for base, targets in EVOLUTION_BRANCHES.items():
+        padded = targets + [0] * (max_branch - len(targets))
+        out.append("  { %d, %d, { %s } },\n" %
+                   (base, len(targets), ', '.join(map(str, padded))))
+    out.append("};\n")
+    # Keep these aliases while downstream tests and third-party sketches move to
+    # the generic table.
+    eevee = EVOLUTION_BRANCHES[133]
+    out.append("#define EEVEE_EVO_COUNT %d\n" % len(eevee))
     out.append("static const int16_t EEVEE_EVOS[EEVEE_EVO_COUNT] = { %s };\n\n"
-               % ', '.join(str(x) for x in EEVEE_BRANCHES))
+               % ', '.join(str(x) for x in eevee))
     out.append("// The 18 current types. See tools/dex_types.py for why this game uses the\n"
                "// modern chart rather than the Gen 1 one.\n"
                "enum PkType : uint8_t {\n  ")
@@ -89,13 +103,12 @@ def main():
         "  uint8_t biome;        // 0 pradera 1 playa 2 bosque 3 volcan 4 montana 5 nieve\n"
         "  uint8_t type1, type2;  // current typing; type2 = T_NONE if single-typed\n"
         "};\n\n")
-    # formas base = las que no son evolucion de nadie (las ramas de Eevee si lo son)
+    # formas base = las que no son evolucion de nadie (las ramas tambien cuentan)
     # Anything that is somebody's evolution target is evolution-ONLY and never
-    # hatches. Eevee's branches have to be added by hand because DexEntry holds a
-    # single evolvesTo -- this used to read `| {135, 136}`, which is why Espeon,
-    # Umbreon, Leafeon, Glaceon and Sylveon were treated as base forms and came
-    # out of eggs. The list lives in dex_data.py so the firmware shares it.
-    evolved = {d[4] for d in DEX if d[4]} | set(EEVEE_BRANCHES)
+    # hatches. Alternate branches come from the same map emitted above, so a
+    # species cannot be reachable by evolution while also hatching as a base.
+    branch_targets = {target for targets in EVOLUTION_BRANCHES.values() for target in targets}
+    evolved = {d[4] for d in DEX if d[4]} | branch_targets
     rarities = []
     out.append("static const DexEntry DEX_TBL[DEX_COUNT + 1] = {\n")
     out.append('  { "?", 0, 0, 0, 0x2946, 50, 50, 50, 50, 50, 50, 0 },  // 0: sin usar\n')

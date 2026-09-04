@@ -4,14 +4,14 @@
 
 [![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 ![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
-![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.0.5-8A2BE2)
+![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.0.6-8A2BE2)
 ![포켓몬](https://img.shields.io/badge/포켓몬-809종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
 
-현재 배포 버전은 **ko.1.0.5**입니다. 첫 파트너 후보를 확인한 뒤 **지방 선택** 버튼으로 돌아가 다른 지방의 스타팅 포켓몬과 비교할 수 있습니다. 40분마다 1레벨이 오르고, 최종 진화 상태라면 2일째 작별을 선택할 수 있으며 수면 중 활력은 분당 10 회복됩니다. 꼬시레는 레벨 1부터 **벌레의저항**을 사용합니다.
+현재 배포 버전은 **ko.1.0.6**입니다. 1~809번에서 진화 결과가 둘 이상인 12계보가 이브이와 같은 분기 규칙을 사용합니다. 아직 도감에 없는 진화 경로를 먼저 선택하고, 모두 모은 뒤에는 가능한 결과 중 하나를 무작위로 선택합니다. 코스모움은 이제 솔가레오와 루나아라 양쪽으로 진화할 수 있습니다. 성장 속도는 40분당 1레벨, 최종 진화 상태의 작별은 2일째, 수면 중 활력 회복은 분당 10입니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
 

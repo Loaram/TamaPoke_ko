@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.0.5"
+#define FW_VERSION "ko.1.0.6"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)

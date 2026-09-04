@@ -857,13 +857,31 @@ CLASSIC = [1, 4, 7, 25, 133]
 # from the others rather than written out.
 #
 # Extending to a fourth generation means adding a row here and nothing else.
-# EEVEE's branches. DexEntry carries a single evolvesTo, so only 134 lives in
-# the table proper; the other seven cannot be expressed as data at all. They are
-# listed ONCE here, consumed by gen_dex.py for the rarity derivation AND emitted
-# into dex.h for the firmware, so the two cannot disagree about what an Eevee can
-# become -- which is exactly how the branch stayed at three for six generations
-# while five more Eeveelutions sat in the dex hatching out of eggs instead.
-EEVEE_BRANCHES = [134, 135, 136, 196, 197, 470, 471, 700]
+# Every branched evolution whose targets are inside this 1..809 edition.
+#
+# DexEntry carries one evolvesTo, so alternate targets cannot live in the main
+# row. Keep them once here: gen_dex.py emits this map for the firmware and uses
+# the same targets to mark every result evolution-only. In TamaPoke the original
+# game's item, gender, personality, environment and version gates become the
+# same collection rule Eevee already used: prefer a branch whose line is still
+# missing from the Pokedex, then choose randomly after the family is complete.
+EVOLUTION_BRANCHES = {
+    44:  [45, 182],                         # Gloom
+    61:  [62, 186],                         # Poliwhirl
+    79:  [80, 199],                         # Slowpoke
+    133: [134, 135, 136, 196, 197, 470, 471, 700],  # Eevee
+    236: [106, 107, 237],                   # Tyrogue
+    265: [266, 268],                        # Wurmple
+    281: [282, 475],                        # Kirlia
+    290: [291, 292],                        # Nincada (adapted as a choice)
+    361: [362, 478],                        # Snorunt
+    366: [367, 368],                        # Clamperl
+    412: [413, 414],                        # Burmy
+    790: [791, 792],                        # Cosmoem
+}
+
+# Compatibility name used by older focused tests and notes.
+EEVEE_BRANCHES = EVOLUTION_BRANCHES[133]
 
 REGIONS = [
     ('KANTO', 1,   151, [1, 4, 7, 25, 133]),
