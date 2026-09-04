@@ -9,12 +9,12 @@ a=p.parse_args()
 out=R/'build/runtime-tests';out.mkdir(parents=True,exist_ok=True)
 env=os.environ.copy();env['PATH']=str(Path(a.cxx).resolve().parent)+os.pathsep+env.get('PATH','')
 core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp']]
-for test in ['korean','i18n','label','save','upgrade','link','balance','moves','hit','release']:
+for test in ['korean','i18n','label','save','upgrade','link','balance','moves','hit','starter','release']:
     exe=out/(test+('.exe' if os.name=='nt' else ''))
     src=[str(E/'tests'/f'{test}_test.cpp'),*core]
     if test in ('korean','label'):src.append(str(E/'font.cpp'))
-    if test in ('hit','release'):
+    if test in ('hit','starter','release'):
         src += [str(a.sketch),*[str(E/x) for x in ['host_impl.cpp','font.cpp','clock.cpp']]]
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: Korean/i18n/label/save/upgrade/link/balance/moves/hit/release runtime suites')
+print('PASS: Korean/i18n/label/save/upgrade/link/balance/moves/hit/starter/release runtime suites')

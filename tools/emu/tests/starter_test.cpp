@@ -29,6 +29,7 @@ static void ck(bool ok,const char*w){printf("%s  %s\n",ok?"PASS":"FAIL",w); if(!
 // where renderRegionPick draws row i, and where renderStarterSelect draws row i
 static int regionRowY(int i){ return 108 + i*72 + 30; }
 static int starterRowY(int i){ return 110 + i*(70+8) + 35; }
+static int starterRegionButtonY(){ return 366 + 24; }
 
 int main(){
   setup();
@@ -74,7 +75,20 @@ int main(){
   ck(pet.region == 1, "tapping a region on the first screen sets the egg region");
   ck(pet.awaitingStarter(), "and does not choose a creature by itself");
 
-  render();                                   // now the starter list
+  // The starter list has an explicit route back to the region chooser.  A tap
+  // there must not accidentally pick the third starter whose row sits above it.
+  render();
+  onTap(233, starterRegionButtonY());
+  ck(pet.awaitingStarter(), "the region button does not choose a starter");
+  onTap(233, regionRowY(0));                  // KANTO on the chooser again
+  ck(pet.region == 0, "the region button returns to a working region chooser");
+  ck(pet.awaitingStarter(), "changing region still waits for a starter choice");
+
+  // Compare one more trio, then return to Johto and make the original choice.
+  onTap(233, starterRegionButtonY());
+  onTap(233, regionRowY(1));                  // JOHTO again
+  ck(pet.region == 1, "a region can be selected again after comparison");
+  render();                                   // now the Johto starter list
   onTap(233, starterRowY(1));                 // CYNDAQUIL
   ck(!pet.awaitingStarter(), "tapping a starter finishes the first boot");
   ck(pet.eggPeek() == 155, "and it is the one that was tapped, from that region");

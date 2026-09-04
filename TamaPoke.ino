@@ -629,6 +629,15 @@ static bool starterRegionDone = false;
 #define STARTER_ROW_Y 110
 #define STARTER_ROW_H 70
 #define STARTER_ROW_GAP 8
+#define STARTER_REGION_W 250
+#define STARTER_REGION_H 48
+#define STARTER_REGION_X (CX - STARTER_REGION_W / 2)
+#define STARTER_REGION_Y 366
+static_assert(STARTER_REGION_H >= UI_TAP_MIN,
+              "the starter region button must remain finger-sized");
+static_assert(STARTER_REGION_Y >
+              STARTER_ROW_Y + (STARTER_SHOWN - 1) * (STARTER_ROW_H + STARTER_ROW_GAP) + STARTER_ROW_H,
+              "the starter region button overlaps the last starter row");
 // boton-CTA de evolucion (centrado, mitad de pantalla)
 #define EVO_BTN_W 256
 #define EVO_BTN_H 64
@@ -1658,6 +1667,15 @@ void onTap(int16_t x, int16_t y) {
       }
       return;
     }
+    if (x >= STARTER_REGION_X && x <= STARTER_REGION_X + STARTER_REGION_W &&
+        y >= STARTER_REGION_Y && y <= STARTER_REGION_Y + STARTER_REGION_H) {
+      // Nothing is committed until a creature is tapped.  Return to the page
+      // containing the current region so the player can compare another trio.
+      starterRegionDone = false;
+      rpickPage = (uint8_t)(pet.region / RPICK_PER_PAGE);
+      sfxPlay(SFX_TAP);
+      return;
+    }
     for (int i = 0; i < starterCountShown(pet.region); i++) {
       int ry = STARTER_ROW_Y + i * (STARTER_ROW_H + STARTER_ROW_GAP);
       if (x >= 70 && x <= 396 && y >= ry && y <= ry + STARTER_ROW_H) {
@@ -2109,6 +2127,15 @@ void renderStarterSelect() {
     gfx->setCursor(178, ry + 24);
     gfx->print(localName(de.name));
   }
+  gfx->fillRoundRect(STARTER_REGION_X, STARTER_REGION_Y,
+                     STARTER_REGION_W, STARTER_REGION_H, 12, UI_WHITE);
+  gfx->drawRoundRect(STARTER_REGION_X, STARTER_REGION_Y,
+                     STARTER_REGION_W, STARTER_REGION_H, 12, UI_INK);
+  gfx->setTextColor(UI_INK);
+  gfx->setTextSize(2);
+  const char *back = T(S_CHOOSE_REGION);
+  gfx->setCursor(CX - textWidthFactor(back, 6), STARTER_REGION_Y + 13);
+  gfx->print(back);
   gfx->flush();
 }
 
