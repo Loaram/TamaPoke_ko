@@ -72,6 +72,71 @@ int main() {
   }
   ck(legal, "a level 1 pet knows nothing it has not learned yet");
 
+  // Wimpod's original filtered set kept only TMs, all gated until level 40.
+  // Its real level-1 STRUGGLE BUG must survive the compact move-table filter.
+  Pet wimpod;
+  wimpod.dbgHatchAs(767, false);
+  wimpod.ageMinutes = 0;
+  wimpod.relearnFromLevel();
+  dump("Wimpod L1    ", wimpod.moves);
+  ck(wimpod.moveCount() >= 1, "a level 1 Wimpod has a usable move");
+  bool struggleBug = false;
+  for (int i = 0; i < MOVE_SLOTS; i++)
+    if (wimpod.moves[i] && !strcmp(MOVE_TBL[wimpod.moves[i]].name, "STRUGGLE BUG"))
+      struggleBug = true;
+  ck(struggleBug, "Wimpod starts with STRUGGLE BUG");
+
+  // Full-dex guard: every one of the 809 table entries can be reached through
+  // hatching, evolution, party restore or the debug tools. None may arrive at
+  // battle with an empty or invalid set, even when its signature move is not
+  // part of the compact move table.
+  int emptyL1 = 0, emptyL100 = 0, invalidAny = 0;
+  for (int16_t dex = 1; dex <= DEX_COUNT; dex++) {
+    for (int lvl : { 1, 100 }) {
+      Pet all;
+      all.dbgHatchAs(dex, false);
+      all.ageMinutes = (uint32_t)(lvl - 1) * MINUTES_PER_LEVEL;
+      all.relearnFromLevel();
+      if (!all.moveCount()) (lvl == 1 ? emptyL1 : emptyL100)++;
+      for (int s = 0; s < MOVE_SLOTS; s++)
+        if (all.moves[s] >= MOVE_COUNT) invalidAny++;
+    }
+  }
+  ck(emptyL1 == 0, "all 809 species have a usable move at level 1");
+  ck(emptyL100 == 0, "all 809 species have a usable move at level 100");
+  ck(invalidAny == 0, "all full-dex move slots stay inside MOVE_TBL");
+
+  Pet magikarp;
+  magikarp.dbgHatchAs(129, false);
+  magikarp.ageMinutes = 0;
+  magikarp.relearnFromLevel();
+  ck(magikarp.moves[0] == MV_STRUGGLE, "a move-less level 1 species gets STRUGGLE");
+  magikarp.lastLearnLevel = 1;
+  magikarp.ageMinutes = 14UL * MINUTES_PER_LEVEL;  // level 15: TACKLE
+  magikarp.checkLearnGates();
+  bool stillStruggling = false, learnedTackle = false;
+  for (int s = 0; s < MOVE_SLOTS; s++) {
+    stillStruggling |= magikarp.moves[s] == MV_STRUGGLE;
+    learnedTackle |= magikarp.moves[s] == MV_TACKLE;
+  }
+  ck(learnedTackle && !stillStruggling,
+     "the first real move replaces temporary STRUGGLE");
+
+  Preferences oldWimpod;
+  oldWimpod.begin("tamapoke", false);
+  oldWimpod.clear();
+  oldWimpod.putBool("init", true);
+  oldWimpod.putShort("dexn", 767);
+  oldWimpod.putUInt("age", 0);
+  uint8_t noMoves[MOVE_SLOTS] = { 0, 0, 0, 0 };
+  oldWimpod.putBytes("mvs", noMoves, sizeof(noMoves));
+  oldWimpod.putUChar("mvlv", 1);  // the released build saved this bad state
+  oldWimpod.end();
+  Pet repairedWimpod;
+  repairedWimpod.begin();
+  ck(repairedWimpod.moveCount() >= 1,
+     "an existing empty Wimpod save is repaired on load");
+
   // --- a default set must be mostly attacks, not a pile of stat-lowering
   // status moves. This is what caught GROWL/LEER on a level 100 Charizard.
   for (int dex : { 6, 9, 3, 65, 68, 25, 143, 150 }) {

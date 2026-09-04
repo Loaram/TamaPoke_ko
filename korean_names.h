@@ -904,6 +904,7 @@ static const KoreanName KOREAN_NAMES[] = {
   { "STOUTLAND", "바랜드" },
   { "STRING SHOT", "실뿜기" },
   { "STRUGGLE", "발버둥" },
+  { "STRUGGLE BUG", "벌레의저항" },
   { "STUFFUL", "포곰곰" },
   { "STUNFISK", "메더" },
   { "STUNKY", "스컹뿡" },

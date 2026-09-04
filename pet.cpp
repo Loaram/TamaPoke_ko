@@ -741,6 +741,11 @@ void Pet::relearnFromLevel() {
     if (sc > bestSc) { bestSc = sc; best = mv; }
   }
   if (best) moves[MOVE_SLOTS - 1] = best;
+  // Some species only know moves outside this deliberately compact table at
+  // low levels (Abra's TELEPORT, Ditto's TRANSFORM, Smeargle's SKETCH, and so
+  // on). They must still be able to enter a battle. STRUGGLE is a temporary
+  // engine fallback and is replaced as soon as a real level-up move arrives.
+  if (moveCount() == 0) moves[0] = MV_STRUGGLE;
 }
 
 // Queues every level-up move unlocked since the last check. A free slot is
@@ -757,8 +762,12 @@ void Pet::checkLearnGates() {
     uint8_t mv = learnMove(speciesId, i);
     if (!mv || mv >= MOVE_COUNT || knowsMove(mv)) continue;
     int freeSlot = -1;
+    // STRUGGLE is not a learned move. The first real move replaces it instead
+    // of leaving the fallback in the set forever.
     for (int s = 0; s < MOVE_SLOTS; s++)
-      if (!moves[s]) { freeSlot = s; break; }
+      if (moves[s] == MV_STRUGGLE) { freeSlot = s; break; }
+    for (int s = 0; s < MOVE_SLOTS; s++)
+      if (freeSlot < 0 && !moves[s]) { freeSlot = s; break; }
     if (freeSlot >= 0) { moves[freeSlot] = mv; continue; }
     if (learnQCount >= sizeof(learnQueue)) continue;
     bool dup = false;
@@ -1392,11 +1401,14 @@ void Pet::load() {
   if (avatar >= AVATAR_COUNT) avatar = 0;   // a save from when there were four
   badges = prefs.getUShort("badg", 0);
   badgesHard = prefs.getUShort("badh", 0);
-  if (!isEgg() && moveCount() == 0 && lastLearnLevel == 0) {
-    // save from before moves existed: hand it the set it should already have
-    // rather than a queue of every gate it ever passed
+  if (!isEgg() && moveCount() == 0) {
+    // A save from before moves existed, or one created while a species had no
+    // level-1 entry, needs the set it should already have. Do not require
+    // lastLearnLevel == 0: the old Wimpod data advanced that marker to 1 while
+    // leaving every slot empty.
     relearnFromLevel();
     lastLearnLevel = level();
+    pendingSave = true;
   }
   learnQCount = 0;      // rebuilt from lastLearnLevel by the next tick
   checkLearnGates();

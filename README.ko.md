@@ -1,12 +1,31 @@
+> **이 저장소는 [socquique/TamaPoke](https://github.com/socquique/TamaPoke)를 포크한 [DylanPDao/TamaPoke](https://github.com/DylanPDao/TamaPoke)를 기반으로 만든 한국어판이며, 한국어화와 일부 기능·밸런스 수정이 포함되어 있습니다.**
+
 # TamaPoke 한국어판
+
+[![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
+![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
+![펌웨어](https://img.shields.io/badge/펌웨어-ko.1.0.4-8A2BE2)
+![포켓몬](https://img.shields.io/badge/포켓몬-809종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
-**DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. 원작은 Quique Tortosa의 [socquique/TamaPoke](https://github.com/socquique/TamaPoke)이며, [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
+**DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 809종·7개 지방 및 기존 게임 기능을 유지합니다. ShadowEnemyx의 Gen 3 포크와는 별개입니다.
 
-현재 배포 버전은 **ko.1.0.3**입니다. 40분마다 1레벨이 오르고, 최종 진화 상태라면 2일째 작별을 선택할 수 있습니다. 수면 중 활력은 분당 10 회복됩니다.
+현재 배포 버전은 **ko.1.0.4**입니다. 40분마다 1레벨이 오르고, 최종 진화 상태라면 2일째 작별을 선택할 수 있습니다. 수면 중 활력은 분당 10 회복됩니다. 꼬시레는 레벨 1부터 **벌레의저항**을 사용하며, 기술표에 초반 기술이 없는 포켓몬도 임시 **발버둥**으로 전투가 막히지 않습니다.
 
 한국어 게임 화면을 넣은 **14쪽 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 기본 조작은 3쪽, 도감 사용법은 4~5쪽입니다.
+
+## 한국어 게임 화면
+
+| 메인 화면 | 포켓몬 기술 | 알과 지방 선택 |
+|---|---|---|
+| <img src="docs/screens/main.png" width="240" alt="TamaPoke 한국어 메인 화면"> | <img src="docs/qa/ko.1.0.4/wimpod-l1.png" width="240" alt="꼬시레 레벨 1 벌레의저항 기술 화면"> | <img src="docs/screens/egg.png" width="240" alt="TamaPoke 알 화면"> |
+
+| 도감 | 지방별 체육관 | 파티와 박스 |
+|---|---|---|
+| <img src="docs/screens/gallery.png" width="240" alt="관동 도감 화면"> | <img src="docs/screens/gymsj.png" width="240" alt="성도 체육관 화면"> | <img src="docs/screens/box.png" width="240" alt="포켓몬 박스 화면"> |
+
+화면 이미지는 펌웨어와 같은 그리기 코드를 사용하는 PC 에뮬레이터에서 466×466 해상도로 저장했습니다.
 
 ## 설치
 
@@ -34,7 +53,7 @@
 
 ## 한국어 지원 범위
 
-- UI 문자열 173개, 포켓몬 809종 이름, 기술 테이블 90개 항목(빈 기술 포함), 18개 타입, 지방·트레이너·장소 표시.
+- UI 문자열 173개, 포켓몬 809종 이름, 기술 테이블 91개 항목(빈 기술 포함), 18개 타입, 지방·트레이너·장소 표시.
 - 메뉴, 도감, 상태, 성장, 기술 선택, 배틀, 파티, 박스, 체육관, 근거리 대전, 언어 설정.
 - 기존 6개 언어와 저장 데이터·무선 통신 형식 유지.
 - Galmuri11의 필요한 글자만 펌웨어에 포함. UTF-8 디코딩과 픽셀 폭 계산을 에뮬레이터·실기에서 공유합니다.

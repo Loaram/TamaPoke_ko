@@ -218,6 +218,12 @@ MOVES = [
     # STAB; Darkrai is SpA 135 / Atk 90, so neither was usable to it. It learns
     # DARK PULSE by level-up at 27, so this is its real move, not a contrivance.
     ("DARK PULSE",   "dark-pulse",    'dark',     MC_SPEC,  80, 100, EF_NONE,      0, 0, 0, TG_FOE),  # LATER (Gen 4)
+
+    # Wimpod's two real level-1 moves are SAND ATTACK and STRUGGLE BUG. Accuracy
+    # stages are deliberately outside this compact battle model, so without
+    # STRUGGLE BUG its filtered learnset contained only level-40 TMs and a newly
+    # hatched Wimpod had four empty move slots.
+    ("STRUGGLE BUG", "struggle-bug",  'bug',      MC_SPEC,  50, 100, EF_NONE,      0, 0, 0, TG_FOE),  # LATER (Gen 5)
 ]
 
 # Accuracy drops (SAND ATTACK, SMOKESCREEN, FLASH) are deliberately left out:

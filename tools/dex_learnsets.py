@@ -770,7 +770,7 @@ LEARNSETS = {
     764: [('amnesia', 0), ('dazzling-gleam', 0), ('hyper-beam', 0), ('solar-beam', 0), ('swift', 0), ('vine-whip', 3), ('play-rough', 39)],
     765: [('body-slam', 0), ('earthquake', 0), ('hyper-beam', 0), ('psybeam', 0), ('rock-slide', 0), ('shadow-ball', 0), ('swift', 0), ('thunder', 0), ('thunderbolt', 0), ('confusion', 1), ('nasty-plot', 25), ('psychic', 43)],
     766: [('body-slam', 0), ('earthquake', 0), ('hyper-beam', 0), ('iron-head', 0), ('rock-slide', 0), ('shadow-ball', 0), ('tackle', 1), ('leer', 4), ('rock-smash', 5), ('bulk-up', 32), ('double-edge', 36)],
-    767: [('bug-buzz', 0), ('leech-life', 0), ('screech', 0), ('surf', 0), ('swift', 0), ('waterfall', 0)],
+    767: [('bug-buzz', 0), ('leech-life', 0), ('screech', 0), ('surf', 0), ('swift', 0), ('waterfall', 0), ('struggle-bug', 1)],
     768: [('blizzard', 0), ('bug-buzz', 0), ('bulk-up', 0), ('dark-pulse', 0), ('hyper-beam', 0), ('ice-beam', 0), ('iron-head', 0), ('leech-life', 0), ('rock-slide', 0), ('screech', 0), ('sludge-bomb', 0), ('surf', 0), ('swift', 0), ('waterfall', 0), ('x-scissor', 0), ('rock-smash', 4), ('bug-bite', 10), ('swords-dance', 16), ('pin-missile', 36)],
     769: [('amnesia', 0), ('earthquake', 0), ('flash-cannon', 0), ('night-shade', 0), ('psychic', 0), ('rock-slide', 0), ('sludge-bomb', 0), ('absorb', 1), ('mega-drain', 15), ('shadow-ball', 41)],
     770: [('amnesia', 0), ('body-slam', 0), ('earthquake', 0), ('flash-cannon', 0), ('hyper-beam', 0), ('night-shade', 0), ('psychic', 0), ('rock-slide', 0), ('sludge-bomb', 0), ('absorb', 1), ('mega-drain', 15), ('shadow-ball', 41)],
