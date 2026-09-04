@@ -891,10 +891,12 @@ which build `sdmon.cpp`).
    They KEEP THEIR DEX NUMBERS -- removing one renumbers every species after it,
    and dex numbers are positional in saved data (`dexReg` bits, `speciesId`,
    every party record) -- but they are barred from the EGG POOL, because
-   hatching one gives a creature that can only ever draw as a number.
-   `tools/check_sprites.py --emit` writes `noart.h`; `region_test` rolls 2400
-   eggs and fails if one appears. **Re-run `--emit` after any expansion, and
-   again whenever upstream adds art.**
+   hatching one gives a creature that can only ever draw as a number. Every
+   earlier member whose evolution line can reach one of them is barred too.
+   `tools/check_sprites.py --emit` writes both lists to `noart.h`; `region_test`
+   checks the full ancestry and rolls every region and rarity tier. A blocked
+   egg saved by an older build is rerolled on load. **Re-run `--emit` after any
+   expansion, and again whenever upstream adds art.**
 2. **A ladder with no disassembly to check it against.** pret's DS work stops at
    Platinum, so Unova is written from knowledge -- which is exactly how Johto and
    Hoenn were first written, and `verify_rosters.py` later found TEN errors in

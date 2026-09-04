@@ -19,3 +19,16 @@ static inline bool speciesHasArt(int16_t d) {
     if (NO_ART[i] == d) return false;
   return true;
 }
+
+// Species that cannot hatch: the art-less entries above plus every
+// earlier member whose evolution line can reach one of them.
+#define NO_HATCH_COUNT 28
+static const int16_t NO_HATCH[NO_HATCH_COUNT ? NO_HATCH_COUNT : 1] = {
+  513, 514, 515, 516, 519, 520, 522, 523, 538, 557, 558, 564, 565, 590, 591, 592, 616, 626, 667, 668, 731, 732, 734, 735, 741, 755, 756, 765
+};
+
+static inline bool speciesCanHatch(int16_t d) {
+  for (int i = 0; i < NO_HATCH_COUNT; i++)
+    if (NO_HATCH[i] == d) return false;
+  return true;
+}

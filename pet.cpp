@@ -467,10 +467,10 @@ int16_t Pet::pickEggSpecies() {
         // ALL spans every region, so filter per species: a missing Sinnoh pack
         // must not put a Sinnoh creature in a mixed egg.
         if (!regionAvailable(regionOfDex(d))) continue;
-        // And a species with no art ANYWHERE never hatches, pack or no pack --
-        // it would be a creature that can only ever draw as a number. It keeps
-        // its dex slot; it is simply not something an egg can contain.
-        if (!speciesHasArt(d)) continue;
+        // A species with no art, and any earlier member whose evolution line
+        // can reach it, never hatches. Dex numbers and existing saves stay
+        // untouched; the incomplete family is only removed from new eggs.
+        if (!speciesCanHatch(d)) continue;
         cand[n++] = d;
       }
       if (n > 0) return cand[random(n)];
@@ -489,7 +489,7 @@ int16_t Pet::rollInRegion(uint8_t r, uint8_t tier) {
     int n = 0;
     for (int16_t d = rg.lo; d <= rg.hi && n < CAND_MAX; d++)
       if (DEX_TBL[d].rarity == t && regionAvailable(regionOfDex(d)) &&
-          speciesHasArt(d)) cand[n++] = d;
+          speciesCanHatch(d)) cand[n++] = d;
     if (n) return cand[random(n)];
   }
   return rg.starters[0];      // a region with nothing in it cannot happen
@@ -1415,6 +1415,25 @@ void Pet::load() {
   // A save from the Kanto-only build has neither key; getBytes leaves the
   // array at its zeroed initialiser, which is exactly "nothing remembered".
   loadBlob(prefs, "eggR", eggByRegion, sizeof(eggByRegion));
+  if (isEgg()) {
+    // A waiting egg may have been rolled by an older build before an
+    // incomplete evolution family was removed from the pool. Replace only
+    // that unborn result; a living creature already in the save is preserved.
+    uint8_t oldTier = eggRarity();
+    for (uint8_t r = 0; r < REGION_COUNT; r++) {
+      int16_t remembered = eggByRegion[r];
+      if (remembered && (remembered < 1 || remembered > DEX_COUNT ||
+                         !speciesCanHatch(remembered))) {
+        eggByRegion[r] = 0;
+        pendingSave = true;
+      }
+    }
+    if (eggTarget < 1 || eggTarget > DEX_COUNT || !speciesCanHatch(eggTarget)) {
+      eggTarget = rollInRegion(region, oldTier);
+      eggByRegion[region] = eggTarget;
+      pendingSave = true;
+    }
+  }
   prefs.getString("tnam", trainerName, sizeof(trainerName));
   if (avatar >= AVATAR_COUNT) avatar = 0;   // a save from when there were four
   badges = prefs.getUShort("badg", 0);

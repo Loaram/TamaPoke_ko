@@ -192,18 +192,58 @@ int main(){
   {
     Pet p; seed(p, 60);
     gRegionArt = 0xFFFF;                       // every pack present
-    int artless = 0, rolls = 0;
-    for (uint8_t r = 0; r < REGION_COUNT; r++) {
-      for (int i = 0; i < 400; i++) {
-        int16_t d = p.rollInRegion(r, R_COMUN);
-        rolls++;
-        if (!speciesHasArt(d)) artless++;
-      }
-    }
+    int blocked = 0, rolls = 0;
+    for (uint8_t r = 0; r < REGION_COUNT; r++)
+      for (uint8_t tier = R_COMUN; tier <= R_LEGENDARIO; tier++)
+        for (int i = 0; i < 400; i++) {
+          int16_t d = p.rollInRegion(r, tier);
+          rolls++;
+          if (!speciesCanHatch(d)) blocked++;
+        }
     printf("      %d rolls across %d regions\n", rolls, (int)REGION_COUNT);
-    ck(artless == 0, "no egg ever contains a species with no art");
+    ck(blocked == 0, "no egg contains blank art or a pre-evolution leading to it");
     // and the guard is real: the list is not empty, so this can actually fail
     ck(NO_ART_COUNT > 0, "and there really are art-less species to exclude");
+    ck(NO_HATCH_COUNT > NO_ART_COUNT,
+       "and pre-evolutions of art-less species are excluded too");
+    int brokenLinks = 0;
+    for (int16_t d = 1; d <= DEX_COUNT; d++) {
+      int16_t target = DEX_TBL[d].evolvesTo;
+      if (target >= 1 && !speciesCanHatch(target) && speciesCanHatch(d)) brokenLinks++;
+    }
+    for (uint8_t b = 0; b < EVO_BRANCH_COUNT; b++)
+      for (uint8_t i = 0; i < EVO_BRANCHES[b].count; i++)
+        if (!speciesCanHatch(EVO_BRANCHES[b].targets[i]) &&
+            speciesCanHatch(EVO_BRANCHES[b].base)) brokenLinks++;
+    ck(brokenLinks == 0, "every affected evolution line is closed back to its base");
+    int artlessAllowed = 0;
+    for (int i = 0; i < NO_ART_COUNT; i++)
+      if (speciesCanHatch(NO_ART[i])) artlessAllowed++;
+    ck(artlessAllowed == 0, "every directly art-less species is also blocked");
+    ck(speciesCanHatch(495) && speciesCanHatch(650) && speciesCanHatch(722),
+       "unaffected starters remain hatchable");
+  }
+
+  // A blocked family may already be hidden inside a waiting egg saved by the
+  // previous firmware. Updating must reroll that unborn result, while leaving
+  // already-hatched creatures alone.
+  {
+    nvs().clear();
+    Preferences old;
+    old.putBool("init", true);
+    old.putShort("dexn", -1);
+    old.putShort("eggT2", 513);              // Pansear -> art-less Simisear
+    old.putUChar("reg", 4);                  // Unova
+    int16_t remembered[REGION_COUNT] = {0};
+    remembered[4] = 513;
+    old.putBytes("eggR", remembered, sizeof(remembered));
+    Pet migrated; migrated.begin();
+    ck(speciesCanHatch(migrated.eggPeek()),
+       "a previously saved blocked egg is replaced during update");
+    migrated.flushSave();
+    Pet reloaded; reloaded.begin();
+    ck(speciesCanHatch(reloaded.eggPeek()),
+       "the replacement egg is saved for the next restart");
   }
 
   // ---- the probes that decide whether a region's pack is installed

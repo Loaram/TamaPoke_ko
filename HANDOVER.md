@@ -252,11 +252,13 @@ Two things happened here that had not happened in any earlier expansion.
 They **keep their dex numbers**. Removing one renumbers every species after it,
 and dex numbers are positional in saved data -- `dexReg` bits, `speciesId`,
 every party record -- so a deletion corrupts existing saves. What is removed is
-their ability to HATCH: `tools/check_sprites.py --emit` writes `noart.h`, and
-`pickEggSpecies()`/`rollInRegion()` skip them. `region_test` rolls 2400 eggs and
-fails if one appears. **Re-run `--emit` after any expansion and whenever
-upstream adds art** -- several of these are base forms, so the list is doing
-real work, not covering a theoretical case.
+their ability to HATCH. Every earlier member whose evolution line can reach one
+of them is removed from the egg pool as well. The generator currently expands
+the 19 blank entries to 28 blocked egg results. `tools/check_sprites.py --emit`
+writes both lists to `noart.h`, and `pickEggSpecies()`/`rollInRegion()` skip the
+expanded list. `region_test` checks the ancestry, every region and every rarity
+tier; `Pet::load()` also replaces a blocked egg saved by an older build.
+**Re-run `--emit` after any expansion and whenever upstream adds art.**
 
 **2. A ladder with nothing to verify it against.** pret's DS disassemblies stop
 at Platinum. Unova is therefore written from knowledge, which is precisely how
