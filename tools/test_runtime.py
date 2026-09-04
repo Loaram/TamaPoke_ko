@@ -9,7 +9,7 @@ a=p.parse_args()
 out=R/'build/runtime-tests';out.mkdir(parents=True,exist_ok=True)
 env=os.environ.copy();env['PATH']=str(Path(a.cxx).resolve().parent)+os.pathsep+env.get('PATH','')
 core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp']]
-for test in ['korean','i18n','label','save','upgrade','link','balance','moves','dexdata','eevee','branch','region','full_dex','full_shiny','hit','starter','release']:
+for test in ['korean','i18n','label','save','upgrade','link','balance','retire','moves','dexdata','eevee','branch','region','full_dex','full_shiny','hit','starter','release']:
     exe=out/(test+('.exe' if os.name=='nt' else ''))
     src=[str(E/'tests'/f'{test}_test.cpp'),*core]
     if test in ('korean','label'):src.append(str(E/'font.cpp'))
@@ -19,4 +19,4 @@ for test in ['korean','i18n','label','save','upgrade','link','balance','moves','
           ['-DTAMAPOKE_FULL_SHINY=1'] if test == 'full_shiny' else [])
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*defs,*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: Korean/i18n/label/save/upgrade/link/balance/moves/dexdata/eevee/branch/region/full_dex/full_shiny/hit/starter/release runtime suites')
+print('PASS: Korean/i18n/label/save/upgrade/link/balance/retire/moves/dexdata/eevee/branch/region/full_dex/full_shiny/hit/starter/release runtime suites')

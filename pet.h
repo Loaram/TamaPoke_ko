@@ -8,19 +8,16 @@
 // 1 tick = 1 minuto de juego. Baja este valor para probar mas rapido
 // (p. ej. 5000UL = las estadisticas caen 12x mas rapido).
 #define PET_TICK_MS 60000UL
-// Minutos de juego por nivel. Con 40, CHARMANDER evoluciona a las ~10 h
+// Minutos de juego por nivel. Con 20, CHARMANDER evoluciona a las ~5 h
 // de juego con cuidado perfecto. Baja a 1 para ver evoluciones al momento.
-#define MINUTES_PER_LEVEL 40
-#define MAX_LEVEL 100              // reached at 2d 18h; see level()
+#define MINUTES_PER_LEVEL 20
+#define MAX_LEVEL 100              // reached at 1d 9h; see level()
+#define SLEEP_ENERGY_PER_MIN 15     // live and offline sleep recovery
 #define EAT_ANIM_MS 2500UL
 #define HEART_MS 1500UL
 #define EVOLVE_ANIM_MS 5200UL              // animacion de evolucion (mas larga = mas epica)
 #define CEREMONY_MS 10000UL                // duracion de la despedida en pantalla
 #define FAREWELL_AGE_MIN (2UL * 24 * 60)   // se despide a los 2 dias de juego (en forma final)
-// Retiring a creature BEFORE it has earned its farewell costs the NEXT one a
-// day's worth of evolution. Derived from MINUTES_PER_LEVEL rather than written
-// as 24, so it stays "a day" if the level rate is ever retuned.
-#define EVO_PENALTY_LEVELS ((uint8_t)((24UL * 60) / MINUTES_PER_LEVEL))
 #define RUNAWAY_TICKS 60                   // se escapa tras 1 h con TODO a cero
 // Night, by the RTC: midnight to 06:00. Auto-sleep needs BOTH: the screen off
 // AND this window.
@@ -297,10 +294,9 @@ public:
   void syncClock(uint32_t nowEpoch);  // aplica el tiempo transcurrido apagado
   void setClock(uint32_t nowEpoch);   // fija la hora sin aplicar progresion
   void startFarewell();  // tambien usable desde la consola serie (BYE)
-  // Retire on demand. Before the farewell is earned this is the SAME ceremony
-  // -- the creature is banked exactly as it would be -- but it hands the next
-  // creature EVO_PENALTY_LEVELS on every evolution threshold. Retiring one that
-  // has already earned its farewell costs nothing: it is then just the button.
+  // Retire on demand. Before the farewell is earned it uses the same ceremony,
+  // but the creature is not banked and grants no farewell bonus. Once earned,
+  // this is simply the normal farewell reached through the menu.
   void startRetire();
   bool canRetireNow() const;
   bool retireIsFree() const { return canFarewellNow(); }
@@ -309,7 +305,7 @@ public:
   // whether a retire started right now WOULD be free: this one remembers what the
   // retire that is already running actually was, and outlives the moment it began.
   bool retireIsEarly() const { return retirePending; }
-  uint8_t evoPenalty() const { return evoPen; }
+  uint8_t evoPenalty() const { return evoPen; } // legacy save value; always zero
   void startRunaway();   // tambien usable desde la consola serie (RUN)
 
   bool isEgg() const { return speciesId < 0; }
@@ -353,12 +349,7 @@ public:
     eggTaps = 0;
     hatch();
   }
-  // Capped at 100, the series' own ceiling. The cap is not cosmetic: ageMinutes
-  // is never clamped, so without it 1 + ageMinutes/40 overflows this uint8_t
-  // past ~7 days -- and the RTC catches up to 2 weeks offline, which would wrap.
-  // Reached at 2d 18h; farewell is merely *offered* at 2 days (level 73),
-  // so declining it to reach the cap is still a real
-  // choice rather than an accident.
+  // Capped at 100, the series' own ceiling. ageMinutes itself is never clamped.
   uint8_t level() const {
     uint32_t l = 1 + ageMinutes / MINUTES_PER_LEVEL;
     return l > MAX_LEVEL ? MAX_LEVEL : (uint8_t)l;
@@ -447,8 +438,8 @@ private:
   uint8_t evoDeclinedLv = 0;    // "mantener forma": no ofrecer evolucion hasta subir de nivel
   uint32_t farDeclinedAge = 0;  // "quedaros juntos": no ofrecer despedida hasta esta edad
   bool starterPick = false;     // primera partida: esperando que el jugador elija inicial
-  uint8_t evoPen = 0;           // levels added to this creature's evolution gate
-  bool retirePending = false;   // an early retire is under way; newEgg() spends it
+  uint8_t evoPen = 0;           // legacy saved penalty, cleared since ko.1.1.0
+  bool retirePending = false;   // an early retire is under way
   uint8_t neglectTicks = 0;
   uint16_t goodTicks = 0;  // racha bien cuidado: forja la DEF
   uint32_t ceremonyUntil = 0;

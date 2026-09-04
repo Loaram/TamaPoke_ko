@@ -1,4 +1,4 @@
-// Pins the ko.1.0.3 growth, farewell and sleep balance against the real Pet code.
+// Pins the current growth, farewell and sleep balance against the real Pet code.
 // Sleep recovery has separate live and offline paths, so both must agree.
 #include "Arduino.h"
 #include "Preferences.h"
@@ -33,23 +33,21 @@ static void hatch(Pet &p) {
 int main() {
   Pet growth;
   hatch(growth);
-  growth.ageMinutes = 39;
-  ck(growth.level() == 1, "39 minutes remains level 1");
-  growth.ageMinutes = 40;
-  ck(growth.level() == 2, "40 minutes reaches level 2");
-  growth.ageMinutes = 99UL * 40;
-  ck(growth.level() == 100, "2d 18h reaches level 100");
+  growth.ageMinutes = MINUTES_PER_LEVEL - 1;
+  ck(growth.level() == 1, "19 minutes remains level 1");
+  growth.ageMinutes = MINUTES_PER_LEVEL;
+  ck(growth.level() == 2, "20 minutes reaches level 2");
+  growth.ageMinutes = 99UL * MINUTES_PER_LEVEL;
+  ck(growth.level() == 100, "1d 9h reaches level 100");
   growth.ageMinutes = 14UL * 24 * 60;
   ck(growth.level() == 100, "level still caps at 100");
-  ck(EVO_PENALTY_LEVELS == 36, "early-retire evolution debt remains one day");
-
   Pet farewell;
   farewell.begin();
   farewell.dbgHatchAs(6, false);      // Charizard is a final form.
   farewell.ageMinutes = FAREWELL_AGE_MIN - 1;
   ck(!farewell.canFarewellNow(), "farewell is unavailable one minute before two days");
   farewell.ageMinutes = FAREWELL_AGE_MIN;
-  ck(farewell.level() == 73, "two days reaches level 73");
+  ck(farewell.level() == 100, "two days remains capped at level 100");
   ck(farewell.canFarewellNow(), "farewell is offered at two days");
 
   Pet live;
@@ -58,7 +56,7 @@ int main() {
   live.sleeping = true;
   live.sleepAuto = SLEEP_PLAYER;
   live.dbgTick();
-  ck(live.energy == 30, "live sleep restores 10 energy per minute");
+  ck(live.energy == 35, "live sleep restores 15 energy per minute");
 
   Pet offline;
   hatch(offline);
@@ -67,7 +65,7 @@ int main() {
   offline.sleepAuto = SLEEP_PLAYER;
   offline.dbgSetSeen(100000);
   offline.syncClock(100120);
-  ck(offline.energy == 40, "offline sleep restores 10 energy per minute");
+  ck(offline.energy == 50, "offline sleep restores 15 energy per minute");
 
   printf("%s\n", bad ? "FAILURES" : "all good");
   return bad ? 1 : 0;

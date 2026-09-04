@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.0a"
+#define FW_VERSION "ko.1.1.0"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
@@ -5126,7 +5126,7 @@ void renderCardProgress() {
   gfx->setCursor(CX - textWidthFactor(lv, 15), 86);
   gfx->print(lv);
 
-  // barra de progreso al siguiente nivel (1 nivel = 60 min de juego)
+  // barra de progreso al siguiente nivel
   uint8_t into = pet.ageMinutes % MINUTES_PER_LEVEL;
   int bx = 93, bw = 280, by = 158, bh = 22;
   gfx->fillRoundRect(bx, by, bw, bh, 6, UI_TRACK);
@@ -5149,10 +5149,7 @@ void renderCardProgress() {
   if (d.evolvesTo == 0) {
     evo = T(S_FINAL_FORM);
   } else {
-    // The SAME sum canEvolveNow() uses -- including the day owed for retiring
-    // the previous creature early. A card that left evoPenalty() out would
-    // promise an evolution that then does not happen.
-    int needed = d.evolveLevel + pet.careMistakes + pet.evoPenalty();
+    int needed = d.evolveLevel + pet.careMistakes;
     if (pet.level() >= needed) {
       if (pet.lowestStat() >= 40) { evo = T(S_EVO_READY); evoCol = UI_BAR_OK; }
       else { evo = T(S_EVO_BLOCKED); evoCol = UI_BAR_BAD; }
@@ -5164,16 +5161,6 @@ void renderCardProgress() {
   gfx->setTextColor(evoCol);
   gfx->setCursor(CX - textWidthFactor(evo, 6), 256);
   gfx->print(evo);
-
-  // the day inherited from an early retire, said out loud -- otherwise this
-  // creature simply evolves late and the player has no way to know why
-  if (pet.evoPenalty()) {
-    gfx->setTextSize(1);
-    gfx->setTextColor(UI_BAR_WARN);
-    gfx->setCursor(CX - textWidthFactor(T(S_EVO_SLOW), 3), 286);
-    gfx->print(T(S_EVO_SLOW));
-    gfx->setTextSize(2);
-  }
 
   // descuidos (retrasan la evolucion)
   char ms[72];
@@ -5863,12 +5850,9 @@ void drawChoiceDialog() {
   } else if (choiceKind == 3) {   // retirada a peticion
     q = T(S_RETIRE_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);
     c1 = UI_BAR_WARN; t1 = UI_INK; c2 = UI_BAR_OK; t2 = UI_WHITE;
-    // The price, spelled out, and only when there is one: retiring a creature
-    // that has already earned its farewell costs nothing and must not claim to.
-    // An EARLY one now costs TWO things and says both -- the creature is not
-    // banked at all, which is the half a player would not otherwise discover
-    // until the party screen came up empty.
-    if (!pet.retireIsFree()) { sub1 = T(S_RETIRE_COST); sub2 = T(S_RETIRE_GONE); }
+    // An early retirement gives the creature up; it no longer delays the next
+    // creature's evolution. Say only what is still lost.
+    if (!pet.retireIsFree()) sub1 = T(S_RETIRE_GONE);
   } else {                // despedida
     q = T(S_FAR_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);
     c1 = UI_BAR_WARN; t1 = UI_INK; c2 = UI_BAR_OK; t2 = UI_WHITE;

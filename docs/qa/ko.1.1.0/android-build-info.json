@@ -1,0 +1,26 @@
+{
+  "file": "TamaPoke-ko.1.1.0-Android-Full-debug.apk",
+  "package": "com.loaram.tamapoke",
+  "versionName": "ko.1.1.0-android.1",
+  "versionCode": 1102,
+  "minSdk": 26,
+  "targetSdk": 37,
+  "nativePageAlignmentKb": 16,
+  "abis": [
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "spritePacks": 9,
+  "size": 301274342,
+  "sha256": "55d4c5fdc7ccfb957f59c04edc05ff2bcef5bb6473a56c483062f9d95106e8c8",
+  "signing": {
+    "kind": "debug",
+    "schemes": [
+      "v2",
+      "v3"
+    ],
+    "signerCertificateSha256": "17aaf3ebfaa9b51599e2b0d0970f99651bd8be6700da981b7f240677535b7f47",
+    "previousApkSignerCertificateSha256": "967237f0191f11b83a7f74827b84767979b98601b7f8454b03bad79e0bff8599"
+  },
+  "deviceRuntime": "not run: connected device had not authorized USB debugging"
+}

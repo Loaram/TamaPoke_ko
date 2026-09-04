@@ -87,9 +87,8 @@ void Pet::newEgg() {
   int shinyBase = (lastEnd == CER_FAREWELL ? 24 : 48) - careBonus();
   if (shinyBase < 8) shinyBase = 8;
   eggShiny = (random(shinyBase) == 0);
-  // The debt lands on the creature about to hatch, and is spent doing so --
-  // it is a one-day penalty, not a running total that compounds each retire.
-  evoPen = retirePending ? EVO_PENALTY_LEVELS : 0;
+  // Early retirement no longer delays the next creature's evolution.
+  evoPen = 0;
   retirePending = false;
   eggTaps = 0;
   fullness = 80;
@@ -136,7 +135,7 @@ void Pet::syncClock(uint32_t nowEpoch) {
       continue;
     }
     if (sleeping) {  // descanso: baja lento y con suelo, igual que en vivo
-      energy = clamp100(energy + 10);
+      energy = clamp100(energy + SLEEP_ENERGY_PER_MIN);
       if (ageMinutes % 2 == 0) {
         fullness = dropTo(fullness, 1, 30);
         joy = dropTo(joy, 1, 35);
@@ -195,7 +194,7 @@ void Pet::tick() {
   // cero, sin descuidos ni escapadas). despierto: comida -2/min, hig/joy -1/min.
   // El peso aun se quema y el descanso cuenta para la DEF (ver defTick).
   if (sleeping) {
-    energy = clamp100(energy + 10);
+    energy = clamp100(energy + SLEEP_ENERGY_PER_MIN);
     if (weight > 0 && ageMinutes % 3 == 0) weight--;
     if (ageMinutes % 2 == 0) {                 // ~4x mas lento que despierto
       fullness = dropTo(fullness, 1, 30);
@@ -915,9 +914,8 @@ bool Pet::canRetireNow() const {
   return !isEgg() && !sleeping && ceremony == CER_NONE && !starterPick;
 }
 
-// The ceremony is the same one; only the debt differs. Marked BEFORE the
-// ceremony starts and spent by newEgg(), so a reset mid-ceremony loses the
-// penalty rather than applying it to a creature that never got retired.
+// The ceremony is the same one. Mark it before the ceremony starts so the
+// creature is not banked if this is an early retirement.
 void Pet::startRetire() {
   if (!canRetireNow()) return;
   retirePending = !canFarewellNow();
@@ -1001,10 +999,7 @@ bool Pet::canEvolveNow() const {
   if (isEgg() || sleeping || ceremony != CER_NONE) return false;
   const DexEntry &d = DEX_TBL[speciesId];
   if (d.evolvesTo == 0) return false;
-  // evoPen is the day owed for retiring the PREVIOUS creature early. It rides
-  // on the same threshold careMistakes already moves, so there is one rule for
-  // "this creature evolves later" rather than two that can disagree.
-  return level() >= (uint16_t)(d.evolveLevel + careMistakes + evoPen) &&
+  return level() >= (uint16_t)(d.evolveLevel + careMistakes) &&
          lowestStat() >= 40;
 }
 
@@ -1367,7 +1362,10 @@ void Pet::load() {
   shiny = prefs.getBool("shy", false);
   eggShiny = prefs.getBool("eshy", false);
   starterPick = prefs.getBool("stpk", false);
-  evoPen = prefs.getUChar("evop", 0);
+  // ko.1.1.0 removes the early-retirement evolution penalty. Clear any debt
+  // carried by a save from an earlier build as soon as it is loaded.
+  evoPen = 0;
+  if (prefs.getUChar("evop", 0)) prefs.putUChar("evop", 0);
   sleepAuto = prefs.getUChar("slpa", SLEEP_NONE);
   retirePending = prefs.getBool("rtpn", false);
   loadBlob(prefs, "dexsh", dexShinyReg, sizeof(dexShinyReg));

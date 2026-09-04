@@ -74,7 +74,7 @@ int main(){
     bool everWrong = false;
     for (int trial=0; trial<40; trial++) {
       Pet q; q.begin(); q.dbgHatchAs(DEX_EEVEE, false);
-      q.ageMinutes = 60UL * 40;              // past the level-30 gate
+      q.ageMinutes = 60UL * MINUTES_PER_LEVEL; // past the level-30 gate
       q.fullness=q.joy=q.energy=q.hygiene=100;
       if (!q.canEvolveNow()) { everWrong = true; break; }
       q.evolve();
@@ -91,7 +91,7 @@ int main(){
     bool sawLater = false;
     for (int trial=0; trial<60 && !sawLater; trial++) {
       Pet q; q.begin(); q.dbgHatchAs(DEX_EEVEE, false);
-      q.ageMinutes = 60UL * 40;
+      q.ageMinutes = 60UL * MINUTES_PER_LEVEL;
       q.fullness=q.joy=q.energy=q.hygiene=100;
       q.evolve();
       if (q.speciesId > 151) sawLater = true;
