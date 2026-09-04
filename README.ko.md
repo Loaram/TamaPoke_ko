@@ -120,6 +120,8 @@ Android Studio의 SDK·NDK·JBR이 설치된 Windows에서는 현재 펌웨어/�
 
 결과는 `build/android/TamaPoke-ko.1.1.4-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지의 기기별 Wear OS ABI 차이에 대응하도록 `armeabi-v7a`와 `arm64-v8a`를 함께 넣었습니다. 설치할 때 워치가 자신에게 맞는 네이티브 실행 파일을 자동으로 선택하므로 모델별 APK를 따로 고를 필요가 없습니다. 466×466 원형 화면은 실제 워치 해상도에 맞춰 비율 유지로 자동 조정되며, 9개 지역 팩을 포함한 독립형 Wear OS 앱입니다. 성장과 시계 화면은 워치의 날짜 및 시간 설정을 따릅니다. LAN 대전과 세이브 전송은 워치의 Wi-Fi를 휴대전화와 같은 공유기에 연결하거나 실기의 `TamaPoke-XXXX` 방에 직접 연결해야 합니다.
 
+처음 설치하는 사용자는 [Galaxy Watch4~9 설치 가이드 PDF](docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf)를 따라 진행할 수 있습니다. 이 PDF는 앞으로 모든 정식 GitHub 릴리즈에 APK와 함께 첨부합니다.
+
 앱끼리 대전할 때는 두 기기를 같은 Wi-Fi에 연결한 뒤 양쪽에서 근거리 대전과 팀을 선택합니다. 앱과 실기가 대전할 때는 실기에서 먼저 근거리 대전 팀을 선택하고 화면에 표시되는 `TamaPoke-XXXX` Wi-Fi를 Android 설정에서 선택합니다. 암호는 `tamapoke`입니다. 인터넷 연결이 없다는 Android 안내가 나오면 연결 유지를 선택한 뒤 앱으로 돌아와 근거리 대전 팀을 선택합니다. 방 만들기/참가하기를 양쪽이 똑같이 눌러도 고유 번호로 역할을 자동 조정합니다.
 
 ### 설치 페이지와 GitHub Pages

@@ -20,6 +20,7 @@
 - Android APK는 `ko.1.1.4-android.1`(versionCode 1116), 301,290,726바이트, ARM64/x86_64이며 APK v2/v3 서명을 확인했습니다.
 - Galaxy Watch4~9 APK는 `ko.1.1.4-wear.1`(versionCode 1117), 301,016,299바이트, armeabi-v7a/arm64-v8a이며 APK v3 서명을 확인했습니다.
 - 비공개 `ko.1.1.4-dex`, `ko.1.1.4-shiny` 에뮬레이터를 각각 빌드·실행했으며 GitHub에는 공개하지 않습니다.
+- `ko.1.1.3` 릴리즈의 Galaxy Watch4~9 설치 가이드를 내용 변경 없이 `ko.1.1.4` 이름으로 복사했습니다. 11쪽 A4 PDF, 186,624바이트이며 전체 페이지 렌더링과 SHA-256 `36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce`를 확인했습니다.
 
 ## 실기 한계
 

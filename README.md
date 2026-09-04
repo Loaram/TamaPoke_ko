@@ -118,6 +118,8 @@ Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64
 
 결과는 `build/android/TamaPoke-ko.1.1.4-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지 대응하도록 32비트 `armeabi-v7a`와 64비트 `arm64-v8a`를 함께 넣었으며, 워치가 자신에게 맞는 실행 파일을 자동 선택합니다. 실제 원형 화면 해상도에 맞춰 화면과 터치 좌표를 자동 조정하고 9개 지역 팩을 포함하는 독립형 Wear OS 앱입니다. 성장과 시계 화면은 워치의 날짜 및 시간 설정을 따릅니다. LAN 대전과 세이브 전송은 워치 Wi-Fi를 휴대전화와 같은 공유기 또는 실기의 `TamaPoke-XXXX` 방에 연결해 사용합니다.
 
+처음 설치하는 사용자는 [Galaxy Watch4~9 설치 가이드 PDF](docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf)를 따라 진행할 수 있습니다. 이 PDF는 앞으로 모든 정식 GitHub 릴리즈에 APK와 함께 첨부합니다.
+
 ### 설치 페이지와 GitHub Pages
 
 ```sh

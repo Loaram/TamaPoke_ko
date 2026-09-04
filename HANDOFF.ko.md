@@ -19,6 +19,8 @@ ko.1.1.4는 20분당 1레벨 성장에 맞춰 최종 진화 포켓몬의 작별 
 
 각 정식 버전과 함께 비공개 PC 에뮬레이터 두 개를 만듭니다. `-dex`판은 1025종 일반 도감을 모두 열고, `-shiny`판은 일반·이로치 도감을 모두 엽니다. 예: `ko.1.1.4-dex`, `ko.1.1.4-shiny`. 각각 `tamapoke-dex.nvs`, `tamapoke-shiny.nvs`를 사용해 일반 에뮬레이터 저장과 분리합니다. 두 테스트판은 GitHub 릴리스와 설치 페이지에 올리지 않습니다.
 
+모든 정식 GitHub 릴리즈에는 Android APK, Galaxy Watch4~9 APK, ESP32 설치 ZIP, `SHA256SUMS.txt`와 함께 [Galaxy Watch4~9 설치 가이드](docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf)를 반드시 첨부합니다. 가이드 내용은 그대로 두고 릴리즈 버전에 맞춘 `TamaPoke-<버전>-Galaxy-Watch4-9-Install-Guide-KO.pdf` 이름으로 복사하며, 해당 PDF의 해시도 `SHA256SUMS.txt`에 포함합니다.
+
 ## 완료한 작업
 
 - 한국어 UI 184개, 포켓몬 1025종, 기술 테이블 136개 항목(빈 기술 포함), 18개 타입과 지방·트레이너·장소 이름.
@@ -192,6 +194,7 @@ ko.1.1.4 한국어 앱 파일은 1,902,480바이트입니다. 스케치는 1,902
 - Galaxy Watch4~9 APK는 `ko.1.1.4-wear.1`(versionCode 1117), 301,016,299바이트이며 armeabi-v7a/arm64-v8a와 APK v3 서명을 확인했습니다.
 - 전체 런타임 21개 묶음에서 1일 경계, 레벨 상한, 조기 돌봄 종료와 작별 보너스를 포함한 회귀 검사를 통과했습니다. 한국어 데이터, 설치 페이지와 설치 파일 검사도 통과했습니다.
 - `ko.1.1.4-dex`, `ko.1.1.4-shiny` 비공개 에뮬레이터를 빌드·실행했으며 공개하지 않습니다.
+- `ko.1.1.3`과 동일한 11쪽 Galaxy Watch4~9 설치 가이드를 `ko.1.1.4` 릴리즈에도 첨부하고 SHA-256을 확인했습니다.
 - 실제 Android·Watch4~9·ESP32에서 24시간 경계는 아직 미확인입니다. 자동 검사 성공을 실기 성공으로 보지 않습니다.
 - 검사·빌드 기록: [docs/qa/ko.1.1.4](docs/qa/ko.1.1.4/README.md).
 
