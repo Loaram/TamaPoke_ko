@@ -38,6 +38,11 @@
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
 #define FW_VERSION "ko.1.0.5"
+#ifdef TAMAPOKE_FULL_DEX
+#define DISPLAY_VERSION FW_VERSION "-dex"
+#else
+#define DISPLAY_VERSION FW_VERSION
+#endif
 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
   LCD_CS, LCD_SCLK, LCD_SDIO0, LCD_SDIO1, LCD_SDIO2, LCD_SDIO3);
@@ -672,7 +677,7 @@ void setup() {
   // monitor serie abierto en el host (el bufer TX del USB CDC se llena
   // y nadie lo vacia) -> con timeout 0 los mensajes se descartan
   Serial.setTxTimeoutMs(0);
-  Serial.printf("TamaPoke fw v%s\n", FW_VERSION);
+  Serial.printf("TamaPoke fw v%s\n", DISPLAY_VERSION);
   bootReport();   // why the last run ended, and what it was doing
   loadLang();  // idioma guardado (ES por defecto)
   Wire.begin(IIC_SDA, IIC_SCL);
@@ -2925,7 +2930,7 @@ void renderClock() {
 
   // version del firmware (discreta, abajo del todo)
   char ver[64];
-  snprintf(ver, sizeof(ver), "TamaPoke v%s", FW_VERSION);
+  snprintf(ver, sizeof(ver), "TamaPoke v%s", DISPLAY_VERSION);
   gfx->setTextSize(1);
   gfx->setCursor(CX - textWidthFactor(ver, 3), 436);
   gfx->print(ver);

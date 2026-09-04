@@ -91,6 +91,8 @@ build/emulator/tamapoke-emu --shot main --dex 25 --out preview.ppm
 
 Windows에서는 `--cxx`로 LLVM-MinGW의 clang++.exe, `--sdl`로 SDL2의 x86_64-w64-mingw32 디렉터리를 지정합니다. 에뮬레이터의 기본 창은 실기 패널과 같은 **466×466픽셀**이며, 크게 볼 때만 `--scale 2`처럼 확대할 수 있습니다. 실제 펌웨어 소스를 사용하지만 터치·SD·오디오·전원·무선 전송은 하드웨어 검증을 대체하지 않습니다.
 
+개발용 도감 완성판은 `python tools/build_emulator.py --full-dex`로 만듭니다. 실행 파일 버전은 정식 번호 뒤에 `-dex`가 붙고 809종 일반 도감이 모두 열립니다. `tamapoke-dex.nvs`라는 별도 저장 파일을 사용하며 공개 릴리스와 설치 페이지에는 포함하지 않습니다.
+
 ### 설치 페이지와 GitHub Pages
 
 ```sh

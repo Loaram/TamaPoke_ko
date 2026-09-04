@@ -17,6 +17,8 @@
 
 ko.1.0.5는 첫 파트너 후보를 본 뒤 지역 선택으로 돌아가 다른 지방과 비교할 수 있게 한 수정판입니다. 이전 버전의 기록은 `docs/qa/`에 보존합니다.
 
+각 정식 버전과 함께 버전명 뒤에 `-dex`를 붙인 비공개 도감 완성 PC 에뮬레이터를 만듭니다. 예: `ko.1.0.5-dex`. 이 테스트판은 809종 일반 도감을 모두 연 상태로 실행하며 `tamapoke-dex.nvs`를 사용해 일반 에뮬레이터 저장과 분리합니다. GitHub 릴리스와 설치 페이지에는 올리지 않습니다.
+
 ## 완료한 작업
 
 - 한국어 UI 173개, 포켓몬 809종, 기술 테이블 91개 항목(빈 기술 포함), 18개 타입과 지방·트레이너·장소 이름.
@@ -134,6 +136,12 @@ CLI가 PATH에 없다면 `--cli`에 실제 실행 파일 경로를 지정합니�
 python tools/unpack_sprites.py
 python tools/build_emulator.py
 python tools/test_runtime.py
+```
+
+정식 버전 작업을 마칠 때 비공개 도감 완성판도 함께 만듭니다.
+
+```sh
+python tools/build_emulator.py --full-dex
 ```
 
 Windows의 `tools/test_runtime.py`도 `--cxx` 인자를 지원합니다. `build/`, 추출한 `tools/sdcard/mons/`, 다운로드한 도구와 캐시는 새 PC에서 재생성하는 파일입니다. 소스·글꼴·배포용 펌웨어·스프라이트 팩은 모두 저장소에 있습니다.

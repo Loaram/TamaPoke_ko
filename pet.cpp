@@ -57,6 +57,14 @@ void Pet::begin() {
   } else {
     load();
   }
+#ifdef TAMAPOKE_FULL_DEX
+  // Developer-only encyclopedia build.  Unlock every normal entry in memory;
+  // the emulator gives this build a separate NVS file, so a player's regular
+  // progress is never overwritten by the test catalogue.
+  memset(dexReg, 0xFF, sizeof(dexReg));
+  if (DEX_COUNT & 7)
+    dexReg[sizeof(dexReg) - 1] = (uint8_t)((1u << (DEX_COUNT & 7)) - 1u);
+#endif
   lastTick = millis();
 }
 

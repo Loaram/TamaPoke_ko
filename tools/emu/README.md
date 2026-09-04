@@ -48,6 +48,13 @@ clipped on real hardware.
 | `--wipe` | delete the save first |
 | `--sprites DIR` | sprite directory (defaults to `tools/sdcard/mons`) |
 
+## Private full-Pokedex build
+
+`python tools/build_emulator.py --full-dex` creates a developer-only build whose
+version and executable name end in `-dex`. It unlocks all 809 normal Pokedex
+entries and uses `tamapoke-dex.nvs`, keeping its progress separate from the
+regular emulator. Keep this build local; it is not a release or Pages asset.
+
 ### Headless captures
 
 Renders one screen to a PPM and exits — no display needed, so it works over SSH

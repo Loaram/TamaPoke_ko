@@ -420,7 +420,11 @@ int main(int argc, char **argv) {
   // remain available through --scale for high-DPI or presentation use.
   int scale = 1;
   g_argv = argv;
+  #ifdef TAMAPOKE_FULL_DEX
+  const char *save = "tamapoke-dex.nvs";
+  #else
   const char *save = "tamapoke.nvs";
+  #endif
   const char *language = nullptr;
   bool saveSpecified = false;
   const char *shot = nullptr, *shotOut = "shot.ppm";
@@ -456,7 +460,12 @@ int main(int argc, char **argv) {
   if (language) setLang(!strcmp(language, "ko") ? LANG_KO : LANG_EN);
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) { fprintf(stderr, "SDL: %s\n", SDL_GetError()); return 1; }
-  SDL_Window *win = SDL_CreateWindow("TamaPoke (emulator)", SDL_WINDOWPOS_CENTERED,
+  #ifdef TAMAPOKE_FULL_DEX
+  const char *windowTitle = "TamaPoke -dex (emulator)";
+  #else
+  const char *windowTitle = "TamaPoke (emulator)";
+  #endif
+  SDL_Window *win = SDL_CreateWindow(windowTitle, SDL_WINDOWPOS_CENTERED,
                                      SDL_WINDOWPOS_CENTERED, PANEL * scale, PANEL * scale,
                                      SDL_WINDOW_ALLOW_HIGHDPI);
   SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
