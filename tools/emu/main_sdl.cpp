@@ -154,7 +154,7 @@ void emuSetSpriteDir(const char *);
 void startBattle(int16_t dex, uint8_t lvl);
 extern Combatant btlYou, btlFoe;
 extern uint32_t btlLungeUntil[2], btlHitUntil[2];
-extern uint8_t btlMenu;
+extern uint8_t btlMenu, btlSwitchPage;
 void startTrainerBattle(uint8_t idx, bool hard);
 void onTap(int16_t x, int16_t y);   // the first-boot shots tap their way in
 extern bool gymOpen, playerOpen;
@@ -194,6 +194,45 @@ extern KoreanCanvas *gfx;
 extern Pet pet;
 extern bool cardOpen, galleryOpen, clockOpen, kbOpen, menuOpen, partyOpen, partyPick, trainOpen, movePickOpen;
 extern uint8_t cardPage;
+extern bool exploreOpen;
+extern uint8_t exploreRegion;
+bool startWildBattle(bool hard);
+
+#if defined(TAMAPOKE_EXPLORE_BETA)
+// Only a truly new, dedicated beta save gets this test roster. Importing an
+// existing save with --save leaves every byte untouched, which is the same
+// compatibility path a later device update will use.
+static void seedExploreBetaTeam() {
+  static const int16_t dexes[6] = { 9, 6, 25, 65, 94, 149 };
+  pet.dbgHatchAs(dexes[0], false);
+  pet.ageMinutes = 59UL * MINUTES_PER_LEVEL;
+  pet.ivAtk = pet.ivDef = pet.ivSpe = pet.ivHp = 25;
+  pet.trAtk = pet.trMaxAtk();
+  pet.trDef = pet.trMaxDef();
+  pet.trSpe = pet.trMaxSpe();
+  pet.energy = 100;
+  pet.relearnFromLevel();
+  pet.saveNow();
+
+  for (uint8_t i = 1; i < 6; i++) {
+    Pet t;
+    t.dbgHatchAs(dexes[i], false);
+    t.ageMinutes = 59UL * MINUTES_PER_LEVEL;
+    t.ivAtk = t.ivDef = t.ivSpe = t.ivHp = 25;
+    t.trAtk = t.trMaxAtk();
+    t.trDef = t.trMaxDef();
+    t.trSpe = t.trMaxSpe();
+    t.relearnFromLevel();
+    PartyMon m;
+    m.dex = dexes[i];
+    m.level = 60;
+    m.ivAtk = m.ivDef = m.ivSpe = m.ivHp = 25;
+    m.trAtk = t.trAtk; m.trDef = t.trDef; m.trSpe = t.trSpe;
+    for (uint8_t k = 0; k < MOVE_SLOTS; k++) m.moves[k] = t.moves[k];
+    party.replaceAt(i - 1, m);
+  }
+}
+#endif
 
 #define PANEL 466
 
@@ -248,6 +287,7 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   for (int i = 0; i < 2; i++) loop();          // pick up the sprite for the new species
   cardOpen = galleryOpen = clockOpen = kbOpen = false;
   menuOpen = partyOpen = partyPick = trainOpen = movePickOpen = false;
+  exploreOpen = false;
   if (!strcmp(screen, "battle"))      { cardOpen = true; cardPage = 1; }
   else if (!strcmp(screen, "profile")){ cardOpen = true; cardPage = 0; }
   else if (!strcmp(screen, "medals")) { cardOpen = true; cardPage = 3; }
@@ -270,6 +310,12 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   }
   else if (!strcmp(screen, "clock"))   clockOpen = true;
   else if (!strcmp(screen, "menu"))    menuOpen = true;
+  else if (!strcmp(screen, "explore")) { exploreOpen = true; exploreRegion = REGION_ALL; pet.energy = 100; }
+  else if (!strcmp(screen, "wild")) {
+    exploreRegion = REGION_ALL;
+    pet.energy = 100;
+    startWildBattle(false);
+  }
   else if (!strcmp(screen, "retire") || !strcmp(screen, "evolveconfirm") || !strcmp(screen, "farewellconfirm")) {
     extern uint8_t choiceKind;
     extern uint32_t choiceUntil;
@@ -282,6 +328,17 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   else if (!strcmp(screen, "battle2")) { startBattle(9, 50); }
   else if (!strcmp(screen, "btlmenu")) { startTrainerBattle(3, false); }
   else if (!strcmp(screen, "btlswitch")) { startTrainerBattle(3, false); btlMenu = 2; }
+  else if (!strcmp(screen, "btlswitch2")) {
+    static const int fill[] = { 6, 25, 65, 94, 149 };
+    for (int i = 0; i < 5; i++) {
+      PartyMon m; m.dex = fill[i]; m.level = 60;
+      m.ivAtk = m.ivDef = m.ivSpe = m.ivHp = 25;
+      party.replaceAt(i, m);
+    }
+    startBattle(143, 60);
+    btlMenu = 2;
+    btlSwitchPage = 1;
+  }
   else if (!strcmp(screen, "btlmoves")) { startTrainerBattle(3, false); btlMenu = 1; }
   else if (!strcmp(screen, "battleanim")) {
     startBattle(9, 50);
@@ -437,7 +494,11 @@ int main(int argc, char **argv) {
   // remain available through --scale for high-DPI or presentation use.
   int scale = 1;
   g_argv = argv;
-  #if defined(TAMAPOKE_FULL_SHINY)
+  #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
+  const char *save = "tamapoke-explore-beta-dex.nvs";
+  #elif defined(TAMAPOKE_EXPLORE_BETA)
+  const char *save = "tamapoke-explore-beta.nvs";
+  #elif defined(TAMAPOKE_FULL_SHINY)
   const char *save = "tamapoke-shiny.nvs";
   #elif defined(TAMAPOKE_FULL_DEX)
   const char *save = "tamapoke-dex.nvs";
@@ -476,10 +537,17 @@ int main(int argc, char **argv) {
   g_crashFile = std::string(save) + ".crash";
   crashRestore();     // a simulated panic left its breadcrumb here
   nvsLoad(save);
+#if defined(TAMAPOKE_EXPLORE_BETA)
+  bool freshExploreSave = nvs().empty();
+#endif
   if (language) setLang(!strcmp(language, "ko") ? LANG_KO : LANG_EN);
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) { fprintf(stderr, "SDL: %s\n", SDL_GetError()); return 1; }
-  #if defined(TAMAPOKE_FULL_SHINY)
+  #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
+  const char *windowTitle = "TamaPoke Explore beta -dex (emulator)";
+  #elif defined(TAMAPOKE_EXPLORE_BETA)
+  const char *windowTitle = "TamaPoke Explore beta (emulator)";
+  #elif defined(TAMAPOKE_FULL_SHINY)
   const char *windowTitle = "TamaPoke -shiny (emulator)";
   #elif defined(TAMAPOKE_FULL_DEX)
   const char *windowTitle = "TamaPoke -dex (emulator)";
@@ -499,6 +567,13 @@ int main(int argc, char **argv) {
          emuTimeScale());
 
   setup();
+#if defined(TAMAPOKE_EXPLORE_BETA)
+  if (freshExploreSave && !saveSpecified) {
+    seedExploreBetaTeam();
+    nvsSave(save);
+    printf("Explore beta: seeded one live and five party Pokemon at Lv.60.\n");
+  }
+#endif
 
   bool run = true;
   std::vector<uint32_t> px(PANEL * PANEL);

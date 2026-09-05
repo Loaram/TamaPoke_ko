@@ -948,6 +948,12 @@ uint16_t Pet::registeredCount() const {
   return n;
 }
 
+void Pet::registerCaughtSpecies(int16_t dex) {
+  if (dex < 1 || dex > DEX_COUNT) return;
+  registerSpecies(dex);
+  save();
+}
+
 // forma final que ya cumplio su ciclo (1 dia): lista para despedirse. La
 // despedida la dispara el usuario con el boton (no salta sola, para que la vea)
 bool Pet::canFarewellNow() const {
@@ -1181,6 +1187,13 @@ uint8_t Pet::rewardTraining(uint8_t amount, uint8_t &which) {
   // as far is the whole point of trMaxFor().
   save();
   return amount;
+}
+
+bool Pet::spendEnergy(uint8_t amount) {
+  if (!amount || energy < amount) return false;
+  energy = (uint8_t)(energy - amount);
+  save();
+  return true;
 }
 
 uint8_t Pet::trainSpeed(uint16_t hits) {

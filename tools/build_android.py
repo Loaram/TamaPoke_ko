@@ -63,7 +63,7 @@ def main() -> int:
     parser.add_argument("--wear", action="store_true",
                         help="build a standalone ARM32/ARM64 Wear OS APK for Galaxy Watch4-9")
     parser.add_argument("--version-code", type=int,
-                        help="defaults to 1120 for Android or 1121 for Wear OS")
+                        help="defaults to 2000 for Android or 2001 for Wear OS")
     parser.add_argument("--android-revision", type=int,
                         help="defaults to 1")
     parser.add_argument("--output", type=Path,
@@ -93,7 +93,7 @@ def main() -> int:
 
     version = firmware_version()
     flavor = "wear" if args.wear else "android"
-    version_code = args.version_code if args.version_code is not None else (1121 if args.wear else 1120)
+    version_code = args.version_code if args.version_code is not None else (2001 if args.wear else 2000)
     revision = args.android_revision if args.android_revision is not None else 1
     version_name = f"{version}-{flavor}.{revision}"
     default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk" if args.wear
@@ -134,7 +134,8 @@ def main() -> int:
     cpp_sources = [
         sketch,
         ROOT / "gbsynth.cpp", ROOT / "pet.cpp", ROOT / "i18n.cpp",
-        ROOT / "party.cpp", ROOT / "battle.cpp", ROOT / "link.cpp", ROOT / "save.cpp",
+        ROOT / "party.cpp", ROOT / "battle.cpp", ROOT / "wild.cpp",
+        ROOT / "link.cpp", ROOT / "save.cpp",
         ROOT / "tools" / "emu" / "font.cpp", ROOT / "tools" / "emu" / "clock.cpp",
         ANDROID / "host_android.cpp", ANDROID / "android_audio.cpp",
         ANDROID / "link_udp.cpp", ANDROID / "android_main.cpp",

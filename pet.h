@@ -157,6 +157,10 @@ public:
   // gained; 0 means every stat is at its ceiling. Costs nothing: the fight
   // already spent the energy, and that is what rate-limits rematching.
   uint8_t rewardTraining(uint8_t amount, uint8_t &which);
+  // Exploration charges up front and persists immediately, so closing the
+  // emulator mid-battle cannot refund an attempt. This reuses the existing
+  // energy byte and does not change the save layout.
+  bool spendEnergy(uint8_t amount);
   uint16_t spdHi = 0;    // best reaction-test score
 
   // stats de combate: base real de gen 1 + nivel + IV + entrenamiento
@@ -368,6 +372,9 @@ public:
     return dex >= 1 && dex <= DEX_COUNT && (dexShinyReg[(dex - 1) >> 3] & (1 << ((dex - 1) & 7)));
   }
   uint16_t registeredCount() const;
+  // A successful wild capture uses the existing Pokedex bitmap. No additional
+  // save or transfer field is needed.
+  void registerCaughtSpecies(int16_t dex);
   bool lineHasUnregistered(int16_t base) const;
   uint8_t eggRarity() const;       // rareza del huevo actual (sin revelar especie)
   int16_t pickEggSpecies();        // publica para poder simular tiradas (EGGS)

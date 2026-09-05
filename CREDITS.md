@@ -35,6 +35,20 @@ credit is in the original repository's
 [tracker.json](https://github.com/PMDCollab/SpriteCollab/blob/master/tracker.json).
 Huge thanks to that whole community for an enormous amount of work.
 
+When a species has no base-form sprite, the packer may use a recognisable form
+from the same SpriteCollab entry while retaining the canonical National Dex ID:
+
+| Species | Packed visual form | Sprite contributors and terms |
+|---|---|---|
+| Pyroar #668 | Female | baronessfaron, ZoroarkDX · PMDCollab_2 |
+| Oricorio #741 | Pom-Pom Style | baronessfaron · CC_BY-NC_4 |
+| Falinks #870 | Trooper | baronessfaron · CC_BY-NC_4 |
+| Gimmighoul #999 | Roaming Form | G〜 · PMDCollab_2 |
+| Miraidon #1008 | Low-Power Mode | Top_Kec · CC_BY-NC_4 |
+
+These are visual substitutions only. Stats, learnsets, evolution, capture rate,
+save records and link-battle identity continue to use the species' normal Dex ID.
+
 The Galar and Paldea packs carry a per-species, per-author attribution table in
 [`docs/PMDCOLLAB_GALAR_PALDEA_CREDITS.md`](docs/PMDCOLLAB_GALAR_PALDEA_CREDITS.md),
 generated from each included asset's `credits.txt` and SpriteCollab's

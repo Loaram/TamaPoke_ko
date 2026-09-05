@@ -13,17 +13,24 @@ def main():
     variants=p.add_mutually_exclusive_group()
     variants.add_argument('--full-dex',action='store_true',help='build the private full-Pokedex test edition')
     variants.add_argument('--full-shiny',action='store_true',help='build the private full-shiny-Pokedex test edition')
+    variants.add_argument('--explore-beta',action='store_true',help='build the emulator-only Explore beta')
+    variants.add_argument('--explore-full-dex',action='store_true',
+                          help='build Explore beta with all 1025 normal Pokedex entries open')
     a=p.parse_args()
     version=re.search(r'#define FW_VERSION "([^"]+)"',(R/'TamaPoke.ino').read_text(encoding='utf-8'))[1]
-    suffix='shiny' if a.full_shiny else ('dex' if a.full_dex else '')
+    suffix=('explore-beta-dex' if a.explore_full_dex else
+            ('explore-beta' if a.explore_beta else
+            ('shiny' if a.full_shiny else ('dex' if a.full_dex else ''))))
     default_out=R/(f'build/emulator-{version}-{suffix}' if suffix else 'build/emulator')
     out=(a.out or default_out).resolve();out.mkdir(parents=True,exist_ok=True)
     subprocess.run([sys.executable,str(E/'genproto.py'),str(R/'TamaPoke.ino')],cwd=E,check=True)
     sketch=out/'sketch.cpp';sketch.write_text('#include "proto.h"\n'+(R/'TamaPoke.ino').read_text(encoding='utf-8'),encoding='utf-8')
-    sources=[str(sketch)]+[str(E/x) for x in ['wavout.cpp','host_impl.cpp','font.cpp','clock.cpp','main_sdl.cpp']]+[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp']]
+    sources=[str(sketch)]+[str(E/x) for x in ['wavout.cpp','host_impl.cpp','font.cpp','clock.cpp','main_sdl.cpp']]+[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp']]
     flags=['-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"']
     if a.full_dex: flags.append('-DTAMAPOKE_FULL_DEX=1')
     if a.full_shiny: flags.append('-DTAMAPOKE_FULL_SHINY=1')
+    if a.explore_beta or a.explore_full_dex: flags.append('-DTAMAPOKE_EXPLORE_BETA=1')
+    if a.explore_full_dex: flags.append('-DTAMAPOKE_FULL_DEX=1')
     libs=[]
     if a.sdl:
         flags+=['-I'+str(a.sdl/'include/SDL2'),'-DSDL_MAIN_HANDLED']

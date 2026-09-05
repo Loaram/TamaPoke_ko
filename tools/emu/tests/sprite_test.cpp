@@ -59,6 +59,27 @@ int main(){
     ck(wrong == 0, "every species that loads is the species that was asked for");
   }
 
+  // Base-form gaps may use a selected form from the SAME National Dex entry.
+  // Both normal and shiny files must contain Idle, and thumbs.bin must carry a
+  // real image, or unlocking the species would only trade one blank screen for
+  // another.
+  {
+    const int16_t formBacked[] = {668, 741, 870, 999, 1008};
+    bool normalOk = true, shinyOk = true, thumbsOk = thumbs.load();
+    for (int16_t d : formBacked) {
+      PmdMon normal, shiny;
+      if (!normal.load(d, false) || !normal.has(PMD_IDLE)) normalOk = false;
+      if (!shiny.load(d, true) || !shiny.has(PMD_IDLE)) shinyOk = false;
+      const uint8_t *thumb = thumbsOk ? thumbs.get(d) : nullptr;
+      if (!thumb || thumb[0] == 0 || thumb[1] == 0 || thumb[2] == 0)
+        thumbsOk = false;
+      normal.unload(); shiny.unload();
+    }
+    ck(normalOk, "all five alternate-form normal sprites load with Idle");
+    ck(shinyOk, "all five alternate-form shiny sprites load with Idle");
+    ck(thumbsOk, "all five alternate-form species have gallery thumbnails");
+  }
+
   // THE assertion that actually bites. m.dex only records what was ASKED for,
   // so a truncation inside the filename alone would slip past it -- proven by
   // putting the bug back and watching that check still pass. This compares the

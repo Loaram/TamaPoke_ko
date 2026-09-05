@@ -376,7 +376,7 @@ int main() {
            i, pty.slots[i].dex, pty.slots[i].level, pty.slots[i].nick);
   }
   ck(aligned, "legacy party blob migrates with slots still aligned");
-  ck(pty.count() == PARTY_SLOTS, "all 6 legacy members survive");
+  ck(pty.count() == PARTY_SLOTS, "all 5 legacy members survive");
 
   // The MOVE PICKER had its own gate and so its own opinion: it checked
   // learnLevel() alone, and a TM is stored as level 0, so a level 22 Charmeleon

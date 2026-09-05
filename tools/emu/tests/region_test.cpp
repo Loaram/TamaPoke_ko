@@ -224,6 +224,14 @@ int main(){
     ck(artlessAllowed == 0, "every directly art-less species is also blocked");
     ck(speciesCanHatch(495) && speciesCanHatch(650) && speciesCanHatch(722),
        "unaffected starters remain hatchable");
+    const int16_t formBacked[] = {668, 741, 870, 999, 1008};
+    bool unlockedForms = true;
+    for (int16_t d : formBacked)
+      if (!speciesHasArt(d) || !speciesCanHatch(d)) unlockedForms = false;
+    ck(unlockedForms,
+       "five species backed by alternate-form sprites can hatch and be encountered");
+    ck(speciesCanHatch(667),
+       "Litleo can hatch now that its Pyroar evolution has female-form art");
   }
 
   // A blocked family may already be hidden inside a waiting egg saved by the

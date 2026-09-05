@@ -104,7 +104,10 @@ int main(){
     else printf("PASS  movepick   closes after the final page\n");
   }
   clearAll(); pickTrainer=7; pickHard=false; pickDefault(squadCap(7,false)); pickOpen=true;
-                                                  check("teampick", &pickOpen,     &pickPage);
+  pickPage = 0;
+  onSwipe(-1);
+  if (pickOpen) { printf("FAIL  teampick   created a second page for only six candidates\n"); bad++; }
+  else printf("PASS  teampick   all six battle candidates fit on one page\n");
   // The Pokedex pages within ONE region and changes region on a vertical swipe.
   // Every species must be reachable: it was capped at 10 flat pages when the dex
   // was 151 long, which silently hid everything past 160 once it grew to 386.

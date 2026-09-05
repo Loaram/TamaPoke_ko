@@ -1,6 +1,6 @@
 # PMDCollab 가라르·팔데아 스프라이트 출처
 
-TamaPoke 한국어판 `ko.1.1.1`의 가라르·팔데아 팩에 실제 포함된 PMDCollab SpriteCollab 스프라이트의 종별 기여자 기록입니다.
+TamaPoke 한국어판 `2.0.0`의 가라르·팔데아 팩에 실제 포함된 PMDCollab SpriteCollab 스프라이트의 종별 기여자 기록입니다.
 
 - 원본: [PMDCollab/SpriteCollab](https://github.com/PMDCollab/SpriteCollab)
 - 라이선스: [Creative Commons Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/)
@@ -69,7 +69,7 @@ TamaPoke 한국어판 `ko.1.1.1`의 가라르·팔데아 팩에 실제 포함된
 | [867](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0867) | 데스판 | Top_Kec · CC_BY-NC_4 | Top_Kec · CC_BY-NC_4 |
 | [868](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0868) | 마빌크 | Riodise · CC_BY-NC_4 | 일반판으로 대체 |
 | [869](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0869) | 마휘핑 | Emmuffin · PMDCollab_1 | Emmuffin · PMDCollab_1 |
-| [870](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0870) | 대여르 | 미포함 (자료 없음) | 일반판으로 대체 |
+| [870](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0870/0003) | 대여르 (Trooper 폼 대체) | baronessfaron · CC_BY-NC_4 | baronessfaron · CC_BY-NC_4 |
 | [871](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0871) | 찌르성게 | Michael12, Shadowcrafts · CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
 | [872](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0872) | 누니머기 | JFain, ◥θ┴θ◤ · PMDCollab_1 | ShyStarryRain, ◥θ┴θ◤, G〜 · PMDCollab_1 |
 | [873](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0873) | 모스노우 | JHONY_REX, Caitemis, Emmuffin · PMDCollab_1, CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
@@ -198,7 +198,7 @@ TamaPoke 한국어판 `ko.1.1.1`의 가라르·팔데아 팩에 실제 포함된
 | [996](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0996) | 드니차 | Soulja, pi3.14, Inv3rse · CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
 | [997](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0997) | 드니꽁 | Soulja, pi3.14 · CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
 | [998](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0998) | 드닐레이브 | Soulja, pi3.14 · CC_BY-NC_4 | G〜 · CC_BY-NC_4 |
-| [999](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0999) | 모으령 | 미포함 (자료 없음) | 일반판으로 대체 |
+| [999](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0999/0001) | 모으령 (로밍폼 대체) | G〜 · PMDCollab_2 | G〜 · PMDCollab_2 |
 | [1000](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1000) | 타부자고 | baronessfaron, G〜 · PMDCollab_2 | Deeshura · PMDCollab_2 |
 | [1001](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1001) | 총지엔 | 미포함 (자료 없음) | 일반판으로 대체 |
 | [1002](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1002) | 파오젠 | 미포함 (자료 없음) | 일반판으로 대체 |
@@ -207,7 +207,7 @@ TamaPoke 한국어판 `ko.1.1.1`의 가라르·팔데아 팩에 실제 포함된
 | [1005](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1005) | 고동치는달 | FERMRACK, Soulja, pi3.14 · CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
 | [1006](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1006) | 무쇠무인 | Emmuffin · CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
 | [1007](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1007) | 코라이돈 | baronessfaron · CC_BY-NC_4 | 일반판으로 대체 |
-| [1008](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1008) | 미라이돈 | 미포함 (자료 없음) | 일반판으로 대체 |
+| [1008](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1008/0001) | 미라이돈 (로우파워폼 대체) | Top_Kec · CC_BY-NC_4 | Top_Kec · CC_BY-NC_4 |
 | [1009](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1009) | 굽이치는물결 | baronessfaron, G〜, Soulja · CC_BY-NC_4 | G〜 · CC_BY-NC_4 |
 | [1010](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1010) | 무쇠잎새 | pi3.14, Emmuffin · CC_BY-NC_4 | Emmuffin · CC_BY-NC_4 |
 | [1011](https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/1011) | 과미르 | Soulja · CC_BY-NC_4 | Gust · CC_BY-NC_4 |

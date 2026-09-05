@@ -36,7 +36,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Elige tu inicial",
     "Sin sprites", "Cargalos en la SD",
     "PS", "IV %u",
-    "MENU", "AJUSTES", "CERRAR", "EQUIPO %u/6", "- vacio -", "%s se une al equipo!", "Equipo lleno: elige a quien sustituir", "Dejarlo ir",
+    "MENU", "AJUSTES", "CERRAR", "EQUIPO %u/5", "- vacio -", "%s se une al equipo!", "Equipo lleno: elige a quien sustituir", "Dejarlo ir",
     "STATS", "ENTRENAR", "FUERZA", "VELOCIDAD", "DEFENSA", "Sube sola si esta a gusto",
     "MOVIMIENTOS", "- vacio -", "Elige movimiento", "Toca para cambiar", "POT %u", "ESTADO",
     "%s quiere aprender", "No aprender",
@@ -46,7 +46,8 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Has ganado!", "Has perdido...",
     "%s saca a %s", "Adelante, %s!", "GIMNASIOS", "MEDALLAS %u/8", "ENTRENADOR", "VELOCIDAD +%u", "toca: cambiar avatar", "%u en total", "NORMAL", "DIFICIL",
  "ELEGIDOS %u/%u", "LUCHAR", "BLOQUEADO", "POKEMON", "%s derrotado!", "MEDALLA NUEVA!", "VOL %u", "CAJA %u/%u", "cambiar con %s: elige hueco", "CAJA", "TRAER", "solo con un huevo", "COMBATE LAN", "CREAR", "UNIRSE", "buscando...", "listo!", "version distinta", "crear o unirse", "rival: %u mons", "el rival se fue", "esperando al rival...", "OTRA VEZ", "HUIR", "de que region viene el huevo", "%s +%u", "ya no puede entrenar mas", "ELIGE TU REGION", "RETIRAR", "Retirarla ya?", "la siguiente evoluciona un dia mas tarde", "evoluciona un dia mas tarde",   "FALTA PACK", "SOLTAR", "se va para siempre", "AL EQUIPO", "no se unira a tu equipo",
-   "GUARDADO", "ENVIAR PARTIDA", "RECIBIR PARTIDA", "enviando %u%%", "recibiendo %u%%", "partida lista", "APLICAR", "reemplaza tu partida", "envio completo", "partida invalida", "CODIGO %06lu", },
+   "GUARDADO", "ENVIAR PARTIDA", "RECIBIR PARTIDA", "enviando %u%%", "recibiendo %u%%", "partida lista", "APLICAR", "reemplaza tu partida", "envio completo", "partida invalida", "CODIGO %06lu",
+   "EXPLORAR", "NORMAL", "ALEATORIO", "ENERGIA %u / COSTE %u", "No hay energia suficiente", "Equipo y caja llenos", "Aparece %s salvaje!", "%s capturado!", "%s escapo...", },
   // ---------------- EN ----------------
   {
     "Evolving!", "Yum yum!", "It likes it!", "It's hungry!", "Needs a bath!",
@@ -76,7 +77,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Choose your starter",
     "No sprites", "Load them onto the SD",
     "HP", "IV %u",
-    "MENU", "SETTINGS", "CLOSE", "PARTY %u/6", "- empty -", "%s joined the party!", "Party full: pick who to replace", "Let it go",
+    "MENU", "SETTINGS", "CLOSE", "PARTY %u/5", "- empty -", "%s joined the party!", "Party full: pick who to replace", "Let it go",
     "STATS", "TRAINING", "STRENGTH", "SPEED", "DEFENCE", "Grows on its own when happy",
     "MOVES", "- empty -", "Choose a move", "Tap a slot to change", "PWR %u", "STATUS",
     "%s wants to learn", "Do not learn",
@@ -87,7 +88,8 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "%s sends out %s", "Go, %s!", "GYMS", "BADGES %u/8", "TRAINER",
  "SPEED +%u", "tap: change avatar", "%u earned in all", "EASY", "HARD", "CHOSEN %u/%u", "FIGHT", "LOCKED", "POKEMON", "%s defeated!", "NEW BADGE!", "VOL %u", "BOX %u/%u", "swap with %s: pick a slot", "BOX", "BRING BACK", "only while an egg waits", "LAN BATTLE", "HOST", "JOIN", "searching...", "ready!", "different version", "host or join", "rival: %u mons", "the rival left", "waiting for the rival...", "AGAIN", "RUN", "where this egg comes from", "%s +%u", "trained as far as it can go", "CHOOSE A REGION", "RETIRE", "Retire it early?", "the next one evolves a day later", "evolves a day later",
    "NEEDS PACK", "RELEASE", "gone for good", "TO PARTY", "it will not join your party",
-   "SAVE TRANSFER", "SEND SAVE", "RECEIVE SAVE", "sending %u%%", "receiving %u%%", "save ready", "APPLY SAVE", "replaces your current save", "transfer complete", "invalid save", "CODE %06lu", },
+   "SAVE TRANSFER", "SEND SAVE", "RECEIVE SAVE", "sending %u%%", "receiving %u%%", "save ready", "APPLY SAVE", "replaces your current save", "transfer complete", "invalid save", "CODE %06lu",
+   "EXPLORE", "NORMAL", "RANDOM", "ENERGY %u / COST %u", "Not enough energy", "Party and box are full", "A wild %s appeared!", "%s was caught!", "%s broke free...", },
   // ---------------- FR ----------------
   {
     "Il evolue!", "Miam miam!", "Il aime ca!", "Il a faim!", "Besoin d'un bain!",
@@ -117,7 +119,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Choisis ton starter",
     "Pas de sprites", "Charge-les sur la SD",
     "PV", "IV %u",
-    "MENU", "REGLAGES", "FERMER", "EQUIPE %u/6", "- vide -", "%s rejoint l'equipe!", "Equipe pleine: qui remplacer?", "Le laisser partir",
+    "MENU", "REGLAGES", "FERMER", "EQUIPE %u/5", "- vide -", "%s rejoint l'equipe!", "Equipe pleine: qui remplacer?", "Le laisser partir",
     "STATS", "ENTRAINEMENT", "FORCE", "VITESSE", "DEFENSE", "Monte seule s'il est heureux",
     "CAPACITES", "- vide -", "Choisis une capacite", "Touche pour changer", "PUI %u", "STATUT",
     "%s veut apprendre", "Ne pas apprendre",
@@ -127,7 +129,8 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Gagne!", "Perdu...",
     "%s envoie %s", "Vas-y, %s!", "ARENES", "BADGES %u/8", "DRESSEUR", "VITESSE +%u", "touche: changer d'avatar", "%u au total", "NORMAL", "DIFFICILE", "CHOISIS %u/%u", "COMBATTRE", "VERROUILLE", "POKEMON", "%s vaincu!", "NOUVEAU BADGE!", "VOL %u", "BOITE %u/%u", "echanger avec %s: choisis", "BOITE", "RAMENER", "seulement avec un oeuf", "COMBAT LAN", "CREER", "REJOINDRE", "recherche...", "pret!", "version differente", "creer ou rejoindre", "rival: %u mons", "le rival est parti", "en attente du rival...", "ENCORE", "FUIR", "d ou vient cet oeuf", "%s +%u", "ne peut plus progresser", "CHOISIS TA REGION", "RETIRER", "Retirer maintenant?", "le suivant evolue un jour plus tard", "evolue un jour plus tard",
    "PACK REQUIS", "RELACHER", "parti pour de bon", "A L EQUIPE", "ne rejoindra pas l equipe",
-   "SAUVEGARDE", "ENVOYER", "RECEVOIR", "envoi %u%%", "reception %u%%", "partie prete", "APPLIQUER", "remplace la partie", "envoi termine", "partie invalide", "CODE %06lu", },
+   "SAUVEGARDE", "ENVOYER", "RECEVOIR", "envoi %u%%", "reception %u%%", "partie prete", "APPLIQUER", "remplace la partie", "envoi termine", "partie invalide", "CODE %06lu",
+   "EXPLORER", "NORMAL", "ALEATOIRE", "ENERGIE %u / COUT %u", "Pas assez d energie", "Equipe et boite pleines", "Un %s sauvage apparait!", "%s est capture!", "%s s echappe...", },
   // ---------------- DE ----------------
   {
     "Entwickelt sich!", "Mampf mampf!", "Gefaellt ihm!", "Hat Hunger!", "Braucht ein Bad!",
@@ -157,7 +160,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Waehle dein Starter",
     "Keine Sprites", "Auf die SD laden",
     "KP", "IV %u",
-    "MENU", "EINSTELLUNGEN", "SCHLIESSEN", "TEAM %u/6", "- leer -", "%s kommt ins Team!", "Team voll: wen ersetzen?", "Ziehen lassen",
+    "MENU", "EINSTELLUNGEN", "SCHLIESSEN", "TEAM %u/5", "- leer -", "%s kommt ins Team!", "Team voll: wen ersetzen?", "Ziehen lassen",
     "WERTE", "TRAINING", "STAERKE", "TEMPO", "ABWEHR", "Steigt von selbst bei guter Laune",
     "ATTACKEN", "- leer -", "Attacke waehlen", "Tippen zum Aendern", "STK %u", "STATUS",
     "%s will lernen", "Nicht lernen",
@@ -167,7 +170,8 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Gewonnen!", "Verloren...",
     "%s schickt %s", "Los, %s!", "ARENEN", "ORDEN %u/8", "TRAINER", "TEMPO +%u", "tippen: Avatar wechseln", "%u insgesamt", "NORMAL", "SCHWER", "GEWAEHLT %u/%u", "KAEMPFEN", "GESPERRT", "POKEMON", "%s besiegt!", "NEUER ORDEN!", "LAUT %u", "BOX %u/%u", "mit %s tauschen: waehle", "BOX", "ZURUECK", "nur mit einem Ei", "LAN KAMPF", "HOSTEN", "BEITRETEN", "suche...", "bereit!", "andere Version", "hosten oder beitreten", "Gegner: %u", "der Gegner ist weg", "warte auf den Gegner...", "NOCHMAL", "FLUCHT", "woher dieses Ei kommt", "%s +%u", "kann nicht weiter trainieren", "WAEHLE DEINE REGION", "VERABSCHIEDEN", "Jetzt verabschieden?", "das naechste entwickelt sich einen Tag spaeter", "entwickelt sich einen Tag spaeter",
    "PACK FEHLT", "FREILASSEN", "fuer immer weg", "INS TEAM", "kommt nicht ins team",
-   "SPIELSTAND", "SENDEN", "EMPFANGEN", "senden %u%%", "empfangen %u%%", "Spielstand bereit", "UEBERNEHMEN", "ersetzt Spielstand", "Uebertragung fertig", "ungueltiger Stand", "CODE %06lu", },
+   "SPIELSTAND", "SENDEN", "EMPFANGEN", "senden %u%%", "empfangen %u%%", "Spielstand bereit", "UEBERNEHMEN", "ersetzt Spielstand", "Uebertragung fertig", "ungueltiger Stand", "CODE %06lu",
+   "ERKUNDEN", "NORMAL", "ZUFALL", "ENERGIE %u / KOSTEN %u", "Nicht genug Energie", "Team und Box sind voll", "Ein wildes %s erscheint!", "%s wurde gefangen!", "%s ist entkommen...", },
   // ---------------- IT ----------------
   {
     "Si evolve!", "Gnam gnam!", "Gli piace!", "Ha fame!", "Vuole un bagno!",
@@ -197,7 +201,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Scegli l'iniziale",
     "Senza sprite", "Caricali sulla SD",
     "PS", "IV %u",
-    "MENU", "IMPOSTAZIONI", "CHIUDI", "SQUADRA %u/6", "- vuoto -", "%s entra in squadra!", "Squadra piena: chi sostituire?", "Lasciarlo andare",
+    "MENU", "IMPOSTAZIONI", "CHIUDI", "SQUADRA %u/5", "- vuoto -", "%s entra in squadra!", "Squadra piena: chi sostituire?", "Lasciarlo andare",
     "STATS", "ALLENAMENTO", "FORZA", "VELOCITA", "DIFESA", "Sale da sola se sta bene",
     "MOSSE", "- vuoto -", "Scegli una mossa", "Tocca per cambiare", "POT %u", "STATO",
     "%s vuole imparare", "Non imparare",
@@ -207,7 +211,8 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Hai vinto!", "Hai perso...",
     "%s manda %s", "Vai, %s!", "PALESTRE", "MEDAGLIE %u/8", "ALLENATORE", "VELOCITA +%u", "tocca: cambia avatar", "%u in totale", "NORMALE", "DIFFICILE", "SCELTI %u/%u", "LOTTA", "BLOCCATO", "POKEMON", "%s sconfitto!", "NUOVA MEDAGLIA!", "VOL %u", "BOX %u/%u", "scambia con %s: scegli", "BOX", "RIPORTA", "solo con un uovo", "LOTTA LAN", "CREA", "ENTRA", "ricerca...", "pronto!", "versione diversa", "crea o entra", "rivale: %u mons", "il rivale se n' e andato", "in attesa del rivale...", "ANCORA", "FUGGI", "da quale regione viene l uovo", "%s +%u", "non puo allenarsi oltre", "SCEGLI LA REGIONE", "RITIRARE", "Ritirarla adesso?", "il prossimo evolve un giorno dopo", "evolve un giorno dopo",
    "MANCA PACK", "LIBERA", "via per sempre", "AL GRUPPO", "non entrera nel gruppo",
-   "SALVATAGGIO", "INVIA", "RICEVI", "invio %u%%", "ricezione %u%%", "salvataggio pronto", "APPLICA", "sostituisce il salvataggio", "invio completo", "salvataggio non valido", "CODICE %06lu", },
+   "SALVATAGGIO", "INVIA", "RICEVI", "invio %u%%", "ricezione %u%%", "salvataggio pronto", "APPLICA", "sostituisce il salvataggio", "invio completo", "salvataggio non valido", "CODICE %06lu",
+   "ESPLORA", "NORMALE", "CASUALE", "ENERGIA %u / COSTO %u", "Energia insufficiente", "Squadra e box pieni", "Appare un %s selvatico!", "%s catturato!", "%s e fuggito...", },
   // ---------------- PT ----------------
   {
     "Evoluindo!", "Nham nham!", "Ele gosta!", "Esta com fome!", "Precisa de banho!",
@@ -237,7 +242,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Escolhe o inicial",
     "Sem sprites", "Carrega-os no SD",
     "PS", "IV %u",
-    "MENU", "AJUSTES", "FECHAR", "EQUIPA %u/6", "- vazio -", "%s junta-se a equipa!", "Equipa cheia: quem substituir?", "Deixa-lo ir",
+    "MENU", "AJUSTES", "FECHAR", "EQUIPA %u/5", "- vazio -", "%s junta-se a equipa!", "Equipa cheia: quem substituir?", "Deixa-lo ir",
     "STATS", "TREINO", "FORCA", "VELOCIDADE", "DEFESA", "Sobe sozinha se estiver bem",
     "GOLPES", "- vazio -", "Escolhe um golpe", "Toca para mudar", "POT %u", "ESTADO",
     "%s quer aprender", "Nao aprender",
@@ -247,7 +252,8 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Ganhaste!", "Perdeste...",
     "%s envia %s", "Vai, %s!", "GINASIOS", "MEDALHAS %u/8", "TREINADOR", "VELOCIDADE +%u", "toca: mudar avatar", "%u no total", "NORMAL", "DIFICIL", "ESCOLHIDOS %u/%u", "LUTAR", "BLOQUEADO", "POKEMON", "%s derrotado!", "NOVA MEDALHA!", "VOL %u", "CAIXA %u/%u", "trocar com %s: escolhe", "CAIXA", "TRAZER", "so com um ovo", "COMBATE LAN", "CRIAR", "ENTRAR", "a procurar...", "pronto!", "versao diferente", "criar ou entrar", "rival: %u mons", "o rival saiu", "a esperar pelo rival...", "OUTRA VEZ", "FUGIR", "de que regiao vem o ovo", "%s +%u", "ja nao pode treinar mais", "ESCOLHE A REGIAO", "REFORMAR", "Reformar agora?", "o proximo evolui um dia depois", "evolui um dia depois",
    "FALTA PACK", "SOLTAR", "vai para sempre", "A EQUIPA", "nao entrara na equipa",
-   "GRAVACAO", "ENVIAR", "RECEBER", "a enviar %u%%", "a receber %u%%", "gravacao pronta", "APLICAR", "substitui a gravacao", "envio concluido", "gravacao invalida", "CODIGO %06lu", },
+   "GRAVACAO", "ENVIAR", "RECEBER", "a enviar %u%%", "a receber %u%%", "gravacao pronta", "APLICAR", "substitui a gravacao", "envio concluido", "gravacao invalida", "CODIGO %06lu",
+   "EXPLORAR", "NORMAL", "ALEATORIO", "ENERGIA %u / CUSTO %u", "Energia insuficiente", "Equipa e caixa cheias", "Um %s selvagem apareceu!", "%s foi capturado!", "%s escapou...", },
   // ---------------- KO ----------------
   {
     "진화 중!", // S_EVOLVING
@@ -340,7 +346,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "메뉴", // S_MENU_TITLE
     "설정", // S_SETTINGS
     "닫기", // S_CLOSE
-    "파티 %u/6", // S_PARTY_FMT
+    "파티 %u/5", // S_PARTY_FMT
     "빈자리", // S_PARTY_EMPTY
     "%s, 파티에 합류!", // S_PARTY_JOINED
     "파티가 가득 찼어요. 교체하세요", // S_PARTY_FULL
@@ -434,6 +440,15 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "전송 완료", // S_SAVE_DONE
     "잘못된 세이브", // S_SAVE_INVALID
     "확인 코드 %06lu", // S_SAVE_CODE_FMT
+    "탐색", // S_EXPLORE
+    "일반", // S_EXPLORE_NORMAL
+    "랜덤", // S_EXPLORE_RANDOM
+    "활력 %u / 소모 %u", // S_EXPLORE_COST_FMT
+    "활력이 부족해요", // S_EXPLORE_NEED_ENERGY
+    "파티와 박스가 가득 찼어요", // S_EXPLORE_STORAGE_FULL
+    "야생 %s 등장!", // S_WILD_MET_FMT
+    "%s 포획 성공!", // S_WILD_CAUGHT_FMT
+    "%s 포획 실패...", // S_WILD_ESCAPED_FMT
   },
 };
 

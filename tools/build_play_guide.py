@@ -21,9 +21,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-ko.1.1.6-Play-Guide-KO.pdf"
-VERSION = "ko.1.1.6"
-PAGE_TOTAL = 16
+OUT = ROOT / "output" / "pdf" / "TamaPoke-2.0.0-Play-Guide-KO.pdf"
+VERSION = "2.0.0"
+PAGE_TOTAL = 18
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -236,7 +236,7 @@ def header_footer(canvas, doc) -> None:
 
 
 screens = ROOT / "docs" / "screens"
-qa_current = ROOT / "docs" / "qa" / "ko.1.1.6"
+qa_current = ROOT / "docs" / "qa" / "2.0.0"
 
 story: list = []
 
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · ko.1.1.6",
+            "플레이 설명서 · 2.0.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -260,7 +260,7 @@ story.extend(
         p("Waveshare ESP32-S3-Touch-AMOLED-1.75", CENTER),
         p("Android · Galaxy Watch4~9 연동 안내 포함", CENTER),
         Spacer(1, 10 * mm),
-        p("설치 · 기본 조작 · 성장 · 기술 · 60칸 박스 · 체육관 · 근거리 배틀 · 세이브 이전", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
+        p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
         p("2026-09-05", CENTER),
     ]
@@ -336,6 +336,7 @@ story.extend(
         bullet("수면은 활력을 회복하고, 목욕은 배설물을 치우며 위생을 100으로 회복합니다."),
         bullet("홈에서 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다."),
         bullet("PWR를 짧게 누르면 화면을 끄고, 길게 누르면 전원을 끕니다."),
+        bullet("화면 위 배터리 그림은 ESP32·휴대전화·워치의 실제 잔량을 따르며 충전 중에는 번개가 표시됩니다."),
         p("화면이 한국어가 아니면 트레이너 설정을 열고 언어 버튼을 눌러 <b>한국어</b>를 선택하세요.", CALLOUT),
     ]
 )
@@ -414,11 +415,12 @@ story.extend(
 page_break(story)
 
 # 8. Party and box
-story.extend(page_heading("07 파티", "6마리 파티와 60칸 박스", "박스는 6마리씩 10페이지이며 아래에 현재/전체 페이지 숫자가 표시됩니다."))
+story.extend(page_heading("07 파티", "현재 동료 포함 6마리와 60칸 박스", "함께 키우는 포켓몬 1마리와 파티 5마리가 한 전투에 참가합니다."))
 story.append(screenshot_pair(qa_current / "guide-party.png", screens / "box.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
+        bullet("파티에는 5마리를 보관할 수 있습니다. 홈에서 키우는 현재 포켓몬까지 합쳐 전투 후보는 최대 6마리입니다."),
         bullet("포켓몬 칸을 눌러 위치를 바꾸거나 상세 정보, 기술, 훈련 상태를 확인합니다."),
         bullet("박스 안에서는 좌우로 밀어 1/10부터 10/10까지 이동합니다."),
         bullet("파티가 가득 찬 상태에서 새 포켓몬이 합류하면 파티 교체 화면에서 보낼 자리를 선택합니다."),
@@ -464,8 +466,72 @@ story.extend(
 )
 page_break(story)
 
-# 11. LAN overview
-story.extend(page_heading("10 근거리 배틀", "어떤 기기끼리 연결할 수 있나요?", "ESP32, Android와 Wear OS는 가까운 곳의 로컬 네트워크로 대전합니다."))
+# 11. Explore overview
+story.extend(page_heading("10 탐색", "야생 포켓몬을 만나는 방법", "메뉴에서 탐색을 열고 지방과 난이도를 선택합니다. 조우가 시작될 때 활력 30을 사용합니다."))
+story.append(screenshot_pair(qa_current / "guide-explore.png", qa_current / "guide-wild.png"))
+story.extend(
+    [
+        Spacer(1, 4 * mm),
+        step_table(
+            [
+                "홈에서 포켓몬 이름을 눌러 메뉴를 열고 <b>탐색</b>을 선택합니다.",
+                "찾고 싶은 포켓몬이 속한 지방을 고릅니다.",
+                "일반 또는 랜덤을 고릅니다. 시작 순간 활력 30이 차감되며 승패와 관계없이 돌려받지 않습니다.",
+                "야생 포켓몬을 쓰러뜨리면 몬스터볼 포획 판정이 한 번 진행됩니다.",
+                "포획에 성공하면 빈 파티 칸에 들어가고, 파티가 찼으면 박스의 빈 칸으로 이동합니다.",
+            ]
+        ),
+        Spacer(1, 4 * mm),
+        p("탐색 시작 조건", H2),
+        p("현재 포켓몬이 알·수면·작별 연출 상태가 아니어야 하며 활력이 30 이상이어야 합니다. 포획할 자리를 위해 파티 또는 60칸 박스에 빈 칸도 하나 이상 필요합니다.", CALLOUT),
+    ]
+)
+page_break(story)
+
+# 12. Explore odds
+story.extend(page_heading("11 탐색", "조우 레벨·종류·포획 확률", "모든 확률은 탐색 1회를 시작했을 때 또는 전투에서 승리했을 때 각각 한 번 판정됩니다."))
+story.append(
+    info_table(
+        [
+            ["선택", "야생 포켓몬 레벨", "언제 쓰면 좋나요?"],
+            ["일반", "현재 키우는 포켓몬 레벨 -5~+5", "비슷한 수준의 상대와 안정적으로 전투"],
+            ["랜덤", "레벨 1~100에서 같은 확률", "낮거나 매우 높은 레벨도 감수하고 도전"],
+        ],
+        [34 * mm, 62 * mm, 78 * mm],
+    )
+)
+story.extend(
+    [
+        Spacer(1, 4 * mm),
+        p("레벨 범위는 1 아래나 100 위로 넘어가지 않습니다. 예를 들어 현재 포켓몬이 레벨 60이면 일반 탐색은 레벨 55~65, 레벨 3이면 1~8입니다. 파티 평균이나 가장 높은 파티원의 레벨은 사용하지 않습니다.", SAFE),
+        p("조우 종류 확률", H2),
+        info_table(
+            [
+                ["일반 포켓몬", "진화한 포켓몬", "희귀 포켓몬", "전설 포켓몬"],
+                ["70%", "22%", "7%", "1%"],
+            ],
+            [43.5 * mm, 43.5 * mm, 43.5 * mm, 43.5 * mm],
+        ),
+        Spacer(1, 4 * mm),
+        p("먼저 위 종류를 뽑고, 선택한 지방에서 그림이 준비된 해당 종류의 포켓몬 중 하나를 같은 확률로 고릅니다. 지방별 후보 수가 달라 특정 포켓몬의 최종 조우 확률도 달라집니다.", BODY),
+        p("승리 뒤 포획 확률", H2),
+        info_table(
+            [
+                ["포획률 값·예시", "1회 승리 시 확률", "설명"],
+                ["255 · 캐터피", "약 99.99%", "거의 반드시 포획"],
+                ["45 · 이상해씨", "약 16.78%", "대략 6번 승리당 1번 수준"],
+                ["3 · 뮤츠", "2.5%", "정식 게임식 약 0.83% 대신 완화한 고정값"],
+            ],
+            [46 * mm, 40 * mm, 88 * mm],
+        ),
+        Spacer(1, 3 * mm),
+        p("몬스터볼 1배, 상대 HP 10%, 상태이상 보너스 없음 조건의 포획식을 사용합니다. 볼 아이템이나 추가 던지기는 없으며, 실패하면 다음 탐색에서 다시 만나 승리해야 합니다.", CALLOUT),
+    ]
+)
+page_break(story)
+
+# 13. LAN overview
+story.extend(page_heading("12 근거리 배틀", "어떤 기기끼리 연결할 수 있나요?", "ESP32, Android와 Wear OS는 가까운 곳의 로컬 네트워크로 대전합니다."))
 story.append(
     info_table(
         [
@@ -490,8 +556,8 @@ story.extend(
 )
 page_break(story)
 
-# 12. LAN with ESP
-story.extend(page_heading("11 근거리 배틀", "ESP32와 Android/워치 연결", "ESP32가 Wi-Fi 방을 만든 뒤 상대 기기가 그 방에 참가합니다."))
+# 14. LAN with ESP
+story.extend(page_heading("13 근거리 배틀", "ESP32와 Android/워치 연결", "ESP32가 Wi-Fi 방을 만든 뒤 상대 기기가 그 방에 참가합니다."))
 story.append(screenshot(qa_current / "guide-lan.png", 74 * mm))
 story.extend(
     [
@@ -512,8 +578,8 @@ story.extend(
 )
 page_break(story)
 
-# 13. LAN app pairs
-story.extend(page_heading("12 근거리 배틀", "앱과 앱, 워치끼리 연결", "두 기기를 같은 Wi-Fi 공유기에 연결한 상태에서 진행합니다."))
+# 15. LAN app pairs
+story.extend(page_heading("14 근거리 배틀", "앱과 앱, 워치끼리 연결", "두 기기를 같은 Wi-Fi 공유기에 연결한 상태에서 진행합니다."))
 story.append(
     step_table(
         [
@@ -538,8 +604,8 @@ story.extend(
 )
 page_break(story)
 
-# 14. Save transfer overview
-story.extend(page_heading("13 세이브 이전", "보내기와 받기 전에 확인", "세이브 전송은 원본을 복사해 대상 기기의 저장을 교체하는 기능입니다."))
+# 16. Save transfer overview
+story.extend(page_heading("15 세이브 이전", "보내기와 받기 전에 확인", "세이브 전송은 원본을 복사해 대상 기기의 저장을 교체하는 기능입니다."))
 story.append(screenshot_pair(qa_current / "guide-lan.png", qa_current / "guide-savereceive.png"))
 story.extend(
     [
@@ -554,8 +620,8 @@ story.extend(
 )
 page_break(story)
 
-# 15. Save transfer steps
-story.extend(page_heading("14 세이브 이전", "세이브 보내기, 확인, 적용", "연결 준비는 근거리 배틀과 같고 메뉴에서 보내기와 받기를 선택합니다."))
+# 17. Save transfer steps
+story.extend(page_heading("16 세이브 이전", "세이브 보내기, 확인, 적용", "연결 준비는 근거리 배틀과 같고 메뉴에서 보내기와 받기를 선택합니다."))
 story.append(
     step_table(
         [
@@ -577,8 +643,8 @@ story.extend(
 )
 page_break(story)
 
-# 16. Apply and troubleshooting
-story.extend(page_heading("15 확인", "세이브 적용 화면과 문제 해결", "덮어쓰기 전 마지막 화면을 확인하고, 문제가 있으면 현재 세이브를 유지하세요."))
+# 18. Apply and troubleshooting
+story.extend(page_heading("17 확인", "세이브 적용 화면과 문제 해결", "덮어쓰기 전 마지막 화면을 확인하고, 문제가 있으면 현재 세이브를 유지하세요."))
 apply_image = screenshot(qa_current / "guide-saveconfirm.png", 67 * mm)
 apply_text = p(
     "<b>예</b>: 대상 기기의 현재 세이브를 받은 세이브로 교체하고 재시작합니다.<br/><br/>"
@@ -604,7 +670,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/ko.1.1.6", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/2.0.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -618,7 +684,7 @@ document = SimpleDocTemplate(
     topMargin=17 * mm,
     bottomMargin=21 * mm,
     title=f"TamaPoke {VERSION} 한국어 플레이 설명서",
-    subject="ESP32 설치, 기본 조작, 근거리 배틀과 세이브 이전",
+    subject="처음 설치, 탐색과 포획, 기본 조작, 근거리 배틀과 세이브 이전",
     author="Loaram / TamaPoke 한국어판",
 )
 document.build(story, onFirstPage=header_footer, onLaterPages=header_footer)

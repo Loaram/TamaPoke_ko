@@ -80,12 +80,44 @@ static bool callActivityBoolean(const char *method) {
   return result;
 }
 
+static int callActivityInt(const char *method, int fallback) {
+  if (!gApp || !gApp->activity || !gApp->activity->vm || !gApp->activity->clazz)
+    return fallback;
+  JNIEnv *env = nullptr;
+  bool attached = false;
+  if (gApp->activity->vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
+    if (gApp->activity->vm->AttachCurrentThread(&env, nullptr) != JNI_OK) return fallback;
+    attached = true;
+  }
+  jclass activityClass = env->GetObjectClass(gApp->activity->clazz);
+  jmethodID call = activityClass
+      ? env->GetMethodID(activityClass, method, "()I")
+      : nullptr;
+  int result = call ? env->CallIntMethod(gApp->activity->clazz, call) : fallback;
+  if (env->ExceptionCheck()) {
+    env->ExceptionDescribe();
+    env->ExceptionClear();
+    result = fallback;
+  }
+  if (activityClass) env->DeleteLocalRef(activityClass);
+  if (attached) gApp->activity->vm->DetachCurrentThread();
+  return result;
+}
+
 bool androidEnsureLocalNetworkPermission() {
   return callActivityBoolean("ensureLocalNetworkPermission");
 }
 
 bool androidHasLocalNetworkPermission() {
   return callActivityBoolean("hasLocalNetworkPermission");
+}
+
+int androidBatteryPercent() {
+  return callActivityInt("getBatteryPercent", -1);
+}
+
+bool androidBatteryCharging() {
+  return callActivityBoolean("isBatteryCharging");
 }
 
 int FakeSerial::available() { return 0; }

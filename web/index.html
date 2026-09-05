@@ -45,13 +45,13 @@
 <h1>TamaPoke 한국어판</h1><p class="sub">DylanPDao 포크 기반 · 1025종 · 9개 지방<br>Waveshare ESP32-S3-Touch-AMOLED-1.75 전용</p>
 <section class="step guide" id="play-guide" aria-labelledby="guide-title">
 <h2 id="guide-title">한국어 플레이 설명서</h2>
-<p>처음 설치하는 순서부터 기본 조작, 성장, 기술, 60칸 박스, 체육관, <b>근거리 배틀과 세이브 이전</b>까지 실제 플레이 순서대로 설명한 16쪽 가이드입니다.</p>
+<p>처음 설치하는 순서부터 기본 조작, 성장, 기술, 탐색·포획, 60칸 박스, 체육관, <b>근거리 배틀과 세이브 이전</b>까지 실제 플레이 순서대로 설명한 18쪽 가이드입니다.</p>
 <p><b>육성 핵심:</b> 20분당 1레벨 · 수면 활력 분당 +8 · 공격·방어·스피드 훈련 · 정상 작별 뒤 다음 알의 이로치 확률 상승</p>
 <div class="row">
-<a class="download-link primary" href="guides/TamaPoke-ko.1.1.6-Play-Guide-KO.pdf" download>PDF 설명서 받기 · 292KB</a>
-<a class="download-link" href="guides/TamaPoke-ko.1.1.6-Play-Guide-KO-Images.zip" download>이미지 16장 받기 · ZIP 1.8MB</a>
+<a class="download-link primary" href="guides/TamaPoke-2.0.0-Play-Guide-KO.pdf" download>PDF 설명서 받기 · 339KB</a>
+<a class="download-link" href="guides/TamaPoke-2.0.0-Play-Guide-KO-Images.zip" download>이미지 18장 받기 · ZIP 2.1MB</a>
 </div>
-<p class="note">설치 2~3쪽 · 기본 조작 4쪽 · 육성 규칙 5쪽 · 근거리 배틀 11~13쪽 · 세이브 이전 14~16쪽<br><a href="guides/TamaPoke-ko.1.1.6-Play-Guide-KO.pdf" target="_blank" rel="noopener">PDF 바로 열어보기</a></p>
+<p class="note">설치 2~3쪽 · 기본 조작 4쪽 · 육성 규칙 5쪽 · 탐색·포획 11~12쪽 · 근거리 배틀 13~15쪽 · 세이브 이전 16~18쪽<br><a href="guides/TamaPoke-2.0.0-Play-Guide-KO.pdf" target="_blank" rel="noopener">PDF 바로 열어보기</a></p>
 </section>
 <p id="unsupported" class="unsupported">PC용 Chrome 또는 Edge에서 열어 주세요. 이 브라우저는 USB 연결을 지원하지 않습니다.</p>
 <section class="step"><h2><span class="num">1</span>한국어 펌웨어 설치 <span class="version" id="version"></span></h2>
@@ -66,7 +66,7 @@
 <section class="step"><h2><span class="num">2</span>스프라이트 설치</h2>
 <p>기기에 microSD를 넣고, 1단계 설치 창을 닫은 뒤 연결하세요. 원하는 지방만 설치해도 되고 나중에 추가할 수도 있습니다.</p>
 <div class="row"><button id="connect">기기 연결</button><button id="disconnect" disabled>연결 해제</button></div>
-<div class="pack-grid" id="packs"><button data-region="kanto" disabled>관동 · 40.7MB</button><button data-region="johto" disabled>성도 · 27.8MB</button><button data-region="hoenn" disabled>호연 · 38.8MB</button><button data-region="sinnoh" disabled>신오 · 33.5MB</button><button data-region="unova" disabled>하나 · 40.3MB</button><button data-region="kalos" disabled>칼로스 · 21.2MB</button><button data-region="alola" disabled>알로라 · 27.7MB</button><button data-region="galar" disabled>가라르 · 25.5MB</button><button data-region="paldea" disabled>팔데아 · 28.9MB</button></div><button id="all" disabled>9개 지방 전체 설치</button>
+<div class="pack-grid" id="packs"><button data-region="kanto" disabled>관동 · 40.7MB</button><button data-region="johto" disabled>성도 · 27.8MB</button><button data-region="hoenn" disabled>호연 · 38.8MB</button><button data-region="sinnoh" disabled>신오 · 33.5MB</button><button data-region="unova" disabled>하나 · 40.3MB</button><button data-region="kalos" disabled>칼로스 · 21.3MB</button><button data-region="alola" disabled>알로라 · 28.1MB</button><button data-region="galar" disabled>가라르 · 25.7MB</button><button data-region="paldea" disabled>팔데아 · 29.7MB</button></div><button id="all" disabled>9개 지방 전체 설치</button>
 <p class="note">USB 전송은 시간이 걸립니다. 관동 팩은 약 10~15분이 걸릴 수 있어요. 전송 중에는 케이블과 SD 카드를 빼지 말고 이 페이지를 열어 두세요.</p>
 <p id="status" role="status" aria-live="polite">기기를 연결하면 설치할 지방을 선택할 수 있습니다.</p>
 <progress id="progress" value="0" max="100" aria-label="스프라이트 설치 진행률" hidden></progress>
@@ -75,7 +75,13 @@
 </section>
 <section class="step"><h2><span class="num">3</span>연결 해제 후 재시작</h2><p>설치 완료 메시지를 확인한 뒤 <b>연결 해제</b>를 누르고 기기를 재시작하세요. 새 게임은 한국어로 시작합니다. 기존 세이브는 <b>설정의 언어 버튼</b>을 눌러 한국어로 바꿀 수 있습니다.</p>
 <p class="note">기존 별명과 저장 데이터는 그대로 유지됩니다. 이름 입력 키보드는 원본의 영문 키보드를 사용합니다.</p></section>
-<section class="step" id="lan-battle"><h2><span class="num">4</span>근거리 배틀</h2>
+<section class="step" id="explore"><h2><span class="num">4</span>탐색과 포획</h2>
+<p>홈에서 포켓몬 이름을 눌러 <b>탐색</b>을 고른 뒤 지방과 난이도를 선택합니다. 시작 순간 활력 30을 쓰며 파티 또는 60칸 박스에 빈자리가 있어야 합니다.</p>
+<ul><li><b>일반:</b> 현재 키우는 포켓몬 레벨의 -5~+5 범위(최저 1, 최고 100)</li><li><b>랜덤:</b> 레벨 1~100을 같은 확률로 선택</li></ul>
+<p>종류 판정은 일반 70%, 진화 22%, 희귀 7%, 전설 1%입니다. 그다음 선택한 지방에서 그림이 있는 해당 종류의 포켓몬 중 하나가 등장합니다.</p>
+<div class="safe"><p><b>승리 뒤 1회 자동 포획:</b> 몬스터볼 1배·상대 HP 10%·상태이상 없음 조건입니다. 예를 들어 포획률 255 캐터피는 약 99.99%, 45 이상해씨는 약 16.78%, 3 뮤츠는 완화된 고정 확률 2.5%입니다.</p></div>
+</section>
+<section class="step" id="lan-battle"><h2><span class="num">5</span>근거리 배틀</h2>
 <p><b>ESP32↔ESP32</b>, 같은 Wi-Fi의 <b>Android↔Android/Wear OS</b>, ESP32가 만드는 Wi-Fi를 이용한 <b>ESP32↔앱/워치</b> 대전을 지원합니다.</p>
 <h3>ESP32와 Android 또는 워치 연결</h3>
 <ol>
@@ -86,10 +92,10 @@
 </ol>
 <h3>앱 또는 워치끼리 연결</h3>
 <p>두 기기를 같은 Wi-Fi 공유기에 연결하고 양쪽에서 근거리 대전을 엽니다. 처음 사용할 때 로컬 네트워크 권한이 나오면 허용하세요. 상대 탐색에는 최대 약 90초가 걸릴 수 있습니다.</p>
-<div class="safe"><p><b>버전 확인:</b> 새 기술 번호를 안전하게 주고받으려면 무선 프로토콜 4를 사용하는 ko.1.1.5 이상끼리 연결하세요. ko.1.1.6 사용을 권장합니다.</p></div>
+<div class="safe"><p><b>버전 확인:</b> 새 기술 번호를 안전하게 주고받으려면 무선 프로토콜 4를 사용하는 기기끼리 연결하세요. 최신 2.0.0 사용을 권장합니다.</p></div>
 <details><summary>상대를 찾지 못할 때</summary><p>공유기의 게스트 Wi-Fi나 AP 격리 기능, VPN, 방화벽, 배터리 절약이 로컬 통신을 막을 수 있습니다. 양쪽 모두 뒤로 나갔다가 같은 네트워크와 권한을 확인한 뒤 다시 시도하세요.</p></details>
 </section>
-<section class="step" id="save-transfer"><h2><span class="num">5</span>세이브 이전</h2>
+<section class="step" id="save-transfer"><h2><span class="num">6</span>세이브 이전</h2>
 <p>근거리 대전 화면에서 ESP32, Android와 Wear OS 사이에 포켓몬·파티·60칸 박스·도감·배지·설정을 복사할 수 있습니다. 원본 기기의 세이브는 자동으로 삭제되지 않습니다.</p>
 <ol>
 <li>위의 근거리 배틀과 같은 방법으로 두 기기의 네트워크를 준비합니다.</li>
@@ -99,9 +105,9 @@
 <li>대상 기기에서 <b>세이브 적용 → 예</b>를 누릅니다. 받은 세이브로 교체한 뒤 앱 또는 기기가 재시작됩니다.</li>
 </ol>
 <div class="safe"><p><b>안전 장치:</b> 받기 완료만으로 기존 세이브는 바뀌지 않습니다. 모든 조각과 CRC16 검사가 성공하고 사용자가 마지막 적용을 확인해야 덮어씁니다. 전송이 끊기거나 손상되면 적용 버튼이 나오지 않습니다.</p></div>
-<div class="row"><a class="download-link" href="guides/TamaPoke-ko.1.1.6-Play-Guide-KO.pdf#page=11" target="_blank" rel="noopener">그림과 함께 자세히 보기</a></div>
+<div class="row"><a class="download-link" href="guides/TamaPoke-2.0.0-Play-Guide-KO.pdf#page=13" target="_blank" rel="noopener">그림과 함께 자세히 보기</a></div>
 </section>
-<details><summary>기본 조작</summary><p>포켓몬을 눌러 쓰다듬고, 아래 아이콘으로 먹이·수면·목욕·훈련을 선택하세요. 이름을 누르면 메뉴가 열립니다. 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다. PWR 버튼을 짧게 누르면 화면을 끄고, 길게 누르면 전원을 끕니다.</p></details>
+<details><summary>기본 조작</summary><p>포켓몬을 눌러 쓰다듬고, 아래 아이콘으로 먹이·수면·목욕·훈련을 선택하세요. 이름을 누르면 메뉴가 열립니다. 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다. PWR 버튼을 짧게 누르면 화면을 끄고, 길게 누르면 전원을 끕니다. 화면 위 배터리 그림은 ESP32·Android·Wear OS 기기의 실제 잔량과 충전 여부를 따릅니다.</p></details>
 <footer class="note"><p>원작: <a href="https://github.com/socquique/TamaPoke">Quique Tortosa · socquique/TamaPoke</a><br>기반 포크: <a href="https://github.com/DylanPDao/TamaPoke">DylanPDao/TamaPoke</a></p>
 <p>스프라이트: <a href="https://github.com/PMDCollab/SpriteCollab">PMD SpriteCollab</a> (CC BY-NC) · <a href="credits-galar-paldea.md">가라르·팔데아 종별 기여자</a>. 코드 MIT. 한글 글꼴 Galmuri11 (SIL OFL 1.1). Pokémon © Nintendo / Game Freak / The Pokémon Company. 비공식·비상업 팬 프로젝트입니다.</p></footer>
 </main><script type="module" src="https://unpkg.com/esp-web-tools@10.1.1/dist/web/install-button.js"></script><script src="installer.js" defer></script></body></html>

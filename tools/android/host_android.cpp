@@ -11,6 +11,8 @@
 #include <string>
 
 uint8_t *androidLoadPackedFile(const char *path, uint32_t *size);
+int androidBatteryPercent();
+bool androidBatteryCharging();
 
 bool sdReady = true;
 bool sdDirty = false;
@@ -122,9 +124,21 @@ void rtcSetEpoch(uint32_t) {
 }
 bool batBegin() { return true; }
 void pmuEnablePanel() {}
-int batPercent() { return 87; }
-bool batCharging() { return false; }
-bool usbPresent() { return true; }
+static int cachedBatteryPercent = -1;
+static bool cachedBatteryCharging = false;
+static uint32_t batteryCheckedAt = 0;
+static bool batteryChecked = false;
+static void refreshBattery() {
+  uint32_t now = millis();
+  if (batteryChecked && now - batteryCheckedAt < 15000U) return;
+  cachedBatteryPercent = androidBatteryPercent();
+  cachedBatteryCharging = androidBatteryCharging();
+  batteryCheckedAt = now;
+  batteryChecked = true;
+}
+int batPercent() { refreshBattery(); return cachedBatteryPercent; }
+bool batCharging() { refreshBattery(); return cachedBatteryCharging; }
+bool usbPresent() { refreshBattery(); return cachedBatteryCharging; }
 void pwrSetup() {}
 bool pwrShortPressed() { return false; }
 

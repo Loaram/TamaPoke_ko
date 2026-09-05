@@ -34,11 +34,21 @@
 #include "i18n.h"
 #include "audio.h"
 #include "korean_text.h"
+// Explore graduated from the desktop beta in 2.0.0. The beta define remains
+// available only for emulator seed/save naming and its diagnostic title.
+#define TAMAPOKE_EXPLORE_ENABLED 1
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+#include "wild.h"
+#endif
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.6"
-#if defined(TAMAPOKE_FULL_SHINY)
+#define FW_VERSION "2.0.0"
+#if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
+#define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
+#elif defined(TAMAPOKE_EXPLORE_BETA)
+#define DISPLAY_VERSION FW_VERSION "-explore-beta"
+#elif defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-dex"
@@ -135,12 +145,19 @@ bool menuOpen = false;
 #define MENU_Y 75
 #define MENU_W 320
 #define MENU_H 316
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+#define MENU_ROW_H 44
+#define MENU_ROW_GAP 4
+#else
 #define MENU_ROW_H 52
 #define MENU_ROW_GAP 6
-// 5 rows: STATS / POKEDEX / SETTINGS / RETIRE / CLOSE. At MENU_Y 75 the panel
-// spans 75..391 and the round display gives a half-width of 171 there against
-// the 160 a row needs, so the corners stay on glass.
+#endif
+// Explore adds a sixth row, so all six stay inside the bezel-safe panel.
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+#define MENU_ROWS 6
+#else
 #define MENU_ROWS 5
+#endif
 #define MENU_ROW_Y(i) (MENU_Y + 16 + (i) * (MENU_ROW_H + MENU_ROW_GAP))
 
 // Party screen. partyPick != 0 means the newcomer needs a slot: the player
@@ -227,10 +244,23 @@ uint8_t movePickPage = 0;
 // rows do not leave room for the sprites.
 bool battleOpen = false;
 
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+// Captured creatures use the existing PartyMon records and Pokedex bitmap, so
+// Explore preserves the released save layout across emulator and device builds.
+bool exploreOpen = false;
+uint8_t exploreRegion = REGION_ALL;
+uint8_t exploreNotice = 0;   // 0 none, 1 energy, 2 storage
+bool btlWild = false;
+int16_t wildDex = 0;
+uint8_t wildLevel = 1;
+uint8_t wildIvAtk = 8, wildIvDef = 8, wildIvSpe = 8, wildIvHp = 8;
+bool wildShiny = false;
+#endif
+
 enum : uint8_t {
   SCR_STARTER = 0, SCR_REGION, SCR_GALLERY, SCR_DEXPICK, SCR_MOVEPICK, SCR_BOX,
   SCR_PARTY, SCR_KEYBOARD, SCR_CARD, SCR_PLAYER, SCR_CLOCK, SCR_GYM, SCR_GYMPICK,
-  SCR_LAN, SCR_PICK, SCR_BATTLE, SCR_WIN, SCR_LEARN, SCR_TRAIN, SCR_MENU,
+  SCR_LAN, SCR_EXPLORE, SCR_PICK, SCR_BATTLE, SCR_WIN, SCR_LEARN, SCR_TRAIN, SCR_MENU,
   SCR_GAME, SCR_MAIN, SCR_COUNT
 };
 extern const char *const SCREEN_NAME[SCR_COUNT];   // const is internal linkage in C++
@@ -248,13 +278,18 @@ uint8_t uiCurrentScreen();
 void uiConfirmRects(int *b1Top, int *b1Bot, int *b2Top, int *b2Bot);
 void renderParty();
 void renderBox();
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+void renderExplore();
+void exploreTap(int16_t x, int16_t y);
+bool startWildBattle(bool hard);
+#endif
 void drawConfirmPanel(const char *q, const char *sub1, const char *sub2,
                       uint16_t subCol, const char *o1, uint16_t c1, uint16_t t1,
                       const char *o2, uint16_t c2, uint16_t t2);
 const char *const SCREEN_NAME[SCR_COUNT] = {
   "starter", "region", "gallery", "dexpick", "movepick", "box",
   "party", "keyboard", "card", "player", "clock", "gym", "gympick",
-  "lan", "pick", "battle", "win", "learn", "train", "menu",
+  "lan", "explore", "pick", "battle", "win", "learn", "train", "menu",
   "minigame", "main"
 };
 
@@ -499,6 +534,10 @@ int8_t btlSwapWho = -1;        // 0 = your side, 1 = the foe's, -1 = nothing due
 #define BTL_ENTER_MS 420
 // battle menu: 0 = FIGHT/POKEMON, 1 = the moves, 2 = the switch list
 uint8_t btlMenu = 0;
+// The switch grid has four physical cells, while a battle squad may contain
+// six. Keep the remaining two on a second swipeable page.
+#define BTL_SWITCH_PER_PAGE 4
+uint8_t btlSwitchPage = 0;
 #define BTL_LUNGE_MS 260
 #define BTL_HIT_MS 420
 char btlMsg[6][160];
@@ -1230,7 +1269,10 @@ void onSwipeV(int dir) {
   if (uiCurrentScreen() == SCR_DEXPICK || uiCurrentScreen() == SCR_GYMPICK)
     return;                 // on the chooser, vertical does nothing: pick a row
   if (menuOpen) { menuOpen = false; return; }   // any swipe closes the menu
-  if (battleOpen) return;   // no swiping out of a fight
+  if (battleOpen) return;   // no vertical swipe out of a fight
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (exploreOpen) { exploreOpen = false; return; }
+#endif
   if (pickOpen) { pickOpen = false; return; }
   if (lanOpen) { lanLeave(); lanOpen = false; return; }
   if (gymOpen) {
@@ -1588,7 +1630,28 @@ void onSwipe(int dir) {
   if (rpickSwipe(dir)) return;
   if (pet.awaitingStarter()) return;  // bloqueado durante la eleccion de inicial
   if (menuOpen) { menuOpen = false; return; }   // any swipe closes the menu
-  if (battleOpen) return;   // no swiping out of a fight
+  if (battleOpen) {
+    if (btlMenu == 2 && !btlMsgCount && !btlOver) {
+      uint8_t pages = (uint8_t)((btlSquadN + BTL_SWITCH_PER_PAGE - 1) /
+                                BTL_SWITCH_PER_PAGE);
+      if (pages > 1) {
+        int p = (int)btlSwitchPage + (dir > 0 ? -1 : 1);
+        if (p < 0) p = pages - 1;
+        if (p >= pages) p = 0;
+        btlSwitchPage = (uint8_t)p;
+        sfxPlay(SFX_TAP);
+      }
+    }
+    return;   // no swiping out of a fight
+  }
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (exploreOpen) {
+    exploreRegion = nextAvailableRegion(exploreRegion);
+    exploreNotice = 0;
+    sfxPlay(SFX_TAP);
+    return;
+  }
+#endif
   if (pickOpen) {   // horizontal pages the candidates, as everywhere else
     uint8_t pages = (pickCandidates() + PICK_PER_PAGE - 1) / PICK_PER_PAGE;
     if (!pages) pages = 1;
@@ -1705,6 +1768,12 @@ void onTap(int16_t x, int16_t y) {
     battleTap(x, y);
     return;
   }
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (exploreOpen) {
+    exploreTap(x, y);
+    return;
+  }
+#endif
   if (playerOpen) {
     if (playerPage == 0 && y >= 32 && y < 68) {   // the name: rename yourself
       openKeyboardFor(KB_TRAINER);
@@ -1827,12 +1896,22 @@ void onTap(int16_t x, int16_t y) {
       menuOpen = false;
       if (i == 0) { cardOpen = true; cardPage = 1; }   // straight to the stats page
       else if (i == 1) { galleryOpen = true; galleryPick = true; galleryPage = 0; rpickPage = 0; galleryDetail = 0; galleryDirty = true; }
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+      else if (i == 2) {
+        exploreRegion = regionAvailable(pet.region) ? pet.region : REGION_ALL;
+        exploreNotice = 0;
+        exploreOpen = true;
+      }
+      else if (i == 3) { openClock(); }
+      else if (i == 4) {
+#else
       else if (i == 2) { openClock(); }
       else if (i == 3) {
+#endif
         if (!pet.canRetireNow()) { sfxPlay(SFX_DENY); return; }
         choiceKind = 3; choiceUntil = millis() + 12000;
       }
-      return;                                     // i == 4 is CLOSE: just shut
+      return;                         // the last row is CLOSE: just shut
     }
     return;
   }
@@ -2182,6 +2261,9 @@ uint8_t uiCurrentScreen() {
   if (clockOpen) return SCR_CLOCK;
   if (btlWinUntil) return SCR_WIN;
   if (battleOpen) return SCR_BATTLE;
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (exploreOpen) return SCR_EXPLORE;
+#endif
   if (pickOpen) return SCR_PICK;
   if (lanOpen) return SCR_LAN;
   if (gymOpen) return gymPick ? SCR_GYMPICK : SCR_GYM;
@@ -2284,6 +2366,12 @@ void render() {
     renderBattle();
     return;
   }
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (exploreOpen) {
+    renderExplore();
+    return;
+  }
+#endif
   if (pickOpen) {
     renderPick();
     return;
@@ -3436,6 +3524,9 @@ void startLinkBattle() {
     linkMonTo(btlSquad[btlSquadN++], lan.mine[i]);
   if (!btlSquadN) return;
   btlYou = btlSquad[0];
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  btlWild = false;
+#endif
   btlLink = true;
   btlLinkHost = lan.isHost;
   btlTrainer = -1;
@@ -3450,6 +3541,7 @@ void startLinkBattle() {
   btlOver = false;
   btlWon = false;
   btlMenu = 0;
+  btlSwitchPage = 0;
   btlWinUntil = 0;
   btlSwapWho = -1;
   btlFaintUntil[0] = btlFaintUntil[1] = 0;
@@ -3478,6 +3570,9 @@ void startTrainerBattle(uint8_t idx, bool hard) {
   // size cap on top, plus a smarter AI and better opposing IVs.
   buildSquad(top, hard ? tr.count : TRAINER_TEAM_MAX, squadMask);
   if (!btlSquadN) return;
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  btlWild = false;
+#endif
   btlTrainer = (int8_t)idx;
   btlHard = hard;
   btlFoeAt = 0;
@@ -3487,6 +3582,7 @@ void startTrainerBattle(uint8_t idx, bool hard) {
   btlOver = false;
   btlWon = false;
   btlMenu = 0;
+  btlSwitchPage = 0;
   btlWinUntil = 0;
   btlSwapWho = -1;
   btlFaintUntil[0] = btlFaintUntil[1] = 0;
@@ -3506,6 +3602,9 @@ void startBattle(int16_t dex, uint8_t lvl) {
   if (dex < 1 || dex > DEX_COUNT) return;
   buildSquad(0, TRAINER_TEAM_MAX, 0xFFFF);
   if (!btlSquadN) return;
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  btlWild = false;
+#endif
   // The opponent is built through Pet so it gets the same stat formula and the
   // same learnset-driven moveset the player's creature does -- no special-cased
   // "enemy" maths that could quietly diverge.
@@ -3519,6 +3618,7 @@ void startBattle(int16_t dex, uint8_t lvl) {
   btlOver = false;
   btlWon = false;
   btlMenu = 0;
+  btlSwitchPage = 0;
   btlWinUntil = 0;
   btlSwapWho = -1;
   btlFaintUntil[0] = btlFaintUntil[1] = 0;
@@ -3532,6 +3632,106 @@ void startBattle(int16_t dex, uint8_t lvl) {
   btlHitUntil[0] = btlHitUntil[1] = 0;
   battleOpen = true;
 }
+
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+static bool wildStorageAvailable() {
+  return !party.isFull() || party.boxFirstFree() >= 0;
+}
+
+static PartyMon wildPartyMon() {
+  PartyMon m;
+  m.dex = wildDex;
+  m.level = wildLevel;
+  m.ivAtk = wildIvAtk; m.ivDef = wildIvDef;
+  m.ivSpe = wildIvSpe; m.ivHp = wildIvHp;
+  m.shiny = wildShiny ? 1 : 0;
+  for (uint8_t i = 0; i < MOVE_SLOTS; i++) m.moves[i] = btlFoe.moves[i];
+  return m;
+}
+
+static bool storeWildCapture() {
+  PartyMon m = wildPartyMon();
+  bool stored = party.add(m);
+  if (!stored) stored = party.boxAdd(m);
+  if (stored) pet.registerCaughtSpecies(wildDex);
+  return stored;
+}
+
+bool startWildBattle(bool hard) {
+  exploreNotice = 0;
+  if (pet.isEgg() || pet.ceremony != CER_NONE || pet.sleeping) return false;
+  if (!wildStorageAvailable()) {
+    exploreNotice = 2;
+    sfxPlay(SFX_DENY);
+    return false;
+  }
+  if (pet.energy < WILD_ENERGY_COST) {
+    exploreNotice = 1;
+    sfxPlay(SFX_DENY);
+    return false;
+  }
+
+  buildSquad(0, TRAINER_TEAM_MAX, 0xFFFF);
+  if (!btlSquadN) return false;
+
+  uint8_t tier = wildTierForRoll((uint8_t)random(100));
+  uint32_t pickRoll = (uint32_t)random(65536) * 31UL + (uint32_t)random(31);
+  wildDex = wildPickSpecies(exploreRegion, tier, pickRoll);
+  // A missing sprite pack or a tier with no candidates must never charge for
+  // an encounter that cannot start. Try every other tier before giving up.
+  for (uint8_t t = 0; !wildDex && t <= R_LEGENDARIO; t++)
+    wildDex = wildPickSpecies(exploreRegion, t, pickRoll + t + 1);
+  if (!wildDex) return false;
+
+  uint8_t lo = wildLevelMin(pet.level(), hard);
+  uint8_t hi = wildLevelMax(pet.level(), hard);
+  wildLevel = (uint8_t)(lo + random((long)(hi - lo + 1)));
+  wildIvAtk = (uint8_t)(8 + random(24));
+  wildIvDef = (uint8_t)(8 + random(24));
+  wildIvSpe = (uint8_t)(8 + random(24));
+  wildIvHp = (uint8_t)(8 + random(24));
+  wildShiny = wildShinyForRoll((uint32_t)random(65536));
+  wildApplyShiny(wildShiny, wildIvAtk, wildIvDef, wildIvSpe, wildIvHp);
+
+  // Charge only after the encounter and squad are known to be valid. The
+  // write is immediate, so closing the emulator cannot refund the attempt.
+  if (!pet.spendEnergy(WILD_ENERGY_COST)) return false;
+
+  Pet foe;
+  foe.dbgHatchAs(wildDex, wildShiny);
+  foe.ivAtk = wildIvAtk; foe.ivDef = wildIvDef;
+  foe.ivSpe = wildIvSpe; foe.ivHp = wildIvHp;
+  foe.ageMinutes = (uint32_t)(wildLevel - 1) * MINUTES_PER_LEVEL;
+  foe.relearnFromLevel();
+  combatantFromPet(btlFoe, foe);
+
+  btlWild = true;
+  btlLink = false;
+  btlTrainer = -1;
+  btlHard = hard;
+  btlFoeAt = 0;
+  btlFoeSquadN = 0;
+  btlMsgCount = 0;
+  btlOver = false;
+  btlWon = false;
+  btlMenu = 0;
+  btlSwitchPage = 0;
+  btlWinUntil = 0;
+  btlSwapWho = -1;
+  btlFaintUntil[0] = btlFaintUntil[1] = 0;
+  btlEnterUntil[0] = btlEnterUntil[1] = 0;
+  btlHpShown[0] = btlYou.maxHp;
+  btlHpShown[1] = btlFoe.maxHp;
+  btlSyncSprite(0, btlYou);
+  btlSyncSprite(1, btlFoe);
+  btlLungeUntil[0] = btlLungeUntil[1] = 0;
+  btlHitUntil[0] = btlHitUntil[1] = 0;
+  audioMusic(MUS_BATTLE);
+  battleOpen = true;
+  btlSay(T(S_WILD_MET_FMT), localName(DEX_TBL[wildDex].name));
+  return true;
+}
+#endif
 
 // The guest's whole turn: copy in what the host resolved and play the same
 // animations the host is playing. It runs no battle logic at all -- that is the
@@ -3740,6 +3940,23 @@ static void btlResolve(MoveId yourMove) {
     // other device sits on a battle that will never take another turn.
     if (btlLink && btlLinkHost) lan.sendEnd(btlWon);
     if (btlLink) { btlSay("%s", btlWon ? T(S_BTL_WIN) : T(S_BTL_LOSE)); return; }
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+    if (btlWild) {
+      // Reserve the final two narration slots even after a very busy last
+      // turn: the player must always see both the win and capture outcome.
+      if (btlMsgCount > 4) btlMsgCount = 4;
+      if (btlWon) {
+        bool caught = wildCaptureNow(wildCatchRateForDex(wildDex));
+        if (caught) caught = storeWildCapture();
+        btlSay("%s", T(S_BTL_WIN));
+        btlSay(caught ? T(S_WILD_CAUGHT_FMT) : T(S_WILD_ESCAPED_FMT),
+               localName(DEX_TBL[wildDex].name));
+      } else {
+        btlSay("%s", T(S_BTL_LOSE));
+      }
+      return;
+    }
+#endif
     if (btlWon && btlTrainer >= 0) { btlWinUntil = millis() + 60000; return; }
     btlSay("%s", T(S_BTL_LOSE));
   }
@@ -3992,9 +4209,25 @@ void renderBattle() {
     }
   } else if (btlMenu == 2) {
     drawBtlBack();
+    uint8_t pages = (uint8_t)((btlSquadN + BTL_SWITCH_PER_PAGE - 1) /
+                              BTL_SWITCH_PER_PAGE);
+    if (!pages) pages = 1;
+    if (btlSwitchPage >= pages) btlSwitchPage = 0;
+    if (pages > 1) {
+      char pg[16];
+      snprintf(pg, sizeof(pg), "%u/%u", (unsigned)btlSwitchPage + 1,
+               (unsigned)pages);
+      gfx->setTextColor(0x6B4D);
+      gfx->setTextSize(1);
+      gfx->setCursor(CX - textWidthFactor(pg, 3), 258);
+      gfx->print(pg);
+    }
     // who to bring on instead; the current one and anything fainted is inert
-    for (uint8_t i = 0; i < btlSquadN && i < 4; i++) {
-      int x = BTL_CELL_X(i), y = BTL_CELL_Y(i);
+    uint8_t first = (uint8_t)(btlSwitchPage * BTL_SWITCH_PER_PAGE);
+    for (uint8_t cell = 0; cell < BTL_SWITCH_PER_PAGE; cell++) {
+      uint8_t i = (uint8_t)(first + cell);
+      if (i >= btlSquadN) break;
+      int x = BTL_CELL_X(cell), y = BTL_CELL_Y(cell);
       const Combatant &m = (i == btlSquadAt) ? btlYou : btlSquad[i];
       bool usable = (i != btlSquadAt) && !m.fainted();
       gfx->fillRoundRect(x, y, BTL_CELL_W, BTL_CELL_H, 10, usable ? UI_BG_DAY : UI_TRACK);
@@ -4086,6 +4319,7 @@ static void btlSwitchTo(uint8_t i) {
   btlLungeUntil[0] = btlHitUntil[0] = btlFaintUntil[0] = 0;
   btlEnterUntil[0] = millis() + BTL_ENTER_MS;
   btlMenu = 0;
+  btlSwitchPage = 0;
   btlSay(T(S_BTL_GO), combatantName(btlYou));
   btlResolve(0);          // move 0 = no attack, so only the foe acts
 }
@@ -4111,6 +4345,7 @@ static bool btlBackTap(int16_t x, int16_t y) {
   if (x < BTL_BACK_X || x > BTL_BACK_X + BTL_BACK_W ||
       y < BTL_BACK_Y || y > BTL_BACK_Y + BTL_BACK_H) return false;
   btlMenu = 0;
+  btlSwitchPage = 0;
   sfxPlay(SFX_TAP);
   return true;
 }
@@ -4124,7 +4359,11 @@ static void btlRun() {
   audioMusic(MUS_NONE);
   if (btlLink) { lanLeave(); btlLink = false; lanOpen = true; }
   battleOpen = false;
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  btlWild = false;
+#endif
   btlMenu = 0;
+  btlSwitchPage = 0;
 }
 
 void battleTap(int16_t x, int16_t y) {
@@ -4133,6 +4372,7 @@ void battleTap(int16_t x, int16_t y) {
     btlFreeSprites();
     audioMusic(MUS_NONE);
     battleOpen = false;
+    btlSwitchPage = 0;
     if (btlLink) { btlLink = false; lanOpen = true; }
     return;
   }
@@ -4141,9 +4381,13 @@ void battleTap(int16_t x, int16_t y) {
     if (btlOver) {
       btlFreeSprites();
       battleOpen = false;
+      btlSwitchPage = 0;
       // Back to the LAN screen rather than all the way out: that is where a
       // rematch is offered, and re-pairing for every fight would be tedious.
       if (btlLink) { btlLink = false; lanOpen = true; }
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+      btlWild = false;
+#endif
       return;
     }
     if (btlSwapWho >= 0) btlDoSwap();   // the replacement arrives on this beat
@@ -4156,14 +4400,21 @@ void battleTap(int16_t x, int16_t y) {
       btlMenu = 1;                       // FIGHT
       return;
     }
-    if (btlCellHit(2, x, y)) { sfxPlay(SFX_TAP); btlMenu = 2; return; }
+    if (btlCellHit(2, x, y)) {
+      sfxPlay(SFX_TAP);
+      btlSwitchPage = 0;
+      btlMenu = 2;
+      return;
+    }
     if (btlCellHit(3, x, y)) { btlRun(); return; }
     return;
   }
   if (btlMenu == 2) {
     if (btlBackTap(x, y)) return;
-    for (uint8_t i = 0; i < btlSquadN && i < 4; i++) {
-      if (!btlCellHit(i, x, y)) continue;
+    uint8_t first = (uint8_t)(btlSwitchPage * BTL_SWITCH_PER_PAGE);
+    for (uint8_t cell = 0; cell < BTL_SWITCH_PER_PAGE; cell++) {
+      uint8_t i = (uint8_t)(first + cell);
+      if (i >= btlSquadN || !btlCellHit(cell, x, y)) continue;
       const Combatant &m = (i == btlSquadAt) ? btlYou : btlSquad[i];
       if (i == btlSquadAt || m.fainted()) { sfxPlay(SFX_DENY); return; }
       sfxPlay(SFX_TAP);
@@ -4173,19 +4424,20 @@ void battleTap(int16_t x, int16_t y) {
         // would for us.
         lan.sendAct(LINK_ACT_SWITCH_TO(i));
         btlMenu = 0;
+        btlSwitchPage = 0;
         return;
       }
       if (btlLink) {            // host: latched like a move, see btlLinkPoll
         btlMyAct = LINK_ACT_SWITCH_TO(i);
         btlMenu = 0;
+        btlSwitchPage = 0;
         if (!lan.hasPeerAct()) return;
         btlMyAct = 0;
       }
       btlSwitchTo(i);
       return;
     }
-    btlMenu = 0;      // anywhere else backs out
-    return;
+    return;            // empty cells are inert; BACK is the explicit way out
   }
   if (btlBackTap(x, y)) return;
   for (int i = 0; i < MOVE_SLOTS; i++) {
@@ -5378,6 +5630,97 @@ void renderCard() {
   gfx->flush();
 }
 
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+// ---------- Explore ----------
+#define EXP_REGION_X 103
+#define EXP_REGION_Y 82
+#define EXP_REGION_W 260
+#define EXP_REGION_H 46
+#define EXP_BTN_X 83
+#define EXP_BTN_W 300
+#define EXP_BTN_H 62
+#define EXP_NORMAL_Y 194
+#define EXP_HARD_Y 274
+
+void renderExplore() {
+  gfx->fillScreen(RGB565_BLACK);
+  gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
+
+  gfx->setTextColor(UI_INK);
+  gfx->setTextSize(3);
+  gfx->setCursor(CX - textWidthFactor(T(S_EXPLORE), 9), 35);
+  gfx->print(T(S_EXPLORE));
+
+  gfx->fillRoundRect(EXP_REGION_X, EXP_REGION_Y, EXP_REGION_W, EXP_REGION_H, 14, UI_WHITE);
+  gfx->drawRoundRect(EXP_REGION_X, EXP_REGION_Y, EXP_REGION_W, EXP_REGION_H, 14, UI_INK);
+  const char *reg = localName(REGIONS[exploreRegion].name);
+  gfx->setTextSize(2);
+  gfx->setCursor(CX - textWidthFactor(reg, 6), EXP_REGION_Y + 14);
+  gfx->print(reg);
+
+  char cost[80];
+  snprintf(cost, sizeof(cost), T(S_EXPLORE_COST_FMT), pet.energy, WILD_ENERGY_COST);
+  gfx->setTextSize(1);
+  gfx->setTextColor(pet.energy >= WILD_ENERGY_COST ? UI_BAR_OK : UI_BAR_BAD);
+  gfx->setCursor(CX - textWidthFactor(cost, 3), 145);
+  gfx->print(cost);
+
+  const char *notice = exploreNotice == 1 ? T(S_EXPLORE_NEED_ENERGY)
+                       : exploreNotice == 2 ? T(S_EXPLORE_STORAGE_FULL) : "";
+  gfx->setTextColor(UI_BAR_BAD);
+  gfx->setCursor(CX - textWidthFactor(notice, 3), 166);
+  gfx->print(notice);
+
+  const char *labels[2] = { T(S_EXPLORE_NORMAL), T(S_EXPLORE_RANDOM) };
+  const int ys[2] = { EXP_NORMAL_Y, EXP_HARD_Y };
+  bool enabled = pet.energy >= WILD_ENERGY_COST && wildStorageAvailable() &&
+                 !pet.isEgg() && !pet.sleeping && pet.ceremony == CER_NONE;
+  for (uint8_t i = 0; i < 2; i++) {
+    gfx->fillRoundRect(EXP_BTN_X, ys[i], EXP_BTN_W, EXP_BTN_H, 16,
+                       enabled ? (i ? UI_BAR_WARN : UI_BG_DAY) : UI_TRACK);
+    gfx->drawRoundRect(EXP_BTN_X, ys[i], EXP_BTN_W, EXP_BTN_H, 16, UI_INK);
+    gfx->setTextColor(UI_INK);
+    gfx->setTextSize(2);
+    gfx->setCursor(CX - textWidthFactor(labels[i], 6), ys[i] + 19);
+    gfx->print(labels[i]);
+  }
+
+  const char *hint = gLang == LANG_KO ? "승리하면 1회 자동 포획" : "One capture roll after a win";
+  gfx->setTextSize(1);
+  gfx->setTextColor(0x6B4D);
+  gfx->setCursor(CX - textWidthFactor(hint, 3), 354);
+  gfx->print(hint);
+  gfx->setTextSize(2);
+  gfx->setCursor(CX - textWidthFactor(T(S_BACK), 6), 397);
+  gfx->print(T(S_BACK));
+  gfx->flush();
+}
+
+void exploreTap(int16_t x, int16_t y) {
+  if (x >= EXP_REGION_X && x <= EXP_REGION_X + EXP_REGION_W &&
+      y >= EXP_REGION_Y && y <= EXP_REGION_Y + EXP_REGION_H) {
+    exploreRegion = nextAvailableRegion(exploreRegion);
+    exploreNotice = 0;
+    sfxPlay(SFX_TAP);
+    return;
+  }
+  if (x >= EXP_BTN_X && x <= EXP_BTN_X + EXP_BTN_W) {
+    if (y >= EXP_NORMAL_Y && y <= EXP_NORMAL_Y + EXP_BTN_H) {
+      if (startWildBattle(false)) sfxPlay(SFX_TAP);
+      return;
+    }
+    if (y >= EXP_HARD_Y && y <= EXP_HARD_Y + EXP_BTN_H) {
+      if (startWildBattle(true)) sfxPlay(SFX_TAP);
+      return;
+    }
+  }
+  if (y >= 382) {
+    exploreOpen = false;
+    sfxPlay(SFX_TAP);
+  }
+}
+#endif
+
 // ---------- menu overlay ----------
 
 // Row labels are built fresh each frame because two of them carry live counts.
@@ -5385,8 +5728,14 @@ static void menuRowLabel(int i, char *out, size_t n) {
   switch (i) {
     case 0: snprintf(out, n, "%s", T(S_STATS)); break;
     case 1: snprintf(out, n, T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT); break;
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+    case 2: snprintf(out, n, "%s", T(S_EXPLORE)); break;
+    case 3: snprintf(out, n, "%s", T(S_SETTINGS)); break;
+    case 4: snprintf(out, n, "%s", T(S_RETIRE)); break;
+#else
     case 2: snprintf(out, n, "%s", T(S_SETTINGS)); break;
     case 3: snprintf(out, n, "%s", T(S_RETIRE)); break;
+#endif
     default: snprintf(out, n, "%s", T(S_CLOSE)); break;
   }
 }
@@ -5403,7 +5752,11 @@ void drawMenu() {
   for (int i = 0; i < MENU_ROWS; i++) {
     int y = MENU_ROW_Y(i);
     bool close = (i == MENU_ROWS - 1);
-    bool dead = (i == 3 && !pet.canRetireNow());   // an egg or a companion
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+    bool dead = (i == 4 && !pet.canRetireNow());   // an egg or a companion
+#else
+    bool dead = (i == 3 && !pet.canRetireNow());
+#endif
     gfx->fillRoundRect(MENU_X + 18, y, MENU_W - 36, MENU_ROW_H, 12,
                        close || dead ? UI_TRACK : UI_BG_DAY);
     gfx->drawRoundRect(MENU_X + 18, y, MENU_W - 36, MENU_ROW_H, 12, UI_INK);

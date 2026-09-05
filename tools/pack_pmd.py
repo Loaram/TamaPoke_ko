@@ -28,6 +28,7 @@ import sys
 import subprocess
 import xml.etree.ElementTree as ET
 from PIL import Image
+from pmd_forms import PMD_FORM_OVERRIDES, sprite_subpath, source_form_name
 
 # Kept in step with dex.h rather than hardcoded, the same way gen_moves.py is.
 import re as _re
@@ -102,9 +103,13 @@ def load_animdata(folder):
 
 
 def pack(dexnum, shiny=False):
-    sub = '/0000/0001' if shiny else ''
-    folder = os.path.join(CACHE, f'{dexnum:04d}{"s" if shiny else ""}')
-    base = f'{BASE}/{dexnum:04d}{sub}'
+    sub = sprite_subpath(dexnum, shiny)
+    # Keep the old cache names for ordinary base sprites.  An override carries
+    # its source path in the cache name so changing a fallback can never reuse
+    # files downloaded for a different form.
+    form_tag = ('-form-' + sub.replace('/', '-')) if dexnum in PMD_FORM_OVERRIDES else ''
+    folder = os.path.join(CACHE, f'{dexnum:04d}{"s" if shiny else ""}{form_tag}')
+    base = f'{BASE}/{dexnum:04d}' + (f'/{sub}' if sub else '')
     if not fetch(f'{base}/AnimData.xml', os.path.join(folder, 'AnimData.xml')):
         raise RuntimeError('sin AnimData.xml')
     anims = load_animdata(folder)
@@ -157,8 +162,10 @@ def pack(dexnum, shiny=False):
             f.write(struct.pack(f'<{nf}H', *ms))
             f.write(data)
     kb = os.path.getsize(path) / 1024
-    print(f"  -> p{'s' if shiny else ''}{dexnum:03d}.bin: {len(packed)} acciones, "
-          f"{len(pal)} colores, {kb:.0f} KB")
+    form = source_form_name(dexnum)
+    suffix = f' [{form}]' if form != 'Base' else ''
+    print(f"  -> p{'s' if shiny else ''}{dexnum:03d}.bin{suffix}: "
+          f"{len(packed)} acciones, {len(pal)} colores, {kb:.0f} KB")
 
 
 if __name__ == '__main__':

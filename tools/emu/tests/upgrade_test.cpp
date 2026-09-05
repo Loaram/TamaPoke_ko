@@ -190,9 +190,9 @@ int main(){
 
   // --- migrate the immediately previous release: six party slots and the old
   // 18-slot box, both with four uint8 move IDs per record.
-  ReleasedPartyMon releasedParty[PARTY_SLOTS] = {};
+  ReleasedPartyMon releasedParty[PARTY_STORAGE_SLOTS] = {};
   ReleasedPartyMon releasedBox[18] = {};
-  for (int i = 0; i < PARTY_SLOTS; i++) {
+  for (int i = 0; i < PARTY_STORAGE_SLOTS; i++) {
     releasedParty[i].dex = (int16_t)(100 + i);
     releasedParty[i].level = (uint16_t)(50 + i);
     releasedParty[i].moves[0] = (uint8_t)(MV_TACKLE + i);
@@ -223,8 +223,8 @@ int main(){
     if (released.box[i].dex != 200 + i || released.box[i].moves[0] != MV_EMBER)
       releasedBoxOk = false;
   ck(releasedPartyOk, "ko.1.1.4 party moves migrate without adjacent IDs merging");
-  ck(releasedBoxOk && released.box[18].empty(),
-     "all 18 released box slots migrate into the expanded 60-slot box");
+  ck(releasedBoxOk && released.box[18].dex == 105 && released.box[19].empty(),
+     "all 18 box slots survive and the former sixth party member follows them");
 
   // A version-1 wireless/file backup can contain those same old byte layouts.
   // Import it first, then prove the ordinary Pet/Party loaders perform the
@@ -259,8 +259,9 @@ int main(){
     ck(oldPet.moves[0] == MV_TACKLE && oldPet.moves[1] == MV_SCRATCH &&
        oldPet.moves[2] == MV_EMBER && oldPet.moves[3] == MV_SURF,
        "version-1 live moves migrate to 16-bit IDs");
-    ck(oldRoster.slots[5].dex == 105 &&
-       oldRoster.slots[5].moves[0] == MV_TACKLE + 5 &&
+    ck(oldRoster.count() == PARTY_SLOTS &&
+       oldRoster.box[18].dex == 105 &&
+       oldRoster.box[18].moves[0] == MV_TACKLE + 5 &&
        oldRoster.box[17].dex == 217,
        "version-1 party and box records migrate intact");
   }
@@ -309,7 +310,7 @@ int main(){
       pr2.end();
       Party pq; pq.begin();
       ck(pq.slots[0].dex == 149 && pq.slots[0].level == 100,
-         "a party written by a build with MORE slots keeps its first six");
+         "a party written by a build with MORE slots keeps its first five");
       ck(pq.box[0].dex == 6, "and so does the box");
     }
 

@@ -105,7 +105,7 @@ void Party::begin() {
   // old party out of RAM.
   for (auto &s : slots) s = PartyMon();
   prefs.begin("tamapoke", false);
-  if (loadRoster(prefs, "party", slots, PARTY_SLOTS)) save();
+  if (loadRoster(prefs, "party", slots, PARTY_STORAGE_SLOTS)) save();
   // a blob written by an older/newer build could hold nonsense; drop anything
   // that is not a real Pokedex number rather than indexing DEX_TBL with it
   for (auto &s : slots) {
@@ -122,6 +122,11 @@ void Party::begin() {
     s.nick[sizeof(s.nick) - 1] = 0;
     for (int i = 0; i < MOVE_SLOTS; i++) if (s.moves[i] >= MOVE_COUNT) s.moves[i] = 0;
   }
+  // Builds through ko.1.1.6 allowed six banked members, which made seven with
+  // the live pet. Move that former sixth member into the first box opening.
+  // If a player's box is completely full, keep it in the reserved physical
+  // slot instead of deleting it; the next box opening will migrate it.
+  migrateLegacyOverflow();
 }
 
 void Party::save() {
@@ -139,6 +144,18 @@ uint8_t Party::boxCount() const {
   return n;
 }
 
+bool Party::migrateLegacyOverflow() {
+  PartyMon &oldSixth = slots[PARTY_SLOTS];
+  if (oldSixth.empty()) return false;
+  int i = boxFirstFree();
+  if (i < 0) return false;
+  box[i] = oldSixth;
+  oldSixth = PartyMon();
+  save();
+  boxSave();
+  return true;
+}
+
 int Party::boxFirstFree() const {
   for (int i = 0; i < BOX_SLOTS; i++)
     if (box[i].empty()) return i;
@@ -146,6 +163,7 @@ int Party::boxFirstFree() const {
 }
 
 bool Party::boxAdd(const PartyMon &m) {
+  migrateLegacyOverflow();
   int i = boxFirstFree();
   if (i < 0) return false;
   box[i] = m;
@@ -157,6 +175,7 @@ void Party::boxReleaseAt(uint8_t i) {
   if (i >= BOX_SLOTS) return;
   box[i] = PartyMon();
   boxSave();
+  migrateLegacyOverflow();
 }
 
 void Party::swapPartyBox(uint8_t partyIdx, uint8_t boxIdx) {
@@ -170,8 +189,8 @@ void Party::swapPartyBox(uint8_t partyIdx, uint8_t boxIdx) {
 
 uint8_t Party::count() const {
   uint8_t n = 0;
-  for (auto &s : slots)
-    if (!s.empty()) n++;
+  for (int i = 0; i < PARTY_SLOTS; i++)
+    if (!slots[i].empty()) n++;
   return n;
 }
 

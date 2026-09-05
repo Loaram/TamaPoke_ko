@@ -51,10 +51,10 @@ cd web && python3 -m http.server 8000
    first: only one program can use the port at a time.
 3. Restart (PWR button) → choose your starter and play.
 
-The page also contains Korean step-by-step sections for LAN battles and save
-transfer between ESP32, Android, and Wear OS. The downloadable ko.1.1.6 play
-guide has 16 pages; pages 11-13 cover LAN setup and pages 14-16 cover save
-send/receive, the six-digit confirmation code, CRC validation, and final apply.
+The page also contains Korean step-by-step sections for Explore, LAN battles
+and save transfer between ESP32, Android, and Wear OS. The downloadable 2.0.0
+play guide has 18 pages; pages 11-12 cover wild levels, encounter tiers and
+capture rates, pages 13-15 cover LAN setup, and pages 16-18 cover save transfer.
 
 A hidden "pick them manually" option lets advanced users send their own `.bin`.
 

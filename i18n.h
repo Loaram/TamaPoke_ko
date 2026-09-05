@@ -57,7 +57,7 @@ enum StrId : uint8_t {
   S_IV_FMT,     // valor individual junto a cada stat ("IV %u")
   // menu overlay (tap the name on the main screen) and the party
   S_MENU_TITLE, S_SETTINGS, S_CLOSE,
-  S_PARTY_FMT,      // "PARTY %u/6"
+  S_PARTY_FMT,      // "PARTY %u/5"
   S_PARTY_EMPTY,    // empty slot marker
   S_PARTY_JOINED,   // "%s joined the party!"
   S_PARTY_FULL,     // prompt: pick someone to replace
@@ -134,6 +134,11 @@ enum StrId : uint8_t {
   S_SAVE_SENDING_FMT, S_SAVE_RECEIVING_FMT,
   S_SAVE_READY, S_SAVE_APPLY, S_SAVE_OVERWRITE,
   S_SAVE_DONE, S_SAVE_INVALID, S_SAVE_CODE_FMT,
+  // Explore strings stay at the tail so the established string IDs remain stable.
+  S_EXPLORE, S_EXPLORE_NORMAL, S_EXPLORE_RANDOM,
+  S_EXPLORE_COST_FMT, S_EXPLORE_NEED_ENERGY,
+  S_EXPLORE_STORAGE_FULL, S_WILD_MET_FMT, S_WILD_CAUGHT_FMT,
+  S_WILD_ESCAPED_FMT,
   STR_COUNT
 };
 

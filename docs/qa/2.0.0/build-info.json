@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "firmware": {
+    "appSize": 2142576,
+    "appSha256": "f7a721e65b3a5ec74efd0586f346f308f02d0bcaee73e7f1c0ce7f7b5a11d43a",
+    "flashUsePercent": 68,
+    "globalRamBytes": 83988
+  },
+  "android": {
+    "file": "TamaPoke-2.0.0-Android-Full-debug.apk",
+    "size": 303457510,
+    "versionName": "2.0.0-android.1",
+    "versionCode": 2000,
+    "sha256": "ac1bfcbe6b9f38962d1352d7885018d59a8ce68f180f75a33957b473d96a8bf8"
+  },
+  "wear": {
+    "file": "TamaPoke-2.0.0-WearOS-GalaxyWatch4-9-debug.apk",
+    "size": 303088875,
+    "versionName": "2.0.0-wear.1",
+    "versionCode": 2001,
+    "sha256": "36816e673518b824722b709ed3655c49a9094f84546665325f680411c6089554"
+  },
+  "release": {
+    "espZipSha256": "afd311915d2fd3c11adf588804ffdbf8ae35624d0b7ef678e539596b0baf9627",
+    "playGuideSha256": "8577bbea5f9adab23d876cc76c2b8377eb7fd5e36729bd252d29a8603571a217",
+    "watchGuideSha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce",
+    "playGuideImagesSha256": "c87c8945b29645acba15d7ccc1d2dd1ffd447c4506297f0f2e67ef219c9aa5f7"
+  },
+  "runtimeSuites": 32,
+  "hardwareVerified": false
+}

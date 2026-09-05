@@ -18,17 +18,22 @@ static PartyMon mk(int dex,int lvl){ PartyMon m; m.dex=dex; m.level=lvl;
   m.ivAtk=m.ivDef=m.ivSpe=m.ivHp=20; return m; }
 
 int main(){
-  // a save from BEFORE the box existed: party key only, no box key
+  // A ko.1.1.6 save may contain six banked members and no box key. The new
+  // five-member limit must move its sixth member, never truncate it.
   { Preferences seed; seed.begin("tamapoke", false);
-    PartyMon old[PARTY_SLOTS];
-    for (int i=0;i<PARTY_SLOTS;i++) old[i]=mk(1+i*20, 30+i);
+    PartyMon old[PARTY_STORAGE_SLOTS];
+    for (int i=0;i<PARTY_STORAGE_SLOTS;i++) old[i]=mk(1+i*20, 30+i);
     seed.putBytes("party", old, sizeof(old));
     seed.end(); }
   Party p; p.begin();
   bool kept = true;
   for (int i=0;i<PARTY_SLOTS;i++) if (p.slots[i].dex != 1+i*20) kept=false;
-  ck(kept, "a pre-box save keeps its whole party");
-  ck(p.boxCount()==0, "and comes up with an empty box, not garbage");
+  ck(kept, "the first five members remain in the party");
+  ck(p.count()==5, "the party limit is five banked members");
+  ck(p.boxCount()==1 && p.box[0].dex==101,
+     "the former sixth member moves safely into the box");
+  ck(p.slots[PARTY_SLOTS].empty(), "the reserved migration slot is cleared");
+  p.boxReleaseAt(0);  // leave the rest of this test on the original empty box
 
   // A ko.1.1.4 box had 18 slots. Growing the array must keep those records at
   // the front, initialise slots 19..60 empty and rewrite the blob once.

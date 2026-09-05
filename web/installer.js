@@ -136,7 +136,7 @@ if('serial' in navigator) navigator.serial.addEventListener('disconnect',async()
 controls();
 Promise.all(['manifest.json','firmware/build-info.json'].map(url=>fetch(url).then(r=>{if(!r.ok)throw Error();return r.json();})))
   .then(([m,info])=>{
-    if(!/^(?:ko\.\d+\.\d+\.\d+[a-z]?|\d+\.\d+-ko\.\d+)$/.test(m.version) || info.version!==m.version || m.new_install_prompt_erase!==true) throw Error();
+    if(!/^(?:\d+\.\d+\.\d+|ko\.\d+\.\d+\.\d+[a-z]?|\d+\.\d+-ko\.\d+)$/.test(m.version) || info.version!==m.version || m.new_install_prompt_erase!==true) throw Error();
     const expected=[['firmware/bootloader.bin',0],['firmware/partitions.bin',32768],['firmware/boot_app0.bin',57344],['firmware/app.bin',65536]];
     const parts=m.builds?.[0]?.parts;
     if(!parts || parts.length!==4 || parts.some((p,i)=>p.path!==expected[i][0]||p.offset!==expected[i][1])) throw Error();

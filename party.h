@@ -9,7 +9,11 @@
 // Only the two endings the player CHOOSES bank a pet -- farewell and release.
 // A runaway does not: it is the game's one punishing outcome, and letting a
 // neglected pet come back as a team member would take the sting out of it.
-#define PARTY_SLOTS 6
+// Five banked members plus the live pet make the six-Pokemon battle limit.
+// Keep a sixth PHYSICAL record so an older save is never truncated before its
+// former last member can be moved safely into the box.
+#define PARTY_SLOTS 5
+#define PARTY_STORAGE_SLOTS 6
 // The box: storage beyond the six that fight. Deliberately a SEPARATE NVS key
 // rather than a bigger party blob -- growing that blob would change its stride
 // and the length-based migration in begin() cannot tell a stride change from a
@@ -41,7 +45,7 @@ struct PartyMon {
 
 class Party {
 public:
-  PartyMon slots[PARTY_SLOTS];
+  PartyMon slots[PARTY_STORAGE_SLOTS];
   PartyMon box[BOX_SLOTS];
 
   void begin();                 // load from NVS
@@ -70,6 +74,7 @@ public:
   uint16_t spdOf(const PartyMon &m) const;
 
 private:
+  bool migrateLegacyOverflow();
   Preferences prefs;
 };
 

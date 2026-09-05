@@ -2,7 +2,10 @@ package com.loaram.tamapoke;
 
 import android.Manifest;
 import android.app.NativeActivity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -44,6 +47,23 @@ public final class TamaPokeActivity extends NativeActivity {
             }
         });
         return false;
+    }
+
+    public int getBatteryPercent() {
+        Intent status = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (status == null) return -1;
+        int level = status.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = status.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        if (level < 0 || scale <= 0) return -1;
+        return Math.max(0, Math.min(100, Math.round(level * 100.0f / scale)));
+    }
+
+    public boolean isBatteryCharging() {
+        Intent status = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (status == null) return false;
+        int state = status.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        return state == BatteryManager.BATTERY_STATUS_CHARGING
+                || state == BatteryManager.BATTERY_STATUS_FULL;
     }
 
     private void hideSystemBars() {

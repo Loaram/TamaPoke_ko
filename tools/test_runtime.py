@@ -8,18 +8,21 @@ p.add_argument('--sketch',type=Path,default=R/'build/emulator/sketch.cpp',help='
 a=p.parse_args()
 out=R/'build/runtime-tests';out.mkdir(parents=True,exist_ok=True)
 env=os.environ.copy();env['PATH']=str(Path(a.cxx).resolve().parent)+os.pathsep+env.get('PATH','')
-core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp']]
+core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp']]
 for test in ['korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
              'lan','battle','ai','gym','evo','balance','retire','moves','box',
-             'dexdata','eevee','branch','region','full_dex','full_shiny','hit',
-             'touch','swipe','starter','release','joy']:
+             'dexdata','eevee','branch','region','sprite','full_dex','full_shiny','hit',
+             'touch','swipe','starter','release','joy','wild','explore']:
     exe=out/(test+('.exe' if os.name=='nt' else ''))
     src=[str(E/'tests'/f'{test}_test.cpp'),*core]
     if test in ('korean','label'):src.append(str(E/'font.cpp'))
-    if test in ('lan','hit','touch','swipe','starter','release','joy'):
+    if test == 'sprite':
+        src += [str(E/'host_impl.cpp'),str(E/'font.cpp')]
+    if test in ('lan','hit','touch','swipe','starter','release','joy','explore'):
         src += [str(a.sketch),*[str(E/x) for x in ['host_impl.cpp','font.cpp','clock.cpp']]]
     defs=(['-DTAMAPOKE_FULL_DEX=1'] if test == 'full_dex' else
-          ['-DTAMAPOKE_FULL_SHINY=1'] if test == 'full_shiny' else [])
+          ['-DTAMAPOKE_FULL_SHINY=1'] if test == 'full_shiny' else
+          ['-DTAMAPOKE_EXPLORE_BETA=1'] if test == 'explore' else [])
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*defs,*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: 29 Korean, save, migration, link, battle, move, dex, touch and release runtime suites')
+print('PASS: 32 Korean, save, migration, link, battle, sprite, dex, touch, release and Explore runtime suites')

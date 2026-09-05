@@ -89,7 +89,7 @@
   "S_MENU_TITLE": "메뉴",
   "S_SETTINGS": "설정",
   "S_CLOSE": "닫기",
-  "S_PARTY_FMT": "파티 %u/6",
+  "S_PARTY_FMT": "파티 %u/5",
   "S_PARTY_EMPTY": "빈자리",
   "S_PARTY_JOINED": "%s, 파티에 합류!",
   "S_PARTY_FULL": "파티가 가득 찼어요. 교체하세요",
@@ -182,5 +182,14 @@
   "S_SAVE_OVERWRITE": "현재 세이브를 덮어씁니다",
   "S_SAVE_DONE": "전송 완료",
   "S_SAVE_INVALID": "잘못된 세이브",
-  "S_SAVE_CODE_FMT": "확인 코드 %06lu"
+  "S_SAVE_CODE_FMT": "확인 코드 %06lu",
+  "S_EXPLORE": "탐색",
+  "S_EXPLORE_NORMAL": "일반",
+  "S_EXPLORE_RANDOM": "랜덤",
+  "S_EXPLORE_COST_FMT": "활력 %u / 소모 %u",
+  "S_EXPLORE_NEED_ENERGY": "활력이 부족해요",
+  "S_EXPLORE_STORAGE_FULL": "파티와 박스가 가득 찼어요",
+  "S_WILD_MET_FMT": "야생 %s 등장!",
+  "S_WILD_CAUGHT_FMT": "%s 포획 성공!",
+  "S_WILD_ESCAPED_FMT": "%s 포획 실패..."
 }

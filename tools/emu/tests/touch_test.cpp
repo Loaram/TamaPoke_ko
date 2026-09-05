@@ -33,6 +33,7 @@ String FakeSerial::readStringUntil(char) { return String(""); }
 
 void setup();
 void loop();
+void onSwipe(int dir);
 extern Pet pet;   // defined in the sketch
 extern bool trainOpen, sackOpen, gameOpen, menuOpen, cardOpen, movePickOpen, spdOpen;
 extern uint8_t movePickSlot, movePickPage;
@@ -41,7 +42,7 @@ extern Combatant btlYou, btlFoe;
 extern uint8_t btlMsgCount;
 void startBattle(int16_t dex, uint8_t lvl);
 void startTrainerBattle(uint8_t idx, bool hard);
-extern uint8_t btlFoeAt, btlSquadN, btlSquadAt, btlMenu;
+extern uint8_t btlFoeAt, btlSquadN, btlSquadAt, btlMenu, btlSwitchPage;
 extern Combatant btlSquad[7];
 extern int8_t btlSwapWho;
 extern bool btlHard;
@@ -171,7 +172,7 @@ int main(int argc, char **argv) {
 
   click(233, 60);                        // name/status band opens the menu
   if (!menuOpen) { printf("FAIL: name band did not open the menu\n"); return 1; }
-  click(233, 104 + 16 + 22);             // menu row 0 == STATS == MENU_ROW_Y(0)+22
+  click(233, 75 + 16 + 22);              // six-row 2.0.0 menu: STATS centre
   if (!cardOpen || cardPage != 1) {
     printf("FAIL: STATS row -> cardOpen=%d cardPage=%d (want 1,1)\n",
            (int)cardOpen, (int)cardPage);
@@ -372,7 +373,7 @@ int main(int argc, char **argv) {
 
   // ---- switching mid-fight
   battleOpen = false; pickOpen = false; pet.badges = 0;
-  for (int i = 0; i < 3; i++) { PartyMon m; m.dex = 9 + i * 20; m.level = 40;
+  for (int i = 0; i < 5; i++) { PartyMon m; m.dex = 9 + i * 20; m.level = 40;
     m.ivAtk = m.ivDef = m.ivSpe = m.ivHp = 25; party.replaceAt(i, m); }
   squadMask = 0xFFFF;
   startTrainerBattle(0, false);
@@ -398,8 +399,35 @@ int main(int argc, char **argv) {
   printf("     foe hp %u -> %u, your new one %u/%u\n", swFoeHp0, btlFoe.hp, btlYou.hp, btlYou.maxHp);
   if (!costTurn) { printf("FAIL: switching was free -- the foe never acted\n"); return 1; }
   printf("PASS: switching spends the turn\n");
+
+  // The grid only has four cells, but the battle squad has six. Swipe to the
+  // second numbered page and prove its first cell means squad slot 4, not slot
+  // 0 drawn again.
+  btlMsgCount = 0;
+  btlMenu = 2;
+  btlSwitchPage = 0;
+  onSwipe(-1);
+  if (btlSwitchPage != 1 || btlMenu != 2) {
+    printf("FAIL: the switch grid did not reach page 2\n"); return 1;
+  }
+  printf("PASS: the switch grid reaches page 2 of 2\n");
+  click(69 + 40, 286 + 22);             // page 2 cell 0 == squad slot 4
+  if (btlSquadAt != 4) {
+    printf("FAIL: page 2 cell 0 switched to slot %u, want 4\n", btlSquadAt);
+    return 1;
+  }
+  printf("PASS: the fifth Pokemon can be selected from page 2\n");
+  btlMsgCount = 0;
+  btlMenu = 2;
+  btlSwitchPage = 1;
+  click(69 + 168 + 40, 286 + 22);       // page 2 cell 1 == squad slot 5
+  if (btlSquadAt != 5) {
+    printf("FAIL: page 2 cell 1 switched to slot %u, want 5\n", btlSquadAt);
+    return 1;
+  }
+  printf("PASS: the sixth Pokemon can be selected from page 2\n");
   battleOpen = false; btlMenu = 0;
-  for (int i = 0; i < 3; i++) party.releaseAt(i);
+  for (int i = 0; i < 5; i++) party.releaseAt(i);
 
   // ---- the gym ladder is sequential: only the next one may be entered
   battleOpen = false; pickOpen = false;
@@ -425,9 +453,7 @@ int main(int argc, char **argv) {
   printf("PASS: hard mode keeps its own unlock order\n");
   gymHard = false; gymOpen = false; pet.badges = 0;
 
-  // ---- a live pet plus a FULL party is 7 candidates against a cap of 6. The
-  // 7th used to be counted but never drawn and never tappable, so FIGHT sat
-  // inert with no way to fix it.
+  // ---- a live pet plus a FULL party is exactly the six-creature battle cap.
   battleOpen = false; pickOpen = false;
   for (int i = 0; i < PARTY_SLOTS; i++) { PartyMon m; m.dex = 9 + i * 10; m.level = 40;
     m.ivAtk = m.ivDef = m.ivSpe = m.ivHp = 25; party.replaceAt(i, m); }
@@ -435,14 +461,14 @@ int main(int argc, char **argv) {
   pickDefault(squadCap(0, false));
   printf("     candidates=%u chosen=%u cap=%u\n",
          pickCandidates(), pickChosen(), squadCap(0, false));
-  if (pickCandidates() != PARTY_SLOTS + 1) { printf("FAIL: expected 7 candidates\n"); return 1; }
-  printf("PASS: a live pet plus a full party is 7 candidates\n");
+  if (pickCandidates() != PARTY_SLOTS + 1) { printf("FAIL: expected 6 candidates\n"); return 1; }
+  printf("PASS: a live pet plus a full party is exactly 6 candidates\n");
   if (pickChosen() > squadCap(0, false)) {
     printf("FAIL: the picker opens over its own cap\n"); return 1; }
   printf("PASS: it opens with a valid selection, not everything\n");
   { uint8_t pages = (pickCandidates() + 6 - 1) / 6;
-    if (pages < 2) { printf("FAIL: 7 candidates must span 2 pages\n"); return 1; }
-    printf("PASS: the 7th is reachable on page %u of %u\n", pages, pages); }
+    if (pages != 1) { printf("FAIL: 6 candidates should fit on one page\n"); return 1; }
+    printf("PASS: all 6 candidates fit on one team-selection page\n"); }
   for (int i = 0; i < PARTY_SLOTS; i++) party.releaseAt(i);
   squadMask = 0xFFFF;
 
