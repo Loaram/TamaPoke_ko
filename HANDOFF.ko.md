@@ -19,7 +19,7 @@ ko.1.1.6은 체육관 전투가 선택한 지역을 전투 전용 상태에 보�
 
 각 정식 버전과 함께 비공개 PC 에뮬레이터 두 개를 만듭니다. `-dex`판은 1025종 일반 도감을 모두 열고, `-shiny`판은 일반·이로치 도감을 모두 엽니다. 예: `ko.1.1.6-dex`, `ko.1.1.6-shiny`. 각각 `tamapoke-dex.nvs`, `tamapoke-shiny.nvs`를 사용해 일반 에뮬레이터 저장과 분리합니다. 두 테스트판은 GitHub 릴리스와 설치 페이지에 올리지 않습니다.
 
-모든 정식 GitHub 릴리즈에는 Android APK, Galaxy Watch4~9 APK, ESP32 설치 ZIP, `SHA256SUMS.txt`와 함께 [Galaxy Watch4~9 설치 가이드](docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf)를 반드시 첨부합니다. 가이드 내용은 그대로 두고 릴리즈 버전에 맞춘 `TamaPoke-<버전>-Galaxy-Watch4-9-Install-Guide-KO.pdf` 이름으로 복사하며, 해당 PDF의 해시도 `SHA256SUMS.txt`에 포함합니다.
+모든 정식 GitHub 릴리즈에는 Android APK, Galaxy Watch4~9 APK, ESP32 설치 ZIP, `SHA256SUMS.txt`와 함께 플레이 가이드와 [Galaxy Watch4~9 설치 가이드](docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf)를 반드시 첨부합니다. 플레이 가이드는 `web/guides/TamaPoke-<버전>-Play-Guide-KO.pdf`, 워치 가이드는 내용은 그대로 두고 `TamaPoke-<버전>-Galaxy-Watch4-9-Install-Guide-KO.pdf` 이름으로 복사합니다. 두 PDF의 해시를 모두 `SHA256SUMS.txt`에 포함합니다. `python tools/prepare_release_guides.py`를 실행하면 현재 버전의 두 릴리스 자산과 해시 항목을 준비하며, 플레이 가이드가 현재 버전으로 만들어지지 않았으면 실패합니다.
 
 ## 완료한 작업
 
