@@ -21,6 +21,7 @@
 - 18쪽 플레이 가이드의 버전, 오프라인 규칙, 세이브 적용 후 앱 다시 열기 안내를 갱신하고 모든 페이지를 PNG로 렌더링해 확인했습니다. 기존 Galaxy Watch4~9 설치 가이드는 변경하지 않습니다.
 - `tools/package_release.py --guide-images <렌더링 폴더>`로 공개 APK 2개·ESP ZIP·PDF 2개와 SHA256SUMS를 조립합니다. `tools/prepare_release_guides.py`도 필수 확인 단계로 실행합니다.
 - 비공개 2.0.1-dex 및 2.0.1-shiny 에뮬레이터를 빌드하되 공개하지 않습니다.
+- GitHub의 새 검사 환경에는 추출된 스프라이트가 없으므로 런타임 검사 전에 `tools/unpack_sprites.py`를 실행하도록 준비 단계를 보완했습니다. 이는 배포 바이너리 변경이 아닙니다.
 
 ## 한계
 
