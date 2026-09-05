@@ -4,16 +4,16 @@
 
 [![브라우저 설치](https://img.shields.io/badge/브라우저에서_설치-FF6B00?logo=googlechrome&logoColor=white)](https://loaram.github.io/TamaPoke_ko/)
 ![지원 기기](https://img.shields.io/badge/ESP32--S3-원형_AMOLED-E7352C?logo=espressif&logoColor=white)
-![펌웨어](https://img.shields.io/badge/펌웨어-2.0.0-8A2BE2)
+![펌웨어](https://img.shields.io/badge/펌웨어-2.0.1-8A2BE2)
 ![포켓몬](https://img.shields.io/badge/포켓몬-1025종-FFCB05)
 
 **[한국어판 설치](https://loaram.github.io/TamaPoke_ko/)** · **[다른 PC에서 이어가기](HANDOFF.ko.md)** · [실기 테스트 체크리스트](docs/HARDWARE_TEST.ko.md)
 
 **DylanPDao/TamaPoke v3.11 기반** 한국어판입니다. [DylanPDao 포크](https://github.com/DylanPDao/TamaPoke)의 기존 게임 기능을 유지하면서 전국도감 1025종과 9개 지방까지 확장했습니다.
 
-현재 정식 버전은 **2.0.0**입니다. 지방과 탐색 방식을 골라 야생 포켓몬과 싸우고 승리 뒤 포획하는 탐색 시스템을 추가했습니다. 조우 1회당 활력 30을 사용하며 일반은 현재 포켓몬 레벨 ±5, 랜덤은 레벨 1~100에서 상대가 정해집니다. 파티는 현재 키우는 포켓몬 1마리와 보관 파티 5마리를 합쳐 전투 후보가 최대 6마리이며, 60칸 박스와 기존 세이브 형식을 유지합니다. Android·Wear OS의 배터리 표시는 실제 기기 잔량과 충전 상태를 따릅니다.
+현재 정식 버전은 **2.0.1**입니다. 지방과 탐색 방식을 골라 야생 포켓몬과 싸우고 승리 뒤 포획하는 탐색 시스템을 추가했습니다. 조우 1회당 활력 30을 사용하며 일반은 현재 포켓몬 레벨 ±5, 랜덤은 레벨 1~100에서 상대가 정해집니다. 파티는 현재 키우는 포켓몬 1마리와 보관 파티 5마리를 합쳐 전투 후보가 최대 6마리이며, 60칸 박스와 기존 세이브 형식을 유지합니다. Android·Wear OS의 배터리 표시는 실제 기기 잔량과 충전 상태를 따릅니다.
 
-현재 2.0.0 한국어 화면을 넣은 **18쪽 초보자용 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 탐색의 조우 레벨·종류 확률과 포획 확률은 11~12쪽, 기기 조합별 근거리 배틀은 13~15쪽, 세이브 이전은 16~18쪽에서 설명합니다.
+현재 2.0.1 한국어 화면을 넣은 **18쪽 초보자용 플레이 설명서**는 [설치 페이지의 설명서 다운로드](https://loaram.github.io/TamaPoke_ko/#play-guide)에서 PDF 또는 페이지별 이미지로 받을 수 있습니다. 탐색의 조우 레벨·종류 확률과 포획 확률은 11~12쪽, 기기 조합별 근거리 배틀은 13~15쪽, 세이브 이전은 16~18쪽에서 설명합니다.
 
 ## 한국어 게임 화면
 
@@ -52,7 +52,7 @@
 1. 앱·워치끼리는 먼저 같은 Wi-Fi에 연결합니다. ESP32와 연결할 때는 ESP32에서 **세이브 보내기** 또는 **세이브 받기**를 먼저 누른 뒤 표시되는 `TamaPoke-XXXX`에 다른 기기를 연결하고 암호 `tamapoke`를 입력합니다.
 2. 양쪽의 **근거리 대전** 화면에서 원본 기기는 **세이브 보내기**, 대상 기기는 **세이브 받기**를 누릅니다.
 3. 양쪽의 6자리 확인 코드가 같은지 확인하고 전송이 끝날 때까지 화면을 유지합니다.
-4. 대상 기기에 **받기 완료**가 나오면 **세이브 적용 → 예**를 누릅니다. 현재 세이브가 받은 세이브로 교체되고 앱 또는 기기가 다시 시작됩니다.
+4. 대상 기기에 **받기 완료**가 나오면 **세이브 적용 → 예**를 누릅니다. ESP32는 재시작합니다. Android·워치는 앱이 닫히면 직접 다시 열어 받은 세이브를 확인하세요.
 
 보내기↔보내기 또는 받기↔받기 조합은 연결을 거부합니다. 전송 중 연결이 끊기거나 데이터가 손상되면 적용 버튼이 나오지 않으므로 기존 세이브는 유지됩니다. 서로 전송하려면 한 방향을 완료한 뒤 역할을 바꿔 다시 진행합니다.
 
@@ -71,7 +71,7 @@
 
 - UI 문자열 193개, 포켓몬 1025종 이름, 기술표 695개(빈 기술 포함 696항목), 18개 타입, 지방·트레이너·장소 표시.
 - 메뉴, 도감, 상태, 성장, 기술 선택, 배틀, 파티, 박스, 체육관, 근거리 대전·세이브 전송, 언어 설정.
-- 기존 6개 언어와 1.1.6 이하 저장 데이터는 자동 변환해 유지합니다. 2.0.0의 무선 규격은 프로토콜 4이며 세이브 전송에는 현재 포켓몬, 파티 5마리, 60칸 박스, 도감, 배지와 설정이 포함됩니다.
+- 기존 6개 언어와 1.1.6 이하 저장 데이터는 자동 변환해 유지합니다. 2.0.1의 무선 규격은 프로토콜 4이며 세이브 전송에는 현재 포켓몬, 파티 5마리, 60칸 박스, 도감, 배지와 설정이 포함됩니다.
 - Galmuri11의 필요한 글자만 펌웨어에 포함. UTF-8 디코딩과 픽셀 폭 계산을 에뮬레이터·실기에서 공유합니다.
 - 별명 입력은 원본 영문 키보드를 사용합니다. 사용자 별명을 자동 번역하지 않습니다.
 - ESP Web Tools의 설치 팝업은 영어이며, 한국어 페이지에서 버튼 순서를 설명합니다.
@@ -117,7 +117,7 @@ Android Studio의 SDK·NDK·JBR이 설치된 Windows에서는 현재 펌웨어/�
 .\.venv\Scripts\python.exe tools\build_android.py
 ```
 
-결과는 `build/android/TamaPoke-2.0.0-Android-Full-debug.apk`입니다. 실제 기기용 `arm64-v8a`와 에뮬레이터용 `x86_64`, 9개 지역 스프라이트 팩을 모두 포함합니다. 성장·시계와 배터리 표시는 Android 기기 설정과 실제 잔량을 직접 따릅니다. 프로젝트별 디버그 키는 무시되는 `build/android/debug.keystore`에 생성됩니다. 다른 PC의 디버그 키로 서명한 구버전 APK가 이미 설치돼 있으면 서명이 달라 덮어쓸 수 없습니다. 기존 앱을 삭제하면 그 앱의 Android 저장 데이터도 함께 지워지므로, 저장이 중요하면 삭제하지 말고 원래 키스토어로 새 APK를 서명해야 합니다. 이번 키로 후속 APK를 계속 업데이트하려면 `debug.keystore`도 별도로 안전하게 보관해야 합니다.
+결과는 `build/android/TamaPoke-2.0.1-Android-Full-debug.apk`입니다. 실제 기기용 `arm64-v8a`와 에뮬레이터용 `x86_64`, 9개 지역 스프라이트 팩을 모두 포함합니다. 성장·시계와 배터리 표시는 Android 기기 설정과 실제 잔량을 직접 따릅니다. 프로젝트별 디버그 키는 무시되는 `build/android/debug.keystore`에 생성됩니다. 다른 PC의 디버그 키로 서명한 구버전 APK가 이미 설치돼 있으면 서명이 달라 덮어쓸 수 없습니다. 기존 앱을 삭제하면 그 앱의 Android 저장 데이터도 함께 지워지므로, 저장이 중요하면 삭제하지 말고 원래 키스토어로 새 APK를 서명해야 합니다. 이번 키로 후속 APK를 계속 업데이트하려면 `debug.keystore`도 별도로 안전하게 보관해야 합니다.
 
 ### Wear OS · Galaxy Watch4~9 통합판
 
@@ -125,7 +125,7 @@ Android Studio의 SDK·NDK·JBR이 설치된 Windows에서는 현재 펌웨어/�
 .\.venv\Scripts\python.exe tools\build_android.py --wear
 ```
 
-결과는 `build/android/TamaPoke-2.0.0-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지의 기기별 Wear OS ABI 차이에 대응하도록 `armeabi-v7a`와 `arm64-v8a`를 함께 넣었습니다. 설치할 때 워치가 자신에게 맞는 네이티브 실행 파일을 자동으로 선택하므로 모델별 APK를 따로 고를 필요가 없습니다. 466×466 원형 화면은 실제 워치 해상도에 맞춰 비율 유지로 자동 조정되며, 9개 지역 팩을 포함한 독립형 Wear OS 앱입니다. 성장·시계와 배터리 표시는 워치의 날짜·시간 및 실제 잔량을 따릅니다. LAN 대전과 세이브 전송은 워치의 Wi-Fi를 휴대전화와 같은 공유기에 연결하거나 실기의 `TamaPoke-XXXX` 방에 직접 연결해야 합니다.
+결과는 `build/android/TamaPoke-2.0.1-WearOS-GalaxyWatch4-9-debug.apk`입니다. Galaxy Watch4부터 Watch9까지의 기기별 Wear OS ABI 차이에 대응하도록 `armeabi-v7a`와 `arm64-v8a`를 함께 넣었습니다. 설치할 때 워치가 자신에게 맞는 네이티브 실행 파일을 자동으로 선택하므로 모델별 APK를 따로 고를 필요가 없습니다. 466×466 원형 화면은 실제 워치 해상도에 맞춰 비율 유지로 자동 조정되며, 9개 지역 팩을 포함한 독립형 Wear OS 앱입니다. 성장·시계와 배터리 표시는 워치의 날짜·시간 및 실제 잔량을 따릅니다. LAN 대전과 세이브 전송은 워치의 Wi-Fi를 휴대전화와 같은 공유기에 연결하거나 실기의 `TamaPoke-XXXX` 방에 직접 연결해야 합니다.
 
 처음 설치하는 사용자는 [Galaxy Watch4~9 설치 가이드 PDF](docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf)를 따라 진행할 수 있습니다.
 
@@ -134,7 +134,7 @@ Android Studio의 SDK·NDK·JBR이 설치된 Windows에서는 현재 펌웨어/�
 앞으로 모든 정식 GitHub 릴리스에는 버전에 맞춘 **한국어 플레이 가이드**와 **Galaxy Watch4~9 설치 가이드**를 APK·ESP32 설치 ZIP과 함께 첨부합니다. 두 PDF는 `SHA256SUMS.txt`에도 포함합니다. 릴리스 파일을 모으는 폴더에서 다음 도구를 실행하면 파일 이름과 해시를 빠뜨리지 않고 준비할 수 있습니다.
 
 ```powershell
-.\.venv\Scripts\python.exe tools\prepare_release_guides.py --out build\release\2.0.0
+.\.venv\Scripts\python.exe tools\prepare_release_guides.py --out build\release\2.0.1
 ```
 
 현재 버전의 `web/guides/TamaPoke-<버전>-Play-Guide-KO.pdf`가 없으면 도구와 GitHub 검사가 실패하므로, 새 버전에서는 플레이 가이드를 먼저 갱신해야 합니다.

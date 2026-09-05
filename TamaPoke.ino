@@ -43,7 +43,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "2.0.0"
+#define FW_VERSION "2.0.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -824,6 +824,12 @@ void loop() {
   wasRunReady = runReady;
 
   handleTouch();
+#ifdef ANDROID
+  // Unlike ESP hardware reset, Activity.finish() returns. Do not let this
+  // same frame flush a stale Pet or party after the user applied a new save.
+  extern bool androidRestartPending();
+  if (androidRestartPending()) return;
+#endif
   handleSerial();
   ensureMon();
 
@@ -3653,7 +3659,7 @@ static bool storeWildCapture() {
   PartyMon m = wildPartyMon();
   bool stored = party.add(m);
   if (!stored) stored = party.boxAdd(m);
-  if (stored) pet.registerCaughtSpecies(wildDex);
+  if (stored) pet.registerCaughtSpecies(wildDex, wildShiny);
   return stored;
 }
 
@@ -5163,6 +5169,8 @@ void lanTap(int16_t x, int16_t y) {
         }
         sfxPlay(SFX_MEDAL);
         linkNowEnd();
+        lanOpen = false;
+        saveApplyArmed = false;
         delay(100);
         ESP.restart();
         return;

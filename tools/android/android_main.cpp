@@ -21,6 +21,7 @@
 #include "Preferences.h"
 #include "korean_text.h"
 #include "pet.h"
+#include "game_lifecycle.h"
 
 #define LOG_TAG "TamaPoke"
 #define PANEL 466
@@ -39,7 +40,7 @@ static bool gActive = false;
 static std::string gSavePath;
 static NvsStore gLastSaved;
 static uint32_t gLastSaveCheck = 0;
-static bool gGameReady = false;
+static AndroidGameLifecycle gGameLifecycle;
 extern Pet pet;
 uint32_t rtcEpoch();
 uint32_t androidUtcEpoch();
@@ -122,7 +123,6 @@ bool androidBatteryCharging() {
 
 int FakeSerial::available() { return 0; }
 String FakeSerial::readStringUntil(char) { return String(""); }
-void FakeESP::restart() { if (gApp && gApp->activity) ANativeActivity_finish(gApp->activity); }
 
 static bool readAll(AAsset *asset, void *out, size_t size) {
   uint8_t *p = static_cast<uint8_t *>(out);
@@ -267,10 +267,23 @@ static void saveIfDirty(bool force) {
 }
 
 static void checkpointGame() {
-  if (!gGameReady) return;
-  pet.updateDeviceClock(millis(), rtcEpoch(), androidUtcEpoch());
-  pet.saveNow();
+  if (gGameLifecycle.checkpoint(pet, millis(), rtcEpoch(), androidUtcEpoch()))
+    saveIfDirty(true);
+}
+
+void FakeESP::restart() {
+  // Import already replaced NVS. Flush it before closing and forbid all later
+  // game ticks/checkpoints from saving the receiver's stale in-memory creature.
+  gGameLifecycle.requestRestart();
   saveIfDirty(true);
+  if (gApp && gApp->activity) ANativeActivity_finish(gApp->activity);
+}
+
+bool androidRestartPending() { return gGameLifecycle.restartPending(); }
+
+static void suspendGame() {
+  gGameLifecycle.suspend(pet, millis(), rtcEpoch(), androidUtcEpoch());
+  checkpointGame();
 }
 
 static bool mapTouch(float x, float y, int *outX, int *outY) {
@@ -317,18 +330,20 @@ static void onCommand(android_app *app, int32_t command) {
     case APP_CMD_INIT_WINDOW:
       gWindow = app->window;
       configureWindow();
+      if (gActive) gGameLifecycle.resume(pet, millis(), rtcEpoch(), androidUtcEpoch());
       break;
     case APP_CMD_WINDOW_RESIZED:
     case APP_CMD_CONFIG_CHANGED:
       configureWindow();
       break;
     case APP_CMD_TERM_WINDOW:
-      checkpointGame();
+      suspendGame();
       gWindow = nullptr;
       break;
     case APP_CMD_GAINED_FOCUS:
     case APP_CMD_RESUME:
       gActive = true;
+      gGameLifecycle.resume(pet, millis(), rtcEpoch(), androidUtcEpoch());
       androidAudioSetActive(true);
       break;
     case APP_CMD_LOST_FOCUS:
@@ -336,7 +351,7 @@ static void onCommand(android_app *app, int32_t command) {
     case APP_CMD_STOP:
       gActive = false;
       androidAudioSetActive(false);
-      checkpointGame();
+      suspendGame();
       break;
     default:
       break;
@@ -370,6 +385,9 @@ static void presentFrame() {
 
 void android_main(android_app *app) {
   app_dummy();
+  gGameLifecycle = AndroidGameLifecycle{};
+  gActive = false;
+  gWindow = nullptr;
   gApp = app;
   gAssets = app->activity->assetManager;
   app->onAppCmd = onCommand;
@@ -414,7 +432,7 @@ void android_main(android_app *app) {
     clockMigration.putBool("andclk1", true);
   }
   setup();
-  gGameReady = true;
+  gGameLifecycle.start();
 
   while (!app->destroyRequested) {
     int events = 0;
@@ -428,7 +446,7 @@ void android_main(android_app *app) {
       timeout = 0;
     }
     if (app->destroyRequested) break;
-    if (gActive && gWindow) {
+    if (gActive && gWindow && gGameLifecycle.canRun()) {
       loop();
       presentFrame();
       saveIfDirty(false);

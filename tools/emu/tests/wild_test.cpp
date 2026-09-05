@@ -78,6 +78,17 @@ int main() {
      "an encounter cannot start without 30 energy");
   Pet reloaded; reloaded.begin();
   ck(reloaded.energy == 0, "the energy charge is persisted immediately");
+  p.registerCaughtSpecies(150, true);
+  ck(p.isShinyRegistered(150), "normal live pet correctly registers a wild shiny");
+  p.shiny = true;
+  p.registerCaughtSpecies(151, false);
+  ck(p.isRegistered(151) && !p.isShinyRegistered(151),
+     "shiny live pet does not mark a normal catch as shiny");
+  p.registerCaughtSpecies(150, false);
+  ck(p.isShinyRegistered(150), "later normal catch preserves an existing shiny entry");
+  Pet dexReload; dexReload.begin();
+  ck(dexReload.isShinyRegistered(150) && !dexReload.isShinyRegistered(151),
+     "corrected caught-species flags survive reload");
 
   printf("%s\n", bad ? "FAILURES" : "all good");
   return bad ? 1 : 0;

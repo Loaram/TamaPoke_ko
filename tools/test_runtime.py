@@ -12,7 +12,7 @@ core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.
 for test in ['korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
              'lan','battle','ai','gym','evo','balance','retire','moves','box',
              'dexdata','eevee','branch','region','sprite','full_dex','full_shiny','hit',
-             'touch','swipe','starter','release','joy','wild','explore']:
+             'touch','swipe','starter','release','joy','wild','explore','android_lifecycle']:
     exe=out/(test+('.exe' if os.name=='nt' else ''))
     src=[str(E/'tests'/f'{test}_test.cpp'),*core]
     if test in ('korean','label'):src.append(str(E/'font.cpp'))
@@ -22,7 +22,8 @@ for test in ['korean','i18n','label','save','savetransfer','upgrade','link','lin
         src += [str(a.sketch),*[str(E/x) for x in ['host_impl.cpp','font.cpp','clock.cpp']]]
     defs=(['-DTAMAPOKE_FULL_DEX=1'] if test == 'full_dex' else
           ['-DTAMAPOKE_FULL_SHINY=1'] if test == 'full_shiny' else
-          ['-DTAMAPOKE_EXPLORE_BETA=1'] if test == 'explore' else [])
+          ['-DTAMAPOKE_EXPLORE_BETA=1'] if test == 'explore' else
+          ['-DANDROID=1'] if test == 'android_lifecycle' else [])
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*defs,*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: 32 Korean, save, migration, link, battle, sprite, dex, touch, release and Explore runtime suites')
+print('PASS: 33 Korean, save, migration, link, battle, sprite, dex, touch, release, Explore and Android lifecycle runtime suites')

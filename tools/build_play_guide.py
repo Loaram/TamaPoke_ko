@@ -21,8 +21,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-2.0.0-Play-Guide-KO.pdf"
-VERSION = "2.0.0"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-2.0.1-Play-Guide-KO.pdf"
+VERSION = "2.0.1"
 PAGE_TOTAL = 18
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 2.0.0",
+            "플레이 설명서 · 2.0.1",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -364,7 +364,7 @@ story.extend(
     [
         Spacer(1, 6 * mm),
         p("기기의 시간이 기준입니다", H2),
-        p("Android와 Wear OS는 휴대전화 또는 워치의 날짜와 시간을 따릅니다. 시간이 뒤로 바뀌어도 잘못된 대량 레벨업으로 계산하지 않습니다. ESP32에서는 기기 설정 시각을 사용합니다.", CALLOUT),
+        p("Android·워치는 기기의 날짜와 시간, ESP32는 설정 시각을 따릅니다. 앱 종료·백그라운드 중에는 오프라인 규칙을 적용해 깨어 있을 때 돌봄 수치가 15 아래로 더 떨어지지 않고 방치 실수가 추가되지 않습니다. 영구 동료는 재접속해도 성장하지 않습니다.", CALLOUT),
         p("작별을 거절하면 하루 뒤 다시 제안합니다. 최종 진화 전, 수면 중, 영구 동료 상태에서는 작별이 열리지 않습니다.", BODY),
         p("올바른 작별과 다음 알", H2),
         p("평소 이로치 알의 기본 확률은 <b>1/48</b>입니다. 알에서 시작한 전체 육성 시간이 24시간 이상이고 현재 최종 진화 상태일 때 정상적으로 작별하면 다음 알은 <b>1/24</b>부터 시작합니다. 최종 진화한 시점부터 다시 24시간을 기다리는 규칙은 아닙니다. 돌봄 연속일수와 유대 보너스까지 좋으면 최고 <b>1/10</b>까지 올라갑니다.", SAFE),
@@ -467,7 +467,7 @@ story.extend(
 page_break(story)
 
 # 11. Explore overview
-story.extend(page_heading("10 탐색", "야생 포켓몬을 만나는 방법", "메뉴에서 탐색을 열고 지방과 난이도를 선택합니다. 조우가 시작될 때 활력 30을 사용합니다."))
+story.extend(page_heading("10 탐색", "야생 포켓몬을 만나는 방법", "메뉴에서 탐색을 열고 지방과 탐색 방식을 선택합니다. 조우가 시작될 때 활력 30을 사용합니다."))
 story.append(screenshot_pair(qa_current / "guide-explore.png", qa_current / "guide-wild.png"))
 story.extend(
     [
@@ -630,7 +630,7 @@ story.append(
             "양쪽 화면의 <b>6자리 확인 코드</b>가 같은지 확인합니다. 다르면 뒤로 나가 다시 연결합니다.",
             "진행률이 100%가 되고 대상에 <b>받기 완료</b>가 나올 때까지 화면과 Wi-Fi를 유지합니다.",
             "대상에서 <b>세이브 적용</b>을 누르고 덮어쓰기 경고를 읽은 뒤 <b>예</b>를 선택합니다.",
-            "재시작 후 포켓몬, 파티, 60칸 박스, 도감, 배지와 설정을 확인합니다.",
+            "ESP32는 재시작을 기다립니다. 앱·워치는 닫힌 앱을 다시 엽니다. 포켓몬, 파티, 박스, 도감과 배지를 확인합니다.",
         ]
     )
 )
@@ -647,7 +647,7 @@ page_break(story)
 story.extend(page_heading("17 확인", "세이브 적용 화면과 문제 해결", "덮어쓰기 전 마지막 화면을 확인하고, 문제가 있으면 현재 세이브를 유지하세요."))
 apply_image = screenshot(qa_current / "guide-saveconfirm.png", 67 * mm)
 apply_text = p(
-    "<b>예</b>: 대상 기기의 현재 세이브를 받은 세이브로 교체하고 재시작합니다.<br/><br/>"
+    "<b>예</b>: 받은 세이브로 교체합니다. ESP32는 재시작하며, Android·워치는 앱이 닫히면 직접 다시 열어 주세요.<br/><br/>"
     "<b>아니요</b>: 받은 데이터는 적용하지 않고 현재 세이브를 유지합니다.<br/><br/>"
     "확인 코드가 다르거나 예상하지 않은 기기 이름이면 적용하지 마세요."
 )
@@ -670,7 +670,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/2.0.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/2.0.1", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

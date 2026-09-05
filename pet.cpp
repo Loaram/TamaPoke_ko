@@ -126,14 +126,16 @@ void Pet::syncClock(uint32_t nowEpoch) {
   deviceClockRemainder = 0;
   if (nowEpoch == 0) return;
   uint32_t mins = (seen && nowEpoch > seen) ? (nowEpoch - seen) / 60 : 0;
-  if (mins < 2 || ceremony != CER_NONE || starterPick) {
-    save();  // primera vez, sin tiempo que aplicar o aun eligiendo inicial
-    return;
-  }
+  applyOfflineMinutes(mins);
+  save();
+}
+
+void Pet::applyOfflineMinutes(uint32_t mins) {
+  if (!mins || ceremony != CER_NONE || starterPick) return;
   if (mins > 14UL * 24 * 60) mins = 14UL * 24 * 60;  // tope: 2 semanas
 
   for (uint32_t i = 0; i < mins; i++) {
-    ageMinutes++;
+    if (!frozen) ageMinutes++;
     if (isEgg()) {
       if (ageMinutes >= 3) hatch();  // eclosiona en tu ausencia
       continue;
@@ -161,7 +163,6 @@ void Pet::syncClock(uint32_t nowEpoch) {
     // tocando al bicho cuando vuelve (para que vea la transformacion)
   }
   Serial.printf("offline: %u min aplicados (nv.%u)\n", mins, level());
-  save();
 }
 
 void Pet::update(uint32_t nowMs) {
@@ -177,7 +178,8 @@ void Pet::update(uint32_t nowMs) {
   }
 }
 
-void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch) {
+void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch,
+                            bool offline) {
   // Animations still use the monotonic clock; only care/growth minutes follow
   // Android's user-visible device clock.
   if (ceremony != CER_NONE && millis() > ceremonyUntil) {
@@ -207,7 +209,8 @@ void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpo
   uint32_t mins = (uint32_t)(accumulated / 60);
   deviceClockRemainder = (uint32_t)(accumulated % 60);
   if (mins > 14UL * 24 * 60) mins = 14UL * 24 * 60;
-  while (mins--) tick();
+  if (offline) applyOfflineMinutes(mins);
+  else while (mins--) tick();
 }
 
 void Pet::tick() {
@@ -948,9 +951,10 @@ uint16_t Pet::registeredCount() const {
   return n;
 }
 
-void Pet::registerCaughtSpecies(int16_t dex) {
+void Pet::registerCaughtSpecies(int16_t dex, bool caughtShiny) {
   if (dex < 1 || dex > DEX_COUNT) return;
-  registerSpecies(dex);
+  dexReg[(dex - 1) >> 3] |= (1 << ((dex - 1) & 7));
+  if (caughtShiny) dexShinyReg[(dex - 1) >> 3] |= (1 << ((dex - 1) & 7));
   save();
 }
 

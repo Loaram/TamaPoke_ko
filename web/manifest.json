@@ -1,6 +1,6 @@
 {
   "name": "TamaPoke Korean",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "new_install_prompt_erase": true,
   "builds": [
     {

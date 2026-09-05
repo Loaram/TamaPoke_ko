@@ -136,7 +136,8 @@ public:
   // Android has no separate hardware RTC: its device clock is authoritative.
   // Drive game minutes from that wall clock so activity pause/resume and a
   // device-time correction cannot leave the display and growth on two clocks.
-  void updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch);
+  void updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch,
+                         bool offline = false);
 
   // Acciones (botones tactiles)
   void feed();              // baya roja (compatibilidad)
@@ -374,7 +375,7 @@ public:
   uint16_t registeredCount() const;
   // A successful wild capture uses the existing Pokedex bitmap. No additional
   // save or transfer field is needed.
-  void registerCaughtSpecies(int16_t dex);
+  void registerCaughtSpecies(int16_t dex, bool caughtShiny);
   bool lineHasUnregistered(int16_t base) const;
   uint8_t eggRarity() const;       // rareza del huevo actual (sin revelar especie)
   int16_t pickEggSpecies();        // publica para poder simular tiradas (EGGS)
@@ -423,6 +424,7 @@ public:
   void saveNow();
 
 private:
+  void applyOfflineMinutes(uint32_t mins);
   Preferences prefs;
   // A Pet that was never begin()'d MUST NOT WRITE. Nothing enforced that, and
   // the battle code builds its opponent as a throwaway Pet:

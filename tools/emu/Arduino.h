@@ -51,8 +51,14 @@ inline void emuFireInterrupt() {
 extern uint32_t g_seed;
 inline long random(long n) {
   if (n <= 0) return 0;
+#if defined(__ANDROID__)
+  // Phone/watch builds must never replay the emulator's fixed test sequence
+  // after process recreation. Bionic draws fresh, unbiased OS randomness.
+  return (long)arc4random_uniform((uint32_t)n);
+#else
   g_seed = g_seed * 1103515245u + 12345u;
   return (long)((g_seed >> 16) % (uint32_t)n);
+#endif
 }
 inline long random(long lo, long hi) { return lo + random(hi - lo); }
 inline void randomSeed(unsigned long s) { g_seed = (uint32_t)s; }
