@@ -381,7 +381,7 @@ page_break(story)
 
 # 7. Moves and evolution
 story.extend(page_heading("06 기술", "레벨업과 진화 기술", "현재 기술표는 자연 습득 기술 689개와 진화 즉시 습득 기술을 포함합니다."))
-story.append(screenshot_pair(screens / "moves.png", qa_current / "guide-profile.png"))
+story.append(screenshot_pair(qa_current / "guide-moves.png", qa_current / "guide-profile.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
