@@ -51,6 +51,11 @@ cd web && python3 -m http.server 8000
    first: only one program can use the port at a time.
 3. Restart (PWR button) → choose your starter and play.
 
+The page also contains Korean step-by-step sections for LAN battles and save
+transfer between ESP32, Android, and Wear OS. The downloadable ko.1.1.6 play
+guide has 16 pages; pages 11-13 cover LAN setup and pages 14-16 cover save
+send/receive, the six-digit confirmation code, CRC validation, and final apply.
+
 A hidden "pick them manually" option lets advanced users send their own `.bin`.
 
 ## Hosting the sprites
