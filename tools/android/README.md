@@ -10,7 +10,7 @@ With Android Studio's SDK, NDK and JBR installed:
 .\.venv\Scripts\python.exe tools\build_android.py
 ```
 
-The APK is written to `build/android/TamaPoke-ko.1.1.5-Android-Full-debug.apk`.
+The APK is written to `build/android/TamaPoke-ko.1.1.6-Android-Full-debug.apk`.
 The project-local debug key is generated under the ignored `build/` directory.
 An APK signed by a different PC's debug key cannot update an installed copy in
 place. Uninstalling also erases that app's Android save data, so keep the old
@@ -41,7 +41,7 @@ Build the standalone universal ARM Wear OS edition with:
 .\.venv\Scripts\python.exe tools\build_android.py --wear
 ```
 
-The output is `build/android/TamaPoke-ko.1.1.5-WearOS-GalaxyWatch4-9-debug.apk`.
+The output is `build/android/TamaPoke-ko.1.1.6-WearOS-GalaxyWatch4-9-debug.apk`.
 It scales the existing 466 x 466 round canvas and touch coordinates to the
 device's actual square surface without changing the aspect ratio. The APK
 declares `android.hardware.type.watch`, is standalone, and contains both

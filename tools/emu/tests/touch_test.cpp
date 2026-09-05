@@ -10,6 +10,7 @@
 #include "party.h"
 #include "moves.h"
 #include "battle.h"
+#include "trainers.h"
 #include <chrono>
 #include <thread>
 #include <string>
@@ -44,7 +45,8 @@ extern uint8_t btlFoeAt, btlSquadN, btlSquadAt, btlMenu;
 extern Combatant btlSquad[7];
 extern int8_t btlSwapWho;
 extern bool btlHard;
-extern bool gymOpen, gymHard; extern uint8_t gymPage;
+extern bool gymOpen, gymHard; extern uint8_t gymPage, gymRegion, btlRegion;
+extern int8_t btlTrainer;
 extern bool pickOpen, pickHard; extern uint8_t pickTrainer; extern uint16_t squadMask;
 uint8_t squadCap(uint8_t idx, bool hard);
 uint8_t pickChosen(); uint8_t pickCandidates(); void pickDefault(uint8_t);
@@ -312,6 +314,44 @@ int main(int argc, char **argv) {
   if (!btlWon) { printf("FAIL: a L100 creature lost to Brock\n"); return 1; }
   if (!pet.hasBadge(0, 0, false) || hadBadge) { printf("FAIL: no badge awarded\n"); return 1; }
   printf("PASS: beating a leader awards its badge (%u/8)\n", pet.badgeCount(false));
+
+  // Every region's roster used to LOOK correct in the list and team picker,
+  // but startTrainerBattle never copied gymRegion to btlRegion.  The battle
+  // banner, later opponents and badge then read Kanto's matching slot (Brock
+  // for the first leader).  Exercise every leader, Elite Four member and
+  // champion so the same bug cannot hide in another roster position.
+  unsigned checkedTrainers = 0;
+  for (uint8_t r = 0; r < GYM_REGIONS; r++) {
+    for (uint8_t ti = 0; ti < TRAINER_COUNT; ti++) {
+      battleOpen = false;
+      gymRegion = r;
+      startTrainerBattle(ti, false);
+      if (!battleOpen || btlTrainer != (int8_t)ti || btlRegion != r) {
+        printf("FAIL: %s %s started as region %u trainer %d\n",
+               TRAINER_SETS[r].region, TRAINER_SETS[r].list[ti].name,
+               (unsigned)btlRegion, (int)btlTrainer);
+        return 1;
+      }
+      if (btlFoe.dex != TRAINER_SETS[r].list[ti].team[0].dex) {
+        printf("FAIL: %s %s opened with dex %d, want %u\n",
+               TRAINER_SETS[r].region, TRAINER_SETS[r].list[ti].name,
+               (int)btlFoe.dex,
+               (unsigned)TRAINER_SETS[r].list[ti].team[0].dex);
+        return 1;
+      }
+      checkedTrainers++;
+    }
+    printf("PASS: %s all %u trainers stay on their own roster\n",
+           TRAINER_SETS[r].region, (unsigned)TRAINER_COUNT);
+  }
+  if (checkedTrainers != (unsigned)GYM_REGIONS * TRAINER_COUNT) {
+    printf("FAIL: checked %u regional trainers\n", checkedTrainers);
+    return 1;
+  }
+  printf("PASS: all %u regional trainer battles keep their region and lead\n",
+         checkedTrainers);
+  gymRegion = 0;
+  battleOpen = false;
 
   // ---- hard mode caps the team to the opponent's size AND level
   battleOpen = false;

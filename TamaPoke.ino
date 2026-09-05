@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.5"
+#define FW_VERSION "ko.1.1.6"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
@@ -3464,7 +3464,12 @@ void startLinkBattle() {
 
 void startTrainerBattle(uint8_t idx, bool hard) {
   if (idx >= TRAINER_COUNT || pet.isEgg() || pet.ceremony != CER_NONE) return;
-  const Trainer &tr = TRAINERS[idx];
+  // Keep the region that opened the team picker for the whole fight.  The
+  // battle renderer, next-opponent swap and badge award all use btlRegion;
+  // leaving its boot-time value (Kanto) made every other region turn into
+  // Brock's ladder as soon as the battle was under way.
+  btlRegion = (uint8_t)(gymRegion % GYM_REGIONS);
+  const Trainer &tr = BTL_TRAINERS[idx];
   uint8_t top = 0;
   for (int k = 0; k < tr.count; k++)
     if (tr.team[k].level > top) top = tr.team[k].level;
@@ -3476,7 +3481,7 @@ void startTrainerBattle(uint8_t idx, bool hard) {
   btlTrainer = (int8_t)idx;
   btlHard = hard;
   btlFoeAt = 0;
-  const Trainer &t = TRAINERS[idx];
+  const Trainer &t = BTL_TRAINERS[idx];
   foeFromSpecies(btlFoe, t.team[0].dex, t.team[0].level, hard ? HARD_IV : EASY_IV);
   btlMsgCount = 0;
   btlOver = false;
