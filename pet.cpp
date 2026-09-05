@@ -677,7 +677,7 @@ uint8_t Pet::moveCount() const {
   return n;
 }
 
-bool Pet::knowsMove(uint8_t mv) const {
+bool Pet::knowsMove(MoveId mv) const {
   if (!mv) return false;
   for (int i = 0; i < MOVE_SLOTS; i++)
     if (moves[i] == mv) return true;
@@ -717,7 +717,7 @@ static uint8_t tmLevelFor(const MoveEntry &m) {
 uint8_t moveUnlockLevel(int16_t dex, uint8_t idx) {
   uint8_t at = learnLevel(dex, idx);
   if (at > 0) return at;                 // a real level-up move
-  uint8_t mv = learnMove(dex, idx);
+  MoveId mv = learnMove(dex, idx);
   if (!mv || mv >= MOVE_COUNT) return 255;
   return tmLevelFor(MOVE_TBL[mv]);       // a TM: no natural level, so the gate
 }
@@ -738,7 +738,7 @@ void Pet::relearnFromLevel() {
     uint8_t at = learnLevel(speciesId, i);
     if (at > lvl) continue;
     if (tmPass != (at == 0)) continue;
-    uint8_t mv = learnMove(speciesId, i);
+    MoveId mv = learnMove(speciesId, i);
     if (!mv || mv >= MOVE_COUNT || knowsMove(mv)) continue;
     const MoveEntry &m = MOVE_TBL[mv];
     // A TM carries no level requirement in the data, which is true of the games
@@ -781,12 +781,12 @@ void Pet::relearnFromLevel() {
     const MoveEntry &m = MOVE_TBL[moves[i]];
     if (m.cat != MC_STATUS && (m.type == d.type1 || m.type == d.type2)) return;
   }
-  uint8_t best = 0;
+  MoveId best = 0;
   int16_t bestSc = 0;
   for (uint8_t i = 0; i < n; i++) {
     uint8_t at = learnLevel(speciesId, i);
     if (at > lvl) continue;
-    uint8_t mv = learnMove(speciesId, i);
+    MoveId mv = learnMove(speciesId, i);
     if (!mv || mv >= MOVE_COUNT) continue;
     const MoveEntry &m = MOVE_TBL[mv];
     if (m.cat == MC_STATUS || (m.type != d.type1 && m.type != d.type2)) continue;
@@ -805,12 +805,44 @@ void Pet::relearnFromLevel() {
   // low levels (Abra's TELEPORT, Ditto's TRANSFORM, Smeargle's SKETCH, and so
   // on). They must still be able to enter a battle. STRUGGLE is a temporary
   // engine fallback and is replaced as soon as a real level-up move arrives.
-  if (moveCount() == 0) moves[0] = MV_STRUGGLE;
+  bool hasAttack = false;
+  int freeSlot = -1;
+  for (int i = 0; i < MOVE_SLOTS; i++) {
+    if (!moves[i] && freeSlot < 0) freeSlot = i;
+    if (moves[i] && MOVE_TBL[moves[i]].cat != MC_STATUS) hasAttack = true;
+  }
+  // Natural tables now include every status-only starting move too. Abra's
+  // TELEPORT and Magikarp's SPLASH must not displace the temporary attack that
+  // lets this single-player battle system finish a fight.
+  if (!hasAttack) moves[freeSlot >= 0 ? freeSlot : MOVE_SLOTS - 1] = MV_STRUGGLE;
 }
 
 // Queues every level-up move unlocked since the last check. A free slot is
 // filled silently -- the games do not ask when there is room either -- and only
 // a full moveset produces an offer the player has to answer.
+void Pet::learnMoveNow(MoveId mv) {
+  if (!mv || mv >= MOVE_COUNT || knowsMove(mv)) return;
+  int freeSlot = -1;
+  // STRUGGLE is not a learned move. The first real move replaces it instead
+  // of leaving the fallback in the set forever.
+  if (MOVE_TBL[mv].cat != MC_STATUS)
+    for (int s = 0; s < MOVE_SLOTS; s++)
+      if (moves[s] == MV_STRUGGLE) { freeSlot = s; break; }
+  for (int s = 0; s < MOVE_SLOTS; s++)
+    if (freeSlot < 0 && !moves[s]) { freeSlot = s; break; }
+  if (freeSlot >= 0) {
+    moves[freeSlot] = mv;
+    pendingSave = true;
+    return;
+  }
+  for (uint8_t q = 0; q < learnQCount; q++)
+    if (learnQueue[q] == mv) return;
+  if (learnQCount < LEARN_QUEUE_MAX) {
+    learnQueue[learnQCount++] = mv;
+    pendingSave = true;
+  }
+}
+
 void Pet::checkLearnGates() {
   if (isEgg() || ceremony != CER_NONE) return;
   uint8_t lvl = level();
@@ -819,27 +851,14 @@ void Pet::checkLearnGates() {
   for (uint8_t i = 0; i < n; i++) {
     uint8_t at = learnLevel(speciesId, i);
     if (at == 0 || at <= lastLearnLevel || at > lvl) continue;  // 0 = TM, no gate
-    uint8_t mv = learnMove(speciesId, i);
-    if (!mv || mv >= MOVE_COUNT || knowsMove(mv)) continue;
-    int freeSlot = -1;
-    // STRUGGLE is not a learned move. The first real move replaces it instead
-    // of leaving the fallback in the set forever.
-    for (int s = 0; s < MOVE_SLOTS; s++)
-      if (moves[s] == MV_STRUGGLE) { freeSlot = s; break; }
-    for (int s = 0; s < MOVE_SLOTS; s++)
-      if (freeSlot < 0 && !moves[s]) { freeSlot = s; break; }
-    if (freeSlot >= 0) { moves[freeSlot] = mv; continue; }
-    if (learnQCount >= sizeof(learnQueue)) continue;
-    bool dup = false;
-    for (uint8_t q = 0; q < learnQCount; q++)
-      if (learnQueue[q] == mv) dup = true;
-    if (!dup) learnQueue[learnQCount++] = mv;
+    MoveId mv = learnMove(speciesId, i);
+    learnMoveNow(mv);
   }
   lastLearnLevel = lvl;
   pendingSave = true;
 }
 
-static void popLearn(uint8_t *q, uint8_t &n) {
+static void popLearn(MoveId *q, uint8_t &n) {
   if (!n) return;
   for (uint8_t i = 0; i + 1 < n; i++) q[i] = q[i + 1];
   q[--n] = 0;
@@ -857,12 +876,18 @@ void Pet::declineLearn() {
   save();
 }
 
-uint8_t Pet::pendingLearnables(uint8_t *out, uint8_t max) const {
+uint8_t Pet::pendingLearnables(MoveId *out, uint8_t max) const {
   if (isEgg() || !out || !max) return 0;
   uint8_t lvl = level(), n = learnCount(speciesId), w = 0;
+  // Keep a declined evolution move recoverable from the move card even when
+  // it is not part of this edition's ordinary level/TM learnset.
+  for (uint8_t i = 0; i < evolutionMoveCount(speciesId) && w < max; i++) {
+    MoveId mv = evolutionMove(speciesId, i);
+    if (mv && !knowsMove(mv)) out[w++] = mv;
+  }
   for (uint8_t i = 0; i < n && w < max; i++) {
     if (learnLevel(speciesId, i) > lvl) break;
-    uint8_t mv = learnMove(speciesId, i);
+    MoveId mv = learnMove(speciesId, i);
     if (knowsMove(mv)) continue;
     bool dup = false;                     // do not offer the same move twice
     for (uint8_t j = 0; j < w; j++)
@@ -1060,7 +1085,12 @@ void Pet::evolve() {
   }
   speciesId = next;
   registerSpecies(speciesId);
-  checkLearnGates();   // the new form may gate a move at this very level
+  // Evolution moves are not level gates. The old form has already consumed
+  // this level before the player taps EVOLVE, which is why Meowscarada used to
+  // miss FLOWER TRICK entirely. Teach or queue the new form's move explicitly.
+  for (uint8_t i = 0; i < evolutionMoveCount(speciesId); i++)
+    learnMoveNow(evolutionMove(speciesId, i));
+  checkLearnGates();
   sfxPlay(SFX_EVOLVE);
   evolveUntil = millis() + EVOLVE_ANIM_MS;
   save();
@@ -1112,7 +1142,9 @@ uint8_t Pet::playResult(uint8_t score) {
   trDef = v > trMaxDef() ? trMaxDef() : (uint8_t)v;
   gain = trDef - before;
   joy = clamp100(joy + 5 + (score > 15 ? 30 : score * 2));
-  energy = dropTo(energy, 10 + score / 2, 5);
+  // A better result should improve the reward, not multiply the price. The old
+  // score-based formula cost as much as 30 energy, far above the other games.
+  energy = dropTo(energy, DEF_TRAIN_ENERGY_COST, 5);
   fullness = dropTo(fullness, 5, 5);
   int burn = (int)weight - score * 2;  // el ejercicio quema peso
   weight = burn > 0 ? burn : 0;
@@ -1159,7 +1191,7 @@ uint8_t Pet::trainSpeed(uint16_t hits) {
   uint8_t v = trSpe + gain;
   trSpe = v > trMaxSpe() ? trMaxSpe() : v;   // el IV pone el techo
   gain = trSpe - before;
-  energy = dropTo(energy, 10, 5);
+  energy = dropTo(energy, SPE_TRAIN_ENERGY_COST, 5);
   fullness = dropTo(fullness, 4, 5);
   int burn = (int)weight - hits / 2;
   weight = burn > 0 ? burn : 0;
@@ -1183,7 +1215,7 @@ uint8_t Pet::trainStrength(uint16_t hits) {
   uint8_t v = trAtk + gain;
   trAtk = v > trMaxAtk() ? trMaxAtk() : v;  // el IV pone el techo
   gain = trAtk - before;            // lo que de verdad subio (puede topar)
-  energy = dropTo(energy, 12, 5);   // cansa
+  energy = dropTo(energy, ATK_TRAIN_ENERGY_COST, 5);   // cansa
   fullness = dropTo(fullness, 5, 5);
   int burn = (int)weight - hits / 3;  // tambien quema peso
   weight = burn > 0 ? burn : 0;
@@ -1328,6 +1360,8 @@ void Pet::save() {
   prefs.putUChar("tspe", trSpe);
   prefs.putBytes("mvs", moves, sizeof(moves));
   prefs.putUChar("mvlv", lastLearnLevel);
+  prefs.putBytes("mvq", learnQueue, sizeof(learnQueue));
+  prefs.putUChar("mvqn", learnQCount);
   prefs.putUChar("avtr", avatar);
   prefs.putUChar("reg", region);
   prefs.putBytes("badgX", badgesX, sizeof(badgesX));
@@ -1440,14 +1474,38 @@ void Pet::load() {
   strHi = prefs.getUShort("shi", 0);
   spdHi = prefs.getUShort("qhi", 0);
   prefs.getString("nick", nick, sizeof(nick));
-  // Moves load last: relearnFromLevel() needs speciesId and ageMinutes, both of
-  // which are read above. A save from before moves existed has no "mvs" key and
-  // leaves the array zeroed, so an established pet is handed the moveset it
-  // should already have rather than walking into a battle knowing nothing.
-  loadBlob(prefs, "mvs", moves, sizeof(moves));
+  // Move IDs widened from 8 to 16 bits without renumbering the old table. Read
+  // the former four-byte value one element at a time; copying it as a prefix of
+  // the new array would combine pairs of old IDs into bogus 16-bit numbers.
+  memset(moves, 0, sizeof(moves));
+  size_t storedMoves = prefs.getBytesLength("mvs");
+  if (storedMoves == sizeof(moves)) {
+    prefs.getBytes("mvs", moves, sizeof(moves));
+  } else if (storedMoves == MOVE_SLOTS) {
+    uint8_t oldMoves[MOVE_SLOTS] = {};
+    if (prefs.getBytes("mvs", oldMoves, sizeof(oldMoves)) == sizeof(oldMoves))
+      for (int i = 0; i < MOVE_SLOTS; i++) moves[i] = oldMoves[i];
+    pendingSave = true;
+  }
   for (int i = 0; i < MOVE_SLOTS; i++)
     if (moves[i] >= MOVE_COUNT) moves[i] = 0;   // never index MOVE_TBL with junk
   lastLearnLevel = prefs.getUChar("mvlv", 0);
+  memset(learnQueue, 0, sizeof(learnQueue));
+  learnQCount = prefs.getUChar("mvqn", 0);
+  if (learnQCount > LEARN_QUEUE_MAX ||
+      prefs.getBytesLength("mvq") != sizeof(learnQueue) ||
+      prefs.getBytes("mvq", learnQueue, sizeof(learnQueue)) != sizeof(learnQueue)) {
+    learnQCount = 0;
+    memset(learnQueue, 0, sizeof(learnQueue));
+  }
+  for (uint8_t i = 0; i < learnQCount; i++) {
+    if (!learnQueue[i] || learnQueue[i] >= MOVE_COUNT) {
+      learnQCount = 0;
+      memset(learnQueue, 0, sizeof(learnQueue));
+      pendingSave = true;
+      break;
+    }
+  }
   frozen = prefs.getBool("froz", false);
   avatar = prefs.getUChar("avtr", 0);
   // Absent on a Kanto-only save, which leaves both arrays zeroed -- exactly
@@ -1491,7 +1549,9 @@ void Pet::load() {
     lastLearnLevel = level();
     pendingSave = true;
   }
-  learnQCount = 0;      // rebuilt from lastLearnLevel by the next tick
+  // Pending offers are persisted now: a long offline catch-up can unlock more
+  // than eight moves, and closing the app on the first dialog must not discard
+  // the rest after lastLearnLevel has already advanced.
   checkLearnGates();
   // siembra: la mascota actual cuenta como criada (guardados antiguos)
   if (speciesId >= 1) registerSpecies(speciesId);

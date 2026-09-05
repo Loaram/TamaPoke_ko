@@ -29,8 +29,8 @@ static bool duel(Combatant &you, Combatant &foe) {
   TurnLog lg; int t=0;
   while(!you.fainted() && !foe.fainted() && t<300){
     t++;
-    uint8_t my=you.moves[random(MOVE_SLOTS)], mf=foe.moves[random(MOVE_SLOTS)];
-    Combatant *a=&you,*b=&foe; uint8_t ma=my,mb=mf;
+    MoveId my=you.moves[random(MOVE_SLOTS)], mf=foe.moves[random(MOVE_SLOTS)];
+    Combatant *a=&you,*b=&foe; MoveId ma=my,mb=mf;
     if(!battleMovesFirst(you,my,foe,mf)){a=&foe;b=&you;ma=mf;mb=my;}
     battleAct(*a,*b,ma,lg);
     if(!b->fainted()) battleAct(*b,*a,mb,lg);

@@ -740,8 +740,11 @@
       "category": "special",
       "power": 80,
       "accuracy": 100,
-      "effect": "none",
+      "effect": "stage",
       "param": 0,
+      "stat": "spe",
+      "stages": -1,
+      "target": "foe",
       "ailment": "none",
       "ailment_chance": 0,
       "source": "https://pokemon.fandom.com/ko/wiki/%ED%8C%8C%EC%9B%8C%EC%A0%AC_%28%EA%B8%B0%EC%88%A0%29"
@@ -801,6 +804,99 @@
       "ailment": "none",
       "ailment_chance": 0,
       "source": "https://pokemon.fandom.com/ko/wiki/%ED%9E%98%EA%BB%8F%EC%B9%98%EA%B8%B0_%28%EA%B8%B0%EC%88%A0%29"
+    },
+    {
+      "display": "DRUM BEATING",
+      "slug": "drum-beating",
+      "ko": "드럼어택",
+      "type": "grass",
+      "category": "physical",
+      "power": 80,
+      "accuracy": 100,
+      "effect": "stage",
+      "param": 0,
+      "stat": "spe",
+      "stages": -1,
+      "target": "foe",
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokeapi.co/api/v2/move/778"
+    },
+    {
+      "display": "PYRO BALL",
+      "slug": "pyro-ball",
+      "ko": "화염볼",
+      "type": "fire",
+      "category": "physical",
+      "power": 120,
+      "accuracy": 90,
+      "effect": "none",
+      "param": 0,
+      "ailment": "burn",
+      "ailment_chance": 10,
+      "source": "https://pokeapi.co/api/v2/move/780"
+    },
+    {
+      "display": "SNIPE SHOT",
+      "slug": "snipe-shot",
+      "ko": "노려맞히기",
+      "type": "water",
+      "category": "special",
+      "power": 80,
+      "accuracy": 100,
+      "effect": "none",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokeapi.co/api/v2/move/745"
+    },
+    {
+      "display": "FLOWER TRICK",
+      "slug": "flower-trick",
+      "ko": "트릭플라워",
+      "type": "grass",
+      "category": "physical",
+      "power": 70,
+      "accuracy": 0,
+      "effect": "always_crit",
+      "param": 0,
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokeapi.co/api/v2/move/870"
+    },
+    {
+      "display": "TORCH SONG",
+      "slug": "torch-song",
+      "ko": "플레어송",
+      "type": "fire",
+      "category": "special",
+      "power": 80,
+      "accuracy": 100,
+      "effect": "stage",
+      "param": 0,
+      "stat": "spa",
+      "stages": 1,
+      "target": "self",
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokeapi.co/api/v2/move/871"
+    },
+    {
+      "display": "AQUA STEP",
+      "slug": "aqua-step",
+      "ko": "아쿠아스텝",
+      "type": "water",
+      "category": "physical",
+      "power": 80,
+      "accuracy": 100,
+      "effect": "stage",
+      "param": 0,
+      "stat": "spe",
+      "stages": 1,
+      "target": "self",
+      "ailment": "none",
+      "ailment_chance": 0,
+      "source": "https://pokeapi.co/api/v2/move/872"
     }
   ],
   "species": [
@@ -899,6 +995,10 @@
       "evolves_to": 0,
       "evolve_level": 0,
       "learnset": [
+        [
+          "drum-beating",
+          1
+        ],
         [
           "scratch",
           1
@@ -1030,6 +1130,10 @@
       "evolve_level": 0,
       "learnset": [
         [
+          "pyro-ball",
+          1
+        ],
+        [
           "tackle",
           1
         ],
@@ -1159,6 +1263,10 @@
       "evolves_to": 0,
       "evolve_level": 0,
       "learnset": [
+        [
+          "snipe-shot",
+          1
+        ],
         [
           "pound",
           1
@@ -4980,6 +5088,10 @@
       "evolve_level": 0,
       "learnset": [
         [
+          "flower-trick",
+          1
+        ],
+        [
           "scratch",
           1
         ],
@@ -5150,6 +5262,10 @@
       "evolve_level": 0,
       "learnset": [
         [
+          "torch-song",
+          1
+        ],
+        [
           "tackle",
           1
         ],
@@ -5291,6 +5407,10 @@
       "evolves_to": 0,
       "evolve_level": 0,
       "learnset": [
+        [
+          "aqua-step",
+          1
+        ],
         [
           "pound",
           1

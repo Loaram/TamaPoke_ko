@@ -37,7 +37,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "ko.1.1.4"
+#define FW_VERSION "ko.1.1.5"
 #if defined(TAMAPOKE_FULL_SHINY)
 #define DISPLAY_VERSION FW_VERSION "-shiny"
 #elif defined(TAMAPOKE_FULL_DEX)
@@ -162,7 +162,6 @@ uint8_t boxDetail = 0;        // box slot + 1 whose sheet is open
 // because only one sheet can be open at a time and partyDetail/boxDetail
 // already say which.
 bool releaseConfirm = false;
-#define BOX_PER_PAGE 6
 uint32_t partyBannerUntil = 0;   // "<name> joined the party!"
 char partyBannerName[64] = "";
 #define PARTY_CELL_W 150
@@ -189,7 +188,7 @@ uint32_t gameOverUntil = 0;
 #define GAME_MS 20000UL
 uint32_t gameUntil = 0;
 float ballX, ballY, ballVX, ballVY, gamePetX;
-uint8_t gameScore, gameMisses;
+uint8_t gameScore, gameMisses, gameGain;
 float hitX, hitY;             // ultimo golpe (anillo de impacto)
 uint32_t hitTime = 0;
 bool gameNewHi = false;
@@ -203,8 +202,7 @@ uint8_t sackGain = 0;
 bool sackNewHi = false;
 
 // training submenu (the 5th icon): routes to the trainer for each stat.
-// DEF has no minigame -- it rises on its own from good wellbeing -- so its row
-// is informational and does not respond to a tap.
+// The bag trains ATK, the reaction test SPE, and the ball game DEF.
 bool trainOpen = false;
 
 // move picker, opened from the MOVES card page. Most learnsets are level 0, so
@@ -338,7 +336,7 @@ static int eggRegionTap(int16_t x, int16_t y);
 static void drawBtlBack();
 static void btlLinkPoll();   // defined with the battle code, called from render()
 static void btlSwitchTo(uint8_t i);
-static void btlResolve(uint8_t yourMove);
+static void btlResolve(MoveId yourMove);
 // The peer's whole team, kept live. A trainer's replacements are built fresh
 // from TRAINERS[] because they only ever arrive once; a linked opponent can
 // switch OUT and back IN, so its creatures have to remember how battered they
@@ -1044,7 +1042,7 @@ void handleSerial() {
     // Prints the whole save as a block of IMPORT commands. Pasting that block
     // back is the restore -- there is no separate format to get wrong, and no
     // single 2000-character line for a terminal to mangle.
-    static uint8_t buf[2048];
+    static uint8_t buf[SAVE_MAX_BYTES];
     size_t n = saveExport(buf, sizeof(buf));
     if (!n) { Serial.println("EXPORT FAIL"); return; }
     Serial.printf("# TamaPoke save, %u bytes. Paste this whole block back.\n",
@@ -1058,7 +1056,7 @@ void handleSerial() {
   } else if (line.startsWith("IMPORT")) {
     // IMPORT <hex>   append a chunk
     // IMPORT         commit what has been appended
-    static uint8_t in[2048];
+    static uint8_t in[SAVE_MAX_BYTES];
     static size_t inN = 0;
     String hex = line.substring(6);
     hex.trim();
@@ -1614,8 +1612,8 @@ void onSwipe(int dir) {
   }
   if (trainOpen) { trainOpen = false; return; }
   if (movePickOpen) {   // the picker is paged; without this its later pages
-    uint8_t all[64];    // were simply unreachable
-    uint8_t n = learnableList(all, sizeof(all));
+    MoveId all[MAX_LEARNABLE_MOVES];
+    uint8_t n = learnableList(all, MAX_LEARNABLE_MOVES);
     uint8_t pages = n ? (n + MOVE_PICK_PER_PAGE - 1) / MOVE_PICK_PER_PAGE : 1;
     int p = (int)movePickPage + (dir > 0 ? -1 : 1);
     if (p < 0 || p >= pages) movePickOpen = false;
@@ -1623,7 +1621,7 @@ void onSwipe(int dir) {
     return;
   }
   if (boxOpen) {   // horizontal pages the box, as every other paged screen
-    uint8_t pages = BOX_SLOTS / BOX_PER_PAGE;
+    uint8_t pages = BOX_PAGES;
     int p = (int)boxPage + (dir > 0 ? -1 : 1);
     if (p < 0 || p >= pages) { boxOpen = false; boxSel = 0; }
     else boxPage = (uint8_t)p;
@@ -1839,8 +1837,8 @@ void onTap(int16_t x, int16_t y) {
     return;
   }
   if (movePickOpen) {
-    uint8_t all[64];
-    uint8_t n = learnableList(all, sizeof(all));
+    MoveId all[MAX_LEARNABLE_MOVES];
+    uint8_t n = learnableList(all, MAX_LEARNABLE_MOVES);
     for (uint8_t i = 0; i < MOVE_PICK_PER_PAGE; i++) {
       uint8_t idx = movePickPage * MOVE_PICK_PER_PAGE + i;
       if (idx >= n) break;
@@ -1849,7 +1847,7 @@ void onTap(int16_t x, int16_t y) {
       sfxPlay(SFX_TAP);
       // Swapping for a move already in another slot would silently duplicate
       // it, so trade the two slots instead of overwriting.
-      uint8_t *tgt = pickTargetMoves();
+      MoveId *tgt = pickTargetMoves();
       for (int s = 0; s < MOVE_SLOTS; s++)
         if (tgt[s] == all[idx] && s != movePickSlot) tgt[s] = tgt[movePickSlot];
       tgt[movePickSlot] = all[idx];
@@ -2456,6 +2454,7 @@ void startGame() {
   gameUntil = millis() + GAME_MS;
   gameScore = 0;
   gameMisses = 0;
+  gameGain = 0;
   gameNewHi = false;
   hitTime = 0;
   gamePetX = 233;
@@ -2472,12 +2471,10 @@ void respawnBall() {
 }
 
 // Leaving a minigame early banks what was actually earned rather than voiding
-// it. Quitting used to forfeit everything, which mattered little when the ball
-// game trained a stat you could grind back -- but it is now purely about
-// happiness, and a pet that just played should be happier for it. The
-// gameOver/over guards stop a swipe during the results screen paying twice.
+// it. The gameOver/over guards stop a swipe during the results screen paying
+// twice.
 void leaveGame() {
-  if (!gameOverUntil) pet.playResult(gameScore);
+  if (!gameOverUntil) gameGain = pet.playResult(gameScore);
   gameOpen = false;
 }
 void leaveSack() {
@@ -2538,7 +2535,7 @@ void stepGame() {
   // the clock, or three misses, whichever lands first
   if (gameUntil && millis() >= gameUntil && !gameOverUntil) {
     gameNewHi = (gameScore > pet.gameHi);
-    pet.playResult(gameScore);
+    gameGain = pet.playResult(gameScore);
     sfxPlay(gameNewHi && gameScore > 0 ? SFX_MEDAL : SFX_LEVEL);
     gameOverUntil = millis() + 4000;
     return;
@@ -2546,7 +2543,7 @@ void stepGame() {
   if (ballY > 384) {  // al suelo
     if (++gameMisses >= 3) {
       gameNewHi = (gameScore > pet.gameHi);
-      pet.playResult(gameScore);  // actualiza el record y da felicidad
+      gameGain = pet.playResult(gameScore);  // record, happiness and DEF
       sfxPlay(gameNewHi && gameScore > 0 ? SFX_MEDAL : SFX_LEVEL);
       gameOverUntil = millis() + 4000;
     } else {
@@ -2698,21 +2695,27 @@ void renderGame() {
     gfx->setTextSize(4);
     gfx->setCursor(CX - textWidthFactor(buf, 12), 160);
     gfx->print(buf);
+    char gain[64];
+    snprintf(gain, sizeof(gain), T(S_WIN_TRAIN_FMT), T(S_TR_DEF), gameGain);
+    gfx->setTextColor(UI_BAR_WARN);
+    gfx->setTextSize(3);
+    gfx->setCursor(CX - textWidthFactor(gain, 9), 210);
+    gfx->print(gain);
     gfx->setTextSize(2);
     if (gameNewHi && gameScore > 0) {
       gfx->setTextColor(UI_BAR_WARN);
-      gfx->setCursor(CX - textWidthFactor(T(S_NEW_RECORD), 6), 214);
+      gfx->setCursor(CX - textWidthFactor(T(S_NEW_RECORD), 6), 256);
       gfx->print(T(S_NEW_RECORD));
     } else {
       char rec[64];
       snprintf(rec, sizeof(rec), T(S_RECORD_FMT), pet.gameHi);
       gfx->setTextColor(ink);
-      gfx->setCursor(CX - textWidthFactor(rec, 6), 214);
+      gfx->setCursor(CX - textWidthFactor(rec, 6), 256);
       gfx->print(rec);
     }
     const char *msg = gameScore >= 10 ? T(S_GREAT_JOY) : T(S_PLUS_JOY);
     gfx->setTextColor(ink);
-    gfx->setCursor(CX - textWidthFactor(msg, 6), 250);
+    gfx->setCursor(CX - textWidthFactor(msg, 6), 292);
     gfx->print(msg);
     gfx->flush();
     return;
@@ -3151,7 +3154,7 @@ int drawTypeChip(int x, int y, uint8_t type) {
   return w;
 }
 
-void drawMoveRow(int y, uint8_t mv, bool highlight, int16_t dex) {
+void drawMoveRow(int y, MoveId mv, bool highlight, int16_t dex) {
   gfx->fillRoundRect(70, y, 326, 50, 12, highlight ? UI_BAR_WARN : UI_BG_DAY);
   gfx->drawRoundRect(70, y, 326, 50, 12, UI_INK);
   if (!mv) {
@@ -3163,9 +3166,10 @@ void drawMoveRow(int y, uint8_t mv, bool highlight, int16_t dex) {
   }
   const MoveEntry &m = MOVE_TBL[mv];
   gfx->setTextColor(UI_INK);
-  gfx->setTextSize(2);
+  const char *moveName = localName(m.name);
+  gfx->setTextSize(uiTextWidth(moveName, 2) <= 300 ? 2 : 1);
   gfx->setCursor(82, y + 8);
-  gfx->print(localName(m.name));
+  gfx->print(moveName);
   // There is no per-type palette (DexEntry.accent is per species), and inventing
   // one by hand would duplicate what gen_dex.py generates. Colouring same-type
   // moves in the species accent is more useful anyway: STAB is a 1.5x damage
@@ -3205,16 +3209,22 @@ void renderCardMoves() {
 
 // Every move the species can learn by this level, so a slot can be swapped for
 // anything legal -- not just the handful a level-up would have offered.
-uint8_t learnableFor(int16_t dex, uint8_t lvl, uint8_t *out, uint8_t max) {
+uint8_t learnableFor(int16_t dex, uint8_t lvl, MoveId *out, uint8_t max) {
   if (dex < 1 || dex > DEX_COUNT) return 0;
   uint8_t n = learnCount(dex), w = 0;
+  // Evolution moves remain legal after the one-time prompt was declined.
+  // Put them first so a compact/paged picker cannot hide the recovery path.
+  for (uint8_t i = 0; i < evolutionMoveCount(dex) && w < max; i++) {
+    MoveId mv = evolutionMove(dex, i);
+    if (mv && mv < MOVE_COUNT) out[w++] = mv;
+  }
   for (uint8_t i = 0; i < n && w < max; i++) {
     // moveUnlockLevel(), NOT learnLevel(): a TM is stored as level 0 and would
     // otherwise clear this check at level 1. That is how a level 22 Charmeleon
     // came to be offered FIRE BLAST -- the same class of bug as the level 1
     // Squirtle with SURF, in the one path that fix did not reach.
     if (moveUnlockLevel(dex, i) > lvl) continue;
-    uint8_t mv = learnMove(dex, i);
+    MoveId mv = learnMove(dex, i);
     if (!mv || mv >= MOVE_COUNT) continue;
     bool dup = false;
     for (uint8_t j = 0; j < w; j++)
@@ -3226,7 +3236,7 @@ uint8_t learnableFor(int16_t dex, uint8_t lvl, uint8_t *out, uint8_t max) {
 
 // The picker targets either the live pet or a banked member. A banked one keeps
 // its frozen level, so it can only relearn what it could have known back then.
-uint8_t learnableList(uint8_t *out, uint8_t max) {
+uint8_t learnableList(MoveId *out, uint8_t max) {
   if (movePickParty) {
     const PartyMon &m = party.slots[movePickParty - 1];
     return learnableFor(m.dex, (uint8_t)m.level, out, max);
@@ -3234,7 +3244,7 @@ uint8_t learnableList(uint8_t *out, uint8_t max) {
   return pet.isEgg() ? 0 : learnableFor(pet.speciesId, pet.level(), out, max);
 }
 
-uint8_t *pickTargetMoves() {
+MoveId *pickTargetMoves() {
   return movePickParty ? party.slots[movePickParty - 1].moves : pet.moves;
 }
 int16_t pickTargetDex() {
@@ -3249,8 +3259,8 @@ void renderMovePick() {
   gfx->setCursor(CX - textWidthFactor(T(S_MOVE_PICK), 6), 40);
   gfx->print(T(S_MOVE_PICK));
 
-  uint8_t all[64];
-  uint8_t n = learnableList(all, sizeof(all));
+  MoveId all[MAX_LEARNABLE_MOVES];
+  uint8_t n = learnableList(all, MAX_LEARNABLE_MOVES);
   uint8_t pages = n ? (n + MOVE_PICK_PER_PAGE - 1) / MOVE_PICK_PER_PAGE : 1;
   if (movePickPage >= pages) movePickPage = 0;
   for (uint8_t i = 0; i < MOVE_PICK_PER_PAGE; i++) {
@@ -3260,9 +3270,13 @@ void renderMovePick() {
     // is obvious rather than a guess
     drawMoveRow(MOVE_PICK_Y(i), all[idx], all[idx] == pickTargetMoves()[movePickSlot], pickTargetDex());
   }
-  for (uint8_t i = 0; i < pages && pages > 1; i++) {
-    if (i == movePickPage) gfx->fillCircle(CX - (pages - 1) * 13 + i * 26, 380, 5, UI_INK);
-    else gfx->drawCircle(CX - (pages - 1) * 13 + i * 26, 380, 4, UI_INK);
+  if (pages > 1) {
+    char pg[16];
+    snprintf(pg, sizeof(pg), "%u/%u", (unsigned)movePickPage + 1, (unsigned)pages);
+    gfx->setTextColor(UI_INK);
+    gfx->setTextSize(1);
+    gfx->setCursor(CX - textWidthFactor(pg, 3), 378);
+    gfx->print(pg);
   }
   gfx->setTextColor(0x6B4D);
   gfx->setTextSize(2);
@@ -3603,7 +3617,7 @@ static void btlLinkPoll() {
 }
 
 // Packs the outcome for the guest. Only the host ever calls this.
-static void btlShipResult(uint8_t yourMove, uint8_t theirMove,
+static void btlShipResult(MoveId yourMove, MoveId theirMove,
                           uint16_t hp0You, uint16_t hp0Foe) {
   LinkResult r = {};
   r.hostHp = btlYou.hp;   r.guestHp = btlFoe.hp;
@@ -3617,11 +3631,11 @@ static void btlShipResult(uint8_t yourMove, uint8_t theirMove,
 }
 
 // One exchange: both sides act in speed order, then burn/poison chip.
-static void btlResolve(uint8_t yourMove) {
+static void btlResolve(MoveId yourMove) {
   TurnLog lg;
   // Against another device the opponent's move comes off the wire, never from
   // the AI -- and the host is the only side that runs this at all.
-  uint8_t foeMove;
+  MoveId foeMove;
   bool foeSwitched = false;
   uint32_t now = millis();
   if (btlLink) {
@@ -3654,8 +3668,8 @@ static void btlResolve(uint8_t yourMove) {
   bool youFirst = battleMovesFirst(btlYou, yourMove, btlFoe, foeMove);
   Combatant *a = youFirst ? &btlYou : &btlFoe;
   Combatant *b = youFirst ? &btlFoe : &btlYou;
-  uint8_t ma = youFirst ? yourMove : foeMove;
-  uint8_t mb = youFirst ? foeMove : yourMove;
+  MoveId ma = youFirst ? yourMove : foeMove;
+  MoveId mb = youFirst ? foeMove : yourMove;
 
   uint16_t hp0You = btlYou.hp, hp0Foe = btlFoe.hp;
   battleAct(*a, *b, ma, lg);
@@ -3993,7 +4007,7 @@ void renderBattle() {
     drawBtlBack();
     for (int i = 0; i < MOVE_SLOTS; i++) {
       int x = BTL_CELL_X(i), y = BTL_CELL_Y(i);
-      uint8_t mv = btlYou.moves[i];
+      MoveId mv = btlYou.moves[i];
       gfx->fillRoundRect(x, y, BTL_CELL_W, BTL_CELL_H, 10, mv ? UI_BG_DAY : UI_TRACK);
       gfx->drawRoundRect(x, y, BTL_CELL_W, BTL_CELL_H, 10, UI_INK);
       if (!mv) continue;
@@ -5224,7 +5238,7 @@ static int regionPickTap(int16_t x, int16_t y, uint8_t mode) {
 void renderLearn() {
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
-  uint8_t mv = pet.learnOffer();
+  MoveId mv = pet.learnOffer();
   char head[120];
   const char *nm = pet.nick[0] ? pet.nick : localName(DEX_TBL[pet.speciesId].name);
   snprintf(head, sizeof(head), T(S_LEARN_Q), nm);
@@ -5498,12 +5512,14 @@ void renderBox() {
     gfx->setCursor(x + 52, y + 34);
     gfx->print(l);
   }
-  uint8_t pages = BOX_SLOTS / BOX_PER_PAGE;
-  for (uint8_t i = 0; i < pages; i++) {
-    int dx = CX - (pages - 1) * 13 + i * 26;
-    if (i == boxPage) gfx->fillCircle(dx, 366, 5, UI_INK);
-    else gfx->drawCircle(dx, 366, 4, UI_INK);
-  }
+  // Numeric pagination scales cleanly past ten pages and is much faster to
+  // read than counting a growing row of dots on the round display.
+  char pg[16];
+  snprintf(pg, sizeof(pg), "%u/%u", (unsigned)boxPage + 1, (unsigned)BOX_PAGES);
+  gfx->setTextColor(0x6B4D);
+  gfx->setTextSize(2);
+  gfx->setCursor(CX - textWidthFactor(pg, 6), 358);
+  gfx->print(pg);
   gfx->setTextColor(0x6B4D);
   gfx->setTextSize(2);
   gfx->setCursor(CX - textWidthFactor(T(S_BACK), 6), 392);

@@ -2,8 +2,100 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dex.h"
+#include "moves.h"
 
 Party party;
+
+// The last released layout ended with four one-byte move IDs. Keep an exact
+// reader for it: treating those bytes as the prefix of MoveId[4] would merge
+// adjacent IDs (1,2 becomes 513) and silently change every banked moveset.
+struct LegacyPartyMon8 {
+  int16_t dex;
+  uint16_t level;
+  uint16_t medals;
+  uint8_t ivAtk, ivDef, ivSpe, ivHp;
+  uint8_t trAtk, trDef, trSpe;
+  uint8_t shiny;
+  char nick[12];
+  uint8_t moves[MOVE_SLOTS];
+};
+static_assert(sizeof(LegacyPartyMon8) == 30, "legacy party stride changed");
+
+struct LegacyPartyMon0 {
+  int16_t dex;
+  uint16_t level;
+  uint16_t medals;
+  uint8_t ivAtk, ivDef, ivSpe, ivHp;
+  uint8_t trAtk, trDef, trSpe;
+  uint8_t shiny;
+  char nick[12];
+};
+static_assert(sizeof(LegacyPartyMon0) == 26, "pre-move party stride changed");
+
+static void copyLegacy(PartyMon &out, const LegacyPartyMon8 &in) {
+  out = PartyMon();
+  out.dex = in.dex; out.level = in.level; out.medals = in.medals;
+  out.ivAtk = in.ivAtk; out.ivDef = in.ivDef; out.ivSpe = in.ivSpe; out.ivHp = in.ivHp;
+  out.trAtk = in.trAtk; out.trDef = in.trDef; out.trSpe = in.trSpe;
+  out.shiny = in.shiny;
+  memcpy(out.nick, in.nick, sizeof(out.nick));
+  for (int i = 0; i < MOVE_SLOTS; i++) out.moves[i] = in.moves[i];
+}
+
+static void copyLegacy(PartyMon &out, const LegacyPartyMon0 &in) {
+  out = PartyMon();
+  out.dex = in.dex; out.level = in.level; out.medals = in.medals;
+  out.ivAtk = in.ivAtk; out.ivDef = in.ivDef; out.ivSpe = in.ivSpe; out.ivHp = in.ivHp;
+  out.trAtk = in.trAtk; out.trDef = in.trDef; out.trSpe = in.trSpe;
+  out.shiny = in.shiny;
+  memcpy(out.nick, in.nick, sizeof(out.nick));
+}
+
+// Loads any known roster stride and preserves as many leading slots as fit.
+// Returns true when a legacy/different-capacity blob should be rewritten.
+static bool loadRoster(Preferences &prefs, const char *key,
+                       PartyMon *out, size_t capacity) {
+  size_t stored = prefs.getBytesLength(key);
+  if (!stored) return false;
+  size_t currentBytes = sizeof(PartyMon) * capacity;
+  if (stored == currentBytes) {
+    // A current-format read needs no rewrite.  If Preferences ever reports a
+    // short read, keep the zero-initialised destination instead of saving that
+    // failed read back over the only copy.
+    prefs.getBytes(key, out, currentBytes);
+    return false;
+  }
+
+  uint8_t *raw = (uint8_t *)malloc(stored);
+  if (!raw) return false;
+  if (prefs.getBytes(key, raw, stored) != stored) { free(raw); return false; }
+
+  size_t stride = 0, count = 0;
+  enum { CURRENT, LEGACY8, LEGACY0 } format = CURRENT;
+  if (stored % sizeof(PartyMon) == 0) {
+    stride = sizeof(PartyMon); count = stored / stride;
+  } else if (stored % sizeof(LegacyPartyMon8) == 0) {
+    format = LEGACY8; stride = sizeof(LegacyPartyMon8); count = stored / stride;
+  } else if (stored % sizeof(LegacyPartyMon0) == 0) {
+    format = LEGACY0; stride = sizeof(LegacyPartyMon0); count = stored / stride;
+  }
+  if (!stride) { free(raw); return false; }
+  if (count > capacity) count = capacity;
+  for (size_t i = 0; i < count; i++) {
+    if (format == CURRENT) memcpy(&out[i], raw + i * stride, sizeof(PartyMon));
+    else if (format == LEGACY8) {
+      LegacyPartyMon8 old;
+      memcpy(&old, raw + i * stride, sizeof(old));
+      copyLegacy(out[i], old);
+    } else {
+      LegacyPartyMon0 old;
+      memcpy(&old, raw + i * stride, sizeof(old));
+      copyLegacy(out[i], old);
+    }
+  }
+  free(raw);
+  return true;
+}
 
 // Same NVS namespace as the pet on purpose: WIPE (Pet::factoryReset) calls
 // clear() on it, and a factory reset that left the party behind would be a lie.
@@ -13,66 +105,22 @@ void Party::begin() {
   // old party out of RAM.
   for (auto &s : slots) s = PartyMon();
   prefs.begin("tamapoke", false);
-  // The blob is raw structs, so growing PartyMon (moves[] was appended in v1.9)
-  // changes its stride. Reading an older, shorter blob straight into the new
-  // array would land slot 1 onward at the wrong offset and quietly invent a
-  // party out of misaligned bytes -- and the dex-range check below would not
-  // reliably catch it, since a stray byte is often a valid Pokedex number.
-  // So migrate by length: copy each old record into the front of the new one
-  // and leave moves[] zeroed for the learnset to fill in.
-  size_t stored = prefs.getBytesLength("party");
-  if (stored == sizeof(slots)) {
-    prefs.getBytes("party", slots, sizeof(slots));
-  } else if (stored > sizeof(slots) && stored % sizeof(PartyMon) == 0) {
-    // A blob from a build with MORE SLOTS at our own stride. Only this case is
-    // unambiguous: stored/sizeof(PartyMon) records, each laid out as we lay them
-    // out, so the first PARTY_SLOTS of them are ours to keep. Anything else that
-    // is merely "too long" could equally be the same slot count at a BIGGER
-    // stride, where a prefix read would land slot 1 at the wrong offset and
-    // invent a party out of misaligned bytes -- so that is left empty instead.
-    //
-    // getBytes copies NOTHING when the stored blob exceeds the buffer, so this
-    // has to go through a temporary of the stored size.
-    uint8_t *tmp = (uint8_t *)malloc(stored);
-    if (tmp) {
-      if (prefs.getBytes("party", tmp, stored) == stored)
-        memcpy(slots, tmp, sizeof(slots));
-      free(tmp);
-    }
-  } else if (stored && stored % PARTY_SLOTS == 0 && stored < sizeof(slots)) {
-    size_t oldStride = stored / PARTY_SLOTS;
-    uint8_t old[sizeof(slots)];
-    prefs.getBytes("party", old, stored);
-    for (int i = 0; i < PARTY_SLOTS; i++)
-      memcpy(&slots[i], old + i * oldStride, oldStride);
-    save();   // rewrite in the current layout so this only happens once
-  }
+  if (loadRoster(prefs, "party", slots, PARTY_SLOTS)) save();
   // a blob written by an older/newer build could hold nonsense; drop anything
   // that is not a real Pokedex number rather than indexing DEX_TBL with it
   for (auto &s : slots) {
     if (s.dex < 1 || s.dex > DEX_COUNT) s.dex = 0;
     s.nick[sizeof(s.nick) - 1] = 0;
+    for (int i = 0; i < MOVE_SLOTS; i++) if (s.moves[i] >= MOVE_COUNT) s.moves[i] = 0;
   }
   // The box is a separate key and simply absent on an older save, which leaves
   // it zeroed -- exactly what an empty box is.
   for (auto &s : box) s = PartyMon();
-  size_t boxStored = prefs.getBytesLength("box");
-  if (boxStored == sizeof(box)) {
-    prefs.getBytes("box", box, sizeof(box));
-  } else if (boxStored > sizeof(box) && boxStored % sizeof(PartyMon) == 0) {
-    // Same as the party above: a later build with more box slots. Keep the
-    // first BOX_SLOTS rather than dropping the whole box on the floor, which is
-    // what happened before -- getBytes refuses an oversized blob outright.
-    uint8_t *tmp = (uint8_t *)malloc(boxStored);
-    if (tmp) {
-      if (prefs.getBytes("box", tmp, boxStored) == boxStored)
-        memcpy(box, tmp, sizeof(box));
-      free(tmp);
-    }
-  }
+  if (loadRoster(prefs, "box", box, BOX_SLOTS)) boxSave();
   for (auto &s : box) {
     if (s.dex < 1 || s.dex > DEX_COUNT) s.dex = 0;
     s.nick[sizeof(s.nick) - 1] = 0;
+    for (int i = 0; i < MOVE_SLOTS; i++) if (s.moves[i] >= MOVE_COUNT) s.moves[i] = 0;
   }
 }
 

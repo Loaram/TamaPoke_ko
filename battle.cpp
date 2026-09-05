@@ -58,7 +58,7 @@ static uint16_t effStat(const Combatant &c, uint8_t idx) {
 // ---------- damage ----------
 
 // roll is 217..255, the series' damage spread, passed in so tests can pin it.
-uint16_t battleDamage(const Combatant &atk, const Combatant &def, uint8_t mv,
+uint16_t battleDamage(const Combatant &atk, const Combatant &def, MoveId mv,
                       bool crit, uint8_t roll) {
   if (!mv || mv >= MOVE_COUNT) return 0;
   const MoveEntry &m = MOVE_TBL[mv];
@@ -89,8 +89,8 @@ uint16_t battleDamage(const Combatant &atk, const Combatant &def, uint8_t mv,
 
 // ---------- turn order ----------
 
-bool battleMovesFirst(const Combatant &a, uint8_t ma,
-                      const Combatant &b, uint8_t mb) {
+bool battleMovesFirst(const Combatant &a, MoveId ma,
+                      const Combatant &b, MoveId mb) {
   int pa = (ma && ma < MOVE_COUNT && MOVE_TBL[ma].effect == EF_PRIORITY)
                ? MOVE_TBL[ma].param : 0;
   int pb = (mb && mb < MOVE_COUNT && MOVE_TBL[mb].effect == EF_PRIORITY)
@@ -121,7 +121,29 @@ static void heal(Combatant &c, uint16_t amount) {
   c.hp = v > c.maxHp ? c.maxHp : (uint16_t)v;
 }
 
-void battleAct(Combatant &atk, Combatant &def, uint8_t mv, TurnLog &log) {
+static void tryInflict(Combatant &def, const MoveEntry &m, TurnLog &log) {
+  if (m.ailment == AIL_NONE || !m.ailChance || def.fainted() ||
+      random(100) >= m.ailChance) return;
+  if (m.ailment == AIL_CONFUSE) {
+    if (!def.confuseTurns) {
+      def.confuseTurns = 2 + random(3);
+      log.inflicted = AIL_CONFUSE;
+    }
+    return;
+  }
+  if (def.ailment != AIL_NONE) return;
+  // A type cannot be given the status it is made of.
+  bool immune = (m.ailment == AIL_BURN && hasStab(def.dex, T_FIRE)) ||
+                (m.ailment == AIL_FREEZE && hasStab(def.dex, T_ICE)) ||
+                (m.ailment == AIL_POISON && hasStab(def.dex, T_POISON)) ||
+                (m.ailment == AIL_PARA && hasStab(def.dex, T_ELECTRIC));
+  if (immune) return;
+  def.ailment = m.ailment;
+  if (m.ailment == AIL_SLEEP) def.ailTurns = 2 + random(3);
+  log.inflicted = m.ailment;
+}
+
+void battleAct(Combatant &atk, Combatant &def, MoveId mv, TurnLog &log) {
   log = TurnLog();
   log.move = mv;
   if (atk.fainted() || def.fainted()) { log.skipped = true; return; }
@@ -178,6 +200,7 @@ void battleAct(Combatant &atk, Combatant &def, uint8_t mv, TurnLog &log) {
       log.stageMask = m.statMask;
       log.stageDelta = m.stages;
     }
+    tryInflict(def, m, log);
     return;
   }
 
@@ -187,7 +210,7 @@ void battleAct(Combatant &atk, Combatant &def, uint8_t mv, TurnLog &log) {
   log.effPct = typeEffVsDex(m.type, def.dex);
   if (log.effPct == 0) { log.immune = true; return; }
   for (uint8_t h = 0; h < hits; h++) {
-    bool crit = random(16) == 0;                 // ~6%, the series' base rate
+    bool crit = m.effect == EF_ALWAYS_CRIT || random(16) == 0;
     uint16_t d = battleDamage(atk, def, mv, crit, (uint8_t)(217 + random(39)));
     total += d;
     if (crit) log.crit = true;
@@ -200,29 +223,15 @@ void battleAct(Combatant &atk, Combatant &def, uint8_t mv, TurnLog &log) {
   if (m.effect == EF_RECOIL && m.param > 0) hurt(atk, total / m.param ? total / m.param : 1);
   if (m.effect == EF_DRAIN && m.param > 0) heal(atk, total * m.param / 100);
   if (m.effect == EF_RECHARGE) atk.recharge = true;
-
-  // --- secondary ailment. Never overwrites an existing one, and confusion is
-  // tracked separately so it can stack with a real status, as in the games.
-  if (m.ailment != AIL_NONE && m.ailChance && !def.fainted() &&
-      random(100) < m.ailChance) {
-    if (m.ailment == AIL_CONFUSE) {
-      if (!def.confuseTurns) {
-        def.confuseTurns = 2 + random(3);
-        log.inflicted = AIL_CONFUSE;
-      }
-    } else if (def.ailment == AIL_NONE) {
-      // a type cannot be given the status it is made of
-      bool immune = (m.ailment == AIL_BURN && hasStab(def.dex, T_FIRE)) ||
-                    (m.ailment == AIL_FREEZE && hasStab(def.dex, T_ICE)) ||
-                    (m.ailment == AIL_POISON && hasStab(def.dex, T_POISON)) ||
-                    (m.ailment == AIL_PARA && hasStab(def.dex, T_ELECTRIC));
-      if (!immune) {
-        def.ailment = m.ailment;
-        if (m.ailment == AIL_SLEEP) def.ailTurns = 2 + random(3);
-        log.inflicted = m.ailment;
-      }
-    }
+  if (m.effect == EF_STAGE) {
+    Combatant &t = (m.target == TG_SELF) ? atk : def;
+    applyStages(t, m.statMask, m.stages);
+    log.stageMask = m.statMask;
+    log.stageDelta = m.stages;
   }
+
+  // Secondary ailments and status-only ailments share the same validation.
+  tryInflict(def, m, log);
   log.targetFainted = def.fainted();
 }
 
@@ -243,17 +252,18 @@ void battleEndTurn(Combatant &c, TurnLog &log) {
 
 // ---------- move choice ----------
 
-uint8_t aiChooseMove(const Combatant &self, const Combatant &foe, bool smart) {
-  uint8_t legal[MOVE_SLOTS], n = 0;
+MoveId aiChooseMove(const Combatant &self, const Combatant &foe, bool smart) {
+  MoveId legal[MOVE_SLOTS];
+  uint8_t n = 0;
   for (int i = 0; i < MOVE_SLOTS; i++)
     if (self.moves[i] && self.moves[i] < MOVE_COUNT) legal[n++] = self.moves[i];
   if (!n) return 0;
   if (!smart) return legal[random(n)];
 
   int16_t bestScore = -32768;
-  uint8_t best = legal[0];
+  MoveId best = legal[0];
   for (uint8_t i = 0; i < n; i++) {
-    uint8_t mv = legal[i];
+    MoveId mv = legal[i];
     const MoveEntry &m = MOVE_TBL[mv];
     int32_t sc;
     if (m.cat == MC_STATUS) {

@@ -21,9 +21,10 @@
 #define SAVE_MAGIC1 'K'
 #define SAVE_MAGIC2 'P'
 #define SAVE_MAGIC3 'S'
-#define SAVE_VERSION 1
+#define SAVE_VERSION 2
+#define SAVE_MIN_VERSION 1
 #define SAVE_HDR 8
-#define SAVE_MAX_BYTES 2048
+#define SAVE_MAX_BYTES 4096
 
 enum SaveKind : uint8_t {
   SK_U8 = 1, SK_I8, SK_BOOL, SK_U16, SK_I16, SK_U32, SK_BYTES, SK_STR,

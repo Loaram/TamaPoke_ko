@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <Preferences.h>
 #include <string.h>
+#include "party.h"
 
 // Every key the firmware persists. Adding one here is the whole job of adding
 // it to the backup; save_test fails if a key exists in NVS and not in this list.
@@ -19,6 +20,7 @@ const SaveField SAVE_FIELDS[] = {
   { "tspe", SK_U8 },
   // moves
   { "mvs", SK_BYTES },  { "mvlv", SK_U8 },
+  { "mvq", SK_BYTES },  { "mvqn", SK_U8 },
   // flags
   { "bk", SK_BOOL },    { "shy", SK_BOOL },   { "eshy", SK_BOOL },
   { "stpk", SK_BOOL },  { "evop", SK_U8 },    { "slpa", SK_U8 },    { "rtpn", SK_BOOL },
@@ -37,7 +39,9 @@ const SaveField SAVE_FIELDS[] = {
 };
 const uint16_t SAVE_FIELD_COUNT = sizeof(SAVE_FIELDS) / sizeof(SAVE_FIELDS[0]);
 
-#define MAX_VAL 768        // the box is the largest, at 18 records
+#define MAX_VAL (sizeof(PartyMon) * BOX_SLOTS) // the box is the largest field
+static_assert(MAX_VAL + 1024 < SAVE_MAX_BYTES,
+              "whole-save buffer must leave room beyond the box blob");
 
 static uint16_t crc16(const uint8_t *p, size_t n) {
   uint16_t c = 0xFFFF;
@@ -108,10 +112,7 @@ static void writeField(Preferences &p, const SaveField &f,
 }
 
 size_t saveExportSize() {
-  size_t n = SAVE_HDR + 2;
-  for (uint16_t i = 0; i < SAVE_FIELD_COUNT; i++)
-    n += 1 + strlen(SAVE_FIELDS[i].key) + 1 + 2 + MAX_VAL / 16;
-  return n + 1024;                   // the two big blobs
+  return SAVE_MAX_BYTES;
 }
 
 size_t saveExport(uint8_t *out, size_t cap) {
@@ -162,7 +163,10 @@ bool saveValidate(const uint8_t *in, size_t n) {
   if (n < SAVE_HDR + 2) return false;
   if (in[0] != SAVE_MAGIC0 || in[1] != SAVE_MAGIC1 ||
       in[2] != SAVE_MAGIC2 || in[3] != SAVE_MAGIC3) return false;
-  if (in[4] != SAVE_VERSION) return false;
+  // Version 2 widens stored move IDs. The current reader has explicit legacy
+  // migration for v1 fields, so old backups remain importable; an old reader
+  // still rejects v2 before it can misread a 16-bit party/box stride.
+  if (in[4] < SAVE_MIN_VERSION || in[4] > SAVE_VERSION) return false;
   uint16_t count = (uint16_t)in[5] | ((uint16_t)in[6] << 8);
   uint16_t want = (uint16_t)in[n - 2] | ((uint16_t)in[n - 1] << 8);
   if (crc16(in, n - 2) != want) return false;

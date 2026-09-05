@@ -17,6 +17,7 @@
 #include "pet.h"
 #include "party.h"
 #include "save.h"
+#include "moves.h"
 #include <cstdio>
 #include <cstring>
 #include <cstddef>
@@ -44,6 +45,30 @@ struct OldPartyMon {
   char nick[12];
 };
 
+// ko.1.1.4 and the other released move-aware builds used four one-byte move
+// IDs.  It is a different migration from the older no-moves record above.
+struct ReleasedPartyMon {
+  int16_t dex;
+  uint16_t level;
+  uint16_t medals;
+  uint8_t ivAtk, ivDef, ivSpe, ivHp;
+  uint8_t trAtk, trDef, trSpe;
+  uint8_t shiny;
+  char nick[12];
+  uint8_t moves[MOVE_SLOTS];
+};
+
+static uint16_t testCrc16(const uint8_t *p, size_t n) {
+  uint16_t c = 0xFFFF;
+  for (size_t i = 0; i < n; i++) {
+    c ^= (uint16_t)p[i] << 8;
+    for (int b = 0; b < 8; b++)
+      c = (c & 0x8000) ? (uint16_t)((c << 1) ^ 0x1021)
+                       : (uint16_t)(c << 1);
+  }
+  return c;
+}
+
 int main(){
   // If this ever fails, the migration cannot work at all: Party::begin() infers
   // the old record size from the blob length and copies that many bytes into
@@ -52,6 +77,8 @@ int main(){
      "the old record is shorter than the new one");
   ck(offsetof(OldPartyMon, nick) == offsetof(PartyMon, nick),
      "and every field before moves[] sits at the same offset");
+  ck(sizeof(ReleasedPartyMon) == 30 && sizeof(PartyMon) == 34,
+     "the released one-byte and expanded two-byte move layouts are exact");
 
   // --- write a save the way an older build would have
   {
@@ -151,7 +178,7 @@ int main(){
 
   // --- and the whole thing can then be backed up and restored
   {
-    static uint8_t buf[2048];
+    static uint8_t buf[SAVE_MAX_BYTES];
     size_t n = saveExport(buf, sizeof(buf));
     ck(n > 0, "an upgraded save exports");
     pet.factoryReset();
@@ -159,6 +186,83 @@ int main(){
     Pet p2; Party q2; p2.begin(); q2.begin();
     ck(p2.speciesId == 59 && !strcmp(p2.nick, "BLAZE") && q2.count() == 4,
        "with the upgraded contents intact");
+  }
+
+  // --- migrate the immediately previous release: six party slots and the old
+  // 18-slot box, both with four uint8 move IDs per record.
+  ReleasedPartyMon releasedParty[PARTY_SLOTS] = {};
+  ReleasedPartyMon releasedBox[18] = {};
+  for (int i = 0; i < PARTY_SLOTS; i++) {
+    releasedParty[i].dex = (int16_t)(100 + i);
+    releasedParty[i].level = (uint16_t)(50 + i);
+    releasedParty[i].moves[0] = (uint8_t)(MV_TACKLE + i);
+    releasedParty[i].moves[1] = (uint8_t)MV_SURF;
+    snprintf(releasedParty[i].nick, sizeof(releasedParty[i].nick), "REL%d", i);
+  }
+  for (int i = 0; i < 18; i++) {
+    releasedBox[i].dex = (int16_t)(200 + i);
+    releasedBox[i].level = (uint16_t)(20 + i);
+    releasedBox[i].moves[0] = (uint8_t)MV_EMBER;
+  }
+  {
+    Preferences p;
+    p.begin("tamapoke", false);
+    p.putBytes("party", releasedParty, sizeof(releasedParty));
+    p.putBytes("box", releasedBox, sizeof(releasedBox));
+    p.end();
+  }
+  Party released;
+  released.begin();
+  bool releasedPartyOk = true, releasedBoxOk = true;
+  for (int i = 0; i < PARTY_SLOTS; i++)
+    if (released.slots[i].dex != 100 + i ||
+        released.slots[i].moves[0] != MV_TACKLE + i ||
+        released.slots[i].moves[1] != MV_SURF)
+      releasedPartyOk = false;
+  for (int i = 0; i < 18; i++)
+    if (released.box[i].dex != 200 + i || released.box[i].moves[0] != MV_EMBER)
+      releasedBoxOk = false;
+  ck(releasedPartyOk, "ko.1.1.4 party moves migrate without adjacent IDs merging");
+  ck(releasedBoxOk && released.box[18].empty(),
+     "all 18 released box slots migrate into the expanded 60-slot box");
+
+  // A version-1 wireless/file backup can contain those same old byte layouts.
+  // Import it first, then prove the ordinary Pet/Party loaders perform the
+  // migrations after the validated restore.
+  {
+    Preferences p;
+    p.begin("tamapoke", false);
+    uint8_t oldLive[MOVE_SLOTS] = {
+      (uint8_t)MV_TACKLE, (uint8_t)MV_SCRATCH,
+      (uint8_t)MV_EMBER, (uint8_t)MV_SURF
+    };
+    p.putBool("init", true);
+    p.putShort("dexn", 6);
+    p.putBytes("mvs", oldLive, sizeof(oldLive));
+    p.putBytes("party", releasedParty, sizeof(releasedParty));
+    p.putBytes("box", releasedBox, sizeof(releasedBox));
+    p.end();
+
+    static uint8_t oldBackup[SAVE_MAX_BYTES];
+    size_t oldN = saveExport(oldBackup, sizeof(oldBackup));
+    oldBackup[4] = 1;
+    uint16_t crc = testCrc16(oldBackup, oldN - 2);
+    oldBackup[oldN - 2] = (uint8_t)crc;
+    oldBackup[oldN - 1] = (uint8_t)(crc >> 8);
+    ck(saveValidate(oldBackup, oldN), "a real version-1 backup envelope is accepted");
+
+    Pet wipe;
+    wipe.factoryReset();
+    ck(saveImport(oldBackup, oldN), "the version-1 backup restores before migration");
+    Pet oldPet; Party oldRoster;
+    oldPet.begin(); oldRoster.begin();
+    ck(oldPet.moves[0] == MV_TACKLE && oldPet.moves[1] == MV_SCRATCH &&
+       oldPet.moves[2] == MV_EMBER && oldPet.moves[3] == MV_SURF,
+       "version-1 live moves migrate to 16-bit IDs");
+    ck(oldRoster.slots[5].dex == 105 &&
+       oldRoster.slots[5].moves[0] == MV_TACKLE + 5 &&
+       oldRoster.box[17].dex == 217,
+       "version-1 party and box records migrate intact");
   }
 
   // ---- DOWNGRADE: a save written by a build with a BIGGER dex

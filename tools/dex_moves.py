@@ -1,26 +1,18 @@
 # -*- coding: utf-8 -*-
-"""The move list, hand-authored. Source of truth for moves.h via gen_moves.py.
+"""Source of truth for the move table generated into moves.h.
 
-86 moves, trimmed from Gen 1's 165 and then topped up with the cheap early
-attacks the early game needs: 63 attacking (three or four per type, a
-cheap one and a strong one), 11 stat-stage moves and 2 heals. STRUGGLE at the
-end makes 77 -- it is a fallback, not a learnable move.
+The first 141 entries are the append-only table shipped through ko.1.1.4.
+Their positions are persistent save IDs and may never be reordered.  The
+committed PokeAPI snapshot in full_move_data.json then appends every move used
+by a level-1, evolution or later level-up learnset in the National Dex through
+The Indigo Disk.  tools/fetch_full_moves.py is the reproducible source step.
 
-Not a pure Gen 1 list, and it can't be. dex_types.py gives the 151 their
-CURRENT typings, so the dex contains Fairy (Clefable, Mr. Mime), Steel
-(Magneton) and Dark types -- and Fairy moves are Gen 6, Steel and Dark moves
-are Gen 2. Restricting to Red/Blue's move list would leave exactly those
-species with no same-type move to their name. Entries marked LATER below are
-in for that reason: they buy STAB for a typing the game already committed to.
-Ghost is the same story -- Gen 1 Ghost had no usable attacking move at all,
-hence SHADOW BALL.
-
-Display names are capped at 12 characters: four move buttons have to fit
-across a 466 px round panel at text size 2. ANCIENTPOWER is the games' own
-Gen 3 spelling; DAZZLE GLEAM is ours.
-
-No PP by design. Status conditions (burn/para/sleep/poison) are deliberately
-absent for now -- the effect enum has room and they land in a later phase.
+Display names may be up to 24 ASCII characters.  The 466 px move grid keeps
+the normal large font where it fits and scales longer names down.  No PP is
+stored by design.  The compact battle engine implements common damage, heal,
+stage, priority, multi-hit, recoil/drain and ailment effects; moves whose
+unique main-series mechanics are outside that model remain selectable with a
+safe generic representation.
 """
 
 # Move categories. There is no separate special-attack IV: special moves run
@@ -32,10 +24,9 @@ MC_PHYS, MC_SPEC, MC_STATUS = 0, 1, 2
 # cleared when it ends, never written to the pet or replayed by the RTC's
 # offline catch-up, so a burn can never grind against the care sim.
 #
-# There is no dedicated status move for these (no THUNDER WAVE, no SLEEP
-# POWDER), so they ride along as a SECONDARY chance on a damaging move -- which
-# is why they need their own two fields rather than reusing `effect`, whose one
-# slot is already spent on things like EF_RECOIL.
+# They use their own two fields rather than reusing `effect`, whose one slot is
+# already spent on things like EF_RECOIL.  This supports both damaging moves'
+# secondary chances and dedicated status moves such as THUNDER WAVE.
 AIL_NONE = 0
 AIL_PARA = 1        # speed cut, and some turns are lost outright
 AIL_BURN = 2        # chip damage each turn, physical attack cut
@@ -57,6 +48,7 @@ EF_MULTI = 8        # hits 2-5 times, power is per hit
 EF_HEAL = 9         # param = percent of max VIT restored
 EF_RECHARGE = 10    # user loses the following turn, exposed
 EF_CHARGE = 11      # turn 1 charges; param 1 = invulnerable while charging
+EF_ALWAYS_CRIT = 12 # always lands a critical hit (FLOWER TRICK)
 
 # Stat bitmask for EF_STAGE. One delta applies to every bit set, which is how
 # DRAGON DANCE (ATK+SPE) and BULK UP (ATK+DEF) get to be one table row.
@@ -67,8 +59,8 @@ TG_SELF, TG_FOE = 0, 1
 # name (<=12 chars), pokeapi slug, type, category, power, accuracy,
 # effect, param, statMask, stages, target
 #
-# accuracy 0 means the move cannot miss (only ever paired with EF_NEVER_MISS
-# or a status move, which never rolls).
+# accuracy 0 means the move cannot miss (paired with EF_NEVER_MISS,
+# EF_ALWAYS_CRIT or a status move, which never rolls).
 MOVES = [
     # --- NORMAL -----------------------------------------------------------
     # The cheap early attacks. Without these a young creature had NOTHING of its
@@ -235,13 +227,34 @@ SLUG_TO_NAME = {slug: name for name, slug, *_ in MOVES if slug}
 # GEN89_DATA_LOADER: official Korean move details in gen89_data.json.
 import json as _json, os as _os
 _G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.json'), encoding='utf-8'))
-_CATS = {'physical': MC_PHYS, 'special': MC_SPEC}
-_EFFECTS = {'none': EF_NONE, 'recoil': EF_RECOIL, 'drain': EF_DRAIN,
-            'priority': EF_PRIORITY, 'never_miss': EF_NEVER_MISS, 'multi': EF_MULTI}
-_AILS = {'none': AIL_NONE, 'para': AIL_PARA, 'poison': AIL_POISON}
-for _m in _G89['moves']:
-    MOVES.append((_m['display'], _m['slug'], _m['type'], _CATS[_m['category']],
-                  _m['power'], _m['accuracy'], _EFFECTS[_m['effect']], _m['param'],
-                  0, 0, TG_FOE, _AILS[_m['ailment']], _m['ailment_chance']))
+_CATS = {'physical': MC_PHYS, 'special': MC_SPEC, 'status': MC_STATUS}
+_EFFECTS = {'none': EF_NONE, 'stage': EF_STAGE, 'recoil': EF_RECOIL, 'drain': EF_DRAIN,
+            'priority': EF_PRIORITY, 'never_miss': EF_NEVER_MISS, 'multi': EF_MULTI,
+            'heal': EF_HEAL, 'always_crit': EF_ALWAYS_CRIT}
+_AILS = {'none': AIL_NONE, 'para': AIL_PARA, 'burn': AIL_BURN, 'poison': AIL_POISON,
+         'sleep': AIL_SLEEP, 'freeze': AIL_FREEZE, 'confuse': AIL_CONFUSE}
+_STATS = {'none': 0, 'atk': ST_ATK, 'def': ST_DEF, 'spa': ST_SPA,
+          'spd': ST_SPD, 'spe': ST_SPE}
+_TARGETS = {'self': TG_SELF, 'foe': TG_FOE}
+def _append_sourced(_rows):
+    for _m in _rows:
+        _mask = 0
+        for _stat in _m.get('stat', 'none').split('+'):
+            _mask |= _STATS[_stat]
+        MOVES.append((_m['display'], _m['slug'], _m['type'], _CATS[_m['category']],
+                      _m['power'], _m['accuracy'], _EFFECTS[_m['effect']], _m['param'],
+                      _mask, _m.get('stages', 0), _TARGETS[_m.get('target', 'foe')],
+                      _AILS[_m['ailment']], _m['ailment_chance']))
+
+_append_sourced(_G89['moves'])
+# Everything through the Galar/Paldea starter signatures already shipped with
+# an 8-bit save ID.  The full natural-learnset expansion must remain append-only
+# after this boundary so every existing creature keeps the same four moves.
+LEGACY_MOVE_COUNT = len(MOVES)
+_full_path = _os.path.join(_os.path.dirname(__file__), 'full_move_data.json')
+if _os.path.exists(_full_path):
+    _FULL = _json.load(open(_full_path, encoding='utf-8'))
+    _append_sourced(_FULL['moves'])
+    del _FULL
 SLUG_TO_NAME = {slug: name for name, slug, *_ in MOVES if slug}
-del _G89, _m, _CATS, _EFFECTS, _AILS
+del _G89, _CATS, _EFFECTS, _AILS, _STATS, _TARGETS, _append_sourced, _full_path

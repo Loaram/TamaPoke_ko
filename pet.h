@@ -12,7 +12,7 @@
 // de juego con cuidado perfecto. Baja a 1 para ver evoluciones al momento.
 #define MINUTES_PER_LEVEL 20
 #define MAX_LEVEL 100              // reached at 1d 9h; see level()
-#define SLEEP_ENERGY_PER_MIN 15     // live and offline sleep recovery
+#define SLEEP_ENERGY_PER_MIN 8      // live and offline sleep recovery
 #define EAT_ANIM_MS 2500UL
 #define HEART_MS 1500UL
 #define EVOLVE_ANIM_MS 5200UL              // animacion de evolucion (mas larga = mas epica)
@@ -31,6 +31,9 @@
 #define NIGHT_END 6
 enum : uint8_t { SLEEP_NONE = 0, SLEEP_AUTO, SLEEP_PLAYER };
 #define DEF_TRAIN_TICKS 60                 // minutos de bienestar por +1 de DEF
+#define ATK_TRAIN_ENERGY_COST 12           // fixed cost per completed session
+#define DEF_TRAIN_ENERGY_COST 12
+#define SPE_TRAIN_ENERGY_COST 10
 
 // ceremonias de fin de ciclo
 enum : uint8_t { CER_NONE = 0, CER_FAREWELL, CER_RUNAWAY, CER_RELEASE };
@@ -145,8 +148,7 @@ public:
   // The ball game: happiness AND defence training. Returns the DEF gained.
   uint8_t playResult(uint8_t score);
   uint8_t trainStrength(uint16_t hits);  // saco de entrenamiento (entrena FUE)
-  // Reaction test: its own trainer, so the ball game can go back to being purely
-  // about joy instead of doubling as a stat grind.
+  // Reaction test: its own trainer, leaving the ball game to train defence.
   uint8_t trainSpeed(uint16_t hits);
   // What beating a gym leader is worth. Random WHICH stat, but only among the
   // ones with room left -- a random grant that landed on an already-capped stat
@@ -171,9 +173,9 @@ public:
   // The four known moves (indices into MOVE_TBL; 0 = empty slot). Player-chosen
   // once the learn/forget prompt exists -- until then, and for saves made before
   // moves were stored at all, relearnFromLevel() fills them in.
-  uint8_t moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
+  MoveId moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
   uint8_t moveCount() const;
-  bool knowsMove(uint8_t mv) const;
+  bool knowsMove(MoveId mv) const;
   // The newest MOVE_SLOTS moves this species has learned by its current level,
   // newest last. Used on hatch, on a fresh save, and to backfill empty slots.
   void relearnFromLevel();
@@ -187,7 +189,7 @@ public:
 
   // Moves reachable at this level that are not already known, for the learn
   // prompt. Returns how many were written into out (at most max).
-  uint8_t pendingLearnables(uint8_t *out, uint8_t max) const;
+  uint8_t pendingLearnables(MoveId *out, uint8_t max) const;
 
   // Player-wide, like the streak and the Pokedex: badges outlive the creature
   // that earned them, so newEgg() must never clear this.
@@ -269,11 +271,12 @@ public:
   // offline catch-up -- which can cross a dozen levels in one go -- queues its
   // offers instead of firing a dozen dialogs at boot.
   uint8_t lastLearnLevel = 0;
-  uint8_t learnQueue[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+#define LEARN_QUEUE_MAX 40
+  MoveId learnQueue[LEARN_QUEUE_MAX] = {};
   uint8_t learnQCount = 0;
   void checkLearnGates();
   bool hasLearnOffer() const { return learnQCount > 0; }
-  uint8_t learnOffer() const { return learnQCount ? learnQueue[0] : 0; }
+  MoveId learnOffer() const { return learnQCount ? learnQueue[0] : 0; }
   void acceptLearn(uint8_t slot);   // put the pending move into slot 0..3
   void declineLearn();
   // tope de entrenamiento que permite un IV: 77 (IV 8) .. 100 (IV 31)
@@ -462,6 +465,7 @@ private:
   void defTick(bool resting);       // la calma forja la defensa (ver pet.cpp)
   void snapshotForParty();          // copy into endedMon before newEgg() wipes it
   void checkMedals();
+  void learnMoveNow(MoveId move);  // fill a slot or queue a replacement prompt
   void tick();
   void applyAutoSleep();
   void hatch();

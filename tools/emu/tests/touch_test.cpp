@@ -53,7 +53,7 @@ extern uint8_t pickPage;
 #define PICK_Y(i) (86 + ((i) / 2) * 80)
 #define BTL_CELL_X(i) (69 + ((i) % 2) * 168)
 #define BTL_CELL_Y(i) (286 + ((i) / 2) * 52)
-uint8_t learnableList(uint8_t *out, uint8_t max);
+uint8_t learnableList(MoveId *out, uint8_t max);
 #define MOVE_PICK_PER_PAGE 5
 #define MOVE_PICK_Y(i) (76 + (i) * 58)
 extern uint8_t cardPage;
@@ -179,7 +179,7 @@ int main(int argc, char **argv) {
 
   // ---- moves card page -> picker -> slot actually changes, with no duplicates
   cardPage = 2;
-  uint8_t before = pet.moves[1];
+  MoveId before = pet.moves[1];
   click(233, 154);                       // slot 1 == MOVE_ROW_Y(1)
   if (!movePickOpen) { printf("FAIL: tapping a move slot did not open the picker\n"); return 1; }
   printf("PASS: tapping a move slot opens the picker\n");
@@ -205,11 +205,11 @@ int main(int argc, char **argv) {
   printf("PASS: no duplicate move after the swap\n");
 
   // picking a move the pet already knows should TRADE slots, not clone it
-  uint8_t s0 = pet.moves[0], s2 = pet.moves[2];
+  MoveId s0 = pet.moves[0], s2 = pet.moves[2];
   cardPage = 2;
   click(233, 212);                       // slot 2
-  uint8_t all[64];
-  uint8_t n = learnableList(all, sizeof(all));
+  MoveId all[MAX_LEARNABLE_MOVES];
+  uint8_t n = learnableList(all, MAX_LEARNABLE_MOVES);
   int page = -1, row = -1;
   for (uint8_t i = 0; i < n; i++)
     if (all[i] == s0) { page = i / MOVE_PICK_PER_PAGE; row = i % MOVE_PICK_PER_PAGE; }
@@ -234,7 +234,7 @@ int main(int argc, char **argv) {
   if (!pet.hasLearnOffer()) { printf("FAIL: no learn offer was queued\n"); return 1; }
   printf("PASS: crossing gates with a full moveset queues an offer\n");
 
-  uint8_t offered = pet.learnOffer(), was2 = pet.moves[2];
+  MoveId offered = pet.learnOffer(), was2 = pet.moves[2];
   click(233, 104 + 2 * 56 + 10);          // LEARN_ROW_Y(2)
   if (pet.moves[2] != offered) {
     printf("FAIL: accepting did not put %s in slot 2 (got %s)\n",
@@ -245,9 +245,9 @@ int main(int argc, char **argv) {
          was2 ? MOVE_TBL[was2].name : "-", MOVE_TBL[offered].name);
 
   if (pet.hasLearnOffer()) {
-    uint8_t before[MOVE_SLOTS];
+    MoveId before[MOVE_SLOTS];
     for (int i = 0; i < MOVE_SLOTS; i++) before[i] = pet.moves[i];
-    uint8_t skipped = pet.learnOffer();
+    MoveId skipped = pet.learnOffer();
     click(233, 334 + 20);                 // LEARN_SKIP_Y
     bool same = true;
     for (int i = 0; i < MOVE_SLOTS; i++) if (pet.moves[i] != before[i]) same = false;
@@ -284,6 +284,9 @@ int main(int argc, char **argv) {
   printf("PASS: the fight concludes and closes\n");
 
   // ---- a trainer fight: the foe's squad must chain, and winning awards a badge
+  // Use Blastoise so repeatedly tapping the first natural move is a legitimate
+  // Brock sweep even after the complete learnset changed default move order.
+  pet.dbgHatchAs(9, false);
   pet.ageMinutes = 100 * MINUTES_PER_LEVEL;   // strong enough to sweep Brock
   pet.relearnFromLevel();
   while (pet.hasLearnOffer()) pet.declineLearn();

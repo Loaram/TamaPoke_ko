@@ -24,6 +24,7 @@ extern uint8_t galleryRegion;
 extern uint8_t gymRegion;
 extern bool gymPick, galleryPick;
 extern uint8_t movePickSlot, movePickParty, boxSel, boxSwapFrom;
+#define MOVE_PICK_PER_PAGE 5
 extern uint16_t squadMask;
 extern uint8_t pickTrainer; extern bool pickHard;
 void pickDefault(uint8_t);
@@ -54,7 +55,8 @@ static void check(const char *name, bool *open, uint8_t *page){
   if (*page != 1) { printf("FAIL  %-10s did not advance a page (page=%u)\n", name, *page); bad++; return; }
   printf("PASS  %-10s pages on a horizontal swipe\n", name);
 }
-uint8_t learnableFor(int16_t dex, uint8_t lvl, uint8_t *out, uint8_t max);
+uint8_t learnableFor(int16_t dex, uint8_t lvl, MoveId *out, uint8_t max);
+uint8_t learnableList(MoveId *out, uint8_t max);
 
 int main(){
   setup();
@@ -72,8 +74,35 @@ int main(){
   clearAll(); gymOpen=true; gymPick=false;        check("gyms",     &gymOpen,      &gymPage);
   clearAll(); playerOpen=true;                    check("player",   &playerOpen,   &playerPage);
   clearAll(); partyOpen=true; boxOpen=true;       check("box",      &boxOpen,      &boxPage);
+  boxPage=0; boxOpen=true;
+  for (uint8_t i=1;i<BOX_PAGES;i++) onSwipe(-1);
+  if (!boxOpen || boxPage!=BOX_PAGES-1) {
+    printf("FAIL  box        page 10 is not reachable (page=%u)\n", boxPage); bad++;
+  } else printf("PASS  box        all %u numbered pages are reachable\n", (unsigned)BOX_PAGES);
+  onSwipe(-1);
+  if (boxOpen) { printf("FAIL  box        did not close past the final page\n"); bad++; }
+  else printf("PASS  box        closes after the final page\n");
   clearAll(); movePickOpen=true; movePickParty=0; movePickSlot=0;
                                                   check("movepick", &movePickOpen, &movePickPage);
+  // Mew owns the largest merged list. Walk the real picker to its final page
+  // so the full expansion cannot silently retain an old small page limit.
+  pet.dbgHatchAs(151, false);
+  pet.ageMinutes = 99UL * MINUTES_PER_LEVEL;
+  for (int i = 0; i < MOVE_SLOTS; i++) pet.moves[i] = MV_NONE;
+  {
+    MoveId every[MAX_LEARNABLE_MOVES];
+    uint8_t n = learnableList(every, MAX_LEARNABLE_MOVES);
+    uint8_t pages = (uint8_t)((n + MOVE_PICK_PER_PAGE - 1) / MOVE_PICK_PER_PAGE);
+    clearAll(); movePickOpen=true; movePickParty=0; movePickSlot=0; movePickPage=0;
+    for (uint8_t p = 1; p < pages; p++) onSwipe(-1);
+    if (n != 91 || pages != 19 || !movePickOpen || movePickPage != pages - 1) {
+      printf("FAIL  movepick   largest list stops at %u moves, page %u/%u\n",
+             n, (unsigned)movePickPage + 1, pages); bad++;
+    } else printf("PASS  movepick   all 91 moves and 19 numbered pages are reachable\n");
+    onSwipe(-1);
+    if (movePickOpen) { printf("FAIL  movepick   did not close past its final page\n"); bad++; }
+    else printf("PASS  movepick   closes after the final page\n");
+  }
   clearAll(); pickTrainer=7; pickHard=false; pickDefault(squadCap(7,false)); pickOpen=true;
                                                   check("teampick", &pickOpen,     &pickPage);
   // The Pokedex pages within ONE region and changes region on a vertical swipe.
@@ -277,8 +306,8 @@ int main(){
   // PICKER has to actually ask it. It once kept its own copy of the check,
   // which IS the bug, so this drives the screen's own list, not the rule.
   {
-    uint8_t l[64];
-    uint8_t n = learnableFor(5, 22, l, sizeof(l));    // a Charmeleon at 22
+    MoveId l[MAX_LEARNABLE_MOVES];
+    uint8_t n = learnableFor(5, 22, l, MAX_LEARNABLE_MOVES); // Charmeleon at 22
     bool blast = false, ember = false;
     for (uint8_t i = 0; i < n; i++) {
       if (!strcmp(MOVE_TBL[l[i]].name, "FIRE BLAST")) blast = true;
@@ -288,9 +317,16 @@ int main(){
     else printf("PASS  picker     no FIRE BLAST for a level 22 Charmeleon\n");
     if (!ember) { printf("FAIL  picker     lost the moves it really knows\n"); bad++; }
     else printf("PASS  picker     still offers what it really knows\n");
-    if (learnableFor(5, 40, l, sizeof(l)) <= n) {
+    if (learnableFor(5, 40, l, MAX_LEARNABLE_MOVES) <= n) {
       printf("FAIL  picker     TMs never arrive at all\n"); bad++;
     } else printf("PASS  picker     and the TMs arrive once it is built\n");
+
+    n = learnableFor(908, 36, l, MAX_LEARNABLE_MOVES);
+    bool flower = false;
+    for (uint8_t i = 0; i < n; i++)
+      if (l[i] == MV_FLOWER_TRICK) flower = true;
+    if (!flower) { printf("FAIL  picker     cannot recover FLOWER TRICK after evolution\n"); bad++; }
+    else printf("PASS  picker     can recover FLOWER TRICK after evolution\n");
   }
 
   printf("%s\n", bad?"FAILURES":"every paged screen pages");

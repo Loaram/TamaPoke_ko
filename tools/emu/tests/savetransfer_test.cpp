@@ -30,7 +30,7 @@ static size_t makeSave(uint8_t *out,size_t cap){
   nvs().clear();
   Preferences p; p.begin("tamapoke",false);
   p.putString("tnam","SENDER"); p.putUChar("lang",6); p.putUInt("age",123456);
-  uint8_t box[700],party[480];
+  uint8_t box[sizeof(PartyMon) * BOX_SLOTS],party[480];
   for(size_t i=0;i<sizeof(box);i++) box[i]=(uint8_t)(i*17u+3u);
   for(size_t i=0;i<sizeof(party);i++) party[i]=(uint8_t)(i*29u+7u);
   p.putBytes("box",box,sizeof(box)); p.putBytes("party",party,sizeof(party)); p.end();
@@ -54,10 +54,13 @@ static void runTransfer(bool lossy,bool receiverStarts=false){
   ck(recv.beginSave(false,"RECEIVER"),"receiver enters save mode");
   send.id=0x1111; recv.id=0x8888;
   if(receiverStarts) recv.start(); else send.start();
-  for(uint32_t now=0; now<85000 &&
+  for(uint32_t now=0; now<180000 &&
       (send.state!=LINK_SAVE_DONE || recv.state!=LINK_SAVE_READY); now+=100){
     send.tick(now); recv.tick(now);
   }
+  if(send.state!=LINK_SAVE_DONE || recv.state!=LINK_SAVE_READY)
+    printf("      transfer stopped: send=%u recv=%u chunks=%u/%u frames=%u/%u\n",
+           send.state,recv.state,recv.saveChunk,recv.saveChunks,a.sent,b.sent);
   ck(send.state==LINK_SAVE_DONE,"sender finishes after final receipt");
   ck(recv.state==LINK_SAVE_READY,"receiver validates the complete save");
   ck(recv.saveProgress()==100 && send.saveProgress()==100,"both report 100 percent");

@@ -56,7 +56,7 @@ int main() {
   live.sleeping = true;
   live.sleepAuto = SLEEP_PLAYER;
   live.dbgTick();
-  ck(live.energy == 35, "live sleep restores 15 energy per minute");
+  ck(live.energy == 28, "live sleep restores 8 energy per minute");
 
   Pet offline;
   hatch(offline);
@@ -65,7 +65,7 @@ int main() {
   offline.sleepAuto = SLEEP_PLAYER;
   offline.dbgSetSeen(100000);
   offline.syncClock(100120);
-  ck(offline.energy == 50, "offline sleep restores 15 energy per minute");
+  ck(offline.energy == 36, "offline sleep restores 8 energy per minute");
 
   Pet deviceClock;
   hatch(deviceClock);

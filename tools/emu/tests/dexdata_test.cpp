@@ -78,10 +78,12 @@ int main(){
   // because it learns no damaging move of its own type in the games either:
   // its whole gimmick is Counter and Recover. COSMOG and COSMOEM are the nebula
   // stages, which know Splash, Teleport and Cosmic Power and nothing else.
-  // Applin is the later equivalent: its only damaging level-up move is the
+  // Wurmple likewise has only Poison Sting and Tackle in its latest natural
+  // list, so it has no Bug attack before evolving. Applin is the later
+  // equivalent: its only damaging level-up move is the
   // Ghost-type Astonish. Giving it an invented Grass attack would contradict
   // the source data, so it is the one known non-STAB attacker.
-  static const int16_t NO_ATTACK[] = { 11, 14, 132, 201, 202, 235, 266, 268, 360,
+  static const int16_t NO_ATTACK[] = { 11, 14, 132, 201, 202, 235, 265, 266, 268, 360,
                                        771, 789, 790, 840 };
   static const int16_t NO_LEARNSET[] = { 11, 14, 132, 201, 235, 789, 790 };
   auto known = [](const int16_t *a, size_t n, int16_t d) {
@@ -90,15 +92,15 @@ int main(){
   };
 
   // --- THE ONE THAT BITES ON A NEW GENERATION: a species with no attack of
-  //     its own type. dex_moves.py is 77 hand-picked moves, so a typing that
-  //     arrives with a new region can leave creatures with no STAB at all.
+  //     its own type. The complete source snapshot makes this an audit of real
+  //     natural learnsets rather than of the former compact table's coverage.
   {
     int noStab = 0; int16_t first = 0;
     for (int16_t d = 1; d <= DEX_COUNT; d++) {
       const DexEntry &e = DEX_TBL[d];
       bool found = false;
       for (uint8_t i = 0; i < learnCount(d) && !found; i++) {
-        uint8_t mv = learnMove(d, i);
+        MoveId mv = learnMove(d, i);
         if (mv >= MOVE_COUNT) continue;
         const MoveEntry &m = MOVE_TBL[mv];
         if (m.cat == MC_STATUS || !m.power) continue;

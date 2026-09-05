@@ -16,6 +16,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 from dex_moves import (MOVES, MC_PHYS, MC_SPEC, MC_STATUS, EF_STAGE,
+                       EF_ALWAYS_CRIT,
                        ST_ATK, ST_DEF, ST_SPA, ST_SPD, ST_SPE, TG_SELF, TG_FOE,
                        AIL_NONE, AIL_PARA, AIL_BURN, AIL_POISON, AIL_SLEEP,
                        AIL_FREEZE, AIL_CONFUSE)
@@ -30,8 +31,9 @@ from dex_learnsets import LEARNSETS
 # Derived, not hardcoded: this file and dex.h must agree on how many species
 # there are, or LEARN_OFS is short and every lookup past the end reads garbage.
 from dex_data import DEX
+from evolution_moves import EVOLUTION_MOVES
 DEX_COUNT = len(DEX)
-MAX_NAME = 12  # four move buttons across a 466 px round panel at text size 2
+MAX_NAME = 24  # rows scale long names down; catches corrupt/source prose instead
 
 
 def ident(name):
@@ -62,9 +64,17 @@ def main():
 
     idx = {name: i + 1 for i, (name, *_) in enumerate(MOVES)}  # 0 = MV_NONE
     by_slug = {slug: name for name, slug, *_ in MOVES if slug}
+    evolution_moves = []
+    for dex, slugs in sorted(EVOLUTION_MOVES.items()):
+        if not 1 <= dex <= DEX_COUNT:
+            sys.exit('evolution move species out of range: %d' % dex)
+        for slug in slugs:
+            if slug not in by_slug:
+                sys.exit('unknown evolution move for %d: %s' % (dex, slug))
+            evolution_moves.append((dex, idx[by_slug[slug]], by_slug[slug]))
 
     o = []
-    o.append('#pragma once\n#include <stdint.h>\n#include "dex.h"\n\n')
+    o.append('#pragma once\n#include <stdint.h>\n#include "move_id.h"\n#include "dex.h"\n\n')
     o.append('// GENERADO por tools/gen_moves.py desde tools/dex_moves.py - no editar\n\n')
 
     o.append('// Categoria. No hay IV de ataque especial: los movimientos\n'
@@ -88,6 +98,7 @@ def main():
              '  EF_HEAL,        // param = % de vitalidad maxima curada\n'
              '  EF_RECHARGE,    // pierde el turno siguiente, expuesto\n'
              '  EF_CHARGE,      // turno 1 carga; param 1 = invulnerable mientras\n'
+             '  EF_ALWAYS_CRIT, // siempre es critico; precision 0 = no falla\n'
              '};\n\n')
 
     o.append('// Mascara de stats para EF_STAGE: un solo delta se aplica a\n'
@@ -118,11 +129,12 @@ def main():
              '  uint8_t ailChance; // percent, 0 = never\n'
              '};\n\n')
 
-    o.append('enum MoveId : uint8_t {\n  MV_NONE = 0,\n')
+    o.append('enum MoveCode : MoveId {\n  MV_NONE = 0,\n')
     for name, *_ in MOVES:
         o.append('  %s,\n' % ident(name))
     o.append('};\n')
     o.append('#define MOVE_COUNT %d\n\n' % (len(MOVES) + 1))
+    o.append('static_assert(MOVE_COUNT <= 65536, "MoveId must address the whole move table");\n\n')
 
     def cname(m):
         return 'MC_PHYS' if m == MC_PHYS else ('MC_SPEC' if m == MC_SPEC else 'MC_STATUS')
@@ -136,7 +148,8 @@ def main():
 
     EFN = {0: 'EF_NONE', 1: 'EF_STAGE', 2: 'EF_RECOIL', 3: 'EF_DRAIN', 4: 'EF_FIXED_LVL',
            5: 'EF_FIXED', 6: 'EF_PRIORITY', 7: 'EF_NEVER_MISS', 8: 'EF_MULTI',
-           9: 'EF_HEAL', 10: 'EF_RECHARGE', 11: 'EF_CHARGE'}
+           9: 'EF_HEAL', 10: 'EF_RECHARGE', 11: 'EF_CHARGE',
+           EF_ALWAYS_CRIT: 'EF_ALWAYS_CRIT'}
 
     o.append('static const MoveEntry MOVE_TBL[MOVE_COUNT] = {\n')
     o.append('  { "-", T_NORMAL, MC_STATUS, 0, 0, EF_NONE, 0, 0, 0, TG_SELF, AIL_NONE, 0 },  // 0: sin usar\n')
@@ -157,7 +170,7 @@ def main():
              '// LEARN_TBL[LEARN_OFS[n] .. LEARN_OFS[n + 1]).\n'
              '// nivel 0 = MT, sin requisito. El nivel se guarda pero todavia\n'
              '// no filtra nada: lo decide la fase de UI.\n')
-    o.append('struct LearnEntry { uint8_t move; uint8_t level; };\n\n')
+    o.append('struct LearnEntry { MoveId move; uint8_t level; };\n\n')
 
     flat, ofs = [], [0]
     empties = []
@@ -169,7 +182,8 @@ def main():
             empties.append(n)
         ofs.append(len(flat))
 
-    o.append('static const LearnEntry LEARN_TBL[%d] = {\n' % len(flat))
+    o.append('#define LEARNSET_COUNT %d\n' % len(flat))
+    o.append('static const LearnEntry LEARN_TBL[LEARNSET_COUNT] = {\n')
     line = []
     for mid, lv, nm in flat:
         line.append('{ %3d, %3d },' % (mid, lv))
@@ -192,7 +206,10 @@ def main():
              '  if (dex < 1 || dex > DEX_COUNT) return 0;\n'
              '  return (uint8_t)(LEARN_OFS[dex + 1] - LEARN_OFS[dex]);\n'
              '}\n\n')
-    o.append('static inline uint8_t learnMove(int16_t dex, uint8_t i) {\n'
+    o.append('#define MAX_LEARNSET_MOVES %d\n\n' % max(
+        (len(LEARNSETS.get(n, [])) for n in range(1, DEX_COUNT + 1)), default=0))
+
+    o.append('static inline MoveId learnMove(int16_t dex, uint8_t i) {\n'
              '  if (i >= learnCount(dex)) return MV_STRUGGLE;\n'
              '  return LEARN_TBL[LEARN_OFS[dex] + i].move;\n'
              '}\n\n')
@@ -201,10 +218,40 @@ def main():
              '  return LEARN_TBL[LEARN_OFS[dex] + i].level;\n'
              '}\n')
 
-    path = os.path.join(os.path.dirname(__file__), '..', 'moves.h')
-    open(path, 'w').write(''.join(o))
+    # Evolution-only moves are sparse. Keep them separate from level 0, which
+    # already means TM/tutor/egg in LEARN_TBL, and from the current level gate:
+    # the old form has already consumed that gate before evolve() changes dex.
+    o.append('\n// Moves learned immediately after evolving into `dex`. Sparse because\n'
+             '// only evolution-specific moves belong here; ordinary level gates stay above.\n'
+             'struct EvolutionLearnEntry { uint16_t dex; MoveId move; };\n'
+             'static const EvolutionLearnEntry EVOLUTION_LEARN_TBL[%d] = {\n'
+             % len(evolution_moves))
+    for dex, mid, name in evolution_moves:
+        o.append('  { %4d, %3d },  // %s\n' % (dex, mid, name))
+    o.append('};\n'
+             '#define EVOLUTION_LEARN_COUNT %d\n'
+             '#define MAX_EVOLUTION_MOVES %d\n'
+             '#define MAX_LEARNABLE_MOVES (MAX_LEARNSET_MOVES + MAX_EVOLUTION_MOVES)\n\n'
+             'static inline uint8_t evolutionMoveCount(int16_t dex) {\n'
+             '  uint8_t n = 0;\n'
+             '  for (uint16_t i = 0; i < EVOLUTION_LEARN_COUNT; i++)\n'
+             '    if (EVOLUTION_LEARN_TBL[i].dex == dex) n++;\n'
+             '  return n;\n'
+             '}\n\n'
+             'static inline MoveId evolutionMove(int16_t dex, uint8_t which) {\n'
+             '  for (uint16_t i = 0; i < EVOLUTION_LEARN_COUNT; i++) {\n'
+             '    if (EVOLUTION_LEARN_TBL[i].dex != dex) continue;\n'
+             '    if (!which--) return EVOLUTION_LEARN_TBL[i].move;\n'
+             '  }\n'
+             '  return MV_NONE;\n'
+             '}\n' % (len(evolution_moves), max(
+                 (len(v) for v in EVOLUTION_MOVES.values()), default=0)))
 
-    tbl_bytes = len(flat) * 2 + len(ofs) * 2
+    path = os.path.join(os.path.dirname(__file__), '..', 'moves.h')
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(''.join(o))
+
+    tbl_bytes = len(flat) * 4 + len(ofs) * 2
     print('movimientos: %d (+MV_NONE)' % len(MOVES))
     print('learnsets: %d filas, %.1f de media, %d bytes de tabla'
           % (len(flat), len(flat) / DEX_COUNT, tbl_bytes))

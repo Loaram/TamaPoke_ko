@@ -30,6 +30,25 @@ int main(){
   ck(kept, "a pre-box save keeps its whole party");
   ck(p.boxCount()==0, "and comes up with an empty box, not garbage");
 
+  // A ko.1.1.4 box had 18 slots. Growing the array must keep those records at
+  // the front, initialise slots 19..60 empty and rewrite the blob once.
+  {
+    constexpr int OLD_BOX_SLOTS = 18;
+    PartyMon oldBox[OLD_BOX_SLOTS];
+    for (int i=0;i<OLD_BOX_SLOTS;i++) oldBox[i]=mk(200+i, 20+i);
+    Preferences seed; seed.begin("tamapoke", false);
+    seed.putBytes("box", oldBox, sizeof(oldBox)); seed.end();
+    Party grown; grown.begin();
+    ck(grown.boxCount()==OLD_BOX_SLOTS,
+       "an 18-slot box keeps every creature after expanding to 60");
+    ck(grown.box[0].dex==200 && grown.box[17].dex==217 && grown.box[18].empty(),
+       "old box slots stay aligned and the new tail starts empty");
+    Preferences saved; saved.begin("tamapoke", true);
+    ck(saved.getBytesLength("box")==sizeof(grown.box),
+       "the expanded box is rewritten in the new layout");
+    saved.end();
+  }
+
   // deposit: party slot 0 <-> empty box slot 0
   int16_t was = p.slots[0].dex;
   p.swapPartyBox(0, 0);

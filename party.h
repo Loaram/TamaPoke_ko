@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <Preferences.h>
+#include "move_id.h"
 
 // The party: pets that finished their life and were kept, rather than being
 // dissolved into a single Pokedex bit like every previous ending did.
@@ -14,7 +15,9 @@
 // and the length-based migration in begin() cannot tell a stride change from a
 // slot-count change, so an existing party would be read back misaligned. A new
 // key is purely additive and cannot corrupt anything.
-#define BOX_SLOTS 18
+#define BOX_SLOTS 60
+#define BOX_PER_PAGE 6
+#define BOX_PAGES ((BOX_SLOTS + BOX_PER_PAGE - 1) / BOX_PER_PAGE)
 #define MOVE_SLOTS 4    // the same four every trainer gets in the real games
 
 // A retired pet. Its level is frozen at the moment it joined; it does not keep
@@ -31,7 +34,7 @@ struct PartyMon {
   // what it fights with forever. 0 = empty slot (MOVE_TBL[0] is the "-" filler).
   // Appended at the END of the struct on purpose -- Party::begin() migrates
   // older, shorter blobs by length, and that only works if nothing moved.
-  uint8_t moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
+  MoveId moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
 
   bool empty() const { return dex < 1; }
 };

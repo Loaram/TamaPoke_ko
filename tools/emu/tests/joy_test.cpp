@@ -17,11 +17,15 @@ void setup(); void loop();
 extern Pet pet;
 extern bool gameOpen;
 extern uint8_t gameScore;
+extern uint8_t gameGain;
 void startGame(); void leaveGame();
 int main(){
-  setup(); for(int i=0;i<4;i++) loop();
-  if (pet.awaitingStarter()) pet.chooseStarter(4);
-  if (pet.isEgg()) pet.dbgHatchAs(25,false);
+  setvbuf(stdout, nullptr, _IONBF, 0);
+  // This test only needs the real Pet and game-controller paths. Avoid a full
+  // display loop so a renderer delay cannot mask a training regression.
+  nvs().clear();
+  pet.begin();
+  pet.dbgHatchAs(25,false);
 
   printf("direct playResult:\n");
   for (int sc : {0, 3, 8, 20}) {
@@ -31,21 +35,43 @@ int main(){
   }
   // and the path that actually matters: start a game, score, leave early
   pet.joy = 40;
+  pet.ivDef = 31;
+  pet.trDef = 0;
   startGame();
   gameScore = 9;              // as if nine rallies had landed
   leaveGame();
-  printf("\nleave early with score 9: joy 40 -> %u, gameOpen=%d, record=%u\n",
-         pet.joy, (int)gameOpen, pet.gameHi);
+  printf("\nleave early with score 9: joy 40 -> %u, DEF +%u, gameOpen=%d, record=%u\n",
+         pet.joy, gameGain, (int)gameOpen, pet.gameHi);
   int bad = pet.joy > 40 ? 0 : 1;
+  if (gameGain != 4) { printf("FAIL: result screen gain was not captured\n"); bad = 1; }
 
   // --- the ball game is DEFENCE's trainer now
   {
     Pet p; p.begin(); p.dbgHatchAs(25, false);
     p.ivAtk = p.ivDef = p.ivSpe = p.ivHp = 31;
-    p.trDef = 0;
-    p.playResult(20);
-    printf("\nball game trains DEF: trDef 0 -> %u\n", p.trDef);
-    if (!p.trDef) { printf("FAIL: the ball game did not train defence\n"); bad = 1; }
+    p.trDef = 0; p.energy = 100;
+    uint8_t gained = p.playResult(40);
+    printf("\nball game trains DEF: trDef 0 -> %u (reported +%u), energy 100 -> %u\n",
+           p.trDef, gained, p.energy);
+    if (gained != 18 || p.trDef != 18) {
+      printf("FAIL: the ball game did not report its full defence gain\n"); bad = 1;
+    }
+    if (p.energy != 100 - DEF_TRAIN_ENERGY_COST) {
+      printf("FAIL: defence training did not use the fixed energy cost\n"); bad = 1;
+    }
+  }
+
+  // A high score earns more DEF but must not cost more energy than a low score.
+  {
+    Pet low, high;
+    low.begin(); high.begin();
+    low.dbgHatchAs(25, false); high.dbgHatchAs(25, false);
+    low.energy = high.energy = 100;
+    low.playResult(2); high.playResult(40);
+    printf("fixed DEF energy: score 2 -> %u, score 40 -> %u\n", low.energy, high.energy);
+    if (low.energy != high.energy || low.energy != 100 - DEF_TRAIN_ENERGY_COST) {
+      printf("FAIL: defence energy still varies with score\n"); bad = 1;
+    }
   }
 
   // --- every trainer bonds, and a bigger session bonds more

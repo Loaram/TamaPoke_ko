@@ -1,6 +1,6 @@
 # TamaPoke
 
-Current fork: **Loaram/TamaPoke_ko**, based on DylanPDao/TamaPoke, 809 species and seven regions. Read `HANDOFF.ko.md` for current state, cloud links, validation evidence, and hardware test status. `HANDOVER.md` is historical upstream context.
+Current fork: **Loaram/TamaPoke_ko**, based on DylanPDao/TamaPoke, 1025 species and nine Pokedex regions (seven gym regions). Read `HANDOFF.ko.md` for current state, cloud links, validation evidence, and hardware test status. `HANDOVER.md` is historical upstream context.
 
 Gen-1-Pokémon tamagotchi firmware for the **Waveshare ESP32-S3-Touch-AMOLED-1.75**.
 Arduino/C++ firmware + a Python asset pipeline + a browser-based flasher.
@@ -12,9 +12,9 @@ Personal, non-commercial fan project. Code MIT; sprites CC BY-NC (PMD SpriteColl
 |---|---|
 | `TamaPoke.ino` | Main sketch: UI, screens, touch, serial console, `FW_VERSION` |
 | `pet.cpp/.h` | Game state machine: stats, tick, evolution, eggs, save/load, balance constants |
-| `species.h` / `dex.h` | Canonical species data: names, typings, evolution chains, base stats, rarity tiers, favourite berry; 809 species in this fork |
+| `species.h` / `dex.h` | Canonical species data: names, typings, evolution chains, base stats, rarity tiers, favourite berry; 1025 species in this fork |
 | `types.h` | Type-effectiveness helpers over the generated 18x18 chart in `dex.h` |
-| `party.cpp/.h` | The 6 retired pets banked by farewell/release (not runaway) |
+| `party.cpp/.h` | The 6-member party and 60-slot box, including legacy roster migration |
 | `i18n.cpp/.h` | 7-language string table (ES/EN/FR/DE/IT/PT/KO); existing indices retained |
 | `korean_text.h` / `korean_font.h` / `korean_names.h` | Shared UTF-8 renderer, generated glyph subset and display-name lookup |
 | `audio.cpp/.h` | ES8311 codec over I2S |
@@ -123,12 +123,14 @@ they surfaced over months rather than at once:
 
 **And wearing an INDEX:** a move's index is its position in `MOVES`
 (`dex_moves.py`; `gen_moves.py` does `idx = i + 1`), and `Pet::moves[]` /
-`PartyMon::moves[]` store that index RAW in NVS. Inserting a move into its type
-section shifts every later move by one and silently rewrites the moveset of
-every creature already saved -- the live pet and every banked member, on every
-player's device. **New moves go at the END**, after STRUGGLE, under the
-`APPEND-ONLY BELOW HERE` marker. Same family as the box getting its own NVS key
-and badges being stored additively: never reinterpret bytes that already exist.
+`PartyMon::moves[]` store that index RAW in NVS. The first 141 IDs shipped in
+one-byte saves and are an immutable append-only prefix. The complete natural
+learnset expansion has 695 moves, so `MoveId` is now `uint16_t`; `pet.cpp` and
+`party.cpp` explicitly migrate the old 4-byte live set and 30-byte roster
+records instead of reinterpreting adjacent bytes. Inserting a move into the
+released prefix would silently rewrite every old moveset. **New moves always go
+at the end.** Same family as the box getting its own NVS key and badges being
+stored additively: never reinterpret bytes that already exist.
 
 **The same trap wearing a table instead of a width:** a helper that keeps its
 own copy of the REGION list. Four were found at once when Sinnoh landed --
@@ -588,7 +590,7 @@ the volume curve. The amplitude scale in particular (`500 * vol`) is a guess at
 what sounds linear. This is part of what the soak test is for.
 
 **B. Storage and the box -- DONE.**
-- The box is 18 slots (3 pages of 6) under its OWN NVS key, not a bigger party
+- The box is 60 slots (10 pages of 6) under its OWN NVS key, not a bigger party
   blob. That was deliberate: growing the party blob changes its stride, and the
   length-based migration in `begin()` cannot tell a stride change from a
   slot-count change, so an existing party would have been read back misaligned.
@@ -940,8 +942,10 @@ What changed for 386 species:
   header: `200`, and no `access-control-allow-origin`. `web/README.md` claimed
   the exact opposite for a long time and acting on it untracks them and breaks
   every download button. The code comment in `.gitignore` was the true one.
-- `dex_moves.py` is 77 moves hand-picked so every *Kanto* typing has a STAB
-  option; Hoenn adds species that would need coverage added.
+- `dex_moves.py` retains the released compact prefix and appends the pinned
+  `full_move_data.json` snapshot: all level-1, evolution and level-up moves for
+  1025 species through The Indigo Disk. Regenerate with `fetch_full_moves.py`
+  only when deliberately updating that pinned source.
 - Johto/Hoenn gyms are pure data, in the shape `trainers.h` already uses.
 
 ### The three drain paths, and why only one had no floor
@@ -1111,10 +1115,10 @@ is nowhere to go back to -- and `rpickSwipe()` must be checked FIRST in
 `onSwipe()`, because the starter screen's `if (pet.awaitingStarter()) return;`
 would otherwise swallow the gesture and make the first-boot chooser unpageable.
 
-### Battle system — decided, not started
+### Battle system
 
-**Turn-based and move-based, like the real games.** This is not a fresh choice:
-`moves.h` (78 moves: name, type, MC_PHYS/SPEC/STATUS, power, acc, effect, target,
+**Turn-based and move-based, like the real games.** The implemented engine uses
+`moves.h` (696 entries including NONE: name, type, MC_PHYS/SPEC/STATUS, power, acc, effect, target,
 plus stat stages, priority, multi-hit, recoil, drain, heal, charge/recharge) is
 already a turn-based engine's data layer. `types.h` has integer `typeEffPct()`.
 The old roadmap line about "resolution by ATK/DEF/SPD" is superseded — it would
@@ -1137,11 +1141,10 @@ Settled:
   left a creature banked with a poor set useless forever -- which fights hard
   mode, where coverage decides the run. A banked one is edited from its party
   sheet, and is limited to what it could have learned at its frozen level.
-- **Status ailments are IN.** Requires a `MoveEntry` schema change: `effect` is
-  a single slot already used by EF_RECOIL etc., so a damaging move cannot also
-  carry a secondary status. Add `ailment` + `ailChance` fields, then author them
-  onto `dex_moves.py` (hand-written, not fetched — PokeAPI ailment data was
-  never pulled).
+- **Status ailments are IN.** `MoveEntry` keeps `ailment` + `ailChance`
+  separate from `effect`, so damaging moves can carry a secondary status and
+  dedicated status moves can inflict one. The pinned full-move snapshot imports
+  those common metadata fields from PokeAPI.
 - **No PP.** No field in `MoveEntry`, and it stays that way.
 - **Rewards are badges/rank, not XP.** `level() = 1 + ageMinutes/MINUTES_PER_LEVEL`
   — level is age. Granting XP would break real-time ageing. Learnsets are

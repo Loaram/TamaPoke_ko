@@ -72,7 +72,7 @@ int main(){
     ck(inTable.size()==SAVE_FIELD_COUNT, "and the table has no duplicates");
   }
 
-  static uint8_t buf[2048];
+  static uint8_t buf[SAVE_MAX_BYTES];
   size_t n = saveExport(buf, sizeof(buf));
   ck(n > 0, "a save exports");
   ck(n < sizeof(buf), "and fits a sensible buffer");

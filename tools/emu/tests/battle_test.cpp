@@ -37,8 +37,8 @@ static void mk(Combatant &c, int16_t dex, uint8_t lvl) {
   combatantFromPet(c, p);
 }
 
-static uint8_t findMove(const char *name) {
-  for (uint8_t i = 1; i < MOVE_COUNT; i++)
+static MoveId findMove(const char *name) {
+  for (MoveId i = 1; i < MOVE_COUNT; i++)
     if (!strcmp(MOVE_TBL[i].name, name)) return i;
   return 0;
 }
@@ -54,7 +54,7 @@ int main() {
   // --- type chart drives damage
   Combatant zard, blast, venu;
   mk(zard, 6, 50); mk(blast, 9, 50); mk(venu, 3, 50);
-  uint8_t flame = findMove("FLAMETHROWER"), surf = findMove("SURF");
+  MoveId flame = findMove("FLAMETHROWER"), surf = findMove("SURF");
   uint16_t vsGrass = battleDamage(zard, venu, flame, false, 255);
   uint16_t vsWater = battleDamage(zard, blast, flame, false, 255);
   printf("     FLAMETHROWER: vs VENUSAUR %u, vs BLASTOISE %u\n", vsGrass, vsWater);
@@ -63,7 +63,7 @@ int main() {
   // --- SWORDS DANCE really doubles physical output
   Combatant m1, m2;
   mk(m1, 68, 50); mk(m2, 68, 50);
-  uint8_t chop = findMove("KARATE CHOP");
+  MoveId chop = findMove("KARATE CHOP");
   uint16_t before = battleDamage(m1, m2, chop, false, 255);
   TurnLog lg;
   battleAct(m1, m2, findMove("SWORDS DANCE"), lg);
@@ -90,7 +90,7 @@ int main() {
   mk(fast, 65, 50);   // Alakazam, 120 base speed
   mk(slow, 143, 50);  // Snorlax, 30 base speed
   ck(battleMovesFirst(fast, flame, slow, flame), "the faster creature acts first");
-  uint8_t quick = findMove("QUICK ATTACK");
+  MoveId quick = findMove("QUICK ATTACK");
   ck(battleMovesFirst(slow, quick, fast, flame), "QUICK ATTACK beats raw speed");
 
   // --- paralysis halves speed
@@ -126,7 +126,7 @@ int main() {
   Combatant gh, norm;
   mk(gh, 94, 50);    // Gengar, Ghost
   mk(norm, 143, 50); // Snorlax, Normal
-  uint8_t slam = findMove("BODY SLAM");
+  MoveId slam = findMove("BODY SLAM");
   ck(battleDamage(norm, gh, slam, false, 255) == 0, "NORMAL does nothing to a GHOST");
 
   // --- a full fight terminates and someone wins
@@ -135,9 +135,9 @@ int main() {
   int turn = 0;
   while (!A.fainted() && !B.fainted() && turn < 200) {
     turn++;
-    uint8_t ma = A.moves[random(MOVE_SLOTS)], mb = B.moves[random(MOVE_SLOTS)];
+    MoveId ma = A.moves[random(MOVE_SLOTS)], mb = B.moves[random(MOVE_SLOTS)];
     Combatant *first = &A, *second = &B;
-    uint8_t mf = ma, ms = mb;
+    MoveId mf = ma, ms = mb;
     if (!battleMovesFirst(A, ma, B, mb)) { first = &B; second = &A; mf = mb; ms = ma; }
     battleAct(*first, *second, mf, lg);
     if (!second->fainted()) battleAct(*second, *first, ms, lg);
@@ -162,8 +162,8 @@ int main() {
           int t = 0;
           while (!X.fainted() && !Y.fainted() && t < 200) {
             t++;
-            uint8_t mx = X.moves[random(MOVE_SLOTS)], my = Y.moves[random(MOVE_SLOTS)];
-            Combatant *f = &X, *sd = &Y; uint8_t mf = mx, ms = my;
+            MoveId mx = X.moves[random(MOVE_SLOTS)], my = Y.moves[random(MOVE_SLOTS)];
+            Combatant *f = &X, *sd = &Y; MoveId mf = mx, ms = my;
             if (!battleMovesFirst(X, mx, Y, my)) { f = &Y; sd = &X; mf = my; ms = mx; }
             battleAct(*f, *sd, mf, lg);
             if (!sd->fainted()) battleAct(*sd, *f, ms, lg);

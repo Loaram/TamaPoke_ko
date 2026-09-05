@@ -183,6 +183,10 @@ extern uint8_t pickTrainer, pickPage;
 void pickDefault(uint8_t cap);
 extern bool pickHard;
 void startSpeedGame();
+void startGame();
+extern uint8_t gameScore, gameGain;
+extern bool gameNewHi;
+extern uint32_t gameOverUntil;
 void setup();
 void loop();
 void render();
@@ -385,6 +389,11 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   }
   else if (!strcmp(screen, "gymshard")) { gymOpen = true; gymHard = true; pet.badgesHard = 0x03; }
   else if (!strcmp(screen, "speed")) { startSpeedGame(); }
+  else if (!strcmp(screen, "defresult")) {
+    startGame();
+    gameScore = 20; gameGain = 10; gameNewHi = true;
+    gameOverUntil = millis() + 60000;
+  }
   else if (!strcmp(screen, "avatars")) {
     pet.renameTrainer("DYLAN");
     playerOpen = true;

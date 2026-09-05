@@ -43,7 +43,7 @@ uint16_t linkBuildTag() {
   return (uint16_t)(h ^ (h >> 16));
 }
 
-uint8_t linkSafeMove(uint8_t m) { return m < MOVE_COUNT ? m : 0; }
+MoveId linkSafeMove(MoveId m) { return m < MOVE_COUNT ? m : 0; }
 
 void linkMonFrom(LinkMon &out, const Combatant &c) {
   memset(&out, 0, sizeof(out));
@@ -117,9 +117,12 @@ static void sendHello(Link &l) {
 static void sendSaveHello(Link &l) {
   uint8_t b[SH_LEN];
   memset(b, 0, sizeof(b));
-  b[SH_PROTO] = LINK_PROTO;
+  b[SH_PROTO] = LINK_SAVE_PROTO;
   b[SH_ROLE] = l.saveSender ? 1 : 0;
-  b[SH_SAVE_VERSION] = SAVE_VERSION;
+  // A receiver advertises the oldest envelope it can import. That keeps a v1
+  // device able to send its existing save to this build. A sender advertises
+  // the version it will actually transmit; old receivers reject v2 safely.
+  b[SH_SAVE_VERSION] = l.saveSender ? SAVE_VERSION : SAVE_MIN_VERSION;
   b[SH_ID] = (uint8_t)(l.id & 0xFF);
   b[SH_ID + 1] = (uint8_t)(l.id >> 8);
   if (l.saveSender) {
@@ -343,7 +346,9 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
     case LM_SAVE_HELLO: {
       if (!saveMode || n < SH_LEN) { state = LINK_REFUSED; return; }
       protoTheirs = body[SH_PROTO];
-      if (protoTheirs != LINK_PROTO || body[SH_SAVE_VERSION] != SAVE_VERSION) {
+      uint8_t peerSaveVersion = body[SH_SAVE_VERSION];
+      if (protoTheirs != LINK_SAVE_PROTO ||
+          peerSaveVersion < SAVE_MIN_VERSION || peerSaveVersion > SAVE_VERSION) {
         state = LINK_REFUSED;
         return;
       }
@@ -357,8 +362,11 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
       peerName[LINK_NAME_LEN - 1] = 0;
       uint16_t lo = id < peerId ? id : peerId;
       uint16_t hi = id < peerId ? peerId : id;
+      // Both screens use the sender's envelope version in the confirmation
+      // code. This also keeps an old-v1 sender and new-v2 receiver in sync.
+      uint8_t transferVersion = theySend ? peerSaveVersion : SAVE_VERSION;
       saveCode = ((uint32_t)lo * 8191u + (uint32_t)hi * 131u +
-                  (uint32_t)SAVE_VERSION * 17u) % 1000000u;
+                  (uint32_t)transferVersion * 17u) % 1000000u;
 
       bool answer = state == LINK_SAVE_LISTENING;
       if (saveSender) {
@@ -408,6 +416,11 @@ void Link::onPacket(const uint8_t *buf, uint8_t len) {
     }
     case LM_SAVE_CHUNK: {
       if (!saveMode || saveSender || n < 2 || !savePeerSize) return;
+      // The sender may repeat the final chunk when our RECEIVED packet was the
+      // one that vanished. We already own the complete validated image; asking
+      // for saveChunk here would request one-past-the-end and make both sides
+      // reject an otherwise perfect transfer. tick() will resend RECEIVED.
+      if (state == LINK_SAVE_READY) return;
       uint16_t chunk = (uint16_t)body[0] | ((uint16_t)body[1] << 8);
       if (chunk < saveChunk) {
         requestSaveChunk(*this, saveChunk);

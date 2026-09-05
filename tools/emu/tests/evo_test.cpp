@@ -36,7 +36,7 @@ static void pending(Pet &p) {
   for (uint8_t i = 0; i < n; i++) {
     uint8_t at = learnLevel(p.speciesId, i);
     if (at == 0 || at > p.level()) continue;      // TMs are on-demand, skip
-    uint8_t mv = learnMove(p.speciesId, i);
+    MoveId mv = learnMove(p.speciesId, i);
     if (p.knowsMove(mv)) continue;
     miss++;
     snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), " %s@%u", MOVE_TBL[mv].name, at);

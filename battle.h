@@ -19,13 +19,13 @@ struct Combatant {
   uint8_t level = 1;
   uint16_t maxHp = 1, hp = 1;
   uint16_t base[SI_COUNT] = { 1, 1, 1, 1, 1 };  // before stat stages
-  uint8_t moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
+  MoveId moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
   int8_t stage[SI_COUNT] = { 0, 0, 0, 0, 0 };   // -6..+6
   uint8_t ailment = AIL_NONE;
   uint8_t ailTurns = 0;      // sleep/freeze countdown
   uint8_t confuseTurns = 0;  // confusion runs alongside a real ailment
   bool recharge = false;     // EF_RECHARGE spent this creature's next turn
-  uint8_t charging = 0;      // EF_CHARGE move already wound up
+  MoveId charging = 0;       // EF_CHARGE move already wound up
   bool shiny = false;        // which sprite variant to stream
   char name[12] = "";
 
@@ -37,7 +37,7 @@ void combatantFromParty(Combatant &c, const PartyMon &m);
 
 // What one action did, so the UI can narrate it without recomputing anything.
 struct TurnLog {
-  uint8_t move = 0;
+  MoveId move = 0;
   uint16_t damage = 0;
   uint16_t effPct = 100;   // type effectiveness, percent
   uint8_t hits = 0;        // >1 for EF_MULTI
@@ -55,16 +55,16 @@ struct TurnLog {
 };
 
 uint16_t stagedStat(uint16_t base, int8_t stage);
-uint16_t battleDamage(const Combatant &atk, const Combatant &def, uint8_t mv,
+uint16_t battleDamage(const Combatant &atk, const Combatant &def, MoveId mv,
                       bool crit, uint8_t roll);
 
 // True if `a` using `ma` acts before `b` using `mb`. Priority first, then the
 // staged speed, and paralysis halves it.
-bool battleMovesFirst(const Combatant &a, uint8_t ma,
-                      const Combatant &b, uint8_t mb);
+bool battleMovesFirst(const Combatant &a, MoveId ma,
+                      const Combatant &b, MoveId mb);
 
 // One creature's action. Applies damage, ailments, stat stages and recoil.
-void battleAct(Combatant &atk, Combatant &def, uint8_t mv, TurnLog &log);
+void battleAct(Combatant &atk, Combatant &def, MoveId mv, TurnLog &log);
 
 // Burn and poison chip damage, applied to one creature after both have acted.
 void battleEndTurn(Combatant &c, TurnLog &log);
@@ -73,4 +73,4 @@ void battleEndTurn(Combatant &c, TurnLog &log);
 // easy picks uniformly at random, hard reads the type chart, accuracy, whether
 // a move kills this turn, and whether a status or a stat boost is worth the
 // turn it costs.
-uint8_t aiChooseMove(const Combatant &self, const Combatant &foe, bool smart);
+MoveId aiChooseMove(const Combatant &self, const Combatant &foe, bool smart);

@@ -93,7 +93,7 @@ int main(){
   // the real payload: what the guest actually renders a turn from
   ck(sizeof(LinkResult) <= LINK_MAX_PAYLOAD, "a result fits in one packet");
   LinkResult r{};
-  r.hostHp=111; r.guestHp=222; r.hostMove=33; r.guestMove=44;
+  r.hostHp=111; r.guestHp=222; r.hostMove=533; r.guestMove=644;
   r.hostDmg=9; r.guestDmg=8; r.hostIdx=1; r.guestIdx=0; r.guestAil=AIL_BURN;
   B.resultNew=false;
   A.pendingAct = LINK_ACT_MOVE(0);
@@ -103,6 +103,8 @@ int main(){
   ck(got.hostHp==111 && got.guestHp==222 && got.guestAil==AIL_BURN,
      "health and ailments survive the wire");
   ck(got.hostIdx==1 && got.guestIdx==0, "so does which creature is out");
+  ck(got.hostMove==533 && got.guestMove==644,
+     "16-bit move IDs survive a battle result");
   ck(!A.pendingAct, "resolving clears the action, so it cannot be spent twice");
 
   // the guest never acts on an action; the host never accepts a result
@@ -182,7 +184,7 @@ int main(){
   // --- NOTHING off the wire may be trusted to index a table
   {
     LinkMon junk{};
-    junk.dex=9999; junk.level=250; junk.maxHp=0; junk.moves[0]=250;
+    junk.dex=9999; junk.level=250; junk.maxHp=0; junk.moves[0]=65535;
     Combatant c; linkMonTo(c,junk);
     ck(c.dex>=1 && c.dex<=DEX_COUNT, "a nonsense dex is clamped into the table");
     ck(c.level>=1 && c.level<=MAX_LEVEL, "so is a nonsense level");
@@ -199,7 +201,7 @@ int main(){
     for (int i=0;i<LINK_NAME_LEN;i++) nm.name[i]='X';
     linkMonTo(c,nm);
     ck(strlen(c.name)<sizeof(c.name), "an unterminated wire name is terminated");
-    ck(linkSafeMove(255)==0 && linkSafeMove(1)==1, "linkSafeMove bounds a move index");
+    ck(linkSafeMove(65535)==0 && linkSafeMove(1)==1, "linkSafeMove bounds a move index");
   }
 
   printf("%s\n", bad?"FAILURES":"all good");
