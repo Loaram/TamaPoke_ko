@@ -423,8 +423,9 @@ public:
   int careBonus() const;  // mejora del huevo por racha + vinculo
   // Player-wide daily egg rewards. Integer weights retain exact end points.
   uint8_t eggBonusDays() const;
-  uint16_t eggShinyWeight() const;      // out of 21600: 1/48 -> 10%
-  uint16_t eggLegendWeight() const;     // out of 900: 3% -> 14%, dex gate applied
+  uint16_t collectibleRegisteredCount() const;
+  uint16_t eggShinyWeight() const;      // out of 21600: either goal 10%, both 15%
+  uint16_t eggLegendWeight() const;     // out of 900: either goal 14%, both 21%, gate applied
   uint8_t farewellsRemaining() const;  // shared by every voluntary live ending
 
   // guardado periodico diferido: tick() marca pendiente y el loop lo vuelca

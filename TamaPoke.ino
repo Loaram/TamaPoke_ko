@@ -46,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.1.1"
+#define FW_VERSION "3.2.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -4602,7 +4602,7 @@ static void renderPlayerBadges() {
   // The real badges, 2x4. Unearned ones draw as a faint outline so the shape
   // of what is missing is still visible.
   for (int i = 0; i < TRAINER_GYMS; i++) {
-    int bx = 140 + (i % 4) * 62, by = 188 + (i / 4) * 62;
+    int bx = 140 + (i % 4) * 62, by = 188 + (i / 4) * 50;
     bool got = pet.hasBadge(playerBadgeRegion, trainerBadgeIndex(playerBadgeRegion,i,gymShield), false);
     bool hard = pet.hasBadge(playerBadgeRegion, trainerBadgeIndex(playerBadgeRegion,i,gymShield), true);
     if (hard) {
@@ -4635,14 +4635,25 @@ static void renderPlayerBadges() {
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
   snprintf(l, sizeof(l), T(S_STREAK_FMT), pet.streak, pet.bestStreak);
-  gfx->setCursor(CX - textWidthFactor(l, 6), 286);
+  gfx->setCursor(CX - textWidthFactor(l, 6), 266);
   gfx->print(l);
   snprintf(l, sizeof(l), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount());
+  gfx->setCursor(CX - textWidthFactor(l, 6), 289);
+  gfx->print(l);
+  snprintf(l, sizeof(l), gLang == LANG_KO ? "연속 %u/10 · 작별 %u/3" : "Care %u/10 days / bye %u/3", pet.eggBonusDays(), pet.farewellsRemaining());
   gfx->setCursor(CX - textWidthFactor(l, 6), 312);
   gfx->print(l);
-  snprintf(l, sizeof(l), gLang == LANG_KO ? "알 보너스 %u/10 · 작별 %u/3" : "Egg %u/10 days / bye %u/3", pet.eggBonusDays(), pet.farewellsRemaining());
-  gfx->setCursor(CX - textWidthFactor(l, 6), 338);
-  gfx->print(l);
+  const uint16_t collected = pet.collectibleRegisteredCount(), total = pokedexCollectibleCount();
+  const uint16_t pct = total ? (uint32_t)collected * 1000 / total : 0;
+  gfx->setTextSize(1);
+  snprintf(l, sizeof(l), gLang == LANG_KO ? "수집 %u/%u · %u.%u%% (목표 50%%)" : "Dex %u/%u · %u.%u%% (goal 50%%)",
+           collected, total, pct / 10, pct % 10);
+  gfx->setCursor(CX - textWidthFactor(l, 3), 334); gfx->print(l);
+  const uint16_t shinyPct = (uint32_t)pet.eggShinyWeight() * 10000 / 21600;
+  const uint16_t legendPct = (uint32_t)pet.eggLegendWeight() * 10000 / 900;
+  snprintf(l, sizeof(l), gLang == LANG_KO ? "다음 알: 이로치 %u.%02u%% · 전설 %u.%02u%%" : "Next egg: shiny %u.%02u%% · legend %u.%02u%%",
+           shinyPct / 100, shinyPct % 100, legendPct / 100, legendPct % 100);
+  gfx->setCursor(CX - textWidthFactor(l, 3), 347); gfx->print(l);
 }
 
 // Page 2: the medals. They used to sit on the creature's card; they belong with

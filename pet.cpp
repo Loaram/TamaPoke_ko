@@ -5,6 +5,8 @@
 #include "form_moves.h"
 #include "noart.h"   // speciesHasArt(): the egg pool skips what cannot be drawn
 #include "audio.h"
+#include "egg_rewards.h"
+#include "pokedex_progress.h"
 
 // Avoid modulo bias in the emulator's 16-bit PRNG as well as on devices.
 static uint16_t rollEggOdds(uint16_t range) {
@@ -108,7 +110,7 @@ void Pet::newEgg() {
   eggByRegion[region % REGION_COUNT] = eggTarget;
   starterPick = (registeredCount() == 0);  // primera partida: el jugador elige inicial
   // Rolled only when creating an egg, never on reload or a companion swap.
-  eggShiny = (rollEggOdds(21600) < eggShinyWeight());
+  eggShiny = (rollEggOdds(EggRewards::SHINY_ROLL) < eggShinyWeight());
   // Early retirement no longer delays the next creature's evolution.
   evoPen = 0;
   retirePending = false;
@@ -704,14 +706,22 @@ uint8_t Pet::eggBonusDays() const {
 }
 
 uint16_t Pet::eggShinyWeight() const {
-  uint8_t days = eggBonusDays();
-  return 450 + 190 * (days ? days - 1 : 0);
+  return EggRewards::weight(EggRewards::SHINY_BASE, EggRewards::SHINY_SOLO,
+      EggRewards::SHINY_MAX, eggBonusDays(), collectibleRegisteredCount(), pokedexCollectibleCount());
 }
 
 uint16_t Pet::eggLegendWeight() const {
   if (registeredCount() < 25 || lastEnd == CER_RUNAWAY) return 0;
-  uint8_t days = eggBonusDays();
-  return 27 + 11 * (days ? days - 1 : 0);
+  return EggRewards::weight(EggRewards::LEGEND_BASE, EggRewards::LEGEND_SOLO,
+      EggRewards::LEGEND_MAX, eggBonusDays(), collectibleRegisteredCount(), pokedexCollectibleCount());
+}
+
+uint16_t Pet::collectibleRegisteredCount() const {
+  uint16_t n = registeredCount();
+  // Saved no-art bits remain in the historical Dex but cannot earn a bonus.
+  for (int i = 0; i < NO_ART_COUNT; ++i)
+    if (NO_ART[i] >= 1 && NO_ART[i] <= DEX_COUNT && isRegistered(NO_ART[i])) --n;
+  return n;
 }
 
 uint8_t Pet::farewellsRemaining() const {

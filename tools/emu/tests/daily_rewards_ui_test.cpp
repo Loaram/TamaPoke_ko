@@ -2,6 +2,8 @@
 #include "Preferences.h"
 #include "pet.h"
 #include "korean_text.h"
+#include "pokedex_progress.h"
+#include "i18n.h"
 #include <cstdio>
 uint32_t g_seed=19743;FakeSerial Serial;FakeESP ESP;FakeWire Wire;
 volatile int g_touchX=0,g_touchY=0;volatile bool g_touchDown=false;
@@ -21,6 +23,17 @@ int main(){
   pet.learnQCount=0;pet.streak=10;pet.bestStreak=10;pet.lastCareDay=200;
   pet.fullness=pet.joy=pet.energy=pet.hygiene=100;pet.ageMinutes=1440;
   playerPage=0;renderPlayer();shot("daily-rewards-player.ppm");
+  memset(pet.dexReg,0,sizeof(pet.dexReg));
+  int need=(pokedexCollectibleCount()+1)/2;
+  for(int d=1;d<=DEX_COUNT && need;d++)if(speciesHasArt(d)){
+    pet.dexReg[(d-1)>>3]|=1<<((d-1)&7);--need;
+  }
+  renderPlayer();shot("egg-bonus-max.ppm");
+  ck(pet.collectibleRegisteredCount()==491 && pet.eggShinyWeight()==3240 && pet.eggLegendWeight()==189,
+     "trainer screen displays collectible goal with both capped probabilities");
+  pet.streak=0;renderPlayer();shot("egg-bonus-dex-only.ppm");
+  ck(pet.eggShinyWeight()==2160 && pet.eggLegendWeight()==126,"dex-only screen retains the standalone goal odds");
+  pet.streak=10;setLang(LANG_EN);renderPlayer();shot("egg-bonus-max-en.ppm");setLang(LANG_KO);
   menuOpen=true;drawMenu();shot("daily-rewards-menu.ppm");onTap(233,303);
   ck(choiceKind==3,"retire menu opens confirmation while allowance remains");
   drawChoiceDialog();shot("daily-rewards-confirm.ppm");choiceKind=0;
