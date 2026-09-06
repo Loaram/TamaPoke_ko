@@ -201,11 +201,10 @@ public:
 
   // Player-wide, like the streak and the Pokedex: badges outlive the creature
   // that earned them, so newEgg() must never clear this.
-  // A creature brought back out of the party or box. It is FROZEN: it does not
-  // age, cannot evolve, and cannot be lost -- a companion rather than a
-  // contender. The cost is that its level never rises again, so it stops
-  // improving; ageMinutes is simply set to match its banked level, which keeps
-  // level() working untouched rather than needing a second source of truth.
+  // Legacy serialized name retained for save compatibility: this now means a
+  // protected companion, not a frozen level. Captured/farewelled companions
+  // grow and evolve while active, but cannot run away or repeat a farewell.
+  // ageMinutes starts at the banked level; stored PartyMon records never tick.
   bool frozen = false;
   void reviveFrom(const PartyMon &m);
   PartyMon storageSnapshot() const;

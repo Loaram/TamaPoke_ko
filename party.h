@@ -25,11 +25,11 @@
 #define BOX_PAGES ((BOX_SLOTS + BOX_PER_PAGE - 1) / BOX_PER_PAGE)
 #define MOVE_SLOTS 4    // the same four every trainer gets in the real games
 
-// Stored individuals do not age. A growing pet can resume its own care state;
-// old retired/caught records retain their established companion behavior.
+// Stored individuals do not age. All can grow when active; old retired/caught
+// records retain companion ending protection and their own care state.
 struct PartyMon {
   int16_t dex = 0;      // Pokedex number, 0 = empty slot
-  uint16_t level = 1;   // frozen at the moment it was banked
+  uint16_t level = 1;   // paused while banked; resumes when brought to the home slot
   uint16_t medals = 0;  // what it earned in life
   uint8_t ivAtk = 0, ivDef = 0, ivSpe = 0, ivHp = 0;
   uint8_t trAtk = 0, trDef = 0, trSpe = 0;

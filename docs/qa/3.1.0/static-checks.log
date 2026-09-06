@@ -10,7 +10,7 @@ what the installer writes:
   0x000000..0x004E10  firmware/bootloader.bin
   0x008000..0x008C00  firmware/partitions.bin
   0x00E000..0x010000  firmware/boot_app0.bin
-  0x010000..0x238150  firmware/app.bin
+  0x010000..0x238200  firmware/app.bin
 what must survive it:
   0x009000..0x00E000  nvs
   0x610000..0xFF0000  ffat

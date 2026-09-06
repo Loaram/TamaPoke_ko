@@ -46,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "4.0.0"
+#define FW_VERSION "3.1.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -1380,6 +1380,13 @@ void onSwipeV(int dir) {
 // The detail sheet, shared by the party and the box so the two cannot drift.
 // `fromBox` picks which action the LEFT button offers; the right one is always
 // RELEASE, which is irreversible and therefore always asks first.
+void storedStatLine(const PartyMon &m, uint8_t row, char *out, size_t size) {
+  if(row==0) snprintf(out,size,gLang==LANG_KO ? "공격 %u(%u)  방어 %u(%u)" : "ATK %u(%u)  DEF %u(%u)",
+    party.atkOf(m),m.ivAtk,party.defOf(m),m.ivDef);
+  else snprintf(out,size,gLang==LANG_KO ? "속도 %u(%u)  체력 %u(%u)" : "SPD %u(%u)  HP %u(%u)",
+    party.speOf(m),m.ivSpe,party.vitOf(m),m.ivHp);
+}
+
 void renderMonSheet(const PartyMon &m, bool fromBox) {
   const DexEntry d = formDex(m.dex,m.form);
   gfx->fillScreen(RGB565_BLACK);
@@ -1405,12 +1412,12 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
     drawMoveRow(78 + i * 52, m.moves[i], false, m.dex,m.form);
 
   char st[120];
-  snprintf(st, sizeof(st), gLang == LANG_KO ? "공격 %u 방어 %u 속도 %u 체력 %u" : "ATK %u  DEF %u  SPD %u  HP %u",
-           party.atkOf(m), party.defOf(m), party.speOf(m), party.vitOf(m));
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(1);
-  gfx->setCursor(CX - textWidthFactor(st, 3), 300);
-  gfx->print(st);
+  for(uint8_t row=0;row<2;row++) {
+    storedStatLine(m,row,st,sizeof(st));
+    gfx->setCursor(CX-textWidthFactor(st,3),292+row*14);gfx->print(st);
+  }
 
   // A live exchange reuses the selected slot, even with completely full storage.
   bool leftOk = pet.canSwapActive();

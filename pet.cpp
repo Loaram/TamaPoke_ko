@@ -162,7 +162,7 @@ void Pet::applyOfflineMinutes(uint32_t mins) {
   if (mins > 14UL * 24 * 60) mins = 14UL * 24 * 60;  // tope: 2 semanas
 
   for (uint32_t i = 0; i < mins; i++) {
-    if (!frozen) ageMinutes++;
+    ageMinutes++; // Active companions grow too; stored records never tick.
     if (isEgg()) {
       if (ageMinutes >= 3) hatch();  // eclosiona en tu ausencia
       continue;
@@ -244,7 +244,7 @@ void Pet::tick() {
                             // tiempo corriera aqui, el huevo eclosionaria solo a
                             // los 3 min con la especie sorteada y se perderia la
                             // eleccion del jugador
-  if (!frozen) ageMinutes++;   // a revived companion does not age
+  ageMinutes++; // Companion protection no longer prevents active growth.
 
   if (isEgg()) {
     if (ageMinutes >= 3) hatch();  // si no lo tocas, eclosiona solo a los 3 min
@@ -324,7 +324,7 @@ void Pet::tick() {
 // newEgg() is about to wipe every field. Only the two endings the player CHOSE
 // qualify: a runaway ran off after an hour of total neglect, and letting it
 // come back on the team would remove the cost from the one ending that has any.
-// Legacy companions remain frozen; parked growing individuals resume their state.
+// Legacy companions retain ending protection; all active individuals can grow.
 void Pet::reviveFrom(const PartyMon &m) {
   if (m.empty()) return;
   ceremony = CER_NONE;
@@ -1219,7 +1219,6 @@ void Pet::hatch() {
 // (ninguna estadistica por debajo de 40). NO evoluciona sola: la dispara el
 // usuario tocando al bicho (evolve()), para que vea la transformacion.
 bool Pet::canEvolveNow() const {
-  if (frozen) return false;     // frozen at the form it was banked in
   if (isEgg() || sleeping || ceremony != CER_NONE) return false;
   const DexEntry &d = DEX_TBL[speciesId];
   if (d.evolvesTo == 0) return false;

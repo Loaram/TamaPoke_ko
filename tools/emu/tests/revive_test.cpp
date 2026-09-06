@@ -1,5 +1,4 @@
-// A revived companion is FROZEN: it does not age, cannot evolve, and cannot be
-// lost. Those three are the whole feature, so each is checked directly.
+// A revived companion grows while active but retains ending protection.
 #include "Arduino.h"
 #include "Preferences.h"
 #include "pet.h"
@@ -27,14 +26,14 @@ int main(){
   ck(p.speciesId==6 && p.level()==61, "comes back at the level it was banked at");
   ck(p.shiny && !strcmp(p.nick,"BLAZE"), "keeps its shininess and its name");
   ck(p.moves[0]==1 && p.moves[1]==2, "and its moveset");
-  ck(p.frozen, "and is marked frozen");
+  ck(p.frozen, "and retains the serialized companion protection flag");
 
-  // it must not age, however long passes
+  // 20 minutes per level, including formerly frozen legacy companions.
   uint8_t lvl = p.level();
   for (int i=0;i<400;i++){ g_ms += 60000; p.update(g_ms);
     p.fullness=p.joy=p.energy=p.hygiene=100; }
   printf("     after ~400 game-minutes: level %u (was %u)\n", p.level(), lvl);
-  ck(p.level()==lvl, "does not age");
+  ck(p.level()==lvl+20, "gains 20 levels in 400 active minutes");
 
   // and cannot be taken away
   p.ageMinutes = 10UL*24*60;
@@ -42,11 +41,17 @@ int main(){
   p.fullness=p.joy=p.energy=p.hygiene=0;
   for (int i=0;i<200;i++){ g_ms += 60000; p.update(g_ms); }
   ck(!p.canRunawayNow(), "cannot run away even when wholly neglected");
-  ck(!p.canEvolveNow(), "cannot evolve past the form it was banked in");
+  ck(!p.canEvolveNow(), "final species has no further normal evolution");
+  m.dex=4;m.level=15;p.reviveFrom(m);p.sleeping=true;
+  for(int i=0;i<20;i++){g_ms+=60000;p.update(g_ms);}
+  p.sleeping=false;p.fullness=p.joy=p.energy=p.hygiene=100;
+  ck(p.level()==16&&p.canEvolveNow(), "captured pre-evolution grows to its evolution gate");
+  p.evolve();ck(p.speciesId==5&&p.frozen,"normal evolution retains companion protection");
+  p.saveNow();
 
-  // it survives a reload, still frozen
+  // it survives a reload with its new level/species and protection.
   Pet q; q.begin();
-  ck(q.frozen && q.speciesId==6, "stays frozen across a reload");
+  ck(q.frozen && q.speciesId==5&&q.level()==16, "new growth and companion protection survive reload");
 
   // and a brand new egg is a normal life again
   q.newEgg();

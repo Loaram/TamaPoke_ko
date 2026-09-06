@@ -1,8 +1,10 @@
 {
-  "version": "4.0.0",
-  "runtime_suites": 45,
+  "version": "3.1.0",
+  "runtime_suites": 47,
   "sd_fault_checks": 10,
   "device_tested": false,
+  "companion_growth": true,
+  "compact_ivs": true,
   "box_sort": true,
   "box_direct_release": true,
   "explicit_box_exchange": true,
@@ -15,44 +17,44 @@
   "form_pools": 69,
   "box_slots": 300,
   "box_pages": 50,
-  "android_version_code": 3016,
-  "wear_version_code": 3017,
-  "guide_pages": 23,
+  "android_version_code": 3018,
+  "wear_version_code": 3019,
+  "guide_pages": 24,
   "watch_guide_unchanged": true,
   "artifacts": {
     "SHA256SUMS.txt": {
       "bytes": 539,
-      "sha256": "3b4e050822b49b082fbb48e0d3d0297eb6c03b9b16b7d91f6289861a51865bfa"
+      "sha256": "459032762514d5cc67638697e76b3fdeeb92fc8e3f4d9d86733f23bdd05510e7"
     },
-    "TamaPoke-4.0.0-Android-Full-debug.apk": {
+    "TamaPoke-3.1.0-Android-Full-debug.apk": {
       "bytes": 387757348,
-      "sha256": "af6b9441c3c758671eb9787a36de6bd789c1c140373c36861e3705a08b9d625e"
+      "sha256": "4e8ebb623220038328efb2f269dd4b3d3c4bf3286d436b7317d86703aedee7e0"
     },
-    "TamaPoke-4.0.0-ESP32-Web-Installer.zip": {
-      "bytes": 2272800,
-      "sha256": "88cd251b96fb1877823d98da06f86ea1125a3b67b60de0db5941232fa930f3e0"
+    "TamaPoke-3.1.0-ESP32-Web-Installer.zip": {
+      "bytes": 2273190,
+      "sha256": "8993cf6a0bead891374061be9ca7eac895a6c089dee3f5bb936c4436ffd474ac"
     },
-    "TamaPoke-4.0.0-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
+    "TamaPoke-3.1.0-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
       "bytes": 186624,
       "sha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce"
     },
-    "TamaPoke-4.0.0-Play-Guide-KO.pdf": {
-      "bytes": 424103,
-      "sha256": "894763dad31c13a352c84eb0c7502ad79e667d5319be679971a08ec3d37df350"
+    "TamaPoke-3.1.0-Play-Guide-KO.pdf": {
+      "bytes": 440516,
+      "sha256": "a138243476fdc5fed3cd43eb8848e5f18f139f1452bd3cb6f3885aeac0bd7e1b"
     },
-    "TamaPoke-4.0.0-WearOS-GalaxyWatch4-9-debug.apk": {
+    "TamaPoke-3.1.0-WearOS-GalaxyWatch4-9-debug.apk": {
       "bytes": 387351849,
-      "sha256": "718a7161f7f5fb34735957f4b5b17d1c0a2248279bf9040f24b341b1cad98bc8"
+      "sha256": "f41dc88497cbf71f8388fca97d0f80b1fc9a23de5afceeaaf26804d4b6221e10"
     }
   },
   "private_emulators": {
     "dex": {
       "bytes": 1572352,
-      "sha256": "c88baf0ebec66c4389c268ca1e6ab033e44ff1cb8c71370812257d344c4b7e0e"
+      "sha256": "55dbc0df57e74fecf43abb0533bbfafb93ffcdbbe1e6b4e6ad1427c6855c6971"
     },
     "shiny": {
       "bytes": 1572352,
-      "sha256": "6bd746af85c47cdb30b0737f284ad30dde95f6a7715179a5a6cea41e0135efa2"
+      "sha256": "abe93e81479fda99b0ac57312bda8931950168743b191cb1fb06de9e44f9751f"
     }
   },
   "source_files": {
@@ -189,16 +191,16 @@
       "sha256": "c54cb88c797182370bd7d99e4881598d063688e335c46e877b25022d660d0adc"
     },
     "party.h": {
-      "bytes": 4397,
-      "sha256": "9fc8700eb953dc5df7e8e5356a7486d18483fbc68859b7bc92c411d8010d1f55"
+      "bytes": 4418,
+      "sha256": "ae2153dab5d45ff3f9b8e061cdca40a692fa5f5400f2c9825e303ee661322184"
     },
     "pet.cpp": {
-      "bytes": 69570,
-      "sha256": "fb0fe83a400b38d990a4b1dc7d2e12f8faa824dc040ecb0887f63477a00ed093"
+      "bytes": 69548,
+      "sha256": "bab6b6c914baa0a98b085246d0967040c255f47345e7efa05598f83b86ce806a"
     },
     "pet.h": {
-      "bytes": 26444,
-      "sha256": "9f635ef35c1598e3c2f4f47e11f9499d3df32115c0042cfc93d54612b809ac23"
+      "bytes": 26372,
+      "sha256": "206e3e53063f664ffeab928076da287c7c63cb83e109bd2d248c0df896cba751"
     },
     "pin_config.h": {
       "bytes": 1018,
@@ -241,8 +243,8 @@
       "sha256": "6d9943a75b7d7875e9dfc06ce9ef06cb9e63cdca05ae6dcd4ad70a5b03ee6916"
     },
     "TamaPoke.ino": {
-      "bytes": 276049,
-      "sha256": "6adfca11bfb773271453dddfc592cc8f8b68a222953047302e3e5b5f060be08a"
+      "bytes": 276323,
+      "sha256": "8bf5ac9ee005545bf3f9c35d3731a647fb14d2ad87c11c22a3c7e3dfb6e57c7b"
     },
     "trainers.h": {
       "bytes": 16412,

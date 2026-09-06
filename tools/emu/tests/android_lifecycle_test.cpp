@@ -71,14 +71,14 @@ int main() {
   nvs().clear(); Pet companion; companion.begin();
   member.dex = 25; member.level = 60;
   companion.reviveFrom(member); companion.setClock(epoch); companion.syncClock(epoch + 3600);
-  ck(companion.level() == 60, "frozen companion stays level 60 after an offline hour");
+  ck(companion.level() == 63, "active companion gains three levels after an offline hour");
   companion.updateDeviceClock(0, epoch + 3600, epoch + 3600);
   app.start(); app.suspend(companion, 0, epoch + 3600, epoch + 3600);
   app.resume(companion, 0, epoch + 7200, epoch + 7200);
-  ck(companion.level() == 60, "frozen companion also stays level 60 after warm resume");
+  ck(companion.level() == 66, "active companion gains three more levels after warm resume");
   app.suspend(companion, 0, epoch + 7200, epoch + 7200);
   app.resume(companion, 0, epoch, epoch);
-  ck(companion.level() == 60, "backward clock correction never adds offline growth");
+  ck(companion.level() == 66, "backward clock correction never adds offline growth");
   printf("%s\n", bad ? "FAILURES" : "all good");
   return bad ? 1 : 0;
 }

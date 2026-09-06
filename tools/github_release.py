@@ -2,8 +2,9 @@
 import argparse, hashlib, json, os, re, subprocess, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('action',choices=['status','create','upload','publish','verify','workflows','jobs'])
+p=argparse.ArgumentParser();p.add_argument('action',choices=['status','create','upload','publish','verify','workflows','jobs','discard-draft'])
 p.add_argument('--notes',type=Path);p.add_argument('--commit');p.add_argument('--assets',type=Path);p.add_argument('--run',type=int)
+p.add_argument('--discard-version',help='explicit obsolete draft version; local matching assets are required')
 a=p.parse_args()
 def digest(path):
     with path.open('rb') as stream:return 'sha256:'+hashlib.file_digest(stream,'sha256').hexdigest()
@@ -20,7 +21,7 @@ def api(path,method='GET',data=None,extra=None):
     if isinstance(data,dict):data=json.dumps(data).encode();h['Content-Type']='application/json'
     req=urllib.request.Request(path if path.startswith('https://') else base+path,data=data,headers=h,method=method)
     try:
-        with urllib.request.urlopen(req,timeout=120) as r:return json.load(r)
+        with urllib.request.urlopen(req,timeout=120) as r:return None if r.status==204 else json.load(r)
     except urllib.error.HTTPError as e:
         if e.code==404 and method=='GET':return None
         raise SystemExit(f'GitHub {method}: HTTP {e.code} {e.reason}') from None
@@ -36,6 +37,20 @@ if a.action=='jobs':
     print(json.dumps([dict(name=j['name'],status=j['status'],conclusion=j['conclusion'],steps=[{k:s.get(k) for k in ('name','status','conclusion')} for s in j['steps']]) for j in jobs],indent=2));raise SystemExit(0)
 version=re.search(r'^#define FW_VERSION "([^"]+)"',(R/'TamaPoke.ino').read_text(encoding='utf8'),re.M)[1]
 assert re.fullmatch(r'\d+\.\d+\.\d+',version),'Only a final numbered version may be published'
+if a.action=='discard-draft':
+    old=a.discard_version
+    assert old and re.fullmatch(r'\d+\.\d+\.\d+',old) and old!=version
+    # Never remove a public release or an unrelated/unknown draft artifact.
+    current=api('/releases/tags/'+version)
+    assert current and not current['draft'],'Publish the replacement before removing its obsolete draft'
+    matches=[x for x in api('/releases?per_page=100') if x['tag_name']==old]
+    assert len(matches)==1 and matches[0]['draft'],'Only one unpublished draft may be discarded'
+    draft=matches[0];local=R/'build/release'/old
+    expected={f.name:f for f in local.iterdir() if f.is_file()}
+    assert len(expected)==6 and {x['name'] for x in draft['assets']}==set(expected)
+    assert all(x['size']==expected[x['name']].stat().st_size and x.get('digest')==digest(expected[x['name']]) for x in draft['assets'])
+    api('/releases/'+str(draft['id']),'DELETE')
+    print(json.dumps(dict(discarded_draft=old,assets=6,local_backup=str(local)),indent=2));raise SystemExit(0)
 release=api('/releases/tags/'+version)
 if release is None:
     # GitHub's tag endpoint may omit drafts until their tag is published.

@@ -21,9 +21,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-4.0.0-Play-Guide-KO.pdf"
-VERSION = "4.0.0"
-PAGE_TOTAL = 23
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.1.0-Play-Guide-KO.pdf"
+VERSION = "3.1.0"
+PAGE_TOTAL = 24
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 4.0.0",
+            "플레이 설명서 · 3.1.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -365,7 +365,7 @@ story.extend(
     [
         Spacer(1, 6 * mm),
         p("기기의 시간이 기준입니다", H2),
-        p("Android·워치는 기기의 날짜와 시간, ESP32는 설정 시각을 따릅니다. 앱 종료·백그라운드 중에는 오프라인 규칙을 적용해 깨어 있을 때 돌봄 수치가 15 아래로 더 떨어지지 않고 방치 실수가 추가되지 않습니다. 영구 동료는 재접속해도 성장하지 않습니다.", CALLOUT),
+        p("Android·워치는 기기의 날짜와 시간, ESP32는 설정 시각을 따릅니다. 앱 종료·백그라운드 중에는 오프라인 규칙을 적용해 깨어 있을 때 돌봄 수치가 15 아래로 더 떨어지지 않고 방치 실수가 추가되지 않습니다. 홈으로 데려온 동료도 이 시간 기준으로 성장합니다.", CALLOUT),
         p("작별을 거절하면 하루 뒤 다시 제안합니다. 최종 진화 전, 수면 중, 영구 동료 상태에서는 작별이 열리지 않습니다.", BODY),
         p("좋은 작별과 연속 돌봄 보너스", H2),
         p("좋은 작별은 <b>부화 이후 실제 누적 성장 24시간</b>과 일반 최종진화가 조건입니다. 최종진화 후 24시간을 더 기다리는 뜻이 아니며 폼체인지도 필수가 아닙니다. 사용자가 작별을 선택하면 파티 우선, 가득 차면 박스에 보관합니다.", SAFE),
@@ -419,7 +419,7 @@ page_break(story)
 
 # 8. Party and box
 story.extend(page_heading("07 파티", "현재 동료 포함 6마리와 300칸 박스", "함께 키우는 포켓몬 1마리와 파티 5마리가 한 전투에 참가합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/3.0.1/box-direct-detail.png", ROOT / "docs/qa/daily-rewards/box-picker.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/3.1.0/companion-box-ivs.png", ROOT / "docs/qa/daily-rewards/box-picker.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -675,7 +675,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/4.0.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.1.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -729,7 +729,7 @@ story.extend([
 page_break(story)
 story.extend(page_heading("21 보관과 안전", "자유 교체와 세이브를 지키는 방법", "현재 포켓몬과 보관 개체의 교환은 알이 아닐 때도 가능합니다."))
 story.extend([
-    step_table(["파티나 박스에서 데려올 포켓몬을 누릅니다.", "상세창의 <b>데려오기</b>를 누르면 현재 포켓몬은 그 보관 칸으로 들어오고 선택한 포켓몬이 홈으로 옵니다.", "키우던 개체의 성장 분·폼·기술·개체값·훈련·돌봄·유대는 그대로 보존됩니다. 보관 중에는 성장과 돌봄 시간이 흐르지 않습니다.", "포획한 개체나 좋은 작별로 남은 동료는 성장 정지 상태를 유지합니다. 데려온다고 다시 성장하는 것은 아닙니다."]),
+    step_table(["파티나 박스에서 데려올 포켓몬을 누릅니다.", "상세창의 <b>데려오기</b>를 누르면 현재 포켓몬은 그 보관 칸으로 들어오고 선택한 포켓몬이 홈으로 옵니다.", "키우던 개체의 성장 분·폼·기술·개체값·훈련·돌봄·유대는 그대로 보존됩니다. 보관 중에는 성장과 돌봄 시간이 흐르지 않습니다.", "포획한 개체나 좋은 작별로 남은 동료도 홈으로 데려오면 현재 레벨에서 성장하고 조건을 만족하면 진화합니다. 보관 중에는 멈춥니다."]),
     Spacer(1, 5*mm),
     p("ESP32의 SD 카드", H2),
     bullet("300칸 보관 기록은 SD에 기기별 이중 저장합니다. 기존 NVS 파티션을 바꾸지 않고 이전 저장을 읽습니다. Android·워치·PC는 기존 내부 저장 방식을 사용합니다."),
@@ -744,7 +744,7 @@ story.extend([
 
 page_break(story)
 story.extend(page_heading("22 박스 정렬", "300칸을 원하는 순서로 정리하기", "박스 전체에 한 번 적용합니다. 파티와 현재 키우는 포켓몬은 바뀌지 않습니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/4.0.0/box-sort-menu.png", ROOT / "docs/qa/4.0.0/box-sort-confirm.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/3.1.0/box-sort-menu.png", ROOT / "docs/qa/3.1.0/box-sort-confirm.png"))
 story.extend([
     Spacer(1, 4*mm),
     step_table(["파티에서 <b>박스</b>를 열고 아래쪽 <b>정렬</b>을 누릅니다. 어느 페이지에서 열어도 300칸 전체가 대상입니다.", "<b>가나다순 · 번호순 · 레벨순</b> 중 원하는 기준을 고릅니다. 확인창에서 <b>예</b>를 누르면 적용하고 첫 페이지로 돌아옵니다.", "<b>아니요</b>는 정렬 메뉴로 돌아갑니다. 정렬 메뉴에서 뒤로 가면 원래 페이지와 교체 선택을 그대로 유지합니다."]),
@@ -754,6 +754,22 @@ story.extend([
     bullet("빈칸은 뒤로 모읍니다. 가나다·번호가 같으면 레벨 높은 순, 레벨이 같으면 도감 번호순입니다. 기준이 모두 같으면 기존 순서를 유지합니다."),
     bullet("새로 포획하거나 보관한 포켓몬은 자동 정렬하지 않습니다. 필요할 때 다시 정렬하세요. 정렬을 적용하면 이전 교체 선택은 취소되므로 대상을 다시 고르세요."),
     p("개체의 별명·이로치·폼·기술·개체값·훈련·돌봄 기록은 그대로 보존됩니다. 정렬 실패가 표시되면 저장 공간을 확인하고, ESP는 원래 SD를 장착한 뒤 재시작하세요. 이전 칸 배치로 되돌리는 버튼은 없습니다.", SAFE),
+])
+
+page_break(story)
+story.extend(page_heading("23 동료 육성·개체값", "다시 데려온 동료도 함께 성장", "포획했거나 좋은 작별로 남은 포켓몬도 키우는 자리에서 성장할 수 있습니다."))
+story.append(screenshot_pair(ROOT / "docs/qa/3.1.0/companion-party-ivs.png", ROOT / "docs/qa/3.1.0/companion-box-ivs.png"))
+story.extend([
+    Spacer(1, 4*mm),
+    step_table(["파티나 박스에서 포켓몬을 누르고 <b>데려오기</b>를 선택합니다. 현재 포켓몬과 자리를 맞바꿉니다.", "홈에서 함께 지내면 현재 레벨부터 <b>20분마다 1레벨</b>씩 성장합니다. 60레벨은 20분 후 61레벨, 좋은 작별 후 73레벨 동료는 20분 후 74레벨이 됩니다.", "일반 진화 조건을 만족하면 진화할 수 있습니다. 필요한 레벨과 돌봄 상태를 갖추고 진화를 선택하세요. 최대 레벨은 100입니다."]),
+    Spacer(1, 3*mm),
+    bullet("파티·박스 안에서는 성장하지 않습니다. 다시 보관했다 데려와도 진행 중이던 성장 분·기술·폼·개체값·훈련 기록이 이어집니다."),
+    bullet("포획·좋은 작별 동료의 기존 보호는 그대로입니다. 도망가지 않고 다시 좋은 작별이나 일반 작별 대상이 되지 않습니다. 필요하면 파티·박스에서 놓아줄 수 있습니다."),
+    p("능력치 옆 괄호 읽기", H2),
+    p("<b>공격 99(31)</b>에서 <b>99는 현재 공격 능력치</b>, <b>괄호 안 31은 공격 개체값</b>입니다. 방어·속도·체력도 같은 표기입니다."),
+    info_table([["값", "의미"], ["괄호 밖 능력치", "종·폼·레벨·개체값·훈련 등에 따라 계산된 현재 값"], ["괄호 안 개체값", "각 항목 0~31. 개체마다 고유하며 성장·훈련으로 다시 뽑지 않음"]], [45*mm,129*mm]),
+    Spacer(1, 3*mm),
+    p("기존 세이브의 포획·작별 동료도 그대로 사용할 수 있습니다. 개체값을 확인하는 것만으로 포켓몬이나 저장 데이터가 바뀌지 않습니다.", SAFE),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

@@ -171,7 +171,7 @@ PASS  foreign UDP traffic is ignored
 PASS  a truncated or lying frame is ignored
 PASS  a zero sender identity is refused
 all good
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -365,7 +365,7 @@ PASS  no trainer fields a creature with no sprite art
 PASS  (and noart.h is non-empty, so that check means something)
 PASS  speciesHasArt really does reject an art-less dex
 all good
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -666,7 +666,7 @@ PASS  all 1025 normal species entries are unlocked
 PASS  all 1025 shiny species entries are unlocked
 PASS  a fresh test save still offers the normal starter choice
 all good
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -724,7 +724,7 @@ PASS  and a wildly out-of-range region too
 PASS  and an out-of-range gym index is refused
 all good
 --- time scale x1 ---
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -734,7 +734,7 @@ picked KANTO, still on the starter flow
 click at (233,420) off the rows: correctly ignored
 click at (233,145) on row 0: awaitingStarter=0
 PASS: tap reached onTap and picked a starter
-idle: 669 ms real -> 669 ms game (x1.0, want x1)
+idle: 639 ms real -> 640 ms game (x1.0, want x1)
 PASS: --fast still accelerates idle game time
 PASS: 5th icon opens the training submenu
 PASS: STRENGTH routes to the punching bag
@@ -791,7 +791,7 @@ PASS: FIGHT is inert while over the cap (6 chosen, cap 2)
 PASS: trimming to the cap lets the fight start (squad 2)
 PASS: the squad respects the chosen team
 PASS: easy mode caps the level as well
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -831,7 +831,7 @@ PASS  picker     still offers what it really knows
 PASS  picker     and the TMs arrive once it is built
 PASS  picker     can recover FLOWER TRICK after evolution
 every paged screen pages
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -856,7 +856,7 @@ PASS  the region choice is saved
 PASS  and the first boot does not run a second time
 PASS  a wiped save asks again
 all good
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -928,7 +928,7 @@ PASS  shiny live pet does not mark a normal catch as shiny
 PASS  later normal catch preserves an existing shiny entry
 PASS  corrected caught-species flags survive reload
 all good
-TamaPoke fw v4.0.0-explore-beta
+TamaPoke fw v3.1.0-explore-beta
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -954,10 +954,10 @@ PASS  background growth advances exactly once
 PASS  duplicate resume/focus events cannot replay time
 offline: 120 min aplicados (nv.7)
 PASS  cold launch and warm resume agree on offline growth and care
-offline: 60 min aplicados (nv.60)
-PASS  frozen companion stays level 60 after an offline hour
-offline: 60 min aplicados (nv.60)
-PASS  frozen companion also stays level 60 after warm resume
+offline: 60 min aplicados (nv.63)
+PASS  active companion gains three levels after an offline hour
+offline: 60 min aplicados (nv.66)
+PASS  active companion gains three more levels after warm resume
 PASS  backward clock correction never adds offline growth
 all good
 PASS 176 animated forms, no appearance category
@@ -998,7 +998,7 @@ PASS a new individual never inherits the previous form
 PASS old selected-form records still pass full-save transfer
 PASS excluded-form save keeps both individuals and IDs without deleting or renumbering them
 PASS excluded form safely uses base stats and can be reset explicitly
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1015,7 +1015,7 @@ PASS old installed stills cannot reappear through the actual sprite loader
 PASS old installed stills cannot reappear through the actual sprite loader
 PASS old installed stills cannot reappear through the actual sprite loader
 PASS missing form thumbnail placeholder persists on cached redraws
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1046,7 +1046,7 @@ PASS failed live-key write retains the committed recovery record
 PASS reboot repairs a partially written live save without duplicating or losing a Pokemon
 PASS beta.1/2 TFR1 records retain form and legacy companion policy
 PASS egg-time bring-back still frees the selected slot
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1135,7 +1135,7 @@ PASS existing egg species and shiny roll are preserved on reload
 PASS old saves without the new field preserve care history and start with three
 PASS missing clock cannot refill three uses on restart
 all good
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1143,7 +1143,7 @@ RTC sin hora: sembrado, sin progresion offline esta vez
 PASS retire menu opens confirmation while allowance remains
 PASS exhausted menu cannot open a fourth farewell
 PASS rendering and opening menus do not refill allowance
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1283,7 +1283,7 @@ save: invalid live species; safely restoring an egg
 PASS invalid saved live species cannot index outside the Pokedex
 save: invalid live species; safely restoring an egg
 PASS invalid saved live species cannot index outside the Pokedex
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1311,7 +1311,7 @@ PASS empty destination still supports party deposit
 forms: roster write failed; recovery copies retained
 PASS failed storage write cannot pretend release succeeded
 PASS failed release preserves the saved individual
-TamaPoke fw v4.0.0
+TamaPoke fw v3.1.0
 boot: reset=power on heap=294024 psram=4194304
 emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
 emu: thumbnails loaded: 1025
@@ -1350,4 +1350,41 @@ PASS write failure restores every RAM record and keeps durable snapshot
 PASS read-only storage rejects further sorting
 PASS failure recovery reloads the original order
 PASS unfinished active-swap journal prevents sorting until recovery
-PASS: 45 runtime suites including box sorting and all 4.0.0 systems
+PASS  comes back at the level it was banked at
+PASS  keeps its shininess and its name
+PASS  and its moveset
+PASS  and retains the serialized companion protection flag
+     after ~400 game-minutes: level 81 (was 61)
+PASS  gains 20 levels in 400 active minutes
+PASS  is never offered a farewell
+PASS  cannot run away even when wholly neglected
+PASS  final species has no further normal evolution
+PASS  captured pre-evolution grows to its evolution gate
+PASS  normal evolution retains companion protection
+PASS  new growth and companion protection survive reload
+PASS  a new egg is not frozen
+all good
+TamaPoke fw v3.1.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS legacy captured record starts active at its stored level with protection
+PASS captured level does not increase before 20 minutes
+PASS captured companion reaches normal evolution gate after 20 minutes
+PASS evolution changes species and keeps ending protection
+PASS evolution keeps all four IVs unchanged
+PASS growing captured companion can be parked again
+PASS parked companion does not age while another Pokemon is active
+PASS bringing it back restores partial progress within a level
+PASS remaining 13 minutes complete the next level without rerolling IVs
+PASS growth and protection persist across an ordinary save reload
+PASS good farewell produces a level 73 stored individual
+PASS farewelled individual can be brought back from the final box slot
+PASS farewelled companion grows without repeat farewell or quota use
+PASS growth does not remove runaway protection
+PASS companion level remains capped at 100
+PASS attack/defense use form-adjusted stats with raw IVs in compact parentheses
+PASS speed/HP pair uses the right IVs with no extra label in the UI
+PASS English detail UI uses the same unambiguous IV mapping
+PASS: 47 runtime suites including companion growth, IV display and all 3.1.0 systems
