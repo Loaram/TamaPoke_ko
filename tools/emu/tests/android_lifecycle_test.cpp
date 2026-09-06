@@ -4,6 +4,7 @@
 #include "party.h"
 #include "save.h"
 #include "tools/android/game_lifecycle.h"
+#include "nvs_file.h"
 #include <cstdio>
 
 uint32_t g_seed = 102;
@@ -79,6 +80,42 @@ int main() {
   app.suspend(companion, 0, epoch + 7200, epoch + 7200);
   app.resume(companion, 0, epoch, epoch);
   ck(companion.level() == 66, "backward clock correction never adds offline growth");
+
+  // Exercise the actual APK/PC disk codec, not just the Preferences map.
+  const char *disk = "android-lifecycle-sleep.nvs";
+  remove(disk);
+  NvsFile storage; storage.load(disk, nvs());
+  Pet sleeper; hatch(sleeper); party.begin();
+  member.dex = 150; member.level = 80;
+  for (auto &slot : party.box) slot = member;
+  party.boxSave();
+  sleeper.energy = 20; sleeper.updateDeviceClock(0, epoch, epoch);
+  sleeper.toggleLight();
+  Preferences settings; settings.putBool("snd", false); settings.putUChar("vol", 3);
+  app.start(); app.suspend(sleeper, 0, epoch, epoch);
+  ck(nvs()["rosterF"].size() == 22116 && storage.save(disk,nvs(),true),
+     "sleeping app checkpoint writes full 300-box disk snapshot");
+  const auto saved = nvs(); nvs().clear(); NvsFile restarted;
+  ck(restarted.load(disk,nvs()) && nvs()==saved &&
+     !settings.getBool("snd",true) && settings.getUChar("vol",7)==3,
+     "process restart restores disabled sound and chosen volume after large roster");
+  Pet sleepingCold; sleepingCold.begin(); party.begin();
+  ck(sleepingCold.sleeping && sleepingCold.sleepAuto==SLEEP_PLAYER &&
+     party.box[0].dex==150 && party.box[299].dex==150,
+     "cold startup restores manual sleep and first/last box residents");
+  sleepingCold.updateDeviceClock(0,epoch+120,epoch+120,true);
+  ck(sleepingCold.sleeping && sleepingCold.energy==36,
+     "sleep survives offline minutes and restores exactly 8 energy per minute");
+  app.start(); app.suspend(sleepingCold,0,epoch+120,epoch+120);
+  app.resume(sleepingCold,0,epoch+240,epoch+240);
+  app.resume(sleepingCold,0,epoch+240,epoch+240);
+  ck(sleepingCold.sleeping && sleepingCold.energy==52,
+     "warm resume preserves sleep without duplicate energy recovery");
+  sleepingCold.toggleLight(); sleepingCold.saveNow();
+  ck(restarted.save(disk,nvs(),true), "manual wake saved");
+  nvs().clear(); storage.load(disk,nvs()); Pet awake; awake.begin();
+  ck(!awake.sleeping, "manual wake also persists across process restart");
+  remove(disk);
   printf("%s\n", bad ? "FAILURES" : "all good");
   return bad ? 1 : 0;
 }

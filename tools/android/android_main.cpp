@@ -19,6 +19,7 @@
 #include "Arduino.h"
 #include "Arduino_GFX_Library.h"
 #include "Preferences.h"
+#include "nvs_file.h"
 #include "korean_text.h"
 #include "pet.h"
 #include "game_lifecycle.h"
@@ -38,7 +39,8 @@ static ANativeWindow *gWindow = nullptr;
 static AAssetManager *gAssets = nullptr;
 static bool gActive = false;
 static std::string gSavePath;
-static NvsStore gLastSaved;
+static NvsFile gNvsFile;
+static bool gNvsLoaded = false;
 static uint32_t gLastSaveCheck = 0;
 static AndroidGameLifecycle gGameLifecycle;
 extern Pet pet;
@@ -217,53 +219,20 @@ uint8_t *androidLoadPackedFile(const char *path, uint32_t *size) {
 }
 
 void nvsLoad(const char *path) {
-  FILE *f = fopen(path, "rb");
-  if (!f) { gLastSaved = nvs(); return; }
-  uint32_t count = 0;
-  if (fread(&count, 4, 1, f) != 1 || count > 1024) { fclose(f); return; }
-  NvsStore loaded;
-  for (uint32_t i = 0; i < count; ++i) {
-    uint32_t keySize = 0, valueSize = 0;
-    if (fread(&keySize, 4, 1, f) != 1 || !keySize || keySize > 64) break;
-    std::string key(keySize, '\0');
-    if (fread(key.data(), 1, keySize, f) != keySize ||
-        fread(&valueSize, 4, 1, f) != 1 || valueSize > 4096) break;
-    std::vector<uint8_t> value(valueSize);
-    if (valueSize && fread(value.data(), 1, valueSize, f) != valueSize) break;
-    loaded[key] = std::move(value);
-  }
-  fclose(f);
-  nvs() = std::move(loaded);
-  gLastSaved = nvs();
+  gNvsLoaded = gNvsFile.load(path, nvs());
 }
 
 void nvsSave(const char *path) {
-  std::string temp = std::string(path) + ".tmp";
-  FILE *f = fopen(temp.c_str(), "wb");
-  if (!f) return;
-  uint32_t count = (uint32_t)nvs().size();
-  bool ok = fwrite(&count, 4, 1, f) == 1;
-  for (const auto &entry : nvs()) {
-    uint32_t keySize = (uint32_t)entry.first.size(), valueSize = (uint32_t)entry.second.size();
-    ok = ok && fwrite(&keySize, 4, 1, f) == 1;
-    ok = ok && fwrite(entry.first.data(), 1, keySize, f) == keySize;
-    ok = ok && fwrite(&valueSize, 4, 1, f) == 1;
-    ok = ok && (!valueSize || fwrite(entry.second.data(), 1, valueSize, f) == valueSize);
-    if (!ok) break;
-  }
-  ok = ok && fflush(f) == 0;
-  fclose(f);
-  if (!ok || rename(temp.c_str(), path) != 0) remove(temp.c_str());
+  if (!gNvsFile.save(path, nvs(), true))
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "NVS write failed; retaining previous file and retrying");
 }
 
 static void saveIfDirty(bool force) {
   uint32_t now = millis();
   if (!force && now - gLastSaveCheck < 1000) return;
   gLastSaveCheck = now;
-  if (force || nvs() != gLastSaved) {
-    nvsSave(gSavePath.c_str());
-    gLastSaved = nvs();
-  }
+  if (!gNvsFile.save(gSavePath.c_str(), nvs(), force))
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "NVS checkpoint failed; will retry");
 }
 
 static void checkpointGame() {
@@ -407,6 +376,12 @@ void android_main(android_app *app) {
 
   gSavePath = std::string(app->activity->internalDataPath) + "/tamapoke.nvs";
   nvsLoad(gSavePath.c_str());
+  if (!gNvsLoaded) {
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "Cannot read complete NVS; preserving original save");
+    callActivityBoolean("showSaveReadError");
+    ANativeActivity_finish(app->activity);
+    return;
+  }
   // ko.1.1.2 and earlier could persist an app-private RTC offset. On the first
   // fixed launch, preserve the saved level/state and rebase only its timestamp
   // to the phone/watch clock instead of interpreting the old offset as offline

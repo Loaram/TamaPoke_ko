@@ -11,9 +11,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.widget.Toast;
 
 public final class TamaPokeActivity extends NativeActivity {
     private static final int LOCAL_NETWORK_REQUEST = 38631;
+
+    public boolean showSaveReadError() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(TamaPokeActivity.this,
+                        "저장 파일을 읽지 못했습니다. 원본은 보존됩니다. 앱 데이터를 지우지 마세요.",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
