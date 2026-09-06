@@ -46,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.0.0"
+#define FW_VERSION "3.0.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -1325,7 +1325,11 @@ void onSwipeV(int dir) {
   if (playerOpen) { playerOpen = false; return; }
   if (trainOpen) { trainOpen = false; return; }
   if (movePickOpen) { movePickOpen = false; return; }
-  if (boxOpen) { boxOpen = false; boxSel = 0; return; }   // vertical backs out
+  if (boxOpen) {
+    if (releaseConfirm) { releaseConfirm=false; return; }
+    if (boxDetail) { boxDetail=0; return; }
+    boxOpen=false;boxSel=boxSwapFrom=partyDetail=0;return;
+  }
   if (partyOpen) {
     if (partyDetail) { partyDetail = 0; return; }
     if (partyPick) { if(!pet.acknowledgeEnding())return; partyPick = false; }
@@ -1418,8 +1422,9 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
     gfx->fillRoundRect(176,PDET_BTN_Y,74,PDET_BTN_H,10,UI_BAR_OK);
     gfx->drawRoundRect(176,PDET_BTN_Y,74,PDET_BTN_H,10,UI_INK);
     gfx->setTextColor(UI_BG_DAY); gfx->setTextSize(1);
-    gfx->setCursor(213-textWidthFactor(T(S_BOX_TAKE),3),PDET_BTN_Y+20);
-    gfx->print(T(S_BOX_TAKE));
+    const char *takeLabel=T(boxSwapFrom?S_BTL_SWITCH:S_BOX_TAKE);
+    gfx->setCursor(213-textWidthFactor(takeLabel,3),PDET_BTN_Y+20);
+    gfx->print(takeLabel);
   }
 
   gfx->fillRoundRect(PDET_R_X, PDET_BTN_Y, PDET_R_W, PDET_BTN_H, 10, UI_BAR_BAD);
@@ -1551,8 +1556,10 @@ bool monSheetConfirmTap(int16_t x, int16_t y, bool fromBox) {
   uiConfirmRects(&c1t, &c1b, &c2t, &c2b);
   if (x < CONFIRM_BTN_X || x > CONFIRM_BTN_X + CONFIRM_BTN_W) return false;
   if (y >= c1t && y <= c1b) {            // YES -- and it does not come back
-    if (fromBox) { party.boxReleaseAt(boxDetail - 1); boxDetail = 0; }
-    else { party.releaseAt(partyDetail - 1); partyDetail = 0; }
+    if (fromBox) party.boxReleaseAt(boxDetail - 1);
+    else party.releaseAt(partyDetail - 1);
+    if(!party.writable()){sfxPlay(SFX_DENY);return true;}
+    if(fromBox)boxDetail=0;else partyDetail=0;
     // A half-finished swap named a slot that may now be empty, so disarm both
     // sides rather than leaving one pointing at a creature that is gone.
     boxSwapFrom = 0;
@@ -1613,7 +1620,7 @@ void partyTap(int16_t x, int16_t y) {
       x >= BOXBTN_X - BOXBTN_PAD && x <= BOXBTN_X + BOXBTN_W + BOXBTN_PAD) {
     boxOpen = true;                  // open the box, nothing picked yet
     boxPage = 0;
-    boxSwapFrom = 0;
+    boxSwapFrom = 0;boxDetail=boxSel=0;releaseConfirm=false;boxPagePicker=false;
     sfxPlay(SFX_TAP);
     return;
   }
@@ -1641,6 +1648,7 @@ void partyTap(int16_t x, int16_t y) {
       if (boxSwapFrom == i + 1) {    // tapped again: take it to the box
         boxOpen = true;
         boxPage = 0;
+        boxDetail=boxSel=0;releaseConfirm=false;boxPagePicker=false;
         sfxPlay(SFX_TAP);
         return;
       }
@@ -1728,9 +1736,11 @@ void onSwipe(int dir) {
     return;
   }
   if (boxOpen) {   // horizontal pages the box, as every other paged screen
+    if (releaseConfirm) {releaseConfirm=false;return;}
+    if (boxDetail) {boxDetail=0;return;}
     uint8_t pages = BOX_PAGES;
     int p = (int)boxPage + (dir > 0 ? -1 : 1);
-    if (p < 0 || p >= pages) { boxOpen = false; boxSel = 0; }
+    if (p < 0 || p >= pages) { boxOpen=false;boxSel=boxSwapFrom=partyDetail=0; }
     else boxPage = (uint8_t)p;
     return;
   }
@@ -6038,6 +6048,12 @@ void boxTap(int16_t x, int16_t y) {
         boxOpen=partyOpen=false; sfxPlay(SFX_HATCH); return;
       }
       if(x<176) return;
+      if(boxSwapFrom) {
+        party.swapPartyBox(boxSwapFrom-1,boxDetail-1);
+        if(!party.writable()){sfxPlay(SFX_DENY);return;}
+        boxDetail=boxSel=boxSwapFrom=partyDetail=0;
+        sfxPlay(SFX_MEDAL);return;
+      }
       int free = party.firstFree();
       if (free < 0) {
         // Preserve the old full-party exchange flow, now explicitly requested.
@@ -6076,7 +6092,7 @@ void boxTap(int16_t x, int16_t y) {
     int cx0 = PARTY_GRID_X + (i % 2) * (PARTY_CELL_W + 10);
     int cy0 = 88 + (i / 2) * (PARTY_CELL_H + 8);
     if (x < cx0 || x > cx0 + PARTY_CELL_W || y < cy0 || y > cy0 + PARTY_CELL_H) continue;
-    if (boxSwapFrom) {           // a party slot is waiting: complete the trade
+    if (boxSwapFrom && party.box[idx].empty()) { // empty destination: deposit
       if (party.slots[boxSwapFrom - 1].empty() && party.box[idx].empty()) {
         sfxPlay(SFX_DENY);
         return;
@@ -6087,9 +6103,8 @@ void boxTap(int16_t x, int16_t y) {
       sfxPlay(SFX_MEDAL);
       return;
     }
-    // Otherwise open its SHEET. It used to go straight to the party, which is a
-    // lot to happen from one tap and left nowhere to put RELEASE; the sheet
-    // offers TO PARTY explicitly and shows what you are about to move.
+    // Occupied slots ALWAYS open the sheet, even with a pending party swap.
+    // The explicit middle button completes that swap; RELEASE stays reachable.
     if (party.box[idx].empty()) { sfxPlay(SFX_DENY); return; }
     // Full parties still need the sheet: live exchange does not need a free slot.
     boxDetail = idx + 1;

@@ -21,8 +21,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.0.0-Play-Guide-KO.pdf"
-VERSION = "3.0.0"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.0.1-Play-Guide-KO.pdf"
+VERSION = "3.0.1"
 PAGE_TOTAL = 22
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.0.0",
+            "플레이 설명서 · 3.0.1",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -419,12 +419,13 @@ page_break(story)
 
 # 8. Party and box
 story.extend(page_heading("07 파티", "현재 동료 포함 6마리와 300칸 박스", "함께 키우는 포켓몬 1마리와 파티 5마리가 한 전투에 참가합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/daily-rewards/box-last.png", ROOT / "docs/qa/daily-rewards/box-picker.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/3.0.1/box-direct-detail.png", ROOT / "docs/qa/daily-rewards/box-picker.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
         bullet("파티에는 5마리를 보관할 수 있습니다. 홈에서 키우는 현재 포켓몬까지 합쳐 전투 후보는 최대 6마리입니다."),
-        bullet("포켓몬 칸을 눌러 위치를 바꾸거나 상세 정보, 기술, 훈련 상태를 확인합니다."),
+        bullet("박스의 포켓몬을 누르면 상세창이 열립니다. <b>놓아주기 → 예</b>로 바로 정리하며 파티를 거칠 필요가 없습니다. 파티/박스 놓아주기는 하루 작별 3회와 별개입니다."),
+        bullet("파티에서 교체 대상을 먼저 골랐어도 상세창이 열립니다. 가운데 <b>교체</b> 버튼을 눌러야 실제로 바뀝니다. 교체 대상이 없으면 <b>파티로</b>로 이동합니다."),
         bullet("박스는 6칸씩 50페이지입니다. 아래 <b>&lt; / &gt;</b> 버튼이나 가로 스와이프로 이동합니다. 페이지 번호를 누르면 10페이지씩 묶인 목록에서 원하는 번호로 바로 갑니다."),
         bullet("좋은 작별·포획으로 합류하면 파티 우선, 파티가 가득 차면 박스로 들어갑니다. 둘 다 가득 찼을 때 보관 대상을 선택합니다."),
         bullet("파티/박스 상세창의 <b>데려오기</b>로 현재 키우는 포켓몬과 자유롭게 맞교환합니다. 성장 개체는 보관 중 시간이 멈추고 다시 데려오면 이어집니다."),
@@ -674,7 +675,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.0.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.0.1", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

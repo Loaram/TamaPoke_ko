@@ -46,7 +46,8 @@ int main(){
   ck(!memcmp(original,party.box,sizeof(original)),"all paging operations leave all 300 stored individuals unchanged");
   boxSwapFrom=1;boxTap(116,360);boxTap(233,360);boxTap(308,313);
   ck(boxPage==49 && boxSwapFrom==1 && boxOpen,"direct page jump preserves a pending party-to-box exchange");
-  boxTap(300,278);ck(party.box[299].dex==4 && party.slots[0].dex==324 && boxSwapFrom==0,"exchange on page fifty affects exactly the 300th slot");
+  boxTap(300,278);ck(boxDetail==300 && party.box[299].dex==324,"pending exchange first opens the 300th slot sheet");
+  boxTap(213,360);ck(party.box[299].dex==4 && party.slots[0].dex==324 && boxSwapFrom==0,"explicit exchange on page fifty affects exactly the 300th slot");
   boxTap(300,278);ck(boxDetail==300,"last stored creature still opens its detail sheet");
   boxTap(233,430);ck(boxDetail==0 && boxOpen,"closing detail returns to box without entering navigation");
   boxTap(233,400);ck(!boxOpen,"box back still closes the box");

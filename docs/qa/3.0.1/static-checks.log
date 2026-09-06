@@ -1,0 +1,19 @@
+PASS: 802 Unicode glyphs, 14436 bitmap bytes
+PASS: 1968 Korean name mappings
+PASS: 194 UI strings, 1025 species, 718 moves; formats and glyphs valid
+
+PASS: 216 sourced species, 689 natural moves / 14,542 rows, 51 previous sourced moves, 717 moves including 22 append-only form moves, 69 form pools, 9 dex and gym regions, 43 art gaps and 58 no-hatch species
+
+PASS: 176 forms, 344 exact PMD sprites, types/stats/IDs and hashes; 100 unavailable candidates excluded
+
+what the installer writes:
+  0x000000..0x004E10  firmware/bootloader.bin
+  0x008000..0x008C00  firmware/partitions.bin
+  0x00E000..0x010000  firmware/boot_app0.bin
+  0x010000..0x232400  firmware/app.bin
+what must survive it:
+  0x009000..0x00E000  nvs
+  0x610000..0xFF0000  ffat
+
+the save is out of the blast radius
+PASS: Korean HTML/JS, 9 valid same-origin TPAK bundles, NVS-safe manifest

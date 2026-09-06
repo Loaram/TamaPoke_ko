@@ -1,0 +1,267 @@
+{
+  "version": "3.0.1",
+  "runtime_suites": 44,
+  "sd_fault_checks": 10,
+  "device_tested": false,
+  "box_direct_release": true,
+  "explicit_box_exchange": true,
+  "save_version": 7,
+  "save_max_bytes": 32768,
+  "legacy_move_ids_unchanged": 695,
+  "forms": 176,
+  "form_sprites": 344,
+  "moves": 717,
+  "form_pools": 69,
+  "box_slots": 300,
+  "box_pages": 50,
+  "android_version_code": 3014,
+  "wear_version_code": 3015,
+  "guide_pages": 22,
+  "watch_guide_unchanged": true,
+  "artifacts": {
+    "SHA256SUMS.txt": {
+      "bytes": 539,
+      "sha256": "d82b5ab829e08733032c700184e964dec31fdd168fcb637de1046160fb51c33a"
+    },
+    "TamaPoke-3.0.1-Android-Full-debug.apk": {
+      "bytes": 387626276,
+      "sha256": "0da25a9f36d8176319af4b43026b2d7de90371d631e74af4461729dbb03f89c5"
+    },
+    "TamaPoke-3.0.1-ESP32-Web-Installer.zip": {
+      "bytes": 2240950,
+      "sha256": "382e05fe4340387b0b29cb6c2d86dbd1d16e00e2824ae69607bc178cf9e173ee"
+    },
+    "TamaPoke-3.0.1-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
+      "bytes": 186624,
+      "sha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce"
+    },
+    "TamaPoke-3.0.1-Play-Guide-KO.pdf": {
+      "bytes": 404280,
+      "sha256": "d033d7e1f321c8f9fa14ae75fb7fbc528fdd15b78716858b9b65d00b0c4da922"
+    },
+    "TamaPoke-3.0.1-WearOS-GalaxyWatch4-9-debug.apk": {
+      "bytes": 387237161,
+      "sha256": "04ddbeb05cb9941ba42ac8b134a24596fb8d83cef0fb83eaa1c38018b5edb950"
+    }
+  },
+  "private_emulators": {
+    "dex": {
+      "bytes": 1542144,
+      "sha256": "d02f9249f5140ee76d9381e53106f732d79176e63655630399e48ad549eb21ab"
+    },
+    "shiny": {
+      "bytes": 1542656,
+      "sha256": "7cf3c8f799d8331a587a47051fcbd6544eedbc5922fc68bd53326af323fba52b"
+    }
+  },
+  "source_files": {
+    "audio.cpp": {
+      "bytes": 11510,
+      "sha256": "079761f426ea1ac1770e2cc8c8b094154dba5f0a306be33529eeb8572dcdab02"
+    },
+    "audio.h": {
+      "bytes": 1618,
+      "sha256": "4ab772e9ef700b72795b1fd04cba43d441d6cfce704b446a692fb0de710ba4cb"
+    },
+    "avatars.h": {
+      "bytes": 14528,
+      "sha256": "25bda143eac68434efaf6122e78775819e2d84c65279705b64808ef310d4e72b"
+    },
+    "backs.h": {
+      "bytes": 877288,
+      "sha256": "22d73794f8cd67b8021da347eef923783b6b61f070cc3d3b197a546d417c665a"
+    },
+    "badges.h": {
+      "bytes": 172798,
+      "sha256": "2104ab66ea92e8a2d0e5b57a516744c7c0cb867e70c37fc5aee64884b55039ea"
+    },
+    "battle.cpp": {
+      "bytes": 12914,
+      "sha256": "7c807052c5590f6e4723c6a03732c35aeab165603020f0ed2b2eb350b2941885"
+    },
+    "battle.h": {
+      "bytes": 3257,
+      "sha256": "c627d4db4a9b06262243aaae1dfc6033aa3fdf35acc89e58780e00e56fc6bc1e"
+    },
+    "catch_rates.h": {
+      "bytes": 5564,
+      "sha256": "4cd3d1c5bd1cc3e6aad8df1e78a1deef541a879345603ce353cd3fe638ee505c"
+    },
+    "dex.h": {
+      "bytes": 114008,
+      "sha256": "118641d7b443de546642871f4a36b2630ea45f8cf36402d29e007929a7ac4f93"
+    },
+    "forms.cpp": {
+      "bytes": 1836,
+      "sha256": "20b5a98fc2bd8e3c91c9fd1fc4032d6ea1aad1f089291b030d525e8d8ab485e5"
+    },
+    "forms.h": {
+      "bytes": 983,
+      "sha256": "c25fcf37dfaae2262df4bc2b8280a325c4f464a259dd5b81f77be1208c23340b"
+    },
+    "forms_data.h": {
+      "bytes": 17888,
+      "sha256": "6bf58aabeea30b52036530167bd0f41d499bf62d0ba7b7f02ff6d1378d8f5356"
+    },
+    "forms_ui.h": {
+      "bytes": 8153,
+      "sha256": "3bf00ff08b78ef1d64d54009d1ea11f3b329589bc10c097ee80037a739bbd6ad"
+    },
+    "form_moves.h": {
+      "bytes": 2603,
+      "sha256": "053c812af083caab88dc97defab6065a5f4c7f34cd0d7604c370cb51a74d42af"
+    },
+    "form_moves_data.h": {
+      "bytes": 52259,
+      "sha256": "13c1f756f988508d09caf59b872dd8a7541697d0549b15f2c5208090b23c43ba"
+    },
+    "gbsynth.cpp": {
+      "bytes": 3678,
+      "sha256": "5c349733edd9211ecf373f15255e862586163337986d28ec2c8a005e90415c75"
+    },
+    "gbsynth.h": {
+      "bytes": 2847,
+      "sha256": "cc671a160e6152e8d4d9e5eacab37932a1a4b19405f0b1424a99dd1c1daa2888"
+    },
+    "gym_art.h": {
+      "bytes": 146255,
+      "sha256": "5a40bb1b49631d8ca440ef383886514f17ca31b7b2c545e7904b42a1c9603ce2"
+    },
+    "i18n.cpp": {
+      "bytes": 30380,
+      "sha256": "df54b581f6ef7b95745a25047ea40ff2305416844a6a345939141041c4e83bb5"
+    },
+    "i18n.h": {
+      "bytes": 7410,
+      "sha256": "aee3f8fb04887069b85be198c90599fe60f96419e8cfcebe56904a19d0c84c5d"
+    },
+    "korean_font.h": {
+      "bytes": 81226,
+      "sha256": "61cade00b318d0033278bdca25621cb1fbb8f484373e658a874e700af380c46e"
+    },
+    "korean_names.h": {
+      "bytes": 65572,
+      "sha256": "c5b3afcb42a7532415480666bf38d28ae0946b09eced9ed506520366a436c383"
+    },
+    "korean_text.h": {
+      "bytes": 2831,
+      "sha256": "58ace816efad936334ec9770aa240a2713c2b7b7db991034ac2e082c7f42642f"
+    },
+    "link.cpp": {
+      "bytes": 22554,
+      "sha256": "f3532dcf71c6cd87897b7f37e24ba2a1a2b9ff5b166e0175b39527fc309be3c2"
+    },
+    "link.h": {
+      "bytes": 9345,
+      "sha256": "885c1402bf954e407f222d1fbf7a3af13321937417f49b0b130493505b52c1f7"
+    },
+    "linknow.cpp": {
+      "bytes": 7762,
+      "sha256": "bd2f33841e199c80ce9f66e6473a674c287131cc9e49cd60e4579f59c10be2ef"
+    },
+    "linknow.h": {
+      "bytes": 1547,
+      "sha256": "5fef78c97e8e293f1b4d54a78f41e62d1b99f40c6812e0814022bd536d9f4468"
+    },
+    "linkudp.h": {
+      "bytes": 1876,
+      "sha256": "0ba0839340a82b6c8a32d2ce7401fd2ce8917a0dc166e12461e3de7b3296792c"
+    },
+    "moves.h": {
+      "bytes": 479685,
+      "sha256": "0b42f8f8ab4d6aa15b989378545517dce8032be521b271c7c9696d4e3a4b1422"
+    },
+    "move_id.h": {
+      "bytes": 378,
+      "sha256": "69946d3628cd97832a62840271cfda80ec17810fb3d667efee92379ba4ad38c1"
+    },
+    "music.h": {
+      "bytes": 60691,
+      "sha256": "bdd2f9d8ed1f47dad094ea164ddc132aa84615d155468692bcd334eb6f58f4db"
+    },
+    "noart.h": {
+      "bytes": 1746,
+      "sha256": "7189f96a9eae72dd17bf9b8139983baba65e8faec08e5d33a518d5646d570293"
+    },
+    "party.cpp": {
+      "bytes": 14622,
+      "sha256": "00e5434fbc2f41b3b0fd811d1f6ca22f35e6c7cb426d62c0f3b059beb85def52"
+    },
+    "party.h": {
+      "bytes": 4231,
+      "sha256": "6cee58f92b4828816c11cea876673abf24eb767d257395b03264d557fa66295f"
+    },
+    "pet.cpp": {
+      "bytes": 69570,
+      "sha256": "fb0fe83a400b38d990a4b1dc7d2e12f8faa824dc040ecb0887f63477a00ed093"
+    },
+    "pet.h": {
+      "bytes": 26444,
+      "sha256": "9f635ef35c1598e3c2f4f47e11f9499d3df32115c0042cfc93d54612b809ac23"
+    },
+    "pin_config.h": {
+      "bytes": 1018,
+      "sha256": "8c9fb98ff3ecd26f2a68060ff1a506a9031881c354c5c6c7125d09d92d673d51"
+    },
+    "pokedex_progress.h": {
+      "bytes": 697,
+      "sha256": "adf05a55b6654e0fb28b0fa69581689b5d87c17af3e18265a34d887ee20081b4"
+    },
+    "roster_store.h": {
+      "bytes": 2522,
+      "sha256": "118038435d0df3dc83e9fdf0d604104d895d377d0c22e8eb309e4a253f86a855"
+    },
+    "rtcbat.cpp": {
+      "bytes": 3051,
+      "sha256": "2952f9569283396b818dc579179871c91337924e42c152c7fde0792f793672bc"
+    },
+    "rtcbat.h": {
+      "bytes": 800,
+      "sha256": "b66174b1d65f84ee778a0c5312bc0c731f4d997d0161aab7bf6ebc3b7a6ff18d"
+    },
+    "save.cpp": {
+      "bytes": 11080,
+      "sha256": "02dd2caff7c2294500137cfe0e97e5115dd3c1829b56fd95d378d99cccab789c"
+    },
+    "save.h": {
+      "bytes": 2224,
+      "sha256": "45ecb09febf5dbe2b244576211a2411262aa0641054d638684e9e5fcecf8193b"
+    },
+    "sdmon.cpp": {
+      "bytes": 9850,
+      "sha256": "8c4b464908cd56725e3d6574b386d567a2abeb486ddb6a324a96f38f78380add"
+    },
+    "sdmon.h": {
+      "bytes": 3952,
+      "sha256": "5a0ee81049a895f2a6dc9e046b6325d4dde578ed3bf03e28700e7344bea44e76"
+    },
+    "species.h": {
+      "bytes": 21970,
+      "sha256": "6d9943a75b7d7875e9dfc06ce9ef06cb9e63cdca05ae6dcd4ad70a5b03ee6916"
+    },
+    "TamaPoke.ino": {
+      "bytes": 272160,
+      "sha256": "302b807cdb6bd88c76dc68a7bede8906d708731da243936884fa02e08553f853"
+    },
+    "trainers.h": {
+      "bytes": 16412,
+      "sha256": "8314e73998059b98d1b488b0b3ae85120c7ced6a18aeeb27e0fd7312a47b9bd9"
+    },
+    "trainers_new.h": {
+      "bytes": 2860,
+      "sha256": "198cc1cc6f7a5daf27abc358fee13259664650336c7da870f1df771d7995607d"
+    },
+    "types.h": {
+      "bytes": 3304,
+      "sha256": "c8995581732f3b627c820ee2bda4a7f266b22c7af074b4743595a162a5b7c07b"
+    },
+    "wild.cpp": {
+      "bytes": 3447,
+      "sha256": "f124001318173eab465327c4bce26dbe0fb6bc61c34173f8df95bb030ad36be5"
+    },
+    "wild.h": {
+      "bytes": 1029,
+      "sha256": "6286dda721d0f5a7963b62309187448a68b2efe47d1cd7dfd298e8e50eae9390"
+    }
+  }
+}
