@@ -2,8 +2,8 @@
 import argparse, hashlib, json, os, re, subprocess, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('action',choices=['status','create','upload','publish','verify','workflows'])
-p.add_argument('--notes',type=Path);p.add_argument('--commit');p.add_argument('--assets',type=Path)
+p=argparse.ArgumentParser();p.add_argument('action',choices=['status','create','upload','publish','verify','workflows','jobs'])
+p.add_argument('--notes',type=Path);p.add_argument('--commit');p.add_argument('--assets',type=Path);p.add_argument('--run',type=int)
 a=p.parse_args()
 def digest(path):
     with path.open('rb') as stream:return 'sha256:'+hashlib.file_digest(stream,'sha256').hexdigest()
@@ -30,9 +30,18 @@ if a.action=='status':
 if a.action=='workflows':
     runs=api('/actions/runs?per_page=8')['workflow_runs']
     print(json.dumps([{k:r.get(k) for k in ('id','name','head_sha','status','conclusion','html_url')} for r in runs],indent=2));raise SystemExit(0)
+if a.action=='jobs':
+    assert a.run and a.run>0
+    jobs=api(f'/actions/runs/{a.run}/jobs')['jobs']
+    print(json.dumps([dict(name=j['name'],status=j['status'],conclusion=j['conclusion'],steps=[{k:s.get(k) for k in ('name','status','conclusion')} for s in j['steps']]) for j in jobs],indent=2));raise SystemExit(0)
 version=re.search(r'^#define FW_VERSION "([^"]+)"',(R/'TamaPoke.ino').read_text(encoding='utf8'),re.M)[1]
 assert re.fullmatch(r'\d+\.\d+\.\d+',version),'Only a final numbered version may be published'
 release=api('/releases/tags/'+version)
+if release is None:
+    # GitHub's tag endpoint may omit drafts until their tag is published.
+    matches=[x for x in api('/releases?per_page=100') if x['tag_name']==version]
+    assert len(matches)<=1,'Multiple releases use this version; inspect before continuing'
+    release=matches[0] if matches else None
 if a.action=='create':
     assert a.notes and a.commit and re.fullmatch(r'[0-9a-f]{40}',a.commit)
     assert api('/commits/'+a.commit),'Commit has not been pushed'
