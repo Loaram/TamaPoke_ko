@@ -1,0 +1,22 @@
+PASS new isolated fixture
+PASS ten actual daily care actions establish a ten-day streak
+PASS bringing a protected companion from box slot 300 retains current/best/date
+PASS box exchange does not rewrite player history to zero
+PASS returning the original growing individual also retains player history
+PASS save a genuine post-box-exchange snapshot in the unchanged disk format
+PASS 3.0.0 disk reader reproduces loss of current streak but retains best/date
+PASS old restart shows 0/10 and same-day care cannot increment it
+PASS old next-day care incorrectly restarts at one
+PASS 3.1.1 reader restores the identical file in full
+PASS 3.1.1 cold restart keeps ten-day history, bonus and incoming companion
+PASS same-day companion care keeps ten days
+PASS next-day companion care advances to eleven
+PASS simulate interruption while committing the active creature
+PASS persist interrupted swap fixture
+PASS disk restart and swap recovery preserve all player history
+PASS whole-save transfer imports streak fixture
+PASS Android/Wear/ESP transfer codec keeps streak, best and date
+PASS genuinely missing a full day still removes the bonus
+PASS real care gap resets only current streak, not best history
+all good
+PASS: streak_persistence

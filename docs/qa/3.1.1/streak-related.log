@@ -1,0 +1,140 @@
+PASS  sender snapshot exported
+PASS  received save imported
+PASS  restart flag stops the applying frame before autosave
+PASS  restart blocks pause/stop/resume/exit checkpoints and game ticks
+PASS  every imported key survives the Android shutdown sequence
+PASS  reopen restores received creature, dex, badges, party and box together
+PASS  repeated background callbacks never apply active-care ticks
+offline: 120 min aplicados (nv.7)
+PASS  two hours in background uses offline floors and adds no neglect
+PASS  background growth advances exactly once
+PASS  duplicate resume/focus events cannot replay time
+offline: 120 min aplicados (nv.7)
+PASS  cold launch and warm resume agree on offline growth and care
+offline: 60 min aplicados (nv.63)
+PASS  active companion gains three levels after an offline hour
+offline: 60 min aplicados (nv.66)
+PASS  active companion gains three more levels after warm resume
+PASS  backward clock correction never adds offline growth
+PASS  sleeping app checkpoint writes full 300-box disk snapshot
+PASS  process restart restores disabled sound and chosen volume after large roster
+PASS  cold startup restores manual sleep and first/last box residents
+offline: 2 min aplicados (nv.1)
+PASS  sleep survives offline minutes and restores exactly 8 energy per minute
+offline: 2 min aplicados (nv.1)
+PASS  warm resume preserves sleep without duplicate energy recovery
+PASS  manual wake saved
+PASS  manual wake also persists across process restart
+all good
+PASS  missing file starts a new save
+PASS  writes 22116-byte roster and later settings
+PASS  cold disk reopen preserves every byte including sound, volume and sleep
+PASS  atomic overwrite persists awake state and enabled sound at zero volume
+PASS  legacy small records and empty values remain compatible
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  trailing garbage rejected without changing original
+PASS  excessive record count rejected
+PASS  duplicate key rejected
+PASS  oversized value rejected before allocation
+PASS  valid save can be reopened after read failure
+PASS  write failure reported
+PASS  failed write stays dirty and succeeds on retry without force
+PASS  invalid output never replaces existing good save
+all good
+TamaPoke fw v3.1.1
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS party button exchanges a living pet without deleting either
+PASS outgoing individual preserves exact minute, energy, bond, IVs, training, moves, nickname, shiny and form
+PASS legacy companion behavior and player-wide achievements stay intact
+PASS returning the growing individual is allowed
+PASS the original grower resumes rather than becoming a retired companion
+PASS full storage stays full after reversible exchange
+PASS restored live care survives reopening the save
+PASS a full party still opens the last box slot's detail sheet
+PASS box bring-back button swaps directly with active pet at full capacity
+PASS box round trip restores the grower
+PASS TO PARTY still offers a storage-slot exchange when the party is full
+PASS box-to-party exchange leaves the live pet untouched
+PASS pending move decision blocks exchange without changing storage
+PASS an ending cannot be interrupted by exchanging pets
+PASS out-of-range indices are rejected
+PASS full roster, care metadata and recovery copies fit the v5 transport envelope
+PASS whole-save import accepts the enlarged care-aware save
+PASS cross-device save round trip keeps both active and boxed individuals
+PASS interrupted exchange replays the committed incoming pet and clears recovery only after verified saving
+PASS recovery is idempotent across another restart
+forms: roster write failed; recovery copies retained
+PASS failed atomic roster write rolls back RAM and retains both saved individuals
+PASS failed live-key write retains the committed recovery record
+PASS reboot repairs a partially written live save without duplicating or losing a Pokemon
+PASS beta.1/2 TFR1 records retain form and legacy companion policy
+PASS egg-time bring-back still frees the selected slot
+PASS unknown clock gives base 1/48 shiny and 3% legendary
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS day ten matches old actual maxima: 10% shiny / 14% legendary
+  day 1: 98 shiny / 5000 actual hatches
+PASS actual egg creation and hatching use daily shiny odds
+  day 10: 473 shiny / 5000 actual hatches
+PASS actual egg creation and hatching use daily shiny odds
+PASS farewell classification and individual bond no longer set these bonuses
+PASS farewell classification and individual bond no longer set these bonuses
+PASS farewell classification and individual bond no longer set these bonuses
+PASS actual egg species lottery uses the day-ten legendary weight
+PASS runaway retains common-only restriction, not a shiny bonus penalty
+PASS legendary gate still requires 25 registered species
+PASS yesterday's care remains valid before today's first action
+PASS missing a full care day removes bonuses without waiting for another action
+PASS care after a gap restarts at day one
+PASS clock rollback cannot farm care days
+PASS care resumes normally after the clock catches up
+PASS caring for a companion counts for the player too
+PASS early retire consumes exactly one allowance
+PASS duplicate requests during ceremony do not consume more
+PASS earned farewell shares the allowance and keeps correct classification
+PASS long-press live release consumes the third allowance
+PASS all three voluntary paths reject a fourth farewell
+PASS restart does not refill the allowance
+PASS free companion exchange preserves player streak and spent allowance
+PASS returning to the original creature is still allowed
+PASS deleting banked creatures does not consume or reset live allowance
+PASS whole-save includes the daily counter
+PASS cross-device payload imports successfully
+PASS save transfer retains both allowance and streak
+PASS backward clock does not refill allowance
+PASS last second before midnight remains exhausted
+PASS local midnight replenishes three farewells
+PASS quota write failure does not start retirement or lose the creature
+PASS retry after storage recovers charges once
+PASS existing egg species and shiny roll are preserved on reload
+PASS old saves without the new field preserve care history and start with three
+PASS missing clock cannot refill three uses on restart
+all good
+PASS: active_swap,daily_rewards,android_lifecycle,nvs_file

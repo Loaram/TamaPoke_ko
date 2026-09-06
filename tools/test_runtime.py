@@ -13,7 +13,7 @@ core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.
 for test in ['korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
              'lan','battle','ai','gym','roster','gyms_new','evo','balance','retire','moves','box',
              'dexdata','eevee','branch','region','sprite','full_dex','full_shiny','hit',
-             'touch','swipe','starter','release','joy','wild','explore','android_lifecycle','nvs_file','forms','forms_ui','active_swap','form_moves','daily_rewards','daily_rewards_ui','box_pages','ending_recovery','box_direct','box_sort','revive','companion_growth']:
+             'touch','swipe','starter','release','joy','wild','explore','android_lifecycle','nvs_file','streak_persistence','forms','forms_ui','active_swap','form_moves','daily_rewards','daily_rewards_ui','box_pages','ending_recovery','box_direct','box_sort','revive','companion_growth']:
     if a.only and test not in a.only.split(','): continue
     exe=out/(test+('.exe' if os.name=='nt' else ''))
     src=[str(E/'tests'/f'{test}_test.cpp'),*core]
@@ -28,4 +28,4 @@ for test in ['korean','i18n','label','save','savetransfer','upgrade','link','lin
           ['-DANDROID=1'] if test == 'android_lifecycle' else [])
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*defs,*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: '+(a.only or '48 runtime suites including disk persistence, Android sleep and all 3.1.1 systems'))
+print('PASS: '+(a.only or '49 runtime suites including streak persistence, Android sleep and all 3.1.1 systems'))
