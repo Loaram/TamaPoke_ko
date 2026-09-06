@@ -21,8 +21,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-2.0.1-Play-Guide-KO.pdf"
-VERSION = "2.0.1"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-2.0.2-Play-Guide-KO.pdf"
+VERSION = "2.0.2"
 PAGE_TOTAL = 18
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 2.0.1",
+            "플레이 설명서 · 2.0.2",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -262,7 +262,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-05", CENTER),
+        p("2026-09-06", CENTER),
     ]
 )
 page_break(story)
@@ -375,12 +375,14 @@ page_break(story)
 
 # 6. Dex and gyms
 story.extend(page_heading("05 도감", "1025종 도감과 7개 지방 체육관", "도감은 9개 지방, 체육관은 관동부터 알로라까지 7개 지방입니다."))
-story.append(screenshot_pair(qa_current / "guide-gallery.png", screens / "gymsj.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", screens / "gymsj.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
         bullet("도감은 관동 · 성도 · 호연 · 신오 · 하나 · 칼로스 · 알로라 · 가라르 · 팔데아를 지원합니다."),
-        bullet("도감 화면에서 위아래로 포켓몬을 바꾸고 좌우로 지방 또는 페이지를 이동합니다."),
+        bullet("도감 1/1025(982)는 등록 1종 / 전체 번호 1025종 / 현재 수집 가능 982종입니다. 괄호는 알·진화·탐색으로 모을 수 있는 종수이며, 지역별로도 표시합니다."),
+        bullet("그림 미지원 43종은 수집 대상에서 제외됩니다. 괄호는 전체 팩 기준이며 설치한 팩 수나 기존 도감 기록을 바꾸지 않습니다."),
+        bullet("도감 목록은 좌우로 페이지, 위아래로 지방을 바꿉니다. 포켓몬을 누르면 상세 정보를 볼 수 있습니다."),
         bullet("체육관은 각 지방 관장 8명, 사천왕 4명, 챔피언 1명 순서입니다."),
         bullet("체육관 전투는 선택한 지방의 관장, 상대 팀과 배지 순서로 끝까지 진행됩니다."),
         p("그림 팩이 설치되지 않은 지방은 잠금으로 표시될 수 있습니다. 먼저 설치 페이지에서 해당 지방 팩을 넣으세요.", SAFE),
@@ -447,7 +449,7 @@ page_break(story)
 
 # 10. Gym regional behavior
 story.extend(page_heading("09 체육관", "지방별 관장과 배지 진행", "왼쪽 화면에서 지방과 상대를 고르고 준비된 파티로 도전합니다."))
-story.append(screenshot_pair(qa_current / "guide-gallery.png", screens / "gymsj.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", screens / "gymsj.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -670,7 +672,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/2.0.1", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/2.0.2", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

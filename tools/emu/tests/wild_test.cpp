@@ -4,6 +4,7 @@
 #include "pet.h"
 #include "wild.h"
 #include "dex.h"
+#include "pokedex_progress.h"
 #include <cstdio>
 
 uint32_t g_seed = 17;
@@ -47,6 +48,41 @@ int main() {
     if (wildCaptureCheck(3, r, shakes)) caught++;
   ck(caught == 25, "catch-rate 3 is exactly 25/1000 (2.5 percent)");
 
+  gRegionArt = 0xFFFF;
+  bool reachable[DEX_COUNT + 1] = {};
+  for (uint8_t region = 0; region < REGION_ALL; ++region)
+    for (uint8_t tier = R_EVO; tier <= R_LEGENDARIO; ++tier)
+      for (uint32_t roll = 0; roll < DEX_COUNT; ++roll) {
+        int16_t dex = wildPickSpecies(region, tier, roll);
+        if (dex >= 1 && dex <= DEX_COUNT) reachable[dex] = true;
+      }
+  uint16_t collectible = 0, regionalTotal = 0;
+  bool availabilityOk = true;
+  for (int16_t dex = 1; dex <= DEX_COUNT; ++dex) {
+    if (reachable[dex]) ++collectible;
+    if (reachable[dex] != speciesHasArt(dex) ||
+        (reachable[dex] && !wildCatchRateForDex(dex))) availabilityOk = false;
+  }
+  for (uint8_t region = 0; region < REGION_ALL; ++region) {
+    uint16_t regionalReachable = 0;
+    const RegionInfo &rg = REGIONS[region];
+    for (uint16_t dex = rg.lo; dex <= rg.hi; ++dex)
+      if (reachable[dex]) ++regionalReachable;
+    if (regionalReachable != pokedexCollectibleCountIn(rg.lo, rg.hi))
+      availabilityOk = false;
+    regionalTotal += regionalReachable;
+  }
+  ck(availabilityOk && collectible == pokedexCollectibleCount() &&
+     regionalTotal == collectible,
+     "national and regional collection targets match all catchable encounters");
+  printf("Collectible species: %u/%u\n", collectible, DEX_COUNT);
+  gRegionArt = 0;
+  ck(pokedexCollectibleCount() == collectible,
+     "collection target stays stable when regional packs are not installed");
+  ck(pokedexCollectibleCountIn(0, 0) == 0 &&
+     pokedexCollectibleCountIn(100, 99) == 0 &&
+     pokedexCollectibleCountIn(0, 65535) == collectible,
+     "collection count bounds exclude dex zero and out-of-range IDs");
   gRegionArt = 0xFFFF;
   bool pickOk = true;
   for (uint8_t tier = R_EVO; tier <= R_LEGENDARIO; tier++) {

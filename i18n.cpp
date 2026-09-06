@@ -13,7 +13,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Esta agotado...", "Esta triste...", "Esta rellenito...", "Es SHINY!!", "Esta feliz",
     "GRACIAS! Hasta siempre", "Se ha escapado...", "Adios! Se despide...",
     "HUEVO", "Huevo legendario!?", "Huevo raro!", "Toca el huevo...", "Se mueve!", "Esta a punto!",
-    "POKEDEX %u/%u",
+    "POKEDEX %u/%u(%u)",
     "%s%s Nv.%u",
     "Soltar a %s?", "SI", "NO",
     "%u GOLPES", "FUERZA +%u", "NUEVO RECORD!", "RECORD: %u", "APORREA RAPIDO!",
@@ -54,7 +54,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Worn out...", "Feeling sad...", "A bit chubby...", "It's SHINY!!", "It's happy",
     "THANKS! Farewell", "It ran away...", "Bye! Waving goodbye...",
     "EGG", "Legendary egg!?", "Rare egg!", "Tap the egg...", "It moves!", "Almost there!",
-    "POKEDEX %u/%u",
+    "POKEDEX %u/%u(%u)",
     "%s%s Lv.%u",
     "Release %s?", "YES", "NO",
     "%u HITS", "STR +%u", "NEW RECORD!", "BEST: %u", "HIT FAST!",
@@ -96,7 +96,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Epuise...", "Triste...", "Un peu rond...", "C'est SHINY!!", "Il est content",
     "MERCI! Adieu", "Il s'est enfui...", "Au revoir!",
     "OEUF", "Oeuf legendaire!?", "Oeuf rare!", "Touche l'oeuf...", "Il bouge!", "Presque la!",
-    "POKEDEX %u/%u",
+    "POKEDEX %u/%u(%u)",
     "%s%s Niv.%u",
     "Relacher %s?", "OUI", "NON",
     "%u COUPS", "FORCE +%u", "NOUVEAU RECORD!", "RECORD: %u", "FRAPPE VITE!",
@@ -137,7 +137,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Erschoepft...", "Traurig...", "Etwas rundlich...", "Es ist SHINY!!", "Es ist froh",
     "DANKE! Lebwohl", "Es ist weg...", "Tschuess! Winkt",
     "EI", "Legendaeres Ei!?", "Seltenes Ei!", "Beruehre das Ei...", "Es bewegt sich!", "Fast soweit!",
-    "POKEDEX %u/%u",
+    "POKEDEX %u/%u(%u)",
     "%s%s Lv.%u",
     "%s freilassen?", "JA", "NEIN",
     "%u TREFFER", "KRAFT +%u", "NEUER REKORD!", "REKORD: %u", "SCHNELL HAUEN!",
@@ -178,7 +178,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Esausto...", "Triste...", "Un po' cicciotto...", "E' SHINY!!", "E' felice",
     "GRAZIE! Addio", "E' scappato...", "Ciao! Saluta",
     "UOVO", "Uovo leggendario!?", "Uovo raro!", "Tocca l'uovo...", "Si muove!", "Ci siamo quasi!",
-    "POKEDEX %u/%u",
+    "POKEDEX %u/%u(%u)",
     "%s%s Lv.%u",
     "Liberare %s?", "SI", "NO",
     "%u COLPI", "FORZA +%u", "NUOVO RECORD!", "RECORD: %u", "COLPISCI VELOCE!",
@@ -219,7 +219,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "Exausto...", "Triste...", "Um pouco gordinho...", "E SHINY!!", "Esta feliz",
     "OBRIGADO! Adeus", "Fugiu...", "Tchau! Acena",
     "OVO", "Ovo lendario!?", "Ovo raro!", "Toque no ovo...", "Mexe-se!", "Quase la!",
-    "POKEDEX %u/%u",
+    "POKEDEX %u/%u(%u)",
     "%s%s Niv.%u",
     "Soltar %s?", "SIM", "NAO",
     "%u GOLPES", "FORCA +%u", "NOVO RECORDE!", "RECORDE: %u", "BATA RAPIDO!",
@@ -275,7 +275,7 @@ static const char *const STRINGS[LANG_COUNT][STR_COUNT] = {
     "알을 만져 보세요", // S_EGG_TOUCH
     "움직여요!", // S_EGG_MOVES
     "곧 태어나요!", // S_EGG_ALMOST
-    "도감 %u/%u", // S_POKEDEX_FMT
+    "도감 %u/%u(%u)", // S_POKEDEX_FMT
     "%s%s Lv.%u", // S_NAME_FMT
     "%s, 놓아줄까요?", // S_RELEASE_FMT
     "예", // S_YES

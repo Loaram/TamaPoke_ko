@@ -18,7 +18,7 @@
   "S_EGG_TOUCH": "알을 만져 보세요",
   "S_EGG_MOVES": "움직여요!",
   "S_EGG_ALMOST": "곧 태어나요!",
-  "S_POKEDEX_FMT": "도감 %u/%u",
+  "S_POKEDEX_FMT": "도감 %u/%u(%u)",
   "S_NAME_FMT": "%s%s Lv.%u",
   "S_RELEASE_FMT": "%s, 놓아줄까요?",
   "S_YES": "예",

@@ -34,6 +34,7 @@
 #include "i18n.h"
 #include "audio.h"
 #include "korean_text.h"
+#include "pokedex_progress.h"
 // Explore graduated from the desktop beta in 2.0.0. The beta define remains
 // available only for emulator seed/save naming and its diagnostic title.
 #define TAMAPOKE_EXPLORE_ENABLED 1
@@ -43,7 +44,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "2.0.1"
+#define FW_VERSION "2.0.2"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -2436,7 +2437,7 @@ void render() {
       gfx->print(rar);
     }
     char reg[72];
-    snprintf(reg, sizeof(reg), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT);
+    snprintf(reg, sizeof(reg), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount());
     gfx->fillRect(0, 312, 466, 154, gNight ? UI_BG_NIGHT : UI_BG_DAY);
     gfx->setTextColor(inkColor());
     gfx->setTextSize(2);
@@ -4547,7 +4548,7 @@ static void renderPlayerBadges() {
   snprintf(l, sizeof(l), T(S_STREAK_FMT), pet.streak, pet.bestStreak);
   gfx->setCursor(CX - textWidthFactor(l, 6), 286);
   gfx->print(l);
-  snprintf(l, sizeof(l), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT);
+  snprintf(l, sizeof(l), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount());
   gfx->setCursor(CX - textWidthFactor(l, 6), 312);
   gfx->print(l);
   snprintf(l, sizeof(l), T(S_PARTY_FMT), party.count());
@@ -5412,7 +5413,7 @@ static void renderRegionPick(uint8_t mode) {
   char ttl[120];
   if (mode == RPICK_FOR_START) snprintf(ttl, sizeof(ttl), "%s", T(S_CHOOSE_REGION));
   else if (forGyms) snprintf(ttl, sizeof(ttl), "%s", T(S_GYMS));
-  else snprintf(ttl, sizeof(ttl), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT);
+  else snprintf(ttl, sizeof(ttl), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount());
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
   gfx->setCursor(CX - textWidthFactor(ttl, 6), 48);
@@ -5443,9 +5444,10 @@ static void renderRegionPick(uint8_t mode) {
     else if (mode == RPICK_FOR_GYMS)
       snprintf(sub, sizeof(sub), T(S_BADGES_FMT), pet.badgeCountIn(i, gymHard));
     else if (mode == RPICK_FOR_DEX)
-      snprintf(sub, sizeof(sub), "%u/%u",
+      snprintf(sub, sizeof(sub), "%u/%u(%u)",
                pet.registeredCountIn(REGIONS[i].lo, REGIONS[i].hi),
-               (unsigned)(REGIONS[i].hi - REGIONS[i].lo + 1));
+               (unsigned)(REGIONS[i].hi - REGIONS[i].lo + 1),
+               pokedexCollectibleCountIn(REGIONS[i].lo, REGIONS[i].hi));
     if (sub[0]) {
       gfx->setTextColor(0x6B4D);
       gfx->setTextSize(2);
@@ -5735,7 +5737,7 @@ void exploreTap(int16_t x, int16_t y) {
 static void menuRowLabel(int i, char *out, size_t n) {
   switch (i) {
     case 0: snprintf(out, n, "%s", T(S_STATS)); break;
-    case 1: snprintf(out, n, T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT); break;
+    case 1: snprintf(out, n, T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount()); break;
 #if defined(TAMAPOKE_EXPLORE_ENABLED)
     case 2: snprintf(out, n, "%s", T(S_EXPLORE)); break;
     case 3: snprintf(out, n, "%s", T(S_SETTINGS)); break;
@@ -6186,11 +6188,12 @@ void renderGallery() {
   // is the question you are actually asking here
   char head[96];
   const RegionInfo &grg = REGIONS[galleryRegion % GAL_REGIONS];
-  snprintf(head, sizeof(head), "%s %u/%u", localName(grg.name),
-           pet.registeredCountIn(grg.lo, grg.hi), (unsigned)GAL_SPAN);
+  snprintf(head, sizeof(head), "%s %u/%u(%u)", localName(grg.name),
+           pet.registeredCountIn(grg.lo, grg.hi), (unsigned)GAL_SPAN,
+           pokedexCollectibleCountIn(grg.lo, grg.hi));
   gfx->setTextColor(UI_INK);
-  gfx->setTextSize(3);
-  gfx->setCursor(CX - textWidthFactor(head, 9), 36);
+  gfx->setTextSize(2);
+  gfx->setCursor(CX - textWidthFactor(head, 6), 36);
   gfx->print(head);
 
   for (int r = 0; r < 4; r++) {
