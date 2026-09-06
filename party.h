@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <Preferences.h>
 #include "move_id.h"
+#include "forms.h"
 
 // The party: pets that finished their life and were kept, rather than being
 // dissolved into a single Pokedex bit like every previous ending did.
@@ -19,13 +20,13 @@
 // and the length-based migration in begin() cannot tell a stride change from a
 // slot-count change, so an existing party would be read back misaligned. A new
 // key is purely additive and cannot corrupt anything.
-#define BOX_SLOTS 60
+#define BOX_SLOTS 300
 #define BOX_PER_PAGE 6
 #define BOX_PAGES ((BOX_SLOTS + BOX_PER_PAGE - 1) / BOX_PER_PAGE)
 #define MOVE_SLOTS 4    // the same four every trainer gets in the real games
 
-// A retired pet. Its level is frozen at the moment it joined; it does not keep
-// ageing, and nothing about it can be trained any further.
+// Stored individuals do not age. A growing pet can resume its own care state;
+// old retired/caught records retain their established companion behavior.
 struct PartyMon {
   int16_t dex = 0;      // Pokedex number, 0 = empty slot
   uint16_t level = 1;   // frozen at the moment it was banked
@@ -39,9 +40,16 @@ struct PartyMon {
   // Appended at the END of the struct on purpose -- Party::begin() migrates
   // older, shorter blobs by length, and that only works if nothing moved.
   MoveId moves[MOVE_SLOTS] = { 0, 0, 0, 0 };
+  // Only runtime extends. Legacy NVS records stay explicitly 34 bytes.
+  FormId form = 0;
+  uint8_t care[36] = {}; // versioned individual care state; zero = legacy companion
 
   bool empty() const { return dex < 1; }
 };
+
+#define PARTY_RECORD_BYTES 72
+#define PARTY_ROSTER_BYTES (12 + PARTY_RECORD_BYTES * (PARTY_STORAGE_SLOTS + BOX_SLOTS + 1))
+class Pet;
 
 class Party {
 public:
@@ -55,15 +63,20 @@ public:
   bool add(const PartyMon &m);  // into the first free slot; false if full
   void replaceAt(uint8_t i, const PartyMon &m);
   void releaseAt(uint8_t i);    // free a slot again
-  void save();
-  uint8_t boxCount() const;
+  bool save();
+  bool writable() const { return !rosterReadOnly; }
+  bool hasEndedMon(const PartyMon &m) const;
+  uint16_t boxCount() const;
   int boxFirstFree() const;
   bool boxAdd(const PartyMon &m);     // into the first free box slot
-  void boxReleaseAt(uint8_t i);
-  void boxSave();
+  void boxReleaseAt(uint16_t i);
+  bool boxSave();
   // Swaps a party slot with a box slot. Either may be empty, so this doubles as
   // deposit and withdraw rather than needing three separate operations.
-  void swapPartyBox(uint8_t partyIdx, uint8_t boxIdx);
+  void swapPartyBox(uint8_t partyIdx, uint16_t boxIdx);
+  bool selectForm(bool fromBox, uint16_t index, FormId id);
+  bool swapActive(Pet &pet, bool fromBox, uint16_t index);
+  static void recoverActiveSwap(Pet &pet);
 
   // combat stats of a party member, same formula as the live pet's
   uint16_t atkOf(const PartyMon &m) const;
@@ -75,6 +88,10 @@ public:
 
 private:
   bool migrateLegacyOverflow();
+  void saveRoster();
+  bool rosterReadOnly = false;
+  PartyMon pendingLive; // committed with the outgoing roster, replayed after interruption
+  bool finishActiveSwap(Pet &pet);
   Preferences prefs;
 };
 

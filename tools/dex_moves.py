@@ -230,7 +230,7 @@ _G89 = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'gen89_data.jso
 _CATS = {'physical': MC_PHYS, 'special': MC_SPEC, 'status': MC_STATUS}
 _EFFECTS = {'none': EF_NONE, 'stage': EF_STAGE, 'recoil': EF_RECOIL, 'drain': EF_DRAIN,
             'priority': EF_PRIORITY, 'never_miss': EF_NEVER_MISS, 'multi': EF_MULTI,
-            'heal': EF_HEAL, 'always_crit': EF_ALWAYS_CRIT}
+            'heal': EF_HEAL, 'always_crit': EF_ALWAYS_CRIT, 'charge': EF_CHARGE}
 _AILS = {'none': AIL_NONE, 'para': AIL_PARA, 'burn': AIL_BURN, 'poison': AIL_POISON,
          'sleep': AIL_SLEEP, 'freeze': AIL_FREEZE, 'confuse': AIL_CONFUSE}
 _STATS = {'none': 0, 'atk': ST_ATK, 'def': ST_DEF, 'spa': ST_SPA,
@@ -256,5 +256,8 @@ if _os.path.exists(_full_path):
     _FULL = _json.load(open(_full_path, encoding='utf-8'))
     _append_sourced(_FULL['moves'])
     del _FULL
+_form_path = _os.path.join(_os.path.dirname(__file__), '../data/forms/moves.json')
+if _os.path.exists(_form_path):
+    _append_sourced(_json.load(open(_form_path,encoding='utf8'))['moves'])
 SLUG_TO_NAME = {slug: name for name, slug, *_ in MOVES if slug}
 del _G89, _CATS, _EFFECTS, _AILS, _STATS, _TARGETS, _append_sourced, _full_path

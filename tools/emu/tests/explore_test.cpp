@@ -66,7 +66,7 @@ int main() {
      "insufficient energy blocks the attempt without charging");
 
   party.replaceAt(5, level60(143));
-  for (uint8_t i = 0; i < BOX_SLOTS; i++) party.box[i] = level60((int16_t)(1 + i));
+  for (uint16_t i = 0; i < BOX_SLOTS; i++) party.box[i] = level60((int16_t)(1 + i));
   party.boxSave();
   pet.energy = 100;
   ck(!startWildBattle(false) && exploreNotice == 2 && pet.energy == 100,

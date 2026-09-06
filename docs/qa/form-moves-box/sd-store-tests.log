@@ -1,0 +1,10 @@
+PASS old NVS roster remains readable without SD migration
+PASS missing card cannot replace the old authoritative save
+PASS large roster stages, verifies, and commits on SD
+PASS short write leaves commit pointer unchanged
+PASS interrupted write leaves all previous individuals intact
+PASS failed NVS pointer commit keeps previous snapshot
+PASS retry commits only the verified new snapshot
+PASS missing migrated card cannot silently fall back to stale NVS
+PASS corrupt or wrong card content fails the selected hash
+PASS factory reset cannot resurrect orphan SD snapshots

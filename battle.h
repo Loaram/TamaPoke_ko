@@ -16,6 +16,8 @@ enum : uint8_t { SI_ATK = 0, SI_DEF, SI_SPA, SI_SPD, SI_SPE, SI_COUNT };
 // ailments battle-only.
 struct Combatant {
   int16_t dex = 0;
+  FormId form = 0;
+  uint8_t npcType1 = T_NONE, npcType2 = T_NONE; // NPC-only regional style; never saved or sent over LAN
   uint8_t level = 1;
   uint16_t maxHp = 1, hp = 1;
   uint16_t base[SI_COUNT] = { 1, 1, 1, 1, 1 };  // before stat stages
@@ -34,6 +36,7 @@ struct Combatant {
 
 void combatantFromPet(Combatant &c, const Pet &p);
 void combatantFromParty(Combatant &c, const PartyMon &m);
+uint8_t formMoveType(int16_t dex, FormId form, MoveId move);
 
 // What one action did, so the UI can narrate it without recomputing anything.
 struct TurnLog {

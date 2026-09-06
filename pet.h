@@ -100,6 +100,8 @@ public:
   bool shiny = false;       // variante de color rara (se sortea en el huevo)
   uint32_t ageMinutes = 0;
   int16_t speciesId = -1;      // numero de Pokedex (1..DEX_COUNT), -1 = huevo
+  FormId form = 0;
+  bool selectForm(FormId id);
   int16_t prevSpeciesId = -1;  // para la animacion de evolucion
   uint8_t careMistakes = 0;   // descuidos: cada uno retrasa la evolucion 1 nivel
   bool sleeping = false;
@@ -112,6 +114,7 @@ public:
   // it; a runaway leaves endedKind at CER_NONE and the pet is simply gone.
   PartyMon endedMon;
   uint8_t endedKind = CER_NONE;
+  bool acknowledgeEnding(); // clear durable handoff only after banking / explicit decline
   // Pokedex bitmaps, one bit per species. Widening these is SAFE on an existing
   // save: getBytes() copies only what was stored, and the array is zeroed by its
   // initialiser, so a 19-byte blob from the Kanto-only build lands in the front
@@ -205,6 +208,9 @@ public:
   // level() working untouched rather than needing a second source of truth.
   bool frozen = false;
   void reviveFrom(const PartyMon &m);
+  PartyMon storageSnapshot() const;
+  bool canSwapActive() const;
+  bool storedIndividualMatches();
 
   // The player's own name, alongside the badges and the streak: it belongs to
   // whoever is playing, not to the creature, so newEgg() must never clear it.
@@ -248,10 +254,11 @@ public:
     return hard ? badgesHardX[rg - 1] : badgesX[rg - 1];
   }
   bool hasBadge(uint8_t rg, uint8_t i, bool hard) const {
+    if (i >= 16) return false;
     return (badgeMask(rg, hard) >> i) & 1;
   }
   void winBadge(uint8_t rg, uint8_t i, bool hard) {
-    if (rg >= GYM_REGIONS) return;
+    if (rg >= GYM_REGIONS || i >= 16) return;
     uint16_t bit = (uint16_t)1 << i;
     if (rg == 0) { if (hard) badgesHard |= bit; else badges |= bit; }
     else if (hard) badgesHardX[rg - 1] |= bit;
@@ -262,6 +269,11 @@ public:
     uint16_t v = badgeMask(rg, hard);
     uint8_t n = 0;
     while (v) { n += v & 1; v >>= 1; }
+    return n;
+  }
+  uint8_t gymBadgeCountIn(uint8_t rg, bool hard, bool shield = false) const {
+    uint8_t n=0;
+    for(uint8_t i=0;i<TRAINER_GYMS;i++) n+=hasBadge(rg,trainerBadgeIndex(rg,i,shield),hard);
     return n;
   }
   // Every region's badges together, for the player card's running total.
@@ -410,6 +422,11 @@ public:
   bool showMedal() const { return millis() < medalUntil; }
   bool showMilestone() const { return millis() < milestoneUntil; }
   int careBonus() const;  // mejora del huevo por racha + vinculo
+  // Player-wide daily egg rewards. Integer weights retain exact end points.
+  uint8_t eggBonusDays() const;
+  uint16_t eggShinyWeight() const;      // out of 21600: 1/48 -> 10%
+  uint16_t eggLegendWeight() const;     // out of 900: 3% -> 14%, dex gate applied
+  uint8_t farewellsRemaining() const;  // shared by every voluntary live ending
 
   // guardado periodico diferido: tick() marca pendiente y el loop lo vuelca
   // cuando la pantalla esta atenuada/apagada (la escritura a flash congela
@@ -424,6 +441,10 @@ public:
   void saveNow();
 
 private:
+  uint32_t farewellQuota = 0;  // civil day << 2 | used (0..3); player, not creature
+  bool consumeFarewell();
+  void beginFarewell(bool early);
+  void restoreCare(const PartyMon &m);
   void applyOfflineMinutes(uint32_t mins);
   Preferences prefs;
   // A Pet that was never begin()'d MUST NOT WRITE. Nothing enforced that, and
@@ -472,7 +493,7 @@ private:
   void rollIVs();                   // los 4, con las garantias de legendario/shiny
   uint8_t ivFromGene(uint8_t gene) const;  // migracion de guardados con genes
   void defTick(bool resting);       // la calma forja la defensa (ver pet.cpp)
-  void snapshotForParty();          // copy into endedMon before newEgg() wipes it
+  bool snapshotForParty();          // persist before newEgg() wipes the live individual
   void checkMedals();
   void learnMoveNow(MoveId move);  // fill a slot or queue a replacement prompt
   void tick();

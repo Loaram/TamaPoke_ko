@@ -1,0 +1,89 @@
+{
+  "version": "3.0.0-beta.1",
+  "base_commit": "5e923a5b9d79112f459bf2fbc197e8e52db2838f",
+  "branch": "codex/persistent-forms",
+  "published": false,
+  "hardware_tested": false,
+  "runtime_suites": 35,
+  "artifacts": {
+    "build\\forms-runtime\\emulator-beta\\TamaPoke-3.0.0-beta.1-forms.exe": {
+      "bytes": 1438208,
+      "sha256": "034d445f0e4021185572d0345d52c8611cc9d0423b98b68c6221f1e9ee3ce2e1"
+    },
+    "build\\forms-runtime\\TamaPoke-3.0.0-beta.1-Android.apk": {
+      "bytes": 387495204,
+      "sha256": "826610e388fbcb4892649676443a2cab6151f012fb432999c03c83089b1b8d35",
+      "abis": [
+        "arm64-v8a",
+        "x86_64"
+      ]
+    },
+    "build\\forms-runtime\\TamaPoke-3.0.0-beta.1-WearOS.apk": {
+      "bytes": 387114281,
+      "sha256": "71bd0ea0a8d00d948cbd3d85bccf9e589cfb71fb9b2c1c65982c655e4515ca07",
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a"
+      ]
+    },
+    "build\\forms-runtime\\firmware\\TamaPoke.ino.bin": {
+      "bytes": 2158000,
+      "sha256": "62833251ccc3a5128e89f6da63e75cb850c1059f22a67371e79c44f4d2b40790"
+    },
+    "web\\forms.pak": {
+      "bytes": 83962278,
+      "sha256": "813a75f897d669bb19f1a8f8ee084f194956abdf685f5de84c6d9aba6f725dfb"
+    }
+  },
+  "sources": {
+    "audio.cpp": "079761f426ea1ac1770e2cc8c8b094154dba5f0a306be33529eeb8572dcdab02",
+    "battle.cpp": "0b6c38e42d30c556875d992cca6cf4a6339d7a7c429a43395f68f3ece8d65cac",
+    "forms.cpp": "3b36f24595fd552e0c24b5afdf77f322b1acc6f5dffa3867c1f562feac649378",
+    "gbsynth.cpp": "5c349733edd9211ecf373f15255e862586163337986d28ec2c8a005e90415c75",
+    "i18n.cpp": "83835acadb0a9e3d658fc44ec309b4877b94b78100e0a88ca73609033210c071",
+    "link.cpp": "f3532dcf71c6cd87897b7f37e24ba2a1a2b9ff5b166e0175b39527fc309be3c2",
+    "linknow.cpp": "bd2f33841e199c80ce9f66e6473a674c287131cc9e49cd60e4579f59c10be2ef",
+    "party.cpp": "ac9859903f6947660528c8f037048f1facf99c532ea105a35ebc52a6c02fb347",
+    "pet.cpp": "b0fbeb489d13c0671bf91435cba9b78c6cbaf55f859c9883953afe618458d935",
+    "rtcbat.cpp": "2952f9569283396b818dc579179871c91337924e42c152c7fde0792f793672bc",
+    "save.cpp": "462d88b62d3986408c214679d73097ee09ab8b7d10179e604775c421127be138",
+    "sdmon.cpp": "1aeb3a04f1d91ba6c9f1090fd290a26f7b6442716b836becad9916498a4b530d",
+    "wild.cpp": "f124001318173eab465327c4bce26dbe0fb6bc61c34173f8df95bb030ad36be5",
+    "audio.h": "4ab772e9ef700b72795b1fd04cba43d441d6cfce704b446a692fb0de710ba4cb",
+    "avatars.h": "25bda143eac68434efaf6122e78775819e2d84c65279705b64808ef310d4e72b",
+    "backs.h": "22d73794f8cd67b8021da347eef923783b6b61f070cc3d3b197a546d417c665a",
+    "badges.h": "2104ab66ea92e8a2d0e5b57a516744c7c0cb867e70c37fc5aee64884b55039ea",
+    "battle.h": "67fe754440986cb3b1fb44e959994587ed95e0cea299c404810069a50188c306",
+    "catch_rates.h": "4cd3d1c5bd1cc3e6aad8df1e78a1deef541a879345603ce353cd3fe638ee505c",
+    "dex.h": "118641d7b443de546642871f4a36b2630ea45f8cf36402d29e007929a7ac4f93",
+    "forms.h": "c25fcf37dfaae2262df4bc2b8280a325c4f464a259dd5b81f77be1208c23340b",
+    "forms_data.h": "254c0eb3237d65aa2af77c4e30491289100b70ea1681629fb053db7b2c3e19c5",
+    "forms_ui.h": "e58119963ba015296a68fa5f882d0de29fa1ad93c233ecd1d3948d3897dca682",
+    "gbsynth.h": "cc671a160e6152e8d4d9e5eacab37932a1a4b19405f0b1424a99dd1c1daa2888",
+    "i18n.h": "9d36fbd9b90b30524a1cde7de33db2769161a0264cc9a0244378eaf0e642863d",
+    "korean_font.h": "7f477bba6ee8da8c418cd16e3b6eba38eabfe0758548bd3b59e94d5a46e8e5f4",
+    "korean_names.h": "4fdcf1fecec6eda4b392e75c64895bb810fc95c04422be5909e99b973f57e2e1",
+    "korean_text.h": "58ace816efad936334ec9770aa240a2713c2b7b7db991034ac2e082c7f42642f",
+    "link.h": "885c1402bf954e407f222d1fbf7a3af13321937417f49b0b130493505b52c1f7",
+    "linknow.h": "5fef78c97e8e293f1b4d54a78f41e62d1b99f40c6812e0814022bd536d9f4468",
+    "linkudp.h": "0ba0839340a82b6c8a32d2ce7401fd2ce8917a0dc166e12461e3de7b3296792c",
+    "moves.h": "1c061c250c73d7c008d5ee75a08eb8f7872baf9240dfcb33f7d5b23110813e46",
+    "move_id.h": "69946d3628cd97832a62840271cfda80ec17810fb3d667efee92379ba4ad38c1",
+    "music.h": "bdd2f9d8ed1f47dad094ea164ddc132aa84615d155468692bcd334eb6f58f4db",
+    "noart.h": "7189f96a9eae72dd17bf9b8139983baba65e8faec08e5d33a518d5646d570293",
+    "party.h": "c256600310f9e8df5ae0b713e47849675eb49920265ebc14c4fc07a877f614ec",
+    "pet.h": "12ce6ab34d9467a66187e62ad089da01baecf831d3196e91963aae5b328f6b22",
+    "pin_config.h": "8c9fb98ff3ecd26f2a68060ff1a506a9031881c354c5c6c7125d09d92d673d51",
+    "pokedex_progress.h": "adf05a55b6654e0fb28b0fa69581689b5d87c17af3e18265a34d887ee20081b4",
+    "rtcbat.h": "b66174b1d65f84ee778a0c5312bc0c731f4d997d0161aab7bf6ebc3b7a6ff18d",
+    "save.h": "3d2c721b7fc545a53c087bb39be81f5e5d52aa9db650515f2d9446d0d40de5ce",
+    "sdmon.h": "5a0ee81049a895f2a6dc9e046b6325d4dde578ed3bf03e28700e7344bea44e76",
+    "species.h": "6d9943a75b7d7875e9dfc06ce9ef06cb9e63cdca05ae6dcd4ad70a5b03ee6916",
+    "trainers.h": "20c044335d5a5ae0f1e358605f57121d583ad5d3ffa6c120402b03b9f5dae437",
+    "types.h": "c8995581732f3b627c820ee2bda4a7f266b22c7af074b4743595a162a5b7c07b",
+    "wild.h": "6286dda721d0f5a7963b62309187448a68b2efe47d1cd7dfd298e8e50eae9390",
+    "TamaPoke.ino": "ebd3ea2fc02026371b29a8c055f670eb2a578a6c5bd245d10b4b2120cb84ae45",
+    "tools\\android\\host_android.cpp": "d869ada1fcfb9772d1c42bcbcce1671d2f98b6cdd8ef9ba143813d9e61d90dae",
+    "tools\\android\\android_main.cpp": "513b13ca9e2b0dcd8cc2838d9d2c06a598537f6fe61ea7927d7c54b3da263dc0"
+  }
+}

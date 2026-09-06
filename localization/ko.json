@@ -146,7 +146,7 @@
   "S_BOX_SWAP": "%s, 교체할 자리 선택",
   "S_BOX_BTN": "박스",
   "S_REVIVE": "데려오기",
-  "S_REVIVE_EGG": "알이 있을 때 가능",
+  "S_REVIVE_EGG": "진행 중인 선택을 먼저 완료",
   "S_LAN": "근거리 대전",
   "S_LAN_HOST": "방 만들기",
   "S_LAN_JOIN": "참가하기",
@@ -191,5 +191,6 @@
   "S_EXPLORE_STORAGE_FULL": "파티와 박스가 가득 찼어요",
   "S_WILD_MET_FMT": "야생 %s 등장!",
   "S_WILD_CAUGHT_FMT": "%s 포획 성공!",
-  "S_WILD_ESCAPED_FMT": "%s 포획 실패..."
+  "S_WILD_ESCAPED_FMT": "%s 포획 실패...",
+  "S_ACTIVE_SWAP_HINT": "현재 포켓몬은 이 칸으로 이동"
 }

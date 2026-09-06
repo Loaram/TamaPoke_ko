@@ -23,7 +23,7 @@ extern int galleryPage; extern bool galleryDirty; extern uint8_t galleryDetail;
 extern uint8_t galleryRegion;
 extern uint8_t gymRegion;
 extern bool gymPick, galleryPick;
-extern uint8_t movePickSlot, movePickParty, boxSel, boxSwapFrom;
+extern uint8_t movePickSlot, movePickParty, boxSwapFrom;extern uint16_t boxSel;
 #define MOVE_PICK_PER_PAGE 5
 extern uint16_t squadMask;
 extern uint8_t pickTrainer; extern bool pickHard;

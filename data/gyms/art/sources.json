@@ -1,0 +1,170 @@
+[
+  {
+    "key": "KATY",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/230112_01/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/230112_01/",
+    "sha256": "ef174c08351333a6aa371e62f9b8fc60ff7de0e0ea9fd7457976654e45074d1c"
+  },
+  {
+    "key": "BRASSIUS",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/220907_02/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/220907_02/",
+    "sha256": "dd761c68ff85bdc48e6586668d3ceb91675f187736b969e3c9af5fedc26c1e0e"
+  },
+  {
+    "key": "IONO",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/221014_01/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/221014_01/",
+    "sha256": "02f1d1c9aeb0428e322f5956b2bc35eba67a927d376e4fe0dc5cf2c253aaf83b"
+  },
+  {
+    "key": "KOFU",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/230112_02/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/230112_02/",
+    "sha256": "e13e35c2ea66e26fa6727bc0461bdf2642a3801990ec06e7316aaf427c715d91"
+  },
+  {
+    "key": "LARRY",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/230112_03/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/230112_03/",
+    "sha256": "9b0a406a02df31c154bdbadcb3821ca1e2ac7e816debe97db6a414d080dbbe7c"
+  },
+  {
+    "key": "RYME",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/230112_05/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/230112_05/",
+    "sha256": "5aaedc4e41c9869f3130244e8eb0e3396545f817394d03aa55af4329b717f860"
+  },
+  {
+    "key": "TULIP",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/230112_04/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/230112_04/",
+    "sha256": "4e963a564336cefe2213204acf645a16e0b5c213110805eb3934317466c3cdbf"
+  },
+  {
+    "key": "GRUSHA",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/220803_05/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/220803_05/",
+    "sha256": "4eaa91322863d228c3a235b78bec5fe129d23bf274ecc73ed8bb4bf92ac23b1e"
+  },
+  {
+    "key": "GEETA",
+    "size": 32,
+    "url": "https://www.pokemon.co.jp/ex/sv/assets/img/character/220907_01/thumbnail.jpg",
+    "page": "https://www.pokemon.co.jp/ex/sv/ja/character/220907_01/",
+    "sha256": "0a4d5ab72fa8374ccfdc154dee108261270b07c044fcf51c827ec4c13908e716"
+  },
+  {
+    "key": "MILO",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_milo.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/grass-gym-leader-milo/",
+    "sha256": "c3fd1190a1bd7b538a1d78ffceb10ed2e339f73d56d0bbb10f4669ddc521ad4a"
+  },
+  {
+    "key": "NESSA",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_nessa.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/water-gym-leader-nessa/",
+    "sha256": "b625a988514b3c6fea8f4a459027ef83da1a9e40330b3fad41a20dfde8f882a9"
+  },
+  {
+    "key": "KABU",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_kabu.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/fire-gym-leader-kabu/",
+    "sha256": "801ca3edb7d27b4cd0270fb124ebe160abcefe14d42b3e10fcd07b84a15c84ca"
+  },
+  {
+    "key": "BEA",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_bea.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/fighting-gym-leader-bea/",
+    "sha256": "0a0996cafa997d0bfab6142470a6748376fa34e2103aa0a2184b077585e6fb1a"
+  },
+  {
+    "key": "ALLISTER",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_allister.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/ghost-type-gym-leader-allister/",
+    "sha256": "75bc9a372f5ba46f3a14304e4d1c3e46d1e2ca66be1076f960fd2f125607d50b"
+  },
+  {
+    "key": "OPAL",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_opal.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/fairy-type-gym-leader-opal/",
+    "sha256": "fb3168a65d0a7a5c22e1a4fb7a9f27d0f976b4e1d7e9a170e69d07866e32233d"
+  },
+  {
+    "key": "GORDIE",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_gordie.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/rock-type-gym-leader-gordie/",
+    "sha256": "d98e4f1b939648c0f867bb6f817ac535cc356a968ee3b2d3aa2680ec2f3672a0"
+  },
+  {
+    "key": "MELONY",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_melony.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/ice-type-gym-leader-melony/",
+    "sha256": "6294957f74c1a20ee2a6ef11f982dd5c8b8f3f5daf43e2659f228635b43d60ac"
+  },
+  {
+    "key": "PIERS",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_piers.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/dark-type-gym-leader-piers/",
+    "sha256": "f6a3cbd81a60b49696c2d458459fcd29d845e5300928bcdbbdccdc1e1449174f"
+  },
+  {
+    "key": "RAIHAN",
+    "size": 32,
+    "url": "https://swordshield.pokemon.com/assets/img/articles/people_raihan.png",
+    "page": "https://swordshield.pokemon.com/en-us/people-galar-region/dragon-type-gym-leader-raihan/",
+    "sha256": "111055f1d57ef712a18eaa374b721c8f8e3c3a0df2f8ec6857c3d7df84ed1c8f"
+  },
+  {
+    "key": "NPC_839",
+    "size": 64,
+    "url": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/839.png",
+    "page": "https://www.pokemon.com/us/pokedex/839",
+    "sha256": "e68e12acb0c445f3ec58186e32cc6eb4ce6f413d04521fef3bab7a34673a8db0"
+  },
+  {
+    "key": "NPC_847",
+    "size": 64,
+    "url": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/847.png",
+    "page": "https://www.pokemon.com/us/pokedex/847",
+    "sha256": "6b0c54e8e2a34114b9619072d8f3ea832ca9ffeae2198a5c514069dd01675303"
+  },
+  {
+    "key": "NPC_956",
+    "size": 64,
+    "url": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/956.png",
+    "page": "https://www.pokemon.com/us/pokedex/956",
+    "sha256": "7352ce61e917db10ee94d2930226f3ae692723bef36a4b0e8f9465e40da55f39"
+  },
+  {
+    "key": "NPC_973",
+    "size": 64,
+    "url": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/973.png",
+    "page": "https://www.pokemon.com/us/pokedex/973",
+    "sha256": "bfbafacd3099734681240cf57fcfef094b13f548f13a06c6da3e33c85012c1b4"
+  },
+  {
+    "key": "NPC_849_LOW",
+    "size": 64,
+    "url": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/849_f2.png",
+    "page": "https://www.pokemon.com/us/pokedex/toxtricity",
+    "sha256": "7b9871deccdbc0b24c176cb1c8767d6ac75fba12fb8e7d8dacf7e680cb2bc497"
+  }
+]

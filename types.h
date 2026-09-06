@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "dex.h"
 #include "i18n.h"
+#include "forms.h"
 
 // Type effectiveness helpers. The chart itself (TYPE_FX) and the PkType enum
 // are generated into dex.h by tools/gen_dex.py from tools/dex_types.py.
@@ -20,15 +21,17 @@ static inline uint16_t typeEffPct(uint8_t atk, uint8_t def1, uint8_t def2) {
 }
 
 // Same, but for a species straight out of the Pokedex.
-static inline uint16_t typeEffVsDex(uint8_t atk, int16_t dex) {
+static inline uint16_t typeEffVsDex(uint8_t atk, int16_t dex, FormId form = 0) {
   if (dex < 1 || dex > DEX_COUNT) return 100;
-  return typeEffPct(atk, DEX_TBL[dex].type1, DEX_TBL[dex].type2);
+  const auto d = formDex(dex, form);
+  return typeEffPct(atk, d.type1, d.type2);
 }
 
 // Same-Type Attack Bonus: 1.5x when the move matches one of the user's types.
-static inline bool hasStab(int16_t dex, uint8_t moveType) {
+static inline bool hasStab(int16_t dex, uint8_t moveType, FormId form = 0) {
   if (dex < 1 || dex > DEX_COUNT) return false;
-  return DEX_TBL[dex].type1 == moveType || DEX_TBL[dex].type2 == moveType;
+  const auto d = formDex(dex, form);
+  return d.type1 == moveType || d.type2 == moveType;
 }
 
 // Short display name for a type. English in every language, matching how the

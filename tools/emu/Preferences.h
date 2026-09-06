@@ -9,6 +9,8 @@
 
 typedef std::map<std::string, std::vector<uint8_t>> NvsStore;
 inline NvsStore &nvs() { static NvsStore s; return s; }
+// Opt-in fault injection for save recovery tests. Normal builds never set it.
+inline std::string &nvsFailKey() { static std::string key; return key; }
 void nvsLoad(const char *path);
 void nvsSave(const char *path);
 
@@ -19,8 +21,10 @@ public:
   void end() {}
   void clear() { kv.clear(); }
   bool isKey(const char *k) { return kv.count(k) != 0; }
+  bool remove(const char *k) { if(nvsFailKey()==k)return false;return kv.erase(k)!=0; }
 
   template <typename T> void putT(const char *k, T v) {
+    if(nvsFailKey()==k) return;
     std::vector<uint8_t> b(sizeof(T));
     memcpy(b.data(), &v, sizeof(T));
     kv[k] = b;
@@ -37,12 +41,15 @@ public:
   void putBool(const char *k, bool v) { putT(k, v); }
   bool getBool(const char *k, bool d = false) { return getT(k, d); }
   void putUInt(const char *k, uint32_t v) { putT(k, v); }
+  void putULong64(const char *k, uint64_t v) { putT(k,v); }
+  uint64_t getULong64(const char *k,uint64_t d=0) { return getT(k,d); }
   uint32_t getUInt(const char *k, uint32_t d = 0) { return getT(k, d); }
   void putShort(const char *k, int16_t v) { putT(k, v); }
   int16_t getShort(const char *k, int16_t d = 0) { return getT(k, d); }
   void putUShort(const char *k, uint16_t v) { putT(k, v); }
   uint16_t getUShort(const char *k, uint16_t d = 0) { return getT(k, d); }
   void putBytes(const char *k, const void *p, size_t n) {
+    if(nvsFailKey()==k) return;
     const uint8_t *b = (const uint8_t *)p;
     kv[k] = std::vector<uint8_t>(b, b + n);
   }
@@ -71,6 +78,7 @@ public:
     return it->second.size();
   }
   void putString(const char *k, const char *v) {
+    if(nvsFailKey()==k) return;
     kv[k] = std::vector<uint8_t>(v, v + strlen(v) + 1);
   }
   size_t getString(const char *k, char *out, size_t n) {

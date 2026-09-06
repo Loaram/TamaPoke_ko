@@ -161,3 +161,11 @@ the honest fix is the one already recommended for the player avatars: ship
 - Korean species and move display names: PokeAPI CSV data, https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv (retrieved 2026-09-03). Internal game identifiers are unchanged.
 - Galmuri11 v2.40.3 by quiple: https://github.com/quiple/galmuri, SIL Open Font License 1.1. Bundled source font and full license in tools/fonts/. Generated bitmap subset in korean_font.h.
 - Pokémon remains copyright Nintendo / Game Freak / The Pokémon Company. Unofficial, non-commercial fan project.
+# Galar / Paldea official-site images (unpublished 3.0.0 beta)
+
+`data/gyms/art/` and generated `gym_art.h` contain downscaled official trainer
+portraits and NPC-only Pokemon still illustrations. Individual source URLs and
+SHA-256 hashes are in `data/gyms/art/sources.json`. Copyright Pokemon / Nintendo /
+Creatures Inc. / GAME FREAK inc.; these are **not** covered by the PMDCollab
+CC BY-NC or SteGriff CC BY licenses. No separate redistribution permission is
+claimed. `tools/gen_gym_art.py` performs resizing/palette conversion only.

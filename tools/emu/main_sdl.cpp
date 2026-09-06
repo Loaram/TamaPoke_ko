@@ -9,6 +9,7 @@
 #include "pet.h"
 #include "party.h"
 #include "battle.h"
+#include "sdmon.h"
 #include <chrono>
 #include <string>
 #include <deque>
@@ -176,8 +177,11 @@ extern Link lan;
 void startLinkBattle();
 extern uint8_t playerPage;
 extern bool gymHard, pickOpen;
+extern bool gymShield;
+extern uint8_t gymPage;
+extern PmdMon btlPmd[2];
 extern uint8_t partyDetail;
-extern bool boxOpen; extern uint8_t boxSwapFrom;
+extern bool boxOpen; extern uint8_t boxSwapFrom; extern uint16_t boxDetail;
 extern bool btlNewBadge; extern uint32_t btlWinUntil;
 extern uint8_t pickTrainer, pickPage;
 void pickDefault(uint8_t cap);
@@ -256,6 +260,9 @@ static void writePPM(const char *path) {
   printf("wrote %s\n", path);
 }
 
+static int g_shotForm=0;
+extern bool formsOpen;
+void formOpenTarget(uint16_t);
 static int shotMode(const char *screen, const char *out, int lvl, int iv, int dex) {
   setup();
   for (int i = 0; i < 4; i++) loop();          // let the sketch settle
@@ -272,6 +279,7 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   // screen the first-boot shots are trying to photograph.
   if (!firstBoot && strcmp(screen, "egg")) pet.dbgHatchAs(dex, false);
   if (lvl > 0) pet.ageMinutes = (uint32_t)(lvl - 1) * MINUTES_PER_LEVEL;
+  if(g_shotForm) pet.selectForm((FormId)g_shotForm);
   if (iv >= 0) {
     pet.ivAtk = pet.ivDef = pet.ivSpe = pet.ivHp = iv;
     pet.trAtk = pet.trMaxAtk(); pet.trDef = pet.trMaxDef(); pet.trSpe = pet.trMaxSpe();
@@ -288,7 +296,8 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   cardOpen = galleryOpen = clockOpen = kbOpen = false;
   menuOpen = partyOpen = partyPick = trainOpen = movePickOpen = false;
   exploreOpen = false;
-  if (!strcmp(screen, "battle"))      { cardOpen = true; cardPage = 1; }
+  if (!strcmp(screen,"forms")) {formOpenTarget(0);}
+  else if (!strcmp(screen, "battle"))      { cardOpen = true; cardPage = 1; }
   else if (!strcmp(screen, "profile")){ cardOpen = true; cardPage = 0; }
   else if (!strcmp(screen, "medals")) { cardOpen = true; cardPage = 3; }
   else if (!strcmp(screen, "progress")){cardOpen = true; cardPage = 3; }
@@ -426,7 +435,7 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
     btlNewBadge = true; btlWinUntil = 60000; pet.badgesHard = 0x07;
     btlTrainGain = 8; btlTrainWhich = 2;
   }
-  else if (!strcmp(screen, "pmon")) {
+  else if (!strcmp(screen, "pmon") || !strcmp(screen,"bmon")) {
     Pet t; t.dbgHatchAs(131,false); t.ivAtk=t.ivDef=t.ivSpe=t.ivHp=27;
     t.ageMinutes=53UL*MINUTES_PER_LEVEL; t.relearnFromLevel();
     PartyMon m; m.dex=131; m.level=54; m.shiny=1;
@@ -435,6 +444,7 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
     snprintf(m.nick,sizeof(m.nick),"NESSIE");
     party.replaceAt(0,m);
     partyOpen = true; partyDetail = 1;
+    if(!strcmp(screen,"bmon")) {party.swapPartyBox(0,59);partyDetail=0;boxOpen=true;boxDetail=60;}
   }
   else if (!strcmp(screen, "pick")) {
     static const int fill[]={9,25,143,94,131,3};
@@ -445,6 +455,22 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
     pickDefault(6); pickOpen = true;
   }
   else if (!strcmp(screen, "gymshard")) { gymOpen = true; gymHard = true; pet.badgesHard = 0x03; }
+  else if (!strcmp(screen, "gymsgalar")) { gymOpen=true; gymRegion=7; }
+  else if (!strcmp(screen, "gymsshield")) { gymOpen=true; gymRegion=7; gymShield=true; }
+  else if (!strcmp(screen, "gymspaldea")) { gymOpen=true; gymRegion=8; }
+  else if (!strcmp(screen, "gymspaldea2")) { gymOpen=true; gymRegion=8; gymPage=1; }
+  else if (!strcmp(screen, "gymspaldea3")) { gymOpen=true; gymRegion=8; gymPage=2; }
+  else if (!strcmp(screen, "galarcup")) { gymOpen=true; gymRegion=7; gymPage=2; }
+  else if (!strcmp(screen, "gymstill")) {
+    gymRegion=7; startTrainerBattle(5,false);
+    Pet npc; npc.dbgHatchAs(839,false); npc.ageMinutes=41*MINUTES_PER_LEVEL;
+    npc.relearnFromLevel(); combatantFromPet(btlFoe,npc); btlPmd[1].unload();
+  }
+  else if (!strcmp(screen, "gymryme")) {
+    gymRegion=8; startTrainerBattle(5,false);
+    Pet npc; npc.dbgHatchAs(849,false); npc.ageMinutes=41*MINUTES_PER_LEVEL;
+    npc.relearnFromLevel(); combatantFromPet(btlFoe,npc); btlPmd[1].unload();
+  }
   else if (!strcmp(screen, "speed")) { startSpeedGame(); }
   else if (!strcmp(screen, "defresult")) {
     startGame();
@@ -494,7 +520,9 @@ int main(int argc, char **argv) {
   // remain available through --scale for high-DPI or presentation use.
   int scale = 1;
   g_argv = argv;
-  #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
+  #if defined(TAMAPOKE_FORMS_BETA)
+  const char *save = "tamapoke-forms-beta.nvs";
+  #elif defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
   const char *save = "tamapoke-explore-beta-dex.nvs";
   #elif defined(TAMAPOKE_EXPLORE_BETA)
   const char *save = "tamapoke-explore-beta.nvs";
@@ -521,6 +549,7 @@ int main(int argc, char **argv) {
     else if (!strcmp(argv[i], "--out") && i + 1 < argc) shotOut = argv[++i];
     else if (!strcmp(argv[i], "--lvl") && i + 1 < argc) shotLvl = atoi(argv[++i]);
     else if (!strcmp(argv[i], "--iv") && i + 1 < argc) shotIv = atoi(argv[++i]);
+    else if (!strcmp(argv[i], "--form") && i + 1 < argc) g_shotForm = atoi(argv[++i]);
     else if (!strcmp(argv[i], "--dex") && i + 1 < argc) shotDex = atoi(argv[++i]);
     else if (!strcmp(argv[i], "--sprites") && i + 1 < argc) emuSetSpriteDir(argv[++i]);
     else if (!strcmp(argv[i], "--wipe")) { remove(save); }
@@ -541,6 +570,7 @@ int main(int argc, char **argv) {
   bool freshExploreSave = nvs().empty();
 #endif
   if (language) setLang(!strcmp(language, "ko") ? LANG_KO : LANG_EN);
+  bool freshFormsSave=nvs().empty();
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) { fprintf(stderr, "SDL: %s\n", SDL_GetError()); return 1; }
   #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
@@ -567,6 +597,20 @@ int main(int argc, char **argv) {
          emuTimeScale());
 
   setup();
+#if defined(TAMAPOKE_FORMS_BETA)
+  if(freshFormsSave && !saveSpecified) {
+    pet.dbgHatchAs(6,false);pet.ageMinutes=79UL*MINUTES_PER_LEVEL;pet.relearnFromLevel();
+    while(pet.hasLearnOffer())pet.declineLearn();pet.saveNow();
+    const int16_t formsDexes[5]={1017,890,646,493,38};
+    for(uint8_t i=0;i<5;i++) {
+      PartyMon m;m.dex=formsDexes[i];m.level=80;
+      Pet temp;temp.dbgHatchAs(m.dex,false);temp.ageMinutes=79UL*MINUTES_PER_LEVEL;temp.relearnFromLevel();
+      for(uint8_t k=0;k<4;k++)m.moves[k]=temp.moves[k];
+      party.replaceAt(i,m);
+    }
+    nvsSave(save);
+  }
+#endif
 #if defined(TAMAPOKE_EXPLORE_BETA)
   if (freshExploreSave && !saveSpecified) {
     seedExploreBetaTeam();

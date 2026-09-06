@@ -23,7 +23,9 @@ int main(){
   { Preferences seed; seed.begin("tamapoke", false);
     PartyMon old[PARTY_STORAGE_SLOTS];
     for (int i=0;i<PARTY_STORAGE_SLOTS;i++) old[i]=mk(1+i*20, 30+i);
-    seed.putBytes("party", old, sizeof(old));
+    uint8_t bytes[34*PARTY_STORAGE_SLOTS];
+    for(int i=0;i<PARTY_STORAGE_SLOTS;i++) memcpy(bytes+34*i,&old[i],34);
+    seed.putBytes("party", bytes, sizeof(bytes));
     seed.end(); }
   Party p; p.begin();
   bool kept = true;
@@ -42,14 +44,17 @@ int main(){
     PartyMon oldBox[OLD_BOX_SLOTS];
     for (int i=0;i<OLD_BOX_SLOTS;i++) oldBox[i]=mk(200+i, 20+i);
     Preferences seed; seed.begin("tamapoke", false);
-    seed.putBytes("box", oldBox, sizeof(oldBox)); seed.end();
+    uint8_t bytes[34*OLD_BOX_SLOTS];
+    for(int i=0;i<OLD_BOX_SLOTS;i++) memcpy(bytes+34*i,&oldBox[i],34);
+    nvs().erase("rosterF");
+    seed.putBytes("box", bytes, sizeof(bytes)); seed.end();
     Party grown; grown.begin();
     ck(grown.boxCount()==OLD_BOX_SLOTS,
        "an 18-slot box keeps every creature after expanding to 60");
     ck(grown.box[0].dex==200 && grown.box[17].dex==217 && grown.box[18].empty(),
        "old box slots stay aligned and the new tail starts empty");
     Preferences saved; saved.begin("tamapoke", true);
-    ck(saved.getBytesLength("box")==sizeof(grown.box),
+    ck(saved.getBytesLength("box")==34*60,
        "the expanded box is rewritten in the new layout");
     saved.end();
   }

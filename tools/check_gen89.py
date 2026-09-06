@@ -54,7 +54,18 @@ assert full['counts'] == {
     'max_learnset_rows': 91,
     'max_learnset_dex': 151,
 }
-assert len(MOVES) == 695
+form_data = json.loads((R / 'data/forms/moves.json').read_text(encoding='utf-8'))
+assert len(MOVES) == 717 and len(form_data['moves']) == 22
+assert len(move_by_slug) == 716  # STRUGGLE deliberately has no learnset slug
+for i, m in enumerate(form_data['moves'], 696):
+    assert move_ids[m['slug']] == i
+    row = move_by_slug[m['slug']]
+    assert row[0] == m['display'] and row[2] == m['type']
+    assert row[4] == m['power'] and row[5] == m['accuracy']
+    assert names[m['display']] == m['ko']
+assert len(form_data['forms']) == 69
+for form in form_data['forms']:
+    assert all(slug in move_ids and 0 <= level <= 100 for slug, level in form['learnset'])
 assert set(map(int, full['learnsets'])) == set(range(1, 1026))
 for m in full['moves']:
     row = move_by_slug[m['slug']]
@@ -95,8 +106,8 @@ assert int(re.search(r'#define NO_ART_COUNT (\d+)', noart)[1]) == len(na)
 assert int(re.search(r'#define NO_HATCH_COUNT (\d+)', noart)[1]) == len(nh)
 
 trainers = (R / 'trainers.h').read_text(encoding='utf-8')
-assert '#define GYM_REGIONS 7' in trainers
+assert '#define GYM_REGIONS 9' in trainers
 print(f'PASS: 216 sourced species, 689 natural moves / 14,542 rows, '
       f'{len(data["moves"])} previous sourced moves, '
-      '9 dex regions, 7 gym regions, '
+      '717 moves including 22 append-only form moves, 69 form pools, 9 dex and gym regions, '
       f'{len(na)} art gaps and {len(nh)} no-hatch species')

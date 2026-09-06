@@ -40,12 +40,14 @@ struct PmdMon {
   // so every species past 255 wrapped -- 258 MARSHTOMP loaded p002.bin and a
   // Hoenn creature appeared on screen as IVYSAUR.
   int16_t dex = 0;
+  uint16_t form = 0;
   uint16_t palCount = 0;
   uint16_t pal[256];
   uint8_t *blob = nullptr;
   PmdAct acts[PMD_NACTS];
 
   bool load(int16_t dexNum, bool shiny = false);
+  bool loadForm(int16_t dexNum, uint16_t form, bool shiny = false);
   void unload();
   bool has(uint8_t a) const { return loaded && a < PMD_NACTS && acts[a].frames > 0; }
 };

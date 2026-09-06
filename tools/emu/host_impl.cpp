@@ -2,6 +2,7 @@
 // TPK2/TPTH parser, just reading from a directory instead of the SD card.
 #include "Arduino.h"
 #include "sdmon.h"
+#include "forms.h"
 #include "rtcbat.h"
 #include "audio.h"
 #include "linknow.h"
@@ -48,16 +49,20 @@ static uint8_t *slurp(const std::string &path, uint32_t *size) {
   return b;
 }
 
-bool PmdMon::load(int16_t dexNum, bool shiny) {
+bool PmdMon::load(int16_t dexNum, bool shiny) { return loadForm(dexNum,0,shiny); }
+
+bool PmdMon::loadForm(int16_t dexNum, uint16_t form, bool shiny) {
+  this->form = form;
   if (dexNum < 1 || dexNum > DEX_COUNT) return false;
   unload();
-  char file[24];
-  snprintf(file, sizeof(file), "/p%s%03u.bin", shiny ? "s" : "", (unsigned)dexNum);
+  char file[32];
+  file[0]='/';
+  formSpriteName(file+1,sizeof(file)-1,dexNum,form,shiny);
   std::string p = g_spriteDir + file;
   uint32_t size = 0;
   blob = slurp(p, &size);
   if (!blob) {
-    snprintf(file, sizeof(file), "/p%03u.bin", (unsigned)dexNum);
+    formSpriteName(file+1,sizeof(file)-1,dexNum,form,false);
     p = g_spriteDir + file;
     blob = slurp(p, &size);
   }

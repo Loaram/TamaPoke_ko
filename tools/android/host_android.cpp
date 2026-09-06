@@ -2,6 +2,7 @@
 // emulator. Sprite bytes come from the indexed TPAK assets in android_main.cpp.
 #include "Arduino.h"
 #include "sdmon.h"
+#include "forms.h"
 #include "rtcbat.h"
 #include "linknow.h"
 #include <chrono>
@@ -26,15 +27,19 @@ static uint8_t *slurp(const std::string &path, uint32_t *size) {
   return androidLoadPackedFile(path.c_str(), size);
 }
 
-bool PmdMon::load(int16_t dexNum, bool shiny) {
+bool PmdMon::load(int16_t dexNum, bool shiny) { return loadForm(dexNum,0,shiny); }
+
+bool PmdMon::loadForm(int16_t dexNum, uint16_t form, bool shiny) {
+  this->form = form;
   if (dexNum < 1 || dexNum > DEX_COUNT) return false;
   unload();
-  char file[24];
-  snprintf(file, sizeof(file), "/p%s%03u.bin", shiny ? "s" : "", (unsigned)dexNum);
+  char file[32];
+  file[0]='/';
+  formSpriteName(file+1,sizeof(file)-1,dexNum,form,shiny);
   uint32_t size = 0;
   blob = slurp(file, &size);
   if (!blob && shiny) {
-    snprintf(file, sizeof(file), "/p%03u.bin", (unsigned)dexNum);
+    formSpriteName(file+1,sizeof(file)-1,dexNum,form,false);
     blob = slurp(file, &size);
   }
   if (!blob) return false;

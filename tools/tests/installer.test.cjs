@@ -4,7 +4,7 @@ const elements=new Map();const element=id=>{
   if(!elements.has(id))elements.set(id,{textContent:'',style:{},disabled:false,dataset:{},hidden:true});
   return elements.get(id);
 };
-const buttons=['kanto','johto','hoenn','sinnoh','unova','kalos','alola','galar','paldea'].map(id=>({dataset:{region:id}}));
+const buttons=['kanto','johto','hoenn','sinnoh','unova','kalos','alola','galar','paldea','forms'].map(id=>({dataset:{region:id}}));
 const context=vm.createContext({TextEncoder,TextDecoder,Uint8Array,DataView,setTimeout,clearTimeout,console,isSecureContext:true,
   document:{getElementById:element,querySelectorAll:()=>buttons},navigator:{serial:{addEventListener(){}}},
   fetch:async url=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(root,'web',url),'utf8'))})});
@@ -36,7 +36,7 @@ function pak(name='mons/p001.bin',data=Buffer.from([1,2,3])) {
   context.blob=pak('../escape.bin');assert.throws(()=>run('parsePak(blob)'));
   context.blob=new ArrayBuffer(2);assert.throws(()=>run('parsePak(blob)'));
   for(const region of buttons.map(b=>b.dataset.region)) {
-    const b=fs.readFileSync(path.join(root,`web/sprites-${region}.pak`));context.blob=b.buffer.slice(b.byteOffset,b.byteOffset+b.length);
+    const b=fs.readFileSync(path.join(root,region==='forms'?'web/forms.pak':`web/sprites-${region}.pak`));context.blob=b.buffer.slice(b.byteOffset,b.byteOffset+b.length);
     assert.ok(run('parsePak(blob).length')>100);
   }
   context.writes=[];
@@ -51,5 +51,5 @@ function pak(name='mons/p001.bin',data=Buffer.from([1,2,3])) {
   await run("runInstall(async()=>{throw new Error('test failure')})");
   assert.match(element('status').textContent,/중단/);assert.doesNotMatch(element('status').textContent,/설치 완료/);
   assert.ok(buttons.every(b=>b.disabled));
-  console.log('PASS: Korean version gate, 9 real packs, invalid paths/truncation, PUT chunk ACKs, timeout, error and failure recovery');
+  console.log('PASS: Korean version gate, 9 regional packs plus forms, invalid paths/truncation, PUT chunk ACKs, timeout, error and failure recovery');
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -2,6 +2,7 @@
 const el = id => document.getElementById(id);
 const enc = new TextEncoder();
 const regionNames = {kanto:'관동',johto:'성도',hoenn:'호연',sinnoh:'신오',unova:'하나',kalos:'칼로스',alola:'알로라',galar:'가라르',paldea:'팔데아'};
+regionNames.forms='폼체인지';
 let port, reader, writer, pendingRead, decoder = new TextDecoder(), lineBuf = '', busy = false, firmwareReady = false;
 const regionButtons = [...document.querySelectorAll('[data-region]')];
 function log(message) { el('log').style.display='block'; el('log').textContent+=message+'\n'; el('log').scrollTop=el('log').scrollHeight; }
@@ -110,7 +111,7 @@ async function loadRegion(region) {
   status(`${name} 스프라이트 다운로드 중...`);
   // Bundles stay on the same origin. GitHub release downloads do not provide
   // the CORS headers needed by the browser, so there is no unreliable fallback.
-  const resp=await fetch(`sprites-${region}.pak`);
+  const resp=await fetch(region==='forms'?'forms.pak':`sprites-${region}.pak`);
   if(!resp.ok) throw new Error(`${name} 팩을 다운로드하지 못했습니다. (HTTP ${resp.status})`);
   await sendAll(parsePak(await resp.arrayBuffer()),name);
 }

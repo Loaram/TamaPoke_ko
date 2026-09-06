@@ -2,8 +2,16 @@
 #include "avatars.h"
 #include "dex.h"
 #include "moves.h"
+#include "form_moves.h"
 #include "noart.h"   // speciesHasArt(): the egg pool skips what cannot be drawn
 #include "audio.h"
+
+// Avoid modulo bias in the emulator's 16-bit PRNG as well as on devices.
+static uint16_t rollEggOdds(uint16_t range) {
+  uint32_t limit = 65536UL / range * range, value;
+  do { value = random(65536L); } while (value >= limit);
+  return value % range;
+}
 
 // Reads a blob that may be LONGER than the array we are reading it into.
 //
@@ -40,6 +48,9 @@ static void loadBlob(Preferences &p, const char *key, void *dst, size_t n) {
 void Pet::begin() {
   prefs.begin("tamapoke", false);
   opened = true;
+  lastSeenEpoch = prefs.getUInt("seen", 0);
+  farewellQuota = prefs.getUInt("byeQuota", 0);
+  endedKind=CER_NONE;endedMon=PartyMon();ceremony=CER_NONE;
   // Zeroed BEFORE the branch below, not inside load(): getBytes() leaves its
   // destination untouched when the key is missing, and the fresh-install path
   // returns without ever calling load(). Without this a begin() after a factory
@@ -57,6 +68,18 @@ void Pet::begin() {
   } else {
     load();
   }
+  PartyMon waiting;
+  if(prefs.getBytesLength("endWait")==sizeof(waiting) &&
+     prefs.getBytes("endWait",&waiting,sizeof(waiting))==sizeof(waiting) &&
+     waiting.dex>=1 && waiting.dex<=DEX_COUNT) {
+    endedMon=waiting;endedMon.nick[sizeof(endedMon.nick)-1]=0;
+    for(auto &m:endedMon.moves)if(m>=MOVE_COUNT)m=0;
+    endedKind=lastEnd==CER_RELEASE?CER_RELEASE:CER_FAREWELL;
+    uint32_t ticket=0;memcpy(&ticket,waiting.care+32,4);
+    // A crash anywhere between handoff and the completed egg save resumes here.
+    if(ticket && prefs.getUInt("endEgg",0)!=ticket)newEgg();
+  }
+  Party::recoverActiveSwap(*this);
 #if defined(TAMAPOKE_FULL_DEX) || defined(TAMAPOKE_FULL_SHINY)
   // Developer-only encyclopedia builds.  Unlock every normal entry in memory;
   // each emulator variant gets a separate NVS file, so a player's regular
@@ -78,15 +101,14 @@ void Pet::newEgg() {
   neglectTicks = 0;
   weight = 0;
   speciesId = -1;
+  form = 0;
   prevSpeciesId = -1;
   for (int i = 0; i < REGION_COUNT; i++) eggByRegion[i] = 0;
   eggTarget = pickEggSpecies();  // especie oculta segun rareza y pokedex
   eggByRegion[region % REGION_COUNT] = eggTarget;
   starterPick = (registeredCount() == 0);  // primera partida: el jugador elige inicial
-  // sorteo shiny: 1/48 base, mejor con despedida y con racha/vinculo altos
-  int shinyBase = (lastEnd == CER_FAREWELL ? 24 : 48) - careBonus();
-  if (shinyBase < 8) shinyBase = 8;
-  eggShiny = (random(shinyBase) == 0);
+  // Rolled only when creating an egg, never on reload or a companion swap.
+  eggShiny = (rollEggOdds(21600) < eggShinyWeight());
   // Early retirement no longer delays the next creature's evolution.
   evoPen = 0;
   retirePending = false;
@@ -102,6 +124,11 @@ void Pet::newEgg() {
   sleeping = false;
   frozen = false;
   save();
+  if(opened && endedKind!=CER_NONE) {
+    uint32_t ticket=0;memcpy(&ticket,endedMon.care+32,4);
+    if(prefs.getShort("dexn",0)==-1 && prefs.getShort("eggT2",0)==eggTarget)
+      prefs.putUInt("endEgg",ticket);
+  }
 }
 
 // progresion offline: el tiempo paso aunque estuviera apagado, pero con
@@ -168,8 +195,7 @@ void Pet::applyOfflineMinutes(uint32_t mins) {
 void Pet::update(uint32_t nowMs) {
   // fin de ceremonia: la criatura se va y queda un huevo nuevo
   if (ceremony != CER_NONE && millis() > ceremonyUntil) {
-    snapshotForParty();  // hand it over BEFORE newEgg() erases everything
-    newEgg();
+    if(snapshotForParty())newEgg();
     return;
   }
   while (nowMs - lastTick >= PET_TICK_MS) {
@@ -183,8 +209,7 @@ void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpo
   // Animations still use the monotonic clock; only care/growth minutes follow
   // Android's user-visible device clock.
   if (ceremony != CER_NONE && millis() > ceremonyUntil) {
-    snapshotForParty();
-    newEgg();
+    if(snapshotForParty())newEgg();
     lastTick = nowMs;
     return;
   }
@@ -299,12 +324,13 @@ void Pet::tick() {
 // newEgg() is about to wipe every field. Only the two endings the player CHOSE
 // qualify: a runaway ran off after an hour of total neglect, and letting it
 // come back on the team would remove the cost from the one ending that has any.
-// Brings a banked creature back as the live pet, frozen.
+// Legacy companions remain frozen; parked growing individuals resume their state.
 void Pet::reviveFrom(const PartyMon &m) {
   if (m.empty()) return;
   ceremony = CER_NONE;
   neglectTicks = 0;
   speciesId = m.dex;
+  form = m.form;
   prevSpeciesId = -1;
   eggTaps = 0;
   starterPick = false;
@@ -330,23 +356,77 @@ void Pet::reviveFrom(const PartyMon &m) {
   frozen = true;
   strncpy(nick, m.nick, sizeof(nick) - 1);
   nick[sizeof(nick) - 1] = 0;
+  sleepAuto = SLEEP_NONE;
+  goodTicks = 0;
+  evoDeclinedLv = 0;
+  farDeclinedAge = 0;
+  restoreCare(m);
+  endedMon = PartyMon(); endedKind = CER_NONE;
+  retirePending = false;
+  eatUntil = heartUntil = evolveUntil = ceremonyUntil = medalUntil = 0;
+  lastTick = millis();
+  deviceClockRemainder = 0;
   registerSpecies(speciesId);
   save();
 }
 
-void Pet::snapshotForParty() {
-  endedKind = CER_NONE;
-  if (isEgg()) return;
-  if (ceremony != CER_FAREWELL && ceremony != CER_RELEASE) return;
+bool Pet::canSwapActive() const {
+  // Resolve a starter, move offer or ending first; otherwise exchanging is reversible.
+  return !starterPick && ceremony==CER_NONE && !evolving() && learnQCount==0 &&
+         endedKind==CER_NONE && !retirePending;
+}
+
+PartyMon Pet::storageSnapshot() const {
+  PartyMon m;
+  if(isEgg()) return m;
+  m.dex=speciesId; m.level=level(); m.form=form; m.medals=medals;
+  m.ivAtk=ivAtk; m.ivDef=ivDef; m.ivSpe=ivSpe; m.ivHp=ivHp;
+  m.trAtk=trAtk; m.trDef=trDef; m.trSpe=trSpe; m.shiny=shiny;
+  memcpy(m.nick,nick,sizeof(m.nick)); memcpy(m.moves,moves,sizeof(m.moves));
+  uint8_t *c=m.care;
+  c[0]=1; c[1]=(frozen?1:0)|(sleeping?2:0)|(berryKnown?4:0);
+  c[2]=fullness; c[3]=joy; c[4]=energy; c[5]=hygiene; c[6]=poops; c[7]=weight;
+  c[8]=careMistakes; c[9]=bond; c[10]=bondToday; c[11]=mistakeCooldown;
+  c[12]=neglectTicks; c[13]=evoDeclinedLv; c[14]=lastLearnLevel; c[15]=sleepAuto;
+  memcpy(c+16,&goodTicks,2); memcpy(c+20,&ageMinutes,4);
+  memcpy(c+24,&farDeclinedAge,4); uint32_t day=today(); memcpy(c+28,&day,4);
+  return m;
+}
+
+void Pet::restoreCare(const PartyMon &m) {
+  const uint8_t *c=m.care;
+  if(c[0]!=1) return;
+  frozen=c[1]&1; sleeping=c[1]&2; berryKnown=c[1]&4;
+  fullness=c[2]; joy=c[3]; energy=c[4]; hygiene=c[5]; poops=c[6]; weight=c[7];
+  careMistakes=c[8]; bond=c[9]; bondToday=c[10]; mistakeCooldown=c[11];
+  neglectTicks=c[12]; evoDeclinedLv=c[13]; lastLearnLevel=c[14]; sleepAuto=c[15];
+  memcpy(&goodTicks,c+16,2); memcpy(&ageMinutes,c+20,4);
+  memcpy(&farDeclinedAge,c+24,4); uint32_t day=0; memcpy(&day,c+28,4);
+  if(today() && day!=today()) bondToday=0;
+}
+
+bool Pet::storedIndividualMatches() {
+  if(!opened) return false;
+  Pet check; check.prefs.begin("tamapoke",true); check.lastSeenEpoch=lastSeenEpoch;
+  check.load();
+  PartyMon expected=storageSnapshot(), actual=check.storageSnapshot();
+  return !memcmp(&expected,&actual,sizeof(expected));
+}
+
+bool Pet::snapshotForParty() {
+  if(endedKind!=CER_NONE)return true;
+  if (isEgg()) return true;
+  if (ceremony != CER_FAREWELL && ceremony != CER_RELEASE) return true;
   // An EARLY retire gives the creature up for good -- it is not banked at all.
   // Retiring one that has EARNED its farewell still banks it, because that is
   // simply the farewell reached by another button. retirePending is still set
   // here: update() snapshots before newEgg() spends it, and that ordering is
   // what this depends on, so retire_test drives the real update() rather than
   // calling the two halves by hand.
-  if (retireIsEarly()) return;
+  if (retireIsEarly()) return true;
   endedMon = PartyMon();
   endedMon.dex = speciesId;
+  endedMon.form = form;
   endedMon.level = level();
   endedMon.medals = medals;
   endedMon.ivAtk = ivAtk;
@@ -360,11 +440,46 @@ void Pet::snapshotForParty() {
   for (int i = 0; i < MOVE_SLOTS; i++) endedMon.moves[i] = moves[i];  // frozen too
   strncpy(endedMon.nick, nick, sizeof(endedMon.nick) - 1);
   endedMon.nick[sizeof(endedMon.nick) - 1] = 0;
+  // Reserved companion bytes carry a handoff ticket. The roster and this
+  // single NVS blob can then be acknowledged idempotently after a restart.
+  uint32_t ticket=((uint32_t)random(65536L)<<16)|(uint32_t)random(65536L);
+  if(!ticket)ticket=1;memcpy(endedMon.care+32,&ticket,4);
+  if(opened) {
+    prefs.putBytes("endWait",&endedMon,sizeof(endedMon));
+    PartyMon check;
+    if(prefs.getBytesLength("endWait")!=sizeof(check) ||
+       prefs.getBytes("endWait",&check,sizeof(check))!=sizeof(check) ||
+       memcmp(&check,&endedMon,sizeof(check)))return false;
+  }
   endedKind = ceremony;
+  return true;
+}
+
+bool Pet::acknowledgeEnding() {
+  if(opened) {
+    PartyMon empty,check;
+    prefs.putBytes("endWait",&empty,sizeof(empty));
+    if(prefs.getBytesLength("endWait")!=sizeof(check) ||
+       prefs.getBytes("endWait",&check,sizeof(check))!=sizeof(check) ||
+       memcmp(&check,&empty,sizeof(check)))return false;
+  }
+  endedKind=CER_NONE;
+  return true;
 }
 
 // vuelca el guardado periodico pendiente (lo llama el loop en un momento sin
 // animacion para que el paron de la escritura a flash no se vea)
+bool Pet::selectForm(FormId id) {
+  if (isEgg() || ceremony != CER_NONE || !formEligible(speciesId,id,level())) return false;
+  FormId old=form;
+  form=id;
+  save();
+  if(opened && (prefs.getUShort("form",65535)!=id || prefs.getShort("formDex",-1)!=speciesId)) {
+    form=old;return false;
+  }
+  return true;
+}
+
 void Pet::saveNow() { save(); }
 
 void Pet::flushSave() {
@@ -484,10 +599,10 @@ int16_t Pet::pickEggSpecies() {
   if (lastEnd != CER_RUNAWAY) {
     bool blessed = (lastEnd == CER_FAREWELL);
     int rare = (blessed ? 45 : 27) + careBonus();
-    int leg = (registeredCount() >= 25) ? (blessed ? 10 : 3) + careBonus() / 3 : 0;
-    int r = random(100);
+    int leg = eggLegendWeight();
+    int r = rollEggOdds(900);
     if (r < leg) tier = R_LEGENDARIO;
-    else if (r < leg + rare) tier = R_RARO;
+    else if (r < leg + rare * 9) tier = R_RARO;
   }
 
   // candidatos del tier con linea incompleta; si no hay, baja de tier;
@@ -580,13 +695,53 @@ int Pet::careBonus() const {
   return s / 3 + bond / 25;
 }
 
+uint8_t Pet::eggBonusDays() const {
+  uint32_t d = today();
+  // Yesterday's streak remains usable until today's first care. A missed full
+  // calendar day invalidates it immediately, even before the next care action.
+  if (!d || !lastCareDay || d < lastCareDay || d - lastCareDay > 1) return 0;
+  return streak > 10 ? 10 : (uint8_t)streak;
+}
+
+uint16_t Pet::eggShinyWeight() const {
+  uint8_t days = eggBonusDays();
+  return 450 + 190 * (days ? days - 1 : 0);
+}
+
+uint16_t Pet::eggLegendWeight() const {
+  if (registeredCount() < 25 || lastEnd == CER_RUNAWAY) return 0;
+  uint8_t days = eggBonusDays();
+  return 27 + 11 * (days ? days - 1 : 0);
+}
+
+uint8_t Pet::farewellsRemaining() const {
+  // A backward/unknown clock never refills the persisted allowance.
+  return 3 - (today() > (farewellQuota >> 2) ? 0 : (farewellQuota & 3));
+}
+
+bool Pet::consumeFarewell() {
+  if (!farewellsRemaining()) return false;
+  uint32_t d = today(), oldDay = farewellQuota >> 2;
+  uint32_t used = d > oldDay ? 0 : farewellQuota & 3;
+  if (d < oldDay) d = oldDay;
+  uint32_t next = (d << 2) | (used + 1);
+  // Commit one atomic scalar BEFORE starting the ceremony. On storage failure
+  // do not lose the creature or let repeated restarts provide free rerolls.
+  if (opened) {
+    prefs.putUInt("byeQuota", next);
+    if (prefs.getUInt("byeQuota", 0) != next) return false;
+  }
+  farewellQuota = next;
+  return true;
+}
+
 // primer cuidado del dia: avanza la racha y afianza el vinculo
 void Pet::registerCare() {
   if (isEgg() || ceremony != CER_NONE) return;
   uint32_t d = today();
-  if (d == 0 || d == lastCareDay) return;  // sin reloj, o ya conto hoy
-  if (lastCareDay == 0 || d == lastCareDay + 1) {
-    streak++;
+  if (d == 0 || d <= lastCareDay) return;  // no clock, duplicate or rollback
+  if (lastCareDay != 0 && d == lastCareDay + 1) {
+    if (streak < UINT16_MAX) streak++;
   } else {
     streak = 1;        // hubo un hueco de dias
     lastMilestone = 0;
@@ -648,27 +803,27 @@ static uint16_t calcStat(uint8_t base, uint8_t iv, uint8_t lvl, uint8_t tr) {
 }
 
 uint16_t Pet::atkStat() const {
-  return isEgg() ? 0 : calcStat(DEX_TBL[speciesId].bAtk, ivAtk, level(), trAtk);
+  return isEgg() ? 0 : calcStat(formDex(speciesId, form).bAtk, ivAtk, level(), trAtk);
 }
 uint16_t Pet::defStat() const {
-  return isEgg() ? 0 : calcStat(DEX_TBL[speciesId].bDef, ivDef, level(), trDef);
+  return isEgg() ? 0 : calcStat(formDex(speciesId, form).bDef, ivDef, level(), trDef);
 }
 uint16_t Pet::speStat() const {
-  return isEgg() ? 0 : calcStat(DEX_TBL[speciesId].bSpe, ivSpe, level(), trSpe);
+  return isEgg() ? 0 : calcStat(formDex(speciesId, form).bSpe, ivSpe, level(), trSpe);
 }
 // la vitalidad no se entrena (no hay nada que la suba), asi que lleva un +10
 // fijo en lugar del entrenamiento, igual que el +Nivel+10 del HP en los juegos
 uint16_t Pet::vitStat() const {
-  return isEgg() ? 0 : calcStat(DEX_TBL[speciesId].bHp, ivHp, level(), 10);
+  return isEgg() ? 0 : calcStat(formDex(speciesId, form).bHp, ivHp, level(), 10);
 }
 // Special reuses the physical IV and training against the species' special base
 // stat, which is what keeps Alakazam (50 Atk / 135 SpA) a real attacker without
 // adding IVs or migrating saves.
 uint16_t Pet::spaStat() const {
-  return isEgg() ? 0 : calcStat(DEX_TBL[speciesId].bSpA, ivAtk, level(), trAtk);
+  return isEgg() ? 0 : calcStat(formDex(speciesId, form).bSpA, ivAtk, level(), trAtk);
 }
 uint16_t Pet::spdStat() const {
-  return isEgg() ? 0 : calcStat(DEX_TBL[speciesId].bSpD, ivDef, level(), trDef);
+  return isEgg() ? 0 : calcStat(formDex(speciesId, form).bSpD, ivDef, level(), trDef);
 }
 
 // ---------- moves ----------
@@ -710,7 +865,7 @@ bool Pet::knowsMove(MoveId mv) const {
 // what the power/2 version was papering over.
 #define TM_LEVEL 40
 
-static uint8_t tmLevelFor(const MoveEntry &m) {
+uint8_t tmLevelFor(const MoveEntry &m) {
   (void)m;
   return TM_LEVEL;
 }
@@ -728,8 +883,8 @@ uint8_t moveUnlockLevel(int16_t dex, uint8_t idx) {
 void Pet::relearnFromLevel() {
   for (int i = 0; i < MOVE_SLOTS; i++) moves[i] = 0;
   if (isEgg()) return;
-  const DexEntry &d = DEX_TBL[speciesId];
-  uint8_t lvl = level(), n = learnCount(speciesId);
+  const DexEntry d = formDex(speciesId,form);
+  uint8_t lvl = level(), n = formLearnCount(speciesId,form);
   int16_t score[MOVE_SLOTS] = { 0, 0, 0, 0 };
   // Two passes. Level-up moves (level >= 1) are what a creature grows into, so
   // they fill the set first; TMs (level 0, no gate) only top up the slots left
@@ -738,10 +893,10 @@ void Pet::relearnFromLevel() {
   for (int pass = 0; pass < 2; pass++) {
   bool tmPass = (pass == 1);
   for (uint8_t i = 0; i < n; i++) {
-    uint8_t at = learnLevel(speciesId, i);
+    uint8_t at = formLearnLevel(speciesId,form,i);
     if (at > lvl) continue;
     if (tmPass != (at == 0)) continue;
-    MoveId mv = learnMove(speciesId, i);
+    MoveId mv = formLearnMove(speciesId,form,i);
     if (!mv || mv >= MOVE_COUNT || knowsMove(mv)) continue;
     const MoveEntry &m = MOVE_TBL[mv];
     // A TM carries no level requirement in the data, which is true of the games
@@ -787,9 +942,9 @@ void Pet::relearnFromLevel() {
   MoveId best = 0;
   int16_t bestSc = 0;
   for (uint8_t i = 0; i < n; i++) {
-    uint8_t at = learnLevel(speciesId, i);
+    uint8_t at = formLearnLevel(speciesId,form,i);
     if (at > lvl) continue;
-    MoveId mv = learnMove(speciesId, i);
+    MoveId mv = formLearnMove(speciesId,form,i);
     if (!mv || mv >= MOVE_COUNT) continue;
     const MoveEntry &m = MOVE_TBL[mv];
     if (m.cat == MC_STATUS || (m.type != d.type1 && m.type != d.type2)) continue;
@@ -850,11 +1005,11 @@ void Pet::checkLearnGates() {
   if (isEgg() || ceremony != CER_NONE) return;
   uint8_t lvl = level();
   if (lvl <= lastLearnLevel) return;
-  uint8_t n = learnCount(speciesId);
+  uint8_t n = formLearnCount(speciesId,form);
   for (uint8_t i = 0; i < n; i++) {
-    uint8_t at = learnLevel(speciesId, i);
+    uint8_t at = formLearnLevel(speciesId,form,i);
     if (at == 0 || at <= lastLearnLevel || at > lvl) continue;  // 0 = TM, no gate
-    MoveId mv = learnMove(speciesId, i);
+    MoveId mv = formLearnMove(speciesId,form,i);
     learnMoveNow(mv);
   }
   lastLearnLevel = lvl;
@@ -881,16 +1036,17 @@ void Pet::declineLearn() {
 
 uint8_t Pet::pendingLearnables(MoveId *out, uint8_t max) const {
   if (isEgg() || !out || !max) return 0;
-  uint8_t lvl = level(), n = learnCount(speciesId), w = 0;
+  uint8_t lvl = level(), n = formLearnCount(speciesId,form), w = 0;
   // Keep a declined evolution move recoverable from the move card even when
   // it is not part of this edition's ordinary level/TM learnset.
-  for (uint8_t i = 0; i < evolutionMoveCount(speciesId) && w < max; i++) {
+  for (uint8_t i = 0; !formLearnIndex(speciesId,form) && i < evolutionMoveCount(speciesId) && w < max; i++) {
     MoveId mv = evolutionMove(speciesId, i);
     if (mv && !knowsMove(mv)) out[w++] = mv;
   }
   for (uint8_t i = 0; i < n && w < max; i++) {
-    if (learnLevel(speciesId, i) > lvl) break;
-    MoveId mv = learnMove(speciesId, i);
+    uint8_t at=formLearnLevel(speciesId,form,i);
+    MoveId mv = formLearnMove(speciesId,form,i);
+    if((at?at:tmLevelFor(MOVE_TBL[mv]))>lvl)continue;
     if (knowsMove(mv)) continue;
     bool dup = false;                     // do not offer the same move twice
     for (uint8_t j = 0; j < w; j++)
@@ -961,7 +1117,7 @@ void Pet::registerCaughtSpecies(int16_t dex, bool caughtShiny) {
 // forma final que ya cumplio su ciclo (1 dia): lista para despedirse. La
 // despedida la dispara el usuario con el boton (no salta sola, para que la vea)
 bool Pet::canFarewellNow() const {
-  if (frozen) return false;     // a companion cannot be lost; that is the point
+  if (frozen || endedKind!=CER_NONE || !farewellsRemaining()) return false;
   return !isEgg() && !sleeping && ceremony == CER_NONE &&
          DEX_TBL[speciesId].evolvesTo == 0 && ageMinutes >= FAREWELL_AGE_MIN;
 }
@@ -982,7 +1138,7 @@ bool Pet::canRunawayNow() const {
 }
 
 bool Pet::canRetireNow() const {
-  if (frozen) return false;     // a companion is never given up
+  if (frozen || endedKind!=CER_NONE || !farewellsRemaining()) return false;
   return !isEgg() && !sleeping && ceremony == CER_NONE && !starterPick;
 }
 
@@ -990,26 +1146,20 @@ bool Pet::canRetireNow() const {
 // creature is not banked if this is an early retirement.
 void Pet::startRetire() {
   if (!canRetireNow()) return;
-  retirePending = !canFarewellNow();
-  save();
-  startFarewell();
-  // An early retire is NOT the good ending and must not pay like one.
-  // startFarewell() sets lastEnd = CER_FAREWELL, which blesses the next egg --
-  // rare 27% -> 45%, legendary 3% -> 10%, shiny 1/48 -> 1/24. Combined with the
-  // creature no longer being banked, that made retiring early a pure SHINY FARM:
-  // retire, check the egg, retire again, with nothing accumulating to regret.
-  // Neutral instead, exactly like a release. The ceremony on screen is still the
-  // farewell -- this was a choice the player made, not a neglected creature
-  // walking out -- but the reward is not.
-  if (retirePending) {
-    lastEnd = CER_RELEASE;
-    save();
-  }
+  beginFarewell(!canFarewellNow());
 }
 
 void Pet::startFarewell() {
-  if (isEgg() || ceremony != CER_NONE) return;
-  lastEnd = CER_FAREWELL;
+  beginFarewell(false);
+}
+
+void Pet::beginFarewell(bool early) {
+  if (isEgg() || ceremony != CER_NONE || endedKind!=CER_NONE) return;
+  if (!consumeFarewell()) return;
+  // Persist the correct ending on the FIRST save, not a good ending followed
+  // by a second write that could be interrupted during early retirement.
+  retirePending = early;
+  lastEnd = early ? CER_RELEASE : CER_FAREWELL;
   ceremony = CER_FAREWELL;
   ceremonyUntil = millis() + CEREMONY_MS;
   heartUntil = ceremonyUntil;  // corazones durante toda la despedida
@@ -1018,7 +1168,7 @@ void Pet::startFarewell() {
 }
 
 void Pet::startRunaway() {
-  if (isEgg() || ceremony != CER_NONE) return;
+  if (isEgg() || ceremony != CER_NONE || endedKind!=CER_NONE) return;
   lastEnd = CER_RUNAWAY;
   ceremony = CER_RUNAWAY;
   ceremonyUntil = millis() + CEREMONY_MS;
@@ -1027,7 +1177,8 @@ void Pet::startRunaway() {
 }
 
 void Pet::release() {
-  if (isEgg() || ceremony != CER_NONE) return;
+  if (isEgg() || ceremony != CER_NONE || endedKind!=CER_NONE) return;
+  if (!consumeFarewell()) return;
   lastEnd = CER_RELEASE;
   ceremony = CER_RELEASE;
   ceremonyUntil = millis() + CEREMONY_MS;
@@ -1038,6 +1189,7 @@ void Pet::release() {
 
 void Pet::hatch() {
   speciesId = eggTarget;
+  form = 0;
   shiny = eggShiny;
   // IV del individuo (cada crianza es unica). Se tiran ANTES de resetear el
   // vinculo a proposito: el careBonus que los empuja es el del bicho anterior.
@@ -1094,6 +1246,7 @@ void Pet::evolve() {
     next = m ? fresh[random(m)] : opts[random(n)];
   }
   speciesId = next;
+  form = 0; // Normal evolution remains separate from optional forms.
   registerSpecies(speciesId);
   // Evolution moves are not level gates. The old form has already consumed
   // this level before the player taps EVOLVE, which is why Meowscarada used to
@@ -1395,9 +1548,12 @@ void Pet::save() {
   prefs.putUChar("evop", evoPen);
   prefs.putUChar("slpa", sleepAuto);
   prefs.putBool("rtpn", retirePending);
+  prefs.putUChar("cer",ceremony);
   prefs.putBytes("dexsh", dexShinyReg, sizeof(dexShinyReg));
   prefs.putUInt("age", ageMinutes);
   prefs.putShort("dexn", speciesId);
+  prefs.putUShort("form", form);
+  prefs.putShort("formDex", speciesId);
   prefs.putShort("eggT2", eggTarget);
   prefs.putUChar("crack", eggTaps);
   prefs.putUChar("mist", careMistakes);
@@ -1411,6 +1567,7 @@ void Pet::save() {
   prefs.putUShort("strk", streak);
   prefs.putUShort("bstrk", bestStreak);
   prefs.putUInt("cday", lastCareDay);
+  prefs.putUInt("byeQuota", farewellQuota);
   prefs.putUChar("bond", bond);
   prefs.putUShort("medal", medals);
   prefs.putUShort("tmedal", totalMedals);
@@ -1419,6 +1576,8 @@ void Pet::save() {
   prefs.putUShort("shi", strHi);
   prefs.putUShort("qhi", spdHi);
   prefs.putString("nick", nick);
+  PartyMon care=storageSnapshot();
+  prefs.putBytes("liveCare",&care,sizeof(care));
 }
 
 void Pet::load() {
@@ -1476,13 +1635,21 @@ void Pet::load() {
     eggTarget = (oldT >= 0 && oldT < 9) ? OLD2DEX[oldT] : 4;
   }
   eggTaps = prefs.getUChar("crack", 0);
+  if(speciesId==0 || speciesId < -1 || speciesId>DEX_COUNT) {
+    Serial.println("save: invalid live species; safely restoring an egg");
+    speciesId=-1;pendingSave=true;
+  }
   careMistakes = prefs.getUChar("mist", 0);
   sleeping = prefs.getBool("sleep", false);
   lastEnd = prefs.getUChar("lend", CER_NONE);
+  ceremony=prefs.getUChar("cer",CER_NONE);
+  if(ceremony>CER_RELEASE)ceremony=CER_NONE;
+  if(ceremony!=CER_NONE)ceremonyUntil=millis()+CEREMONY_MS;
   loadBlob(prefs, "dexreg", dexReg, sizeof(dexReg));
   streak = prefs.getUShort("strk", 0);
   bestStreak = prefs.getUShort("bstrk", 0);
   lastCareDay = prefs.getUInt("cday", 0);
+  farewellQuota = prefs.getUInt("byeQuota", 0);
   bond = prefs.getUChar("bond", 0);
   medals = prefs.getUShort("medal", 0);
   totalMedals = prefs.getUShort("tmedal", 0);
@@ -1569,7 +1736,22 @@ void Pet::load() {
   // Pending offers are persisted now: a long offline catch-up can unlock more
   // than eight moves, and closing the app on the first dialog must not discard
   // the rest after lastLearnLevel has already advanced.
+  form = prefs.getShort("formDex", -1) == speciesId ? prefs.getUShort("form", 0) : 0;
+  PartyMon care, current=storageSnapshot();
+  // The legacy live fields remain authoritative. Ignore stale metadata after
+  // an old version, partial write or external save tool changes this individual.
+  if(prefs.getBytesLength("liveCare")==sizeof(care) &&
+     prefs.getBytes("liveCare",&care,sizeof(care))==sizeof(care) &&
+     !memcmp(&care,&current,36) && !memcmp(care.care+20,&ageMinutes,4) && care.care[0]==1) {
+    // Only the extra counters live here; never overwrite newer ordinary keys.
+    const uint8_t *c=care.care;
+    bondToday=c[10]; mistakeCooldown=c[11]; neglectTicks=c[12]; evoDeclinedLv=c[13];
+    memcpy(&goodTicks,c+16,2); memcpy(&farDeclinedAge,c+24,4);
+    uint32_t day=0; memcpy(&day,c+28,4);
+    if(today() && day!=today()) bondToday=0;
+  }
   checkLearnGates();
+  // Unknown form IDs are retained for forward-compatible saves.
   // siembra: la mascota actual cuenta como criada (guardados antiguos)
   if (speciesId >= 1) registerSpecies(speciesId);
 }

@@ -22,7 +22,7 @@ static void finish(Pet &p, Party &q){
   p.update(gNow);
   if (p.endedKind != CER_NONE) {
     if (!q.add(p.endedMon)) q.boxAdd(p.endedMon);
-    p.endedKind = CER_NONE;
+    p.acknowledgeEnding();
   }
 }
 
@@ -47,7 +47,7 @@ int main(){
     ck(q.count() == 0, "an early retirement does NOT bank the creature");
     ck(p.endedKind == CER_NONE, "so nothing is left waiting for a party slot");
     ck(p.lastEnd == CER_RELEASE,
-       "and the next egg is neutral, not blessed -- or this is a shiny farm");
+       "early ending keeps neutral rare-tier and banking classification");
     ck(p.isEgg(), "and a new egg is waiting");
     ck(p.evoPenalty() == 0, "the next creature has no evolution penalty");
 
@@ -75,12 +75,13 @@ int main(){
     ck(p.evoPenalty() == 0, "an earned retirement also leaves no penalty");
     ck(q.count() == 1 && q.slots[0].dex == 6,
        "an earned retirement banks the creature like a normal farewell");
-    ck(p.lastEnd == CER_FAREWELL, "and still blesses the next egg");
+    ck(p.lastEnd == CER_FAREWELL, "and keeps good-ending rare-tier classification");
   }
 
   // --- repeated early retirements never create or accumulate a penalty
   {
     Pet p; Party q; p.begin(); q.begin();
+    p.setClock(86400);
     for (int i = 0; i < PARTY_SLOTS; i++) q.releaseAt(i);
     for (int i = 0; i < 3; i++) {
       young(p, 4, 10);
@@ -116,6 +117,7 @@ int main(){
   // --- the no-penalty state survives a reload
   {
     Pet p; Party q; p.begin(); q.begin();
+    p.setClock(2 * 86400);
     young(p, 7, 12);
     p.startRetire(); finish(p, q);
     Pet again; again.begin();
@@ -123,6 +125,17 @@ int main(){
     ck(again.isEgg(), "and the waiting egg survives reload");
   }
 
+  // The 24-hour good farewell still retains the individual when party is full.
+  {
+    nvs().clear();Pet p;Party q;p.begin();q.begin();p.setClock(3*86400);
+    young(p,6,73);
+    for(int i=0;i<PARTY_SLOTS;i++){PartyMon m;m.dex=25+i;m.level=60;q.add(m);}
+    ck(p.canFarewellNow(),"ordinary final evolution at exactly 24 hours / level 73 remains eligible");
+    p.startRetire();finish(p,q);
+    ck(q.count()==PARTY_SLOTS && q.boxCount()==1 && q.box[0].dex==6,
+       "good farewell automatically banks in the box when the party is full");
+    ck(p.isEgg() && p.farewellsRemaining()==2,"retained farewell gives one new egg and spends one daily use");
+  }
   printf("%s\n", bad?"FAILURES":"all good");
   return bad?1:0;
 }

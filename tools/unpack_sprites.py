@@ -20,3 +20,4 @@ def unpack(pak,dest):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--dest',type=Path,default=R/'tools/sdcard');a=p.parse_args()
     for pak in sorted((R/'web').glob('sprites-*.pak')):unpack(pak,a.dest)
+    if (R/'web/forms.pak').exists():unpack(R/'web/forms.pak',a.dest)

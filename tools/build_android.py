@@ -63,7 +63,7 @@ def main() -> int:
     parser.add_argument("--wear", action="store_true",
                         help="build a standalone ARM32/ARM64 Wear OS APK for Galaxy Watch4-9")
     parser.add_argument("--version-code", type=int,
-                        help="defaults to 2004 for Android or 2005 for Wear OS")
+                        help="defaults to 3012 for Android or 3013 for Wear OS")
     parser.add_argument("--android-revision", type=int,
                         help="defaults to 1")
     parser.add_argument("--output", type=Path,
@@ -93,7 +93,7 @@ def main() -> int:
 
     version = firmware_version()
     flavor = "wear" if args.wear else "android"
-    version_code = args.version_code if args.version_code is not None else (2005 if args.wear else 2004)
+    version_code = args.version_code if args.version_code is not None else (3013 if args.wear else 3012)
     revision = args.android_revision if args.android_revision is not None else 1
     version_name = f"{version}-{flavor}.{revision}"
     default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk" if args.wear
@@ -134,7 +134,7 @@ def main() -> int:
     cpp_sources = [
         sketch,
         ROOT / "gbsynth.cpp", ROOT / "pet.cpp", ROOT / "i18n.cpp",
-        ROOT / "party.cpp", ROOT / "battle.cpp", ROOT / "wild.cpp",
+        ROOT / "party.cpp", ROOT / "battle.cpp", ROOT / "wild.cpp", ROOT / "forms.cpp",
         ROOT / "link.cpp", ROOT / "save.cpp",
         ROOT / "tools" / "emu" / "font.cpp", ROOT / "tools" / "emu" / "clock.cpp",
         ANDROID / "host_android.cpp", ANDROID / "android_audio.cpp",
@@ -192,6 +192,10 @@ def main() -> int:
         raise SystemExit(f"Expected 9 sprite packs, found {len(packs)}")
     for pack in packs:
         add_stored(unaligned, pack, f"assets/{pack.name}")
+    form_pack = ROOT / "web/forms.pak"
+    if not form_pack.is_file():
+        raise SystemExit("Missing forms.pak: run tools/gen_forms.py --sprites first")
+    add_stored(unaligned, form_pack, "assets/forms.pak")
     for abi, lib in native_outputs.items():
         add_stored(unaligned, lib, f"lib/{abi}/libtamapoke.so")
     run([str(build_tools / "zipalign.exe"), "-P", "16", "-f", "4",

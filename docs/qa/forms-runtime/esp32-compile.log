@@ -1,0 +1,6 @@
+In file included from C:\Users\hyung\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\TamaPokeArduinoBuild\forms-runtime-stage\TamaPoke\TamaPoke.ino:15:
+C:\Users\hyung\Documents\Arduino\libraries\SensorLib\src/TouchDrvCSTXXX.hpp:3:113: note: '#pragma message: WARNING: TouchDrvCSTXXX.hpp is deprecated. Include TouchDrv.hpp instead for all touch drivers.'
+    3 | #pragma message("WARNING: TouchDrvCSTXXX.hpp is deprecated. Include TouchDrv.hpp instead for all touch drivers.")
+      |                                                                                                                 ^
+Sketch uses 2157855 bytes (68%) of program storage space. Maximum is 3145728 bytes.
+Global variables use 105892 bytes (32%) of dynamic memory, leaving 221788 bytes for local variables. Maximum is 327680 bytes.

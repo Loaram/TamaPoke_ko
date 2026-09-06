@@ -8,6 +8,7 @@
 #include "battle.h"
 #include "dex.h"
 #include "moves.h"
+#include "form_moves.h"
 #include <cstdio>
 
 uint32_t g_seed = 0xC0FFEE;
@@ -38,7 +39,7 @@ static void dump(const char *tag, const MoveId *mv) {
 
 int main() {
   ck(sizeof(MoveId) == 2, "expanded move IDs use 16-bit storage");
-  ck(MOVE_COUNT == 696, "the complete natural move table contains 695 moves plus NONE");
+  ck(MOVE_COUNT == 718, "695 released moves plus 22 form moves and NONE");
 
   // Audit the generated table itself before exercising individual creatures.
   // Every appended move must be reachable from at least one species, and every
@@ -58,6 +59,9 @@ int main() {
       else referenced[mv] = true;
     }
   int orphanedExpanded = 0;
+  for(const auto &row:FORM_LEARN_ROWS) {
+    if(!row.move || row.move>=MOVE_COUNT)badRows++;else referenced[row.move]=true;
+  }
   for (MoveId mv = 142; mv < MOVE_COUNT; mv++)
     if (!referenced[mv]) orphanedExpanded++;
   ck(badRows == 0, "all generated move and learnset rows are valid");
@@ -352,7 +356,7 @@ int main() {
   // --- party migration: a blob written in the OLD layout (no moves[]) must
   // survive, with slots still aligned. This is the case that silently
   // corrupted the party if migrated by a plain getBytes().
-  const size_t oldStride = sizeof(PartyMon) - sizeof(MoveId) * MOVE_SLOTS;
+  const size_t oldStride = 26; // Released pre-move layout, not the new runtime stride.
   uint8_t legacy[PARTY_SLOTS * (sizeof(PartyMon))];
   for (int i = 0; i < PARTY_SLOTS; i++) {
     PartyMon m;
@@ -365,6 +369,7 @@ int main() {
   Preferences seed;
   seed.begin("tamapoke", false);
   seed.putBytes("party", legacy, PARTY_SLOTS * oldStride);
+  nvs().erase("rosterF");
   seed.end();
 
   Party pty;

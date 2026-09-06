@@ -18,12 +18,14 @@
 #include "dex.h"
 #include "types.h"
 #include "moves.h"
+#include "form_moves.h"
 #include "battle.h"
 #include "trainers.h"
 #include "link.h"
 #include "linknow.h"
 #include "backs.h"
 #include "badges.h"
+#include "gym_art.h"
 #include "avatars.h"
 #include <stdarg.h>
 #include "party.h"
@@ -44,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "2.0.2"
+#define FW_VERSION "3.0.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -139,6 +141,17 @@ uint8_t cardPage = 0;         // 0 perfil, 1 stats+medallas
 // internally), so a hub on that axis would be ambiguous; the header was inert
 // and is the only free surface left.
 bool menuOpen = false;
+bool formsOpen = false, formPreviewDirty = true;
+uint16_t formTarget = 0;
+uint8_t formPage = 0;
+PmdMon formPreview;
+FormId monFormFor = 0, btlFormFor[2] = {0,0};
+void formOpenTarget(uint16_t target);
+void formClose();
+void formPageMove(int dir);
+void renderForms();
+void formsTap(int16_t x,int16_t y);
+void drawFormMini(int16_t dex,FormId form,bool shiny,int cx,int cy);
 #define MENU_X 73
 // Four rows: PARTY and GYMS came out, since a swipe right and a swipe left now
 // reach them directly. Sized to the bezel -- the panel is 320 wide, so 160 from
@@ -170,12 +183,14 @@ uint8_t partyDetail = 0;   // 0 = the grid, else slot + 1
 // waiting for something to trade with, 0 when nothing is pending.
 bool boxOpen = false;
 uint8_t boxPage = 0;
+bool boxPagePicker = false;
+uint8_t boxPickerGroup = 0;
 uint8_t boxSwapFrom = 0;   // party slot + 1, armed from the party side
-uint8_t boxSel = 0;        // box slot + 1, armed from the box side
+uint16_t boxSel = 0;        // box slot + 1, armed from the box side
 // The box gets the same detail sheet the party has. Tapping a box slot used to
 // yank the creature into the party immediately, which is a surprising amount to
 // happen from one tap -- and left nowhere to put a RELEASE button.
-uint8_t boxDetail = 0;        // box slot + 1 whose sheet is open
+uint16_t boxDetail = 0;        // box slot + 1 whose sheet is open
 // The RELEASE confirm, on whichever sheet is up. One flag rather than two,
 // because only one sheet can be open at a time and partyDetail/boxDetail
 // already say which.
@@ -229,6 +244,7 @@ bool trainOpen = false;
 bool movePickOpen = false;
 uint8_t movePickSlot = 0;   // which of the 4 slots is being replaced
 uint8_t movePickParty = 0;  // 0 = the live pet, else the party slot + 1
+uint16_t movePickBox = 0;
 uint8_t movePickPage = 0;
 #define MOVE_ROW_Y(i) (96 + (i) * 58)
 #define MOVE_PICK_PER_PAGE 5
@@ -314,6 +330,15 @@ static const BadgeArt *badgeArtFor(uint8_t region, uint8_t i) {
 // type so the tests can ask: the emulator's genproto.py emits every prototype
 // ABOVE the includes, where the BadgeArt struct does not exist yet.
 bool badgeArtExists(uint8_t region, uint8_t i) { return badgeArtFor(region, i) != nullptr; }
+
+static void drawGymArt(const char *key, int x, int y, int scale = 1) {
+  const GymArt *a = gymArt(key);
+  if (!a) return;
+  for (int r=0;r<a->size;r++) for(int c=0;c<a->size;c++) {
+    uint8_t v=a->idx[r*a->size+c];
+    if(v!=255) gfx->fillRect(x+c*scale,y+r*scale,scale,scale,a->pal[v]);
+  }
+}
 
 Combatant btlYou, btlFoe;
 bool btlOver = false;
@@ -456,8 +481,9 @@ static_assert(PDET_R_X > PDET_L_X + PDET_L_W + 8,
 
 uint8_t gymRegion = 0;
 uint8_t btlRegion = 0;
-#define TRAINERS (TRAINER_SETS[gymRegion % GYM_REGIONS].list)
-#define BTL_TRAINERS (TRAINER_SETS[btlRegion % GYM_REGIONS].list)
+bool gymShield = false, btlShield = false;
+#define TRAINER_AT(i) trainerAt(gymRegion, (i), gymShield)
+#define BTL_TRAINER_AT(i) trainerAt(btlRegion, (i), btlShield)
 bool gShowAllAvatars = false;  // emulator screenshot aid, never set on hardware
 bool btlPetIn = false;       // was the live pet in the squad?
 uint8_t btlTrainGain = 0;    // what the win trained, for the win screen
@@ -465,7 +491,7 @@ uint8_t btlTrainWhich = 0;
 bool btlLink = false;      // this fight is against another device
 bool btlLinkHost = false;
 static bool gymUnlocked(uint8_t idx, bool hard) {
-  return idx == 0 || pet.hasBadge(gymRegion, idx - 1, hard);
+  return idx == 0 || pet.hasBadge(gymRegion, trainerBadgeIndex(gymRegion,idx - 1,gymShield), hard);
 }
 
 // Team select. Candidate 0 is the live pet, 1..PARTY_SLOTS are the banked
@@ -756,9 +782,9 @@ void setup() {
   pinMode(TP_INT, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(TP_INT), touchIsr, FALLING);
 
+  sdBegin();
   party.begin();
   pet.begin();
-  sdBegin();
   thumbs.load();
 
   // reloj real: aplica el tiempo que estuvo apagado
@@ -780,18 +806,19 @@ void setup() {
 
 // carga/descarga el sprite de SD cuando cambia la especie
 void ensureMon() {
-  if (pet.speciesId == monFor && monShinyFor == pet.shiny && !sdDirty) return;
+  if (pet.speciesId == monFor && monShinyFor == pet.shiny && monFormFor == pet.form && !sdDirty) return;
   sdDirty = false;
   monFor = pet.speciesId;
   monShinyFor = pet.shiny;
+  monFormFor = pet.form;
   mon.unload();
   pmd.unload();
   beh.x = beh.targetX = 233;
   beh.mode = 0;
   beh.until = 0;
   if (pet.speciesId >= 1 && pet.speciesId <= DEX_COUNT) {
-    pmd.load(pet.speciesId, pet.shiny);          // principal: PMD
-    if (!pmd.loaded) mon.load(pet.speciesId, pet.shiny);  // respaldo: B/N
+    pmd.loadForm(pet.speciesId, formFind(pet.speciesId,pet.form)?pet.form:0, pet.shiny);          // principal: PMD
+    if (!pmd.loaded && !pet.form) mon.load(pet.speciesId, pet.shiny);  // respaldo: B/N
   }
 }
 
@@ -850,11 +877,11 @@ void loop() {
   // to the party screen to choose who it replaces, or to let it go.
   if (pet.endedKind != CER_NONE && !partyPick) {
     // party first, then the box; only a full box makes it your choice
-    if (party.add(pet.endedMon) || party.boxAdd(pet.endedMon)) {
+    if (party.hasEndedMon(pet.endedMon) || party.add(pet.endedMon) || party.boxAdd(pet.endedMon)) {
       snprintf(partyBannerName, sizeof(partyBannerName), "%s",
                pet.endedMon.nick[0] ? pet.endedMon.nick : localName(DEX_TBL[pet.endedMon.dex].name));
       partyBannerUntil = now + 3500;
-      pet.endedKind = CER_NONE;
+      pet.acknowledgeEnding();
       sfxPlay(SFX_MEDAL);
     } else {
       partyPick = true;
@@ -1088,9 +1115,12 @@ void handleSerial() {
     // Prints the whole save as a block of IMPORT commands. Pasting that block
     // back is the restore -- there is no separate format to get wrong, and no
     // single 2000-character line for a terminal to mangle.
-    static uint8_t buf[SAVE_MAX_BYTES];
-    size_t n = saveExport(buf, sizeof(buf));
-    if (!n) { Serial.println("EXPORT FAIL"); return; }
+    // The serial exporter is rare: do not reserve a second 32-KiB DRAM buffer
+    // for the lifetime of the game. ESP allocates this temporary block in PSRAM.
+    uint8_t *buf=(uint8_t*)ps_malloc(SAVE_MAX_BYTES);
+    if(!buf){Serial.println("EXPORT MEMORY");return;}
+    size_t n = saveExport(buf, SAVE_MAX_BYTES);
+    if (!n) { free(buf);Serial.println("EXPORT FAIL"); return; }
     Serial.printf("# TamaPoke save, %u bytes. Paste this whole block back.\n",
                   (unsigned)n);
     for (size_t i = 0; i < n; i += 48) {
@@ -1099,6 +1129,7 @@ void handleSerial() {
       Serial.println();
     }
     Serial.println("IMPORT");        // the empty one commits
+    free(buf);
   } else if (line.startsWith("IMPORT")) {
     // IMPORT <hex>   append a chunk
     // IMPORT         commit what has been appended
@@ -1272,6 +1303,8 @@ void handleTouch() {
 void openClock();  // prototipo
 
 void onSwipeV(int dir) {
+  if (boxOpen && boxPagePicker) { boxPagePicker = false; return; }
+  if(formsOpen) {formClose();return;}
   if (pet.awaitingStarter()) return;  // bloqueado durante la eleccion de inicial
   if (uiCurrentScreen() == SCR_DEXPICK || uiCurrentScreen() == SCR_GYMPICK)
     return;                 // on the chooser, vertical does nothing: pick a row
@@ -1295,7 +1328,7 @@ void onSwipeV(int dir) {
   if (boxOpen) { boxOpen = false; boxSel = 0; return; }   // vertical backs out
   if (partyOpen) {
     if (partyDetail) { partyDetail = 0; return; }
-    if (partyPick) { partyPick = false; pet.endedKind = CER_NONE; }
+    if (partyPick) { if(!pet.acknowledgeEnding())return; partyPick = false; }
     partyOpen = false;
     return;
   }
@@ -1338,7 +1371,7 @@ void onSwipeV(int dir) {
 // `fromBox` picks which action the LEFT button offers; the right one is always
 // RELEASE, which is irreversible and therefore always asks first.
 void renderMonSheet(const PartyMon &m, bool fromBox) {
-  const DexEntry &d = DEX_TBL[m.dex];
+  const DexEntry d = formDex(m.dex,m.form);
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
   char head[108];
@@ -1348,6 +1381,8 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
   gfx->setTextSize(2);
   gfx->setCursor(CX - textWidthFactor(head, 6), 40);
   gfx->print(head);
+  gfx->fillRoundRect(342,57,58,20,5,UI_TRACK);
+  gfx->setTextColor(UI_INK);gfx->setTextSize(1);gfx->setCursor(350,62);gfx->print(gLang==LANG_KO?"폼":"Form");
   char ty[72];
   if (d.type2 == T_NONE) snprintf(ty, sizeof(ty), "%s", typeName(d.type1));
   else snprintf(ty, sizeof(ty), "%s/%s", typeName(d.type1), typeName(d.type2));
@@ -1357,7 +1392,7 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
   gfx->print(ty);
 
   for (int i = 0; i < MOVE_SLOTS; i++)
-    drawMoveRow(78 + i * 52, m.moves[i], false, m.dex);
+    drawMoveRow(78 + i * 52, m.moves[i], false, m.dex,m.form);
 
   char st[120];
   snprintf(st, sizeof(st), gLang == LANG_KO ? "공격 %u 방어 %u 속도 %u 체력 %u" : "ATK %u  DEF %u  SPD %u  HP %u",
@@ -1367,21 +1402,25 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
   gfx->setCursor(CX - textWidthFactor(st, 3), 300);
   gfx->print(st);
 
-  // Bringing one back is only offered while an egg is waiting. Otherwise it
-  // would silently destroy whatever creature is currently alive, and a rule the
-  // player cannot see is worse than a button they cannot press. A box creature
-  // goes to the party instead, which is always allowed if there is room.
-  bool leftOk = fromBox ? (party.firstFree() >= 0)
-                        : (pet.isEgg() && !pet.awaitingStarter());
-  const char *leftLbl = fromBox ? T(S_BOX_TAKE) : T(S_REVIVE);
-  gfx->fillRoundRect(PDET_L_X, PDET_BTN_Y, PDET_L_W, PDET_BTN_H, 10,
+  // A live exchange reuses the selected slot, even with completely full storage.
+  bool leftOk = pet.canSwapActive();
+  const char *leftLbl = T(S_REVIVE);
+  int liveW=fromBox?96:PDET_L_W;
+  gfx->fillRoundRect(PDET_L_X, PDET_BTN_Y, liveW, PDET_BTN_H, 10,
                      leftOk ? UI_BAR_OK : UI_TRACK);
-  gfx->drawRoundRect(PDET_L_X, PDET_BTN_Y, PDET_L_W, PDET_BTN_H, 10, UI_INK);
+  gfx->drawRoundRect(PDET_L_X, PDET_BTN_Y, liveW, PDET_BTN_H, 10, UI_INK);
   gfx->setTextColor(leftOk ? UI_BG_DAY : 0x8410);
-  gfx->setTextSize(2);
-  gfx->setCursor(PDET_L_X + PDET_L_W / 2 - textWidthFactor(leftLbl, 6),
-                 PDET_BTN_Y + PDET_BTN_H / 2 - 8);
+  gfx->setTextSize(fromBox?1:2);
+  gfx->setCursor(PDET_L_X + liveW / 2 - textWidthFactor(leftLbl, fromBox?3:6),
+                 PDET_BTN_Y + PDET_BTN_H / 2 - (fromBox?4:8));
   gfx->print(leftLbl);
+  if(fromBox) {
+    gfx->fillRoundRect(176,PDET_BTN_Y,74,PDET_BTN_H,10,UI_BAR_OK);
+    gfx->drawRoundRect(176,PDET_BTN_Y,74,PDET_BTN_H,10,UI_INK);
+    gfx->setTextColor(UI_BG_DAY); gfx->setTextSize(1);
+    gfx->setCursor(213-textWidthFactor(T(S_BOX_TAKE),3),PDET_BTN_Y+20);
+    gfx->print(T(S_BOX_TAKE));
+  }
 
   gfx->fillRoundRect(PDET_R_X, PDET_BTN_Y, PDET_R_W, PDET_BTN_H, 10, UI_BAR_BAD);
   gfx->drawRoundRect(PDET_R_X, PDET_BTN_Y, PDET_R_W, PDET_BTN_H, 10, UI_INK);
@@ -1391,21 +1430,17 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
                  PDET_BTN_Y + PDET_BTN_H / 2 - 4);
   gfx->print(T(S_RELEASE_BTN));
 
-  // WHY the button is dead, ABOVE it and in a colour that can be read.
-  //
-  // This used to sit BELOW the buttons in UI_TRACK -- pale beige on a pale
-  // background, at the smallest text size, eight pixels above "tap: back". It
-  // was reported as "every time I hit bring back it just buzzes": the refusal
-  // was correct (reviving would destroy the creature you are raising) but the
-  // reason was invisible, so the button read as broken rather than disabled.
-  // Above the button there is clear space between it and the stat line, and
-  // that is also where the eye is already travelling.
   if (!leftOk) {
-    const char *why = fromBox ? T(S_PARTY_FULL) : T(S_REVIVE_EGG);
+    const char *why = T(S_REVIVE_EGG);
     gfx->setTextColor(UI_BAR_WARN);
     gfx->setTextSize(1);
     gfx->setCursor(CX - textWidthFactor(why, 3), PDET_BTN_Y - 14);
     gfx->print(why);
+  }
+  else if(!pet.isEgg()) {
+    gfx->setTextColor(UI_INK); gfx->setTextSize(1);
+    gfx->setCursor(CX-textWidthFactor(T(S_ACTIVE_SWAP_HINT),3),PDET_BTN_Y-14);
+    gfx->print(T(S_ACTIVE_SWAP_HINT));
   }
   gfx->setTextColor(0x6B4D);
   gfx->setTextSize(2);
@@ -1546,9 +1581,7 @@ void partyTap(int16_t x, int16_t y) {
     // or a miss on YES would fall through to the move rows underneath it.
     if (releaseConfirm) { monSheetConfirmTap(x, y, false); return; }
     if (monSheetBtn(x, y, true)) {           // BRING BACK
-      if (!pet.isEgg() || pet.awaitingStarter()) { sfxPlay(SFX_DENY); return; }
-      pet.reviveFrom(party.slots[partyDetail - 1]);
-      party.releaseAt(partyDetail - 1);      // it is alive now, not banked
+      if (!party.swapActive(pet,false,partyDetail-1)) { sfxPlay(SFX_DENY); return; }
       partyDetail = 0;
       boxSwapFrom = 0;
       partyOpen = false;
@@ -1564,6 +1597,7 @@ void partyTap(int16_t x, int16_t y) {
       int ry = 78 + i * 52;
       if (x < 70 || x > 396 || y < ry || y > ry + 50) continue;
       movePickParty = partyDetail;
+      movePickBox = 0;
       movePickSlot = i;
       movePickPage = 0;
       movePickOpen = true;
@@ -1586,8 +1620,8 @@ void partyTap(int16_t x, int16_t y) {
   // exit button, and the top band, both always work
   if ((y >= 372 && y <= 416 && x >= 133 && x <= 333) || y < 34) {
     if (partyPick) {                 // declined the swap: the pet is let go
+      if(!pet.acknowledgeEnding())return;
       partyPick = false;
-      pet.endedKind = CER_NONE;
     }
     partyOpen = false;
     sfxPlay(SFX_TAP);
@@ -1617,10 +1651,11 @@ void partyTap(int16_t x, int16_t y) {
       return;
     }
     party.replaceAt(i, pet.endedMon);
+    if(!party.writable()) {sfxPlay(SFX_DENY);return;}
     snprintf(partyBannerName, sizeof(partyBannerName), "%s",
              pet.endedMon.nick[0] ? pet.endedMon.nick : localName(DEX_TBL[pet.endedMon.dex].name));
     partyBannerUntil = millis() + 3500;
-    pet.endedKind = CER_NONE;
+    if(!pet.acknowledgeEnding())return;
     partyPick = false;
     partyOpen = false;
     sfxPlay(SFX_MEDAL);
@@ -1630,6 +1665,8 @@ void partyTap(int16_t x, int16_t y) {
 
 // deslizar: dir +1 = hacia la derecha
 void onSwipe(int dir) {
+  if (boxOpen && boxPagePicker) { boxPickerStep(dir > 0 ? -1 : 1); return; }
+  if(formsOpen) {formPageMove(dir>0?-1:1);return;}
   // The region chooser pages, and it is checked before everything else because
   // it sits on TOP of the starter/gallery/gym screens -- each of which has its
   // own horizontal handler that would otherwise swallow the gesture. Paging a
@@ -1699,7 +1736,7 @@ void onSwipe(int dir) {
   }
   if (partyOpen) {
     if (partyDetail) { partyDetail = 0; return; }
-    if (partyPick) { partyPick = false; pet.endedKind = CER_NONE; }
+    if (partyPick) { if(!pet.acknowledgeEnding())return; partyPick = false; }
     partyOpen = false;
     return;
   }
@@ -1742,6 +1779,7 @@ void onSwipe(int dir) {
 }
 
 void onTap(int16_t x, int16_t y) {
+  if(formsOpen) {formsTap(x,y);return;}
   if (pet.awaitingStarter()) {  // primera partida: region y luego inicial
     if (!starterRegionDone) {
       int r = regionPickTap(x, y, RPICK_FOR_START);
@@ -1782,6 +1820,9 @@ void onTap(int16_t x, int16_t y) {
   }
 #endif
   if (playerOpen) {
+    if (playerPage == 7 && y >= 100 && y <= 150) {
+      gymShield = !gymShield; sfxPlay(SFX_TAP); return;
+    }
     if (playerPage == 0 && y >= 32 && y < 68) {   // the name: rename yourself
       openKeyboardFor(KB_TRAINER);
       sfxPlay(SFX_TAP);
@@ -1826,6 +1867,9 @@ void onTap(int16_t x, int16_t y) {
     return;
   }
   if (gymOpen) {
+    if (gymRegion == 7 && y >= 16 && y < 60 && x >= 105 && x <= 361) {
+      gymShield = !gymShield; sfxPlay(SFX_TAP); return;
+    }
     if (y >= GYMDIF_Y && y <= GYMDIF_Y + GYMDIF_H) {   // the difficulty pill
       gymHard = !gymHard;
       sfxPlay(SFX_TAP);
@@ -1934,10 +1978,13 @@ void onTap(int16_t x, int16_t y) {
       // Swapping for a move already in another slot would silently duplicate
       // it, so trade the two slots instead of overwriting.
       MoveId *tgt = pickTargetMoves();
+      MoveId before[MOVE_SLOTS];memcpy(before,tgt,sizeof(before));
       for (int s = 0; s < MOVE_SLOTS; s++)
         if (tgt[s] == all[idx] && s != movePickSlot) tgt[s] = tgt[movePickSlot];
       tgt[movePickSlot] = all[idx];
-      if (movePickParty) party.save(); else pet.flushSave();
+      if (movePickParty || movePickBox) {
+        if(!party.save()){memcpy(tgt,before,sizeof(before));sfxPlay(SFX_DENY);return;}
+      } else pet.saveNow();
       movePickOpen = false;
       return;
     }
@@ -1945,6 +1992,10 @@ void onTap(int16_t x, int16_t y) {
     return;
   }
   if (partyOpen) {
+    if(!releaseConfirm && x>=342 && x<=400 && y>=57 && y<=77) {
+      if(boxOpen && boxDetail) {formOpenTarget(7+boxDetail-1);return;}
+      if(!boxOpen && partyDetail) {formOpenTarget(partyDetail);return;}
+    }
     partyTap(x, y);
     return;
   }
@@ -1976,6 +2027,7 @@ void onTap(int16_t x, int16_t y) {
   }
   if (pet.ceremony) return;  // durante la despedida no hay botones
   if (cardOpen) {
+    if(cardPage==1 && x>=116 && x<=350 && y>=320 && y<=362) {formOpenTarget(0);return;}
     if (cardPage == 0 && y < 84) openKeyboard();  // tocar el nombre = renombrar
     else if (cardPage == 2) {
       for (int i = 0; i < MOVE_SLOTS; i++) {   // tap a slot to change it
@@ -1983,6 +2035,7 @@ void onTap(int16_t x, int16_t y) {
         if (x < 70 || x > 396 || y < ry || y > ry + 50) continue;
         sfxPlay(SFX_TAP);
         movePickParty = 0;      // the live pet
+        movePickBox = 0;
         movePickSlot = i;
         movePickPage = 0;
         movePickOpen = true;
@@ -2258,6 +2311,7 @@ RTC_NOINIT_ATTR uint32_t gCrumbHeap;
 
 // Which screen is on the panel RIGHT NOW, in the same order render() tests.
 uint8_t uiCurrentScreen() {
+  if(formsOpen) return SCR_CARD;
   if (pet.awaitingStarter()) return starterRegionDone ? SCR_STARTER : SCR_REGION;
   if (galleryOpen) return galleryPick ? SCR_DEXPICK : SCR_GALLERY;
   if (movePickOpen) return SCR_MOVEPICK;
@@ -2321,6 +2375,7 @@ void bootReport() {
 }
 
 void render() {
+  if(formsOpen) {renderForms();return;}
   crumbDrop();   // so a crash can name the screen it happened on
   if (pet.awaitingStarter()) {  // primera partida: region y luego inicial
     if (!starterRegionDone) renderRegionPick(RPICK_FOR_START);
@@ -2503,7 +2558,12 @@ void render() {
       gfx->setTextSize(2);
       gfx->setCursor(CX - textWidthFactor(q, 6), 196);
       gfx->print(q);
-      gfx->fillRoundRect(118, 252, 100, 52, 12, UI_BAR_OK);
+      snprintf(q, sizeof(q), gLang == LANG_KO ? "오늘 남은 작별 %u/3" : "Farewells left today: %u/3", pet.farewellsRemaining());
+      gfx->setTextSize(1);
+      gfx->setCursor(CX - textWidthFactor(q, 3), 226);
+      gfx->print(q);
+      gfx->setTextSize(2);
+      gfx->fillRoundRect(118, 252, 100, 52, 12, pet.farewellsRemaining() ? UI_BAR_OK : UI_TRACK);
       gfx->setTextColor(UI_WHITE);
       gfx->setCursor(118 + (100 - textWidthFactor(T(S_YES), 12)) / 2, 270);
       gfx->print(T(S_YES));
@@ -3214,7 +3274,7 @@ void renderCardStats() {
 
   // typing, in the accent colour of the species (English in every language,
   // same as the species names themselves)
-  const DexEntry &de = DEX_TBL[pet.speciesId];
+  const DexEntry de = formDex(pet.speciesId,pet.form);
   char ty[72];
   if (de.type2 == T_NONE) snprintf(ty, sizeof(ty), "%s", typeName(de.type1));
   else snprintf(ty, sizeof(ty), "%s/%s", typeName(de.type1), typeName(de.type2));
@@ -3230,6 +3290,10 @@ void renderCardStats() {
   drawCardStat(184, T(S_STAT_SPE), pet.speStat(), 360, UI_BAR_WARN, pet.ivSpe);
   drawCardStat(224, T(S_STAT_VIT), pet.vitStat(), 360, UI_BAR_OK, pet.ivHp);
   drawCardStat(264, T(S_STAT_WGT), pet.weight, 100, 0xB3C8, IV_NONE);
+  gfx->fillRoundRect(116,320,234,42,10,UI_TRACK);
+  gfx->setTextColor(UI_INK);gfx->setTextSize(2);
+  const char *fl=gLang==LANG_KO?"폼체인지":"Forms";
+  gfx->setCursor(CX-uiTextWidth(fl,2)/2,332);gfx->print(fl);
 
 }
 
@@ -3249,7 +3313,7 @@ int drawTypeChip(int x, int y, uint8_t type) {
   return w;
 }
 
-void drawMoveRow(int y, MoveId mv, bool highlight, int16_t dex) {
+void drawMoveRow(int y, MoveId mv, bool highlight, int16_t dex, FormId form) {
   gfx->fillRoundRect(70, y, 326, 50, 12, highlight ? UI_BAR_WARN : UI_BG_DAY);
   gfx->drawRoundRect(70, y, 326, 50, 12, UI_INK);
   if (!mv) {
@@ -3272,8 +3336,8 @@ void drawMoveRow(int y, MoveId mv, bool highlight, int16_t dex) {
   // The chip carries the TYPE; STAB moved onto the power figure, where it
   // belongs -- STAB is a damage bonus, so saying it next to the damage reads
   // straight, and it leaves the type free to be its own colour.
-  bool stab = hasStab(dex, m.type) && m.cat != MC_STATUS;
-  int cw = drawTypeChip(82, y + 29, m.type);
+  bool stab = hasStab(dex, formMoveType(dex,form,mv), form) && m.cat != MC_STATUS;
+  int cw = drawTypeChip(82, y + 29, formMoveType(dex,form,mv));
   if (stab) {
     gfx->setTextColor(DEX_TBL[dex].accent);
     gfx->setTextSize(1);
@@ -3295,7 +3359,7 @@ void renderCardMoves() {
   gfx->setTextSize(3);
   gfx->setCursor(CX - textWidthFactor(T(S_MOVES), 9), 44);
   gfx->print(T(S_MOVES));
-  for (int i = 0; i < MOVE_SLOTS; i++) drawMoveRow(MOVE_ROW_Y(i), pet.moves[i], false, pet.speciesId);
+  for (int i = 0; i < MOVE_SLOTS; i++) drawMoveRow(MOVE_ROW_Y(i), pet.moves[i], false, pet.speciesId,pet.form);
   gfx->setTextColor(0x6B4D);
   gfx->setTextSize(1);
   gfx->setCursor(CX - textWidthFactor(T(S_MOVE_TAP), 3), 340);
@@ -3305,44 +3369,26 @@ void renderCardMoves() {
 // Every move the species can learn by this level, so a slot can be swapped for
 // anything legal -- not just the handful a level-up would have offered.
 uint8_t learnableFor(int16_t dex, uint8_t lvl, MoveId *out, uint8_t max) {
-  if (dex < 1 || dex > DEX_COUNT) return 0;
-  uint8_t n = learnCount(dex), w = 0;
-  // Evolution moves remain legal after the one-time prompt was declined.
-  // Put them first so a compact/paged picker cannot hide the recovery path.
-  for (uint8_t i = 0; i < evolutionMoveCount(dex) && w < max; i++) {
-    MoveId mv = evolutionMove(dex, i);
-    if (mv && mv < MOVE_COUNT) out[w++] = mv;
-  }
-  for (uint8_t i = 0; i < n && w < max; i++) {
-    // moveUnlockLevel(), NOT learnLevel(): a TM is stored as level 0 and would
-    // otherwise clear this check at level 1. That is how a level 22 Charmeleon
-    // came to be offered FIRE BLAST -- the same class of bug as the level 1
-    // Squirtle with SURF, in the one path that fix did not reach.
-    if (moveUnlockLevel(dex, i) > lvl) continue;
-    MoveId mv = learnMove(dex, i);
-    if (!mv || mv >= MOVE_COUNT) continue;
-    bool dup = false;
-    for (uint8_t j = 0; j < w; j++)
-      if (out[j] == mv) { dup = true; break; }
-    if (!dup) out[w++] = mv;
-  }
-  return w;
+  return formLearnableList(dex,0,lvl,out,max);
 }
 
 // The picker targets either the live pet or a banked member. A banked one keeps
 // its frozen level, so it can only relearn what it could have known back then.
 uint8_t learnableList(MoveId *out, uint8_t max) {
+  if(movePickBox){const auto &m=party.box[movePickBox-1];return formLearnableList(m.dex,m.form,(uint8_t)m.level,out,max);}
   if (movePickParty) {
     const PartyMon &m = party.slots[movePickParty - 1];
-    return learnableFor(m.dex, (uint8_t)m.level, out, max);
+    return formLearnableList(m.dex,m.form,(uint8_t)m.level,out,max);
   }
-  return pet.isEgg() ? 0 : learnableFor(pet.speciesId, pet.level(), out, max);
+  return pet.isEgg() ? 0 : formLearnableList(pet.speciesId,pet.form,pet.level(),out,max);
 }
 
 MoveId *pickTargetMoves() {
+  if(movePickBox)return party.box[movePickBox-1].moves;
   return movePickParty ? party.slots[movePickParty - 1].moves : pet.moves;
 }
 int16_t pickTargetDex() {
+  if(movePickBox)return party.box[movePickBox-1].dex;
   return movePickParty ? party.slots[movePickParty - 1].dex : pet.speciesId;
 }
 
@@ -3363,7 +3409,7 @@ void renderMovePick() {
     if (idx >= n) break;
     // the move already in this slot is highlighted, so replacing like for like
     // is obvious rather than a guess
-    drawMoveRow(MOVE_PICK_Y(i), all[idx], all[idx] == pickTargetMoves()[movePickSlot], pickTargetDex());
+    drawMoveRow(MOVE_PICK_Y(i), all[idx], all[idx] == pickTargetMoves()[movePickSlot], pickTargetDex(),movePickBox?party.box[movePickBox-1].form:movePickParty?party.slots[movePickParty-1].form:pet.form);
   }
   if (pages > 1) {
     char pg[16];
@@ -3418,11 +3464,12 @@ static void drawBattleBack() {
 // a creature steps in, never per frame.
 static void btlSyncSprite(uint8_t who, const Combatant &c) {
   int16_t key = c.dex * (c.shiny ? -1 : 1);
-  if (btlPmdDex[who] == key && btlPmd[who].loaded) return;
+  if (btlPmdDex[who] == key && btlFormFor[who] == c.form && btlPmd[who].loaded) return;
+  btlFormFor[who]=c.form;
   btlPmd[who].unload();
   btlPmdDex[who] = 0;
   if (c.dex < 1 || c.dex > DEX_COUNT) return;
-  if (btlPmd[who].load(c.dex, c.shiny)) btlPmdDex[who] = key;   // NOT (uint8_t): Hoenn runs past 255
+  if (btlPmd[who].loadForm(c.dex,c.form,c.shiny)) btlPmdDex[who] = key;   // NOT (uint8_t): Hoenn runs past 255
 }
 
 static void btlFreeSprites() {
@@ -3474,9 +3521,10 @@ static void btlNarrate(const Combatant &actor, const Combatant &target, const Tu
 
 // Builds one opponent through Pet, so it gets the same stat formula and the
 // same learnset-driven moveset the player's creatures do.
-static void foeFromSpecies(Combatant &c, int16_t dex, uint8_t lvl, uint8_t iv) {
+static void foeFromSpecies(Combatant &c, int16_t dex, uint8_t lvl, uint8_t iv, uint16_t form = 0) {
   Pet foe;
   foe.dbgHatchAs(dex, false);
+  foe.form = form;
   foe.ivAtk = foe.ivDef = foe.ivSpe = foe.ivHp = iv;
   foe.ageMinutes = (uint32_t)(lvl ? lvl - 1 : 0) * MINUTES_PER_LEVEL;
   foe.relearnFromLevel();
@@ -3515,7 +3563,7 @@ static void buildSquad(uint8_t maxLvl, uint8_t maxCount, uint16_t mask) {
 // How many you may bring: the leader's own count in hard mode, six otherwise.
 uint8_t squadCap(uint8_t idx, bool hard) {
   if (idx >= TRAINER_COUNT) return TRAINER_TEAM_MAX;
-  return hard ? TRAINERS[idx].count : TRAINER_TEAM_MAX;
+  return hard ? TRAINER_AT(idx).count : TRAINER_TEAM_MAX;
 }
 
 // A fight against another device. The squads are already exchanged; the host
@@ -3568,7 +3616,8 @@ void startTrainerBattle(uint8_t idx, bool hard) {
   // leaving its boot-time value (Kanto) made every other region turn into
   // Brock's ladder as soon as the battle was under way.
   btlRegion = (uint8_t)(gymRegion % GYM_REGIONS);
-  const Trainer &tr = BTL_TRAINERS[idx];
+  btlShield = gymShield;
+  const Trainer &tr = BTL_TRAINER_AT(idx);
   uint8_t top = 0;
   for (int k = 0; k < tr.count; k++)
     if (tr.team[k].level > top) top = tr.team[k].level;
@@ -3583,8 +3632,9 @@ void startTrainerBattle(uint8_t idx, bool hard) {
   btlTrainer = (int8_t)idx;
   btlHard = hard;
   btlFoeAt = 0;
-  const Trainer &t = BTL_TRAINERS[idx];
-  foeFromSpecies(btlFoe, t.team[0].dex, t.team[0].level, hard ? HARD_IV : EASY_IV);
+  const Trainer &t = BTL_TRAINER_AT(idx);
+  foeFromSpecies(btlFoe, t.team[0].dex, t.team[0].level, hard ? HARD_IV : EASY_IV, t.team[0].form);
+  btlFoe.npcType1=t.team[0].type1; btlFoe.npcType2=t.team[0].type2;
   btlMsgCount = 0;
   btlOver = false;
   btlWon = false;
@@ -3911,7 +3961,7 @@ static void btlResolve(MoveId yourMove) {
     btlSwapWho = 1;
     return;
   }
-  if (btlFoe.fainted() && btlTrainer >= 0 && btlFoeAt + 1 < BTL_TRAINERS[btlTrainer].count) {
+  if (btlFoe.fainted() && btlTrainer >= 0 && btlFoeAt + 1 < BTL_TRAINER_AT(btlTrainer).count) {
     btlFaintUntil[1] = millis() + BTL_FAINT_MS;
     btlSwapWho = 1;
     return;
@@ -3926,8 +3976,8 @@ static void btlResolve(MoveId yourMove) {
     btlWon = btlFoe.fainted();
     btlNewBadge = false;
     btlTrainGain = 0;
-    if (btlWon && btlTrainer >= 0 && !pet.hasBadge(btlRegion, btlTrainer, btlHard)) {
-      pet.winBadge(btlRegion, btlTrainer, btlHard);
+    if (btlWon && btlTrainer >= 0 && !pet.hasBadge(btlRegion, trainerBadgeIndex(btlRegion,btlTrainer,btlShield), btlHard)) {
+      pet.winBadge(btlRegion, trainerBadgeIndex(btlRegion,btlTrainer,btlShield), btlHard);
       btlNewBadge = true;
     }
     // A badge and nothing else made the ladder a one-way checklist. A win now
@@ -4038,6 +4088,9 @@ static void btlSide(int tx, int ty, int sx, int sy, const Combatant &c, uint8_t 
   // while flinching, idle otherwise. `has()` guards every one, because not
   // every species ships every action -- falling through to idle, and to the
   // flat thumbnail if the sprite is missing entirely (no SD).
+  if (who==1 && btlRegion==8 && btlTrainer==5 && c.dex==849) {
+    drawGymArt("NPC_849_LOW",sx-8+ox,sy+14+oy); return;
+  }
   if (btlPmd[who].loaded) {
     uint8_t act = PMD_IDLE;
     bool loop = true;
@@ -4050,6 +4103,12 @@ static void btlSide(int tx, int ty, int sx, int sy, const Combatant &c, uint8_t 
     drawPmdActM(btlPmd[who], act, sx + 24 + ox, sy + 78 + oy, t, loop, false, 4);
     return;
   }
+  // Official stills are NPC-only: do not unlock these species in eggs/explore.
+  if (who==1 && btlTrainer>=0 && gymNpcHasArt(c.dex)) {
+    char key[16]; snprintf(key,sizeof(key),"NPC_%d",c.dex);
+    drawGymArt(key,sx-8+ox,sy+14+oy); return;
+  }
+  if(c.form) {drawFormMini(c.dex,c.form,c.shiny,sx+24+ox,sy+48+oy);return;}
   const uint8_t *th = thumbs.get(c.dex);
   if (!th) return;
   if (now < btlHitUntil[who]) flash = ((btlHitUntil[who] - now) / 60) % 2 == 0;
@@ -4072,7 +4131,7 @@ static void btlEaseBars() {
 // The moment the ladder builds toward. It used to be one more line in the same
 // message box as "It's super effective!", with the badge awarded silently.
 void renderWin() {
-  const Trainer &t = BTL_TRAINERS[btlTrainer];
+  const Trainer &t = BTL_TRAINER_AT(btlTrainer);
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
 
@@ -4124,7 +4183,7 @@ void renderWin() {
       gfx->print(T(S_BTL_NEWBADGE));
     }
   }
-  snprintf(l, sizeof(l), T(S_BADGES_FMT), pet.badgeCountIn(btlRegion, btlHard));
+  snprintf(l, sizeof(l), T(S_BADGES_FMT), pet.gymBadgeCountIn(btlRegion, btlHard, btlShield));
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
   gfx->setCursor(CX - textWidthFactor(l, 6), 316);
@@ -4262,8 +4321,8 @@ void renderBattle() {
       gfx->print(localName(MOVE_TBL[mv].name));
       // Same chip as the move list: in a fight the type IS the decision, and
       // grey 6px text was the least visible thing on the busiest screen.
-      int cw = drawTypeChip(x + 10, y + 26, MOVE_TBL[mv].type);
-      if (hasStab(btlYou.dex, MOVE_TBL[mv].type) &&
+      int cw = drawTypeChip(x + 10, y + 26, formMoveType(btlYou.dex,btlYou.form,mv));
+      if (hasStab(btlYou.dex, formMoveType(btlYou.dex,btlYou.form,mv),btlYou.form) &&
           MOVE_TBL[mv].cat != MC_STATUS) {
         gfx->setTextSize(1);
         gfx->setTextColor(DEX_TBL[btlYou.dex].accent);
@@ -4292,10 +4351,11 @@ static void btlDoSwap() {
     btlEnterUntil[1] = now + BTL_ENTER_MS;
     btlSay(T(S_BTL_SENDS), lan.peerName, combatantName(btlFoe));
   } else if (btlSwapWho == 1) {
-    const Trainer &t = BTL_TRAINERS[btlTrainer];
+    const Trainer &t = BTL_TRAINER_AT(btlTrainer);
     btlFoeAt++;
     foeFromSpecies(btlFoe, t.team[btlFoeAt].dex, t.team[btlFoeAt].level,
-                   btlHard ? HARD_IV : EASY_IV);
+                   btlHard ? HARD_IV : EASY_IV, t.team[btlFoeAt].form);
+    btlFoe.npcType1=t.team[btlFoeAt].type1; btlFoe.npcType2=t.team[btlFoeAt].type2;
     btlHpShown[1] = btlFoe.maxHp;
     btlSyncSprite(1, btlFoe);
     btlLungeUntil[1] = btlHitUntil[1] = btlFaintUntil[1] = 0;
@@ -4489,7 +4549,7 @@ static void renderPlayerBadges() {
   // Pages 1 and 2 are the other regions' ladders: name them, and drop the
   // avatar so the badges have the room. Only page 0 is "you".
   if (playerBadgeRegion != 0) {
-    const char *rn = localName(TRAINER_SETS[playerBadgeRegion].region);
+    const char *rn = playerBadgeRegion == 7 ? localName(gymShield ? "GALAR SHIELD" : "GALAR SWORD") : localName(TRAINER_SETS[playerBadgeRegion].region);
     gfx->setTextColor(UI_INK);
     gfx->setTextSize(2);
     gfx->setCursor(CX - textWidthFactor(rn, 6), 120);
@@ -4514,8 +4574,8 @@ static void renderPlayerBadges() {
   // of what is missing is still visible.
   for (int i = 0; i < TRAINER_GYMS; i++) {
     int bx = 140 + (i % 4) * 62, by = 188 + (i / 4) * 62;
-    bool got = pet.hasBadge(playerBadgeRegion, i, false);
-    bool hard = pet.hasBadge(playerBadgeRegion, i, true);
+    bool got = pet.hasBadge(playerBadgeRegion, trainerBadgeIndex(playerBadgeRegion,i,gymShield), false);
+    bool hard = pet.hasBadge(playerBadgeRegion, trainerBadgeIndex(playerBadgeRegion,i,gymShield), true);
     if (hard) {
       // Beaten on hard: a golden halo. Concentric rings, not a filled disc --
       // a disc sat behind the art and read as a gold coin rather than a glow.
@@ -4531,7 +4591,7 @@ static void renderPlayerBadges() {
     }
     const BadgeArt *a = badgeArtFor(playerBadgeRegion, i);
     if (!a) {                 // no art for this region: a filled disc, won is won
-      gfx->fillCircle(bx, by, 14, typeColor(TRAINER_SETS[playerBadgeRegion % GYM_REGIONS].list[i].type));
+      gfx->fillCircle(bx, by, 14, typeColor(trainerAt(playerBadgeRegion,i,gymShield).type));
       gfx->drawCircle(bx, by, 14, UI_INK);
       continue;
     }
@@ -4551,7 +4611,7 @@ static void renderPlayerBadges() {
   snprintf(l, sizeof(l), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount());
   gfx->setCursor(CX - textWidthFactor(l, 6), 312);
   gfx->print(l);
-  snprintf(l, sizeof(l), T(S_PARTY_FMT), party.count());
+  snprintf(l, sizeof(l), gLang == LANG_KO ? "알 보너스 %u/10 · 작별 %u/3" : "Egg %u/10 days / bye %u/3", pet.eggBonusDays(), pet.farewellsRemaining());
   gfx->setCursor(CX - textWidthFactor(l, 6), 338);
   gfx->print(l);
 }
@@ -4779,7 +4839,9 @@ static void drawPickCell(uint8_t n, int x, int y, uint8_t capLvl) {
   gfx->fillRoundRect(x, y, PICK_CELL_W, PICK_CELL_H, 10, on ? UI_BG_DAY : UI_TRACK);
   gfx->drawRoundRect(x, y, PICK_CELL_W, PICK_CELL_H, 10, on ? UI_INK : 0x8410);
   const uint8_t *th = thumbs.get(dex);
-  if (th) drawThumb(th, x - 12, y - 6, 2, !on);
+  FormId selectedForm=n==0?pet.form:party.slots[n-1].form;
+  if(selectedForm) drawFormMini(dex,selectedForm,shiny,x+29,y+32);
+  else if (th) drawThumb(th, x - 12, y - 6, 2, !on);
   gfx->setTextColor(on ? UI_INK : 0x8410);
   gfx->setTextSize(1);
   gfx->setCursor(x + 54, y + 14);
@@ -4789,7 +4851,7 @@ static void drawPickCell(uint8_t n, int x, int y, uint8_t capLvl) {
   gfx->setCursor(x + 54, y + 30);
   gfx->print(l);
   // its typing is the whole reason you are on this screen
-  const DexEntry &d = DEX_TBL[dex];
+  const DexEntry d = formDex(dex,n==0?pet.form:party.slots[n-1].form);
   gfx->setTextColor(on ? d.accent : 0x8410);
   gfx->setCursor(x + 54, y + 48);
   gfx->print(typeName(d.type1));
@@ -4815,7 +4877,7 @@ void renderPick() {
     snprintf(head, sizeof(head), "%s: %s", T(S_LAN),
              lanWantHost ? T(S_LAN_HOST) : T(S_LAN_JOIN));
   } else {
-    const Trainer &t = TRAINERS[pickTrainer];
+    const Trainer &t = TRAINER_AT(pickTrainer);
     for (int k = 0; k < t.count; k++)
       if (t.team[k].level > top) top = t.team[k].level;
     snprintf(head, sizeof(head), "%s  Lv.%u x%u", localName(t.name), top, t.count);
@@ -5202,7 +5264,7 @@ void renderGyms() {
   // three of them and "GYMS" alone would not say which you are looking at.
   char title[84];
   snprintf(title, sizeof(title), "%s %s", localName(TRAINER_SETS[gymRegion % GYM_REGIONS].region),
-           T(S_GYMS));
+           gymRegion == 7 ? localName(gymShield ? "SHIELD" : "SWORD") : T(S_GYMS));
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
   gfx->setCursor(CX - textWidthFactor(title, 6), 42);
@@ -5225,19 +5287,21 @@ void renderGyms() {
   for (int i = 0; i < GYM_ROWS; i++) {
     uint8_t idx = gymPage * GYM_ROWS + i;
     if (idx >= TRAINER_COUNT) break;
-    const Trainer &t = TRAINERS[idx];
+    const Trainer &t = TRAINER_AT(idx);
     int y = GYM_ROW_Y(i);
-    bool done = pet.hasBadge(gymRegion, idx, gymHard);
+    bool done = pet.hasBadge(gymRegion, trainerBadgeIndex(gymRegion,idx,gymShield), gymHard);
     bool open_ = gymUnlocked(idx, gymHard);
     gfx->fillRoundRect(70, y, 326, 44, 10, done ? UI_TRACK : UI_BG_DAY);
     gfx->drawRoundRect(70, y, 326, 44, 10, open_ ? UI_INK : UI_TRACK);
     gfx->setTextColor(open_ ? UI_INK : UI_TRACK);
     gfx->setTextSize(2);
-    gfx->setCursor(84, y + 8);
+    bool portrait = gymArt(t.name) != nullptr;
+    if (portrait) drawGymArt(t.name,78,y+6);
+    gfx->setCursor(portrait ? 118 : 84, y + 8);
     gfx->print(localName(t.name));
     gfx->setTextSize(1);
     gfx->setTextColor(0x6B4D);
-    gfx->setCursor(84, y + 28);
+    gfx->setCursor(portrait ? 118 : 84, y + 28);
     gfx->print(open_ ? localName(t.place) : T(S_LOCKED));
     // the level of the strongest creature: the honest measure of the wall
     uint8_t top = 0;
@@ -5442,7 +5506,7 @@ static void renderRegionPick(uint8_t mode) {
     if (!open)
       snprintf(sub, sizeof(sub), "%s", T(S_NEED_PACK));
     else if (mode == RPICK_FOR_GYMS)
-      snprintf(sub, sizeof(sub), T(S_BADGES_FMT), pet.badgeCountIn(i, gymHard));
+      snprintf(sub, sizeof(sub), T(S_BADGES_FMT), pet.gymBadgeCountIn(i, gymHard, gymShield));
     else if (mode == RPICK_FOR_DEX)
       snprintf(sub, sizeof(sub), "%u/%u(%u)",
                pet.registeredCountIn(REGIONS[i].lo, REGIONS[i].hi),
@@ -5518,7 +5582,7 @@ void renderLearn() {
   gfx->setCursor(CX - textWidthFactor(localName(MOVE_TBL[mv].name), 9), 66);
   gfx->print(localName(MOVE_TBL[mv].name));
 
-  for (int i = 0; i < MOVE_SLOTS; i++) drawMoveRow(LEARN_ROW_Y(i), pet.moves[i], false, pet.speciesId);
+  for (int i = 0; i < MOVE_SLOTS; i++) drawMoveRow(LEARN_ROW_Y(i), pet.moves[i], false, pet.speciesId,pet.form);
 
   gfx->fillRoundRect(70, LEARN_SKIP_Y, 326, 44, 12, UI_TRACK);
   gfx->drawRoundRect(70, LEARN_SKIP_Y, 326, 44, 12, UI_INK);
@@ -5741,10 +5805,10 @@ static void menuRowLabel(int i, char *out, size_t n) {
 #if defined(TAMAPOKE_EXPLORE_ENABLED)
     case 2: snprintf(out, n, "%s", T(S_EXPLORE)); break;
     case 3: snprintf(out, n, "%s", T(S_SETTINGS)); break;
-    case 4: snprintf(out, n, "%s", T(S_RETIRE)); break;
+    case 4: snprintf(out, n, "%s (%u/3)", T(S_RETIRE), pet.farewellsRemaining()); break;
 #else
     case 2: snprintf(out, n, "%s", T(S_SETTINGS)); break;
-    case 3: snprintf(out, n, "%s", T(S_RETIRE)); break;
+    case 3: snprintf(out, n, "%s (%u/3)", T(S_RETIRE), pet.farewellsRemaining()); break;
 #endif
     default: snprintf(out, n, "%s", T(S_CLOSE)); break;
   }
@@ -5831,10 +5895,80 @@ void renderTrain() {
 }
 
 // ---------- the box ----------
+// Shared navigation stays clear of the six cells and the round screen bezel.
+#define BOX_NAV_Y 338
+#define BOX_NAV_H 44
+#define BOX_PICK_SIZE 10
+void boxPickerStep(int delta) {
+  int next = (int)boxPickerGroup + delta;
+  if (next < 0 || next >= (BOX_PAGES + BOX_PICK_SIZE - 1) / BOX_PICK_SIZE) return;
+  boxPickerGroup = (uint8_t)next;
+  sfxPlay(SFX_TAP);
+}
+
+void drawBoxNavigation(bool picker) {
+  char page[24];
+  int current = picker ? boxPickerGroup : boxPage;
+  int pages = picker ? (BOX_PAGES + BOX_PICK_SIZE - 1) / BOX_PICK_SIZE : BOX_PAGES;
+  if (picker) {
+    unsigned first = boxPickerGroup * BOX_PICK_SIZE + 1;
+    unsigned last = first + BOX_PICK_SIZE - 1;
+    if (last > BOX_PAGES) last = BOX_PAGES;
+    snprintf(page, sizeof(page), "%u-%u/%u", first, last, (unsigned)BOX_PAGES);
+  } else snprintf(page, sizeof(page), "%u/%u", (unsigned)boxPage + 1, (unsigned)BOX_PAGES);
+  const int xs[3] = {84, 160, 316}, widths[3] = {66, 146, 66};
+  const char *labels[3] = {"<", page, ">"};
+  for (int i=0;i<3;i++) {
+    bool disabled = (i==0 && current==0) || (i==2 && current==pages-1);
+    gfx->fillRoundRect(xs[i],BOX_NAV_Y,widths[i],BOX_NAV_H,10,disabled || (picker && i==1) ? UI_TRACK : UI_WHITE);
+    gfx->drawRoundRect(xs[i],BOX_NAV_Y,widths[i],BOX_NAV_H,10,UI_INK);
+    gfx->setTextColor(disabled ? 0x8410 : UI_INK);gfx->setTextSize(2);
+    gfx->setCursor(xs[i]+widths[i]/2-textWidthFactor(labels[i],6),BOX_NAV_Y+14);
+    gfx->print(labels[i]);
+  }
+}
+
+void renderBoxPagePicker() {
+  gfx->fillScreen(RGB565_BLACK);gfx->fillCircle(CX,CY,231,UI_BG_DAY);
+  const char *title = gLang==LANG_KO ? "페이지 바로 이동" : "GO TO PAGE";
+  gfx->setTextColor(UI_INK);gfx->setTextSize(2);
+  gfx->setCursor(CX-textWidthFactor(title,6),56);gfx->print(title);
+  for (int i=0;i<BOX_PICK_SIZE;i++) {
+    int page=boxPickerGroup*BOX_PICK_SIZE+i;
+    if(page>=BOX_PAGES) break;
+    int x=88+(i%2)*150,y=100+(i/2)*48;
+    gfx->fillRoundRect(x,y,140,42,10,page==boxPage ? UI_BAR_OK : UI_WHITE);
+    gfx->drawRoundRect(x,y,140,42,10,UI_INK);
+    char label[12];snprintf(label,sizeof(label),"%u",(unsigned)page+1);
+    gfx->setTextColor(page==boxPage ? UI_WHITE : UI_INK);gfx->setTextSize(2);
+    gfx->setCursor(x+70-textWidthFactor(label,6),y+13);gfx->print(label);
+  }
+  drawBoxNavigation(true);
+  gfx->setTextColor(UI_INK);gfx->setTextSize(2);
+  gfx->setCursor(CX-textWidthFactor(T(S_BACK),6),400);gfx->print(T(S_BACK));gfx->flush();
+}
+
+void boxPagePickerTap(int16_t x,int16_t y) {
+  if (y>=392) {boxPagePicker=false;sfxPlay(SFX_TAP);return;}
+  if (y>=BOX_NAV_Y && y<BOX_NAV_Y+BOX_NAV_H) {
+    if(x>=84 && x<150) boxPickerStep(-1);
+    else if(x>=316 && x<382) boxPickerStep(1);
+    return;
+  }
+  for(int i=0;i<BOX_PICK_SIZE;i++) {
+    int xx=88+(i%2)*150,yy=100+(i/2)*48;
+    int page=boxPickerGroup*BOX_PICK_SIZE+i;
+    if(x>=xx && x<xx+140 && y>=yy && y<yy+42 && page<BOX_PAGES) {
+      boxPage=(uint8_t)page;boxPagePicker=false;sfxPlay(SFX_TAP);return;
+    }
+  }
+}
+
 // Storage past the six that fight. A creature is moved by picking a party slot
 // and then a box slot, which swaps them -- so one gesture covers deposit,
 // withdraw and exchange rather than needing three.
 void renderBox() {
+  if (boxPagePicker) { renderBoxPagePicker(); return; }
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
   char head[96];
@@ -5854,7 +5988,7 @@ void renderBox() {
     gfx->print(sub);
   }
   for (uint8_t i = 0; i < BOX_PER_PAGE; i++) {
-    uint8_t idx = boxPage * BOX_PER_PAGE + i;
+    uint16_t idx = boxPage * BOX_PER_PAGE + i;
     if (idx >= BOX_SLOTS) break;
     const PartyMon &m = party.box[idx];
     int x = PARTY_GRID_X + (i % 2) * (PARTY_CELL_W + 10);
@@ -5870,7 +6004,8 @@ void renderBox() {
       continue;
     }
     const uint8_t *th = thumbs.get(m.dex);
-    if (th) drawThumb(th, x - 14, y - 4, 2, false);
+    if(m.form) drawFormMini(m.dex,m.form,m.shiny,x+28,y+30);
+    else if (th) drawThumb(th, x - 14, y - 4, 2, false);
     gfx->setTextColor(UI_INK);
     gfx->setTextSize(1);
     gfx->setCursor(x + 52, y + 16);
@@ -5880,14 +6015,7 @@ void renderBox() {
     gfx->setCursor(x + 52, y + 34);
     gfx->print(l);
   }
-  // Numeric pagination scales cleanly past ten pages and is much faster to
-  // read than counting a growing row of dots on the round display.
-  char pg[16];
-  snprintf(pg, sizeof(pg), "%u/%u", (unsigned)boxPage + 1, (unsigned)BOX_PAGES);
-  gfx->setTextColor(0x6B4D);
-  gfx->setTextSize(2);
-  gfx->setCursor(CX - textWidthFactor(pg, 6), 358);
-  gfx->print(pg);
+  drawBoxNavigation(false);
   gfx->setTextColor(0x6B4D);
   gfx->setTextSize(2);
   gfx->setCursor(CX - textWidthFactor(T(S_BACK), 6), 392);
@@ -5896,12 +6024,26 @@ void renderBox() {
 }
 
 void boxTap(int16_t x, int16_t y) {
+  if (boxPagePicker) { boxPagePickerTap(x,y); return; }
   // The sheet is checked first and is modal in the same way the party's is.
   if (boxDetail) {
     if (releaseConfirm) { monSheetConfirmTap(x, y, true); return; }
+    for(int i=0;i<MOVE_SLOTS;i++)if(x>=70 && x<=396 && y>=78+i*52 && y<=128+i*52) {
+      movePickBox=boxDetail;movePickParty=0;movePickSlot=i;movePickPage=0;movePickOpen=true;return;
+    }
     if (monSheetBtn(x, y, true)) {          // TO PARTY
+      if(x<=166) {
+        if(!party.swapActive(pet,true,boxDetail-1)) {sfxPlay(SFX_DENY);return;}
+        boxDetail=boxSel=boxSwapFrom=partyDetail=0;
+        boxOpen=partyOpen=false; sfxPlay(SFX_HATCH); return;
+      }
+      if(x<176) return;
       int free = party.firstFree();
-      if (free < 0) { sfxPlay(SFX_DENY); return; }
+      if (free < 0) {
+        // Preserve the old full-party exchange flow, now explicitly requested.
+        boxSel=boxDetail; boxDetail=partyDetail=boxSwapFrom=0;
+        boxOpen=false; sfxPlay(SFX_TAP); return;
+      }
       party.swapPartyBox((uint8_t)free, boxDetail - 1);
       boxDetail = 0;
       boxSel = 0;
@@ -5918,8 +6060,18 @@ void boxTap(int16_t x, int16_t y) {
     sfxPlay(SFX_TAP);
     return;
   }
+  if (y>=BOX_NAV_Y && y<BOX_NAV_Y+BOX_NAV_H) {
+    if (x>=84 && x<150) {
+      if(boxPage>0) {boxPage--;sfxPlay(SFX_TAP);}
+    } else if(x>=316 && x<382) {
+      if(boxPage+1<BOX_PAGES) {boxPage++;sfxPlay(SFX_TAP);}
+    } else if(x>=160 && x<306) {
+      boxPickerGroup=boxPage/BOX_PICK_SIZE;boxPagePicker=true;sfxPlay(SFX_TAP);
+    }
+    return;
+  }
   for (uint8_t i = 0; i < BOX_PER_PAGE; i++) {
-    uint8_t idx = boxPage * BOX_PER_PAGE + i;
+    uint16_t idx = boxPage * BOX_PER_PAGE + i;
     if (idx >= BOX_SLOTS) break;
     int cx0 = PARTY_GRID_X + (i % 2) * (PARTY_CELL_W + 10);
     int cy0 = 88 + (i / 2) * (PARTY_CELL_H + 8);
@@ -5939,12 +6091,7 @@ void boxTap(int16_t x, int16_t y) {
     // lot to happen from one tap and left nowhere to put RELEASE; the sheet
     // offers TO PARTY explicitly and shows what you are about to move.
     if (party.box[idx].empty()) { sfxPlay(SFX_DENY); return; }
-    if (party.firstFree() < 0) {
-      boxSel = idx + 1;          // party is full: go choose who steps out
-      boxOpen = false;
-      sfxPlay(SFX_TAP);
-      return;
-    }
+    // Full parties still need the sheet: live exchange does not need a free slot.
     boxDetail = idx + 1;
     releaseConfirm = false;
     sfxPlay(SFX_TAP);
@@ -5972,8 +6119,9 @@ void drawPartySlot(int i, int x, int y) {
     return;
   }
   const uint8_t *th = thumbs.get(m.dex);
-  if (th) drawThumb(th, x - 6, y - 3, 1, false);
-  const DexEntry &d = DEX_TBL[m.dex];
+  if(m.form) drawFormMini(m.dex,m.form,m.shiny,x+30,y+33);
+  else if (th) drawThumb(th, x - 6, y - 3, 1, false);
+  const DexEntry d = formDex(m.dex,m.form);
   const char *nm = m.nick[0] ? m.nick : localName(d.name);
   gfx->setTextColor(d.accent);
   gfx->setTextSize(1);
@@ -6396,6 +6544,8 @@ void drawConfirmPanel(const char *q, const char *sub1, const char *sub2,
 void drawChoiceDialog() {
   const char *q, *o1, *o2;
   const char *sub1 = nullptr, *sub2 = nullptr;
+  char daily[96];
+  snprintf(daily, sizeof(daily), gLang == LANG_KO ? "오늘 남은 작별 %u/3 (자정 초기화)" : "Left today: %u/3 (resets at midnight)", pet.farewellsRemaining());
   uint16_t c1, c2, t1, t2;
   if (choiceKind == 1) {  // evolucion
     q = T(S_EVO_Q); o1 = T(S_EVO_TAP); o2 = T(S_EVO_KEEP);
@@ -6406,9 +6556,11 @@ void drawChoiceDialog() {
     // An early retirement gives the creature up; it no longer delays the next
     // creature's evolution. Say only what is still lost.
     if (!pet.retireIsFree()) sub1 = T(S_RETIRE_GONE);
+    sub2 = daily;
   } else {                // despedida
     q = T(S_FAR_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);
     c1 = UI_BAR_WARN; t1 = UI_INK; c2 = UI_BAR_OK; t2 = UI_WHITE;
+    sub2 = daily;
   }
   drawConfirmPanel(q, sub1, sub2, UI_BAR_BAD, o1, c1, t1, o2, c2, t2);
 }
@@ -6506,7 +6658,7 @@ void drawPet() {
     drawPetSD();
     return;
   }
-  int fi = flashIdxForDex(pet.speciesId);
+  int fi = pet.form ? -1 : flashIdxForDex(pet.speciesId);
   if (fi < 0) {
     // sin SD y sin sprite de flash: aviso claro de que faltan sprites
     gfx->setTextColor(inkColor());
@@ -6643,6 +6795,21 @@ void drawPmdActM(PmdMon &m, uint8_t actId, int cx, int groundY, uint32_t t, bool
   while (s > 2 && a.h * s > 250) s--;  // acciones con frame grande (ataque)
   uint8_t fi = pmdFrameAt(a, t, loop);
   const uint8_t *fr = a.data + (uint32_t)fi * a.w * a.h;
+  if(m.form) {
+    // Large forms (notably Eternamax) must fit the actual round-screen lane.
+    bool battleSprite=&m==&btlPmd[0] || &m==&btlPmd[1];
+    int maxW=battleSprite?156:330,maxH=battleSprite?132:200;
+    int den=256, num=s*256;
+    if(a.w*num/den>maxW) num=maxW*den/a.w;
+    if(a.h*num/den>maxH) num=maxH*den/a.h;
+    int w=a.w*num/den,h=a.h*num/den;
+    int x0=cx-w/2,y0=groundY-(a.base?a.base:a.h)*num/den;
+    for(int y=0;y<h;y++) for(int x=0;x<w;x++) {
+      uint8_t idx=fr[(y*a.h/h)*a.w+x*a.w/w];
+      if(idx<m.palCount) gfx->fillRect(x0+x,y0+y,1,1,sil?INK_K:m.pal[idx]);
+    }
+    return;
+  }
   // anclar por los pies (a.base), no por el alto del lienzo: asi las acciones
   // con padding distinto (Hurt, Eat...) quedan todas a la misma altura de suelo
   int x0 = cx - a.w * s / 2, y0 = groundY - (a.base ? a.base : a.h) * s;
@@ -6861,3 +7028,5 @@ void drawMap(const char *const *map, int n, int x, int y, int s, bool silhouette
     }
   }
 }
+
+#include "forms_ui.h"

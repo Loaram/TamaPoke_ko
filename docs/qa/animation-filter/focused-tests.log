@@ -1,0 +1,108 @@
+TamaPoke fw v3.0.0-beta.4
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS nine gym regions without reindexing the first seven
+PASS short seven-region save preserves every old badge in both modes
+PASS new regions start with no forged wins
+PASS Galar title toggles Sword/Shield without leaving gyms
+PASS difficulty control does not toggle the version
+PASS Bea win does not award Allister badge
+PASS Shield final bit 15 survives saving and loading
+PASS course badge count excludes the other version and Cup wins
+Checked 39 battles, 160 team members
+PASS all new teams chain, retain their region/form and award correct course wins
+PASS Paldea second page remains reachable
+PASS Paldea Elite Four and champion page remains reachable
+PASS expanded badges fit the existing v3 transfer limit
+PASS expanded save passes the actual transfer importer
+PASS all new course wins survive full export/import, including high bit 15
+PASS NPC Pom-Pom defense uses electric/flying, not the base fire/flying type
+PASS NPC Pom-Pom electric attacks receive the matching-type bonus
+PASS 176 animated forms, no appearance category
+PASS three still-only forms are absent from the supported table
+PASS removed forms cannot be selected even at level 100
+PASS only still-only forms disappear; animated Eternamax remains
+PASS an old excluded form uses base art even if the former still file remains installed
+PASS every threshold, type, stat and ordinary evolution identity is valid
+PASS 60 / 70 / 80 categories
+PASS Charizard X changes Flying to Dragon in the real type chart
+PASS wrong species and unknown IDs use safe base data
+PASS Hearthflame Ivy Cudgel is Fire
+PASS Judgment follows the Arceus form
+PASS Multi-Attack follows the Silvally form
+PASS Techno Blast uses its drive type, not Bug/Steel
+PASS Dragon STAB changes actual damage after Mega X selection
+PASS battle action uses Fire Ivy Cudgel against Grass, not the original Grass move type
+PASS level 70 can select Mega Charizard X
+PASS live form, shiny and altered stats survive reload
+PASS good farewell still opens at original 73 / 24-hour boundary
+PASS no form unlock or transformation is required for good farewell
+PASS Mega Floette does NOT count as ordinary final evolution
+PASS party-to-box form and moves survive authoritative roster reload
+PASS box-to-party keeps the form with the individual
+PASS reviving carries the selected form
+PASS LAN wire retains form identity and derived stats
+PASS battle level caps do not undo a previously unlocked form
+PASS current whole save fits the new bound, including legacy recovery copies
+PASS form save enters transport
+PASS lossy multi-device transport preserves every form-save byte
+PASS form save restores
+PASS live and party forms restored together
+PASS unrecognized form ID is preserved, never rewritten to zero
+forms: roster unreadable; recovery copies are read-only
+PASS an unreadable/future roster cannot be overwritten through form selection
+PASS a failed roster read preserves the authoritative bytes for recovery
+PASS a new individual never inherits the previous form
+PASS old selected-form records still pass full-save transfer
+PASS excluded-form save keeps both individuals and IDs without deleting or renumbering them
+PASS excluded form safely uses base stats and can be reset explicitly
+TamaPoke fw v3.0.0-beta.4
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS form page arrow navigates without leaving the modal
+PASS visible select button applies the displayed form
+PASS page wrap skips the removed Charizard Gmax entry
+PASS base form is still selectable after the list shrinks
+PASS animated Eternamax still requires level 80
+PASS animated Eternamax remains selectable at level 80
+PASS vertical back closes the form preview
+PASS all 176 normal and shiny-or-same-form-fallback sprites load through the real parser
+PASS old installed stills cannot reappear through the actual sprite loader
+PASS old installed stills cannot reappear through the actual sprite loader
+PASS old installed stills cannot reappear through the actual sprite loader
+TamaPoke fw v3.0.0-beta.4
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS party button exchanges a living pet without deleting either
+PASS outgoing individual preserves exact minute, energy, bond, IVs, training, moves, nickname, shiny and form
+PASS legacy companion behavior and player-wide achievements stay intact
+PASS returning the growing individual is allowed
+PASS the original grower resumes rather than becoming a retired companion
+PASS full storage stays full after reversible exchange
+PASS restored live care survives reopening the save
+PASS a full party still opens the last box slot's detail sheet
+PASS box bring-back button swaps directly with active pet at full capacity
+PASS box round trip restores the grower
+PASS TO PARTY still offers a storage-slot exchange when the party is full
+PASS box-to-party exchange leaves the live pet untouched
+PASS pending move decision blocks exchange without changing storage
+PASS an ending cannot be interrupted by exchanging pets
+PASS out-of-range indices are rejected
+PASS full roster, care metadata and recovery copies fit the v4 transport envelope
+PASS whole-save import accepts the enlarged care-aware save
+PASS cross-device save round trip keeps both active and boxed individuals
+PASS interrupted exchange replays the committed incoming pet and clears recovery only after verified saving
+PASS recovery is idempotent across another restart
+forms: roster write failed; recovery copies retained
+PASS failed atomic roster write rolls back RAM and retains both saved individuals
+PASS failed live-key write retains the committed recovery record
+PASS reboot repairs a partially written live save without duplicating or losing a Pokemon
+PASS beta.1/2 TFR1 records retain form and legacy companion policy
+PASS egg-time bring-back still frees the selected slot
+PASS: forms,forms_ui,active_swap,gyms_new

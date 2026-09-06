@@ -77,7 +77,7 @@ int main(){
      "the old record is shorter than the new one");
   ck(offsetof(OldPartyMon, nick) == offsetof(PartyMon, nick),
      "and every field before moves[] sits at the same offset");
-  ck(sizeof(ReleasedPartyMon) == 30 && sizeof(PartyMon) == 34,
+  ck(sizeof(ReleasedPartyMon) == 30 && offsetof(PartyMon,form) == 34 && sizeof(PartyMon)==PARTY_RECORD_BYTES,
      "the released one-byte and expanded two-byte move layouts are exact");
 
   // --- write a save the way an older build would have
@@ -209,6 +209,7 @@ int main(){
     p.begin("tamapoke", false);
     p.putBytes("party", releasedParty, sizeof(releasedParty));
     p.putBytes("box", releasedBox, sizeof(releasedBox));
+    nvs().erase("rosterF"); // This fixture represents a release before form metadata existed.
     p.end();
   }
   Party released;
@@ -239,6 +240,7 @@ int main(){
     p.putBool("init", true);
     p.putShort("dexn", 6);
     p.putBytes("mvs", oldLive, sizeof(oldLive));
+    nvs().erase("rosterF");
     p.putBytes("party", releasedParty, sizeof(releasedParty));
     p.putBytes("box", releasedBox, sizeof(releasedBox));
     p.end();
@@ -298,14 +300,15 @@ int main(){
     // and a party/box blob from a build with MORE slots at the same stride
     {
       Preferences pr2; pr2.begin("tamapoke", false);
-      std::vector<uint8_t> bigp(sizeof(PartyMon) * (PARTY_SLOTS + 3), 0);
+      nvs().erase("rosterF"); // Simulate a released-format save, not a current authoritative roster.
+      std::vector<uint8_t> bigp(34 * (PARTY_SLOTS + 3), 0);
       PartyMon m; m.dex = 149; m.level = 100;
       snprintf(m.nick, sizeof(m.nick), "DRAGO");
-      memcpy(bigp.data(), &m, sizeof(m));
+      memcpy(bigp.data(), &m, 34);
       pr2.putBytes("party", bigp.data(), bigp.size());
-      std::vector<uint8_t> bigb2(sizeof(PartyMon) * (BOX_SLOTS + 5), 0);
+      std::vector<uint8_t> bigb2(34 * (BOX_SLOTS + 5), 0);
       PartyMon b; b.dex = 6; b.level = 100;
-      memcpy(bigb2.data(), &b, sizeof(b));
+      memcpy(bigb2.data(), &b, 34);
       pr2.putBytes("box", bigb2.data(), bigb2.size());
       pr2.end();
       Party pq; pq.begin();

@@ -37,7 +37,7 @@ uint16_t linkBuildTag() {
   const uint16_t bits[] = {
     (uint16_t)MOVE_COUNT, (uint16_t)DEX_COUNT, (uint16_t)MOVE_SLOTS,
     (uint16_t)TRAINER_TEAM_MAX, (uint16_t)sizeof(LinkMon),
-    (uint16_t)sizeof(LinkResult), (uint16_t)SI_COUNT,
+    (uint16_t)sizeof(LinkResult), (uint16_t)SI_COUNT, FORM_DATA_TAG,
   };
   for (uint16_t b : bits) { h ^= b; h *= 16777619u; }
   return (uint16_t)(h ^ (h >> 16));
@@ -48,6 +48,7 @@ MoveId linkSafeMove(MoveId m) { return m < MOVE_COUNT ? m : 0; }
 void linkMonFrom(LinkMon &out, const Combatant &c) {
   memset(&out, 0, sizeof(out));
   out.dex = c.dex;
+  out.form = c.form;
   out.level = c.level;
   out.maxHp = c.maxHp;
   for (int i = 0; i < SI_COUNT; i++) out.base[i] = c.base[i];
@@ -64,6 +65,7 @@ void linkMonTo(Combatant &out, const LinkMon &m) {
   out = Combatant();
   out.dex = (m.dex >= 1 && m.dex <= DEX_COUNT) ? m.dex : 1;
   out.level = m.level < 1 ? 1 : (m.level > MAX_LEVEL ? MAX_LEVEL : m.level);
+  out.form = formFind(out.dex,m.form) ? m.form : 0; // Battle level caps do not revoke unlocked forms.
   out.maxHp = m.maxHp ? m.maxHp : 1;
   out.hp = out.maxHp;
   for (int i = 0; i < SI_COUNT; i++) out.base[i] = m.base[i] ? m.base[i] : 1;

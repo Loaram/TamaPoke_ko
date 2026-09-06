@@ -398,7 +398,7 @@ void android_main(android_app *app) {
   static const char *packs[] = {
     "sprites-alola.pak", "sprites-galar.pak", "sprites-hoenn.pak",
     "sprites-johto.pak", "sprites-kalos.pak", "sprites-kanto.pak",
-    "sprites-paldea.pak", "sprites-sinnoh.pak", "sprites-unova.pak"
+    "sprites-paldea.pak", "sprites-sinnoh.pak", "sprites-unova.pak", "forms.pak"
   };
   int indexed = 0;
   for (const char *pack : packs) if (indexPack(pack)) ++indexed;

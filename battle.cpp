@@ -1,6 +1,7 @@
 #include "battle.h"
 #include "dex.h"
 #include "types.h"
+#include "form_moves.h"
 
 // ---------- building a combatant ----------
 
@@ -18,8 +19,9 @@ static void fill(Combatant &c, int16_t dex, uint8_t lvl, uint16_t hp,
 void combatantFromPet(Combatant &c, const Pet &p) {
   fill(c, p.speciesId, p.level(), p.vitStat(), p.atkStat(), p.defStat(),
        p.spaStat(), p.spdStat(), p.speStat());
-  for (int i = 0; i < MOVE_SLOTS; i++) c.moves[i] = p.moves[i];
+  for (int i = 0; i < MOVE_SLOTS; i++) c.moves[i] = formMoveUsable(p.speciesId,p.form,p.moves[i])?p.moves[i]:MV_STRUGGLE;
   c.shiny = p.shiny;
+  c.form = p.form;
   const char *nm = p.nick[0] ? p.nick : DEX_TBL[p.speciesId].name;
   snprintf(c.name, sizeof(c.name), "%s", nm);
 }
@@ -27,8 +29,9 @@ void combatantFromPet(Combatant &c, const Pet &p) {
 void combatantFromParty(Combatant &c, const PartyMon &m) {
   fill(c, m.dex, (uint8_t)m.level, party.vitOf(m), party.atkOf(m), party.defOf(m),
        party.spaOf(m), party.spdOf(m), party.speOf(m));
-  for (int i = 0; i < MOVE_SLOTS; i++) c.moves[i] = m.moves[i];
+  for (int i = 0; i < MOVE_SLOTS; i++) c.moves[i] = formMoveUsable(m.dex,m.form,m.moves[i])?m.moves[i]:MV_STRUGGLE;
   c.shiny = m.shiny != 0;
+  c.form = m.form;
   const char *nm = m.nick[0] ? m.nick : DEX_TBL[m.dex].name;
   snprintf(c.name, sizeof(c.name), "%s", nm);
 }
@@ -56,12 +59,37 @@ static uint16_t effStat(const Combatant &c, uint8_t idx) {
 }
 
 // ---------- damage ----------
+static bool battleHasType(const Combatant &c, uint8_t type) {
+  if(c.npcType1<TYPE_COUNT) return c.npcType1==type || c.npcType2==type;
+  return hasStab(c.dex,type,c.form);
+}
+static uint16_t battleTypeEff(uint8_t type,const Combatant &c) {
+  if(c.npcType1<TYPE_COUNT) return typeEffPct(type,c.npcType1,c.npcType2);
+  return typeEffVsDex(type,c.dex,c.form);
+}
+uint8_t formMoveType(int16_t dex, FormId form, MoveId move) {
+  if(move>=MOVE_COUNT) return T_NORMAL;
+  const auto *f=formFind(dex,form);
+  if(!f) return MOVE_TBL[move].type;
+  if((dex==493 && move==MV_JUDGMENT) || (dex==773 && move==MV_MULTI_ATTACK) ||
+     (dex==351 && move==MV_WEATHER_BALL)) return f->type1;
+  if(dex==1017 && move==MV_IVY_CUDGEL) return f->type2<TYPE_COUNT?f->type2:T_GRASS;
+  if(dex==877 && move==MV_AURA_WHEEL) return T_DARK;
+  if(dex==649 && move==MV_TECHNO_BLAST) {
+    if(strstr(f->key,"douse")) return T_WATER;
+    if(strstr(f->key,"shock")) return T_ELECTRIC;
+    if(strstr(f->key,"burn")) return T_FIRE;
+    if(strstr(f->key,"chill")) return T_ICE;
+  }
+  return MOVE_TBL[move].type;
+}
 
 // roll is 217..255, the series' damage spread, passed in so tests can pin it.
 uint16_t battleDamage(const Combatant &atk, const Combatant &def, MoveId mv,
                       bool crit, uint8_t roll) {
   if (!mv || mv >= MOVE_COUNT) return 0;
-  const MoveEntry &m = MOVE_TBL[mv];
+  MoveEntry m = MOVE_TBL[mv];
+  m.type = formMoveType(atk.dex,atk.form,mv);
   if (m.cat == MC_STATUS) return 0;
 
   if (m.effect == EF_FIXED_LVL) return atk.level ? atk.level : 1;
@@ -69,6 +97,10 @@ uint16_t battleDamage(const Combatant &atk, const Combatant &def, MoveId mv,
 
   uint16_t A = (m.cat == MC_PHYS) ? effStat(atk, SI_ATK) : effStat(atk, SI_SPA);
   uint16_t D = (m.cat == MC_PHYS) ? effStat(def, SI_DEF) : effStat(def, SI_SPD);
+  if(mv==MV_SHELL_SIDE_ARM && (uint32_t)effStat(atk,SI_ATK)*effStat(def,SI_SPD) >
+       (uint32_t)effStat(atk,SI_SPA)*effStat(def,SI_DEF)) {
+    m.cat=MC_PHYS;A=effStat(atk,SI_ATK);D=effStat(def,SI_DEF);
+  }
   // A critical hit ignores the defender's positive stages and the attacker's
   // negative ones, so a Barrier cannot make you immune to a lucky roll.
   if (crit) {
@@ -79,8 +111,8 @@ uint16_t battleDamage(const Combatant &atk, const Combatant &def, MoveId mv,
 
   uint32_t dmg = (2UL * atk.level / 5 + 2) * m.power * A / D / 50 + 2;
   if (crit) dmg *= 2;
-  if (hasStab(atk.dex, m.type)) dmg = dmg * 3 / 2;
-  uint16_t eff = typeEffVsDex(m.type, def.dex);
+  if (battleHasType(atk, m.type)) dmg = dmg * 3 / 2;
+  uint16_t eff = battleTypeEff(m.type, def);
   dmg = dmg * eff / 100;
   if (eff == 0) return 0;               // immune: no chip, no minimum
   dmg = dmg * roll / 255;
@@ -133,10 +165,10 @@ static void tryInflict(Combatant &def, const MoveEntry &m, TurnLog &log) {
   }
   if (def.ailment != AIL_NONE) return;
   // A type cannot be given the status it is made of.
-  bool immune = (m.ailment == AIL_BURN && hasStab(def.dex, T_FIRE)) ||
-                (m.ailment == AIL_FREEZE && hasStab(def.dex, T_ICE)) ||
-                (m.ailment == AIL_POISON && hasStab(def.dex, T_POISON)) ||
-                (m.ailment == AIL_PARA && hasStab(def.dex, T_ELECTRIC));
+  bool immune = (m.ailment == AIL_BURN && battleHasType(def, T_FIRE)) ||
+                (m.ailment == AIL_FREEZE && battleHasType(def, T_ICE)) ||
+                (m.ailment == AIL_POISON && (battleHasType(def, T_POISON) || battleHasType(def, T_STEEL))) ||
+                (m.ailment == AIL_PARA && battleHasType(def, T_ELECTRIC));
   if (immune) return;
   def.ailment = m.ailment;
   if (m.ailment == AIL_SLEEP) def.ailTurns = 2 + random(3);
@@ -181,7 +213,8 @@ void battleAct(Combatant &atk, Combatant &def, MoveId mv, TurnLog &log) {
   }
 
   if (!mv || mv >= MOVE_COUNT) { log.skipped = true; return; }
-  const MoveEntry &m = MOVE_TBL[mv];
+  MoveEntry m = MOVE_TBL[mv];
+  m.type = formMoveType(atk.dex,atk.form,mv);
   log.move = mv;
 
   // --- accuracy. acc 0 means it cannot miss (SWIFT, and every status move)
@@ -205,9 +238,9 @@ void battleAct(Combatant &atk, Combatant &def, MoveId mv, TurnLog &log) {
   }
 
   // --- damage, including multi-hit
-  uint8_t hits = (m.effect == EF_MULTI) ? (uint8_t)(2 + random(4)) : 1;
+  uint8_t hits = mv==MV_SURGING_STRIKES?3:(m.effect == EF_MULTI) ? (uint8_t)(2 + random(4)) : 1;
   uint16_t total = 0;
-  log.effPct = typeEffVsDex(m.type, def.dex);
+  log.effPct = battleTypeEff(m.type, def);
   if (log.effPct == 0) { log.immune = true; return; }
   for (uint8_t h = 0; h < hits; h++) {
     bool crit = m.effect == EF_ALWAYS_CRIT || random(16) == 0;

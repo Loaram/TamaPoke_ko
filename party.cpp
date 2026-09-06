@@ -1,10 +1,31 @@
 #include "party.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include "dex.h"
 #include "moves.h"
+#include "pet.h"
+#include <new>
+#include "roster_store.h"
 
 Party party;
+bool Party::hasEndedMon(const PartyMon &m) const {
+  uint32_t ticket=0;memcpy(&ticket,m.care+32,4);
+  if(!ticket || m.empty() || !writable())return false;
+  for(const auto &s:slots)if(!memcmp(&s,&m,sizeof(m)))return true;
+  for(const auto &s:box)if(!memcmp(&s,&m,sizeof(m)))return true;
+  return false;
+}
+static constexpr size_t LEGACY_STRIDE = 34;
+static_assert(offsetof(PartyMon,moves)==26 && offsetof(PartyMon,form)==34 && offsetof(PartyMon,care)==36 && sizeof(PartyMon)==PARTY_RECORD_BYTES,
+              "legacy prefix or runtime extension changed");
+static constexpr size_t ROSTER_N = PARTY_STORAGE_SLOTS + BOX_SLOTS;
+static constexpr size_t ROSTER_BYTES = PARTY_ROSTER_BYTES;
+static uint32_t rosterHash(const uint8_t *p, size_t n) {
+  uint32_t h=2166136261u;
+  while(n--) {h^=*p++; h*=16777619u;}
+  return h;
+}
 
 // The last released layout ended with four one-byte move IDs. Keep an exact
 // reader for it: treating those bytes as the prefix of MoveId[4] would merge
@@ -57,23 +78,14 @@ static bool loadRoster(Preferences &prefs, const char *key,
                        PartyMon *out, size_t capacity) {
   size_t stored = prefs.getBytesLength(key);
   if (!stored) return false;
-  size_t currentBytes = sizeof(PartyMon) * capacity;
-  if (stored == currentBytes) {
-    // A current-format read needs no rewrite.  If Preferences ever reports a
-    // short read, keep the zero-initialised destination instead of saving that
-    // failed read back over the only copy.
-    prefs.getBytes(key, out, currentBytes);
-    return false;
-  }
-
   uint8_t *raw = (uint8_t *)malloc(stored);
   if (!raw) return false;
   if (prefs.getBytes(key, raw, stored) != stored) { free(raw); return false; }
 
   size_t stride = 0, count = 0;
   enum { CURRENT, LEGACY8, LEGACY0 } format = CURRENT;
-  if (stored % sizeof(PartyMon) == 0) {
-    stride = sizeof(PartyMon); count = stored / stride;
+  if (stored % LEGACY_STRIDE == 0) {
+    stride = LEGACY_STRIDE; count = stored / stride;
   } else if (stored % sizeof(LegacyPartyMon8) == 0) {
     format = LEGACY8; stride = sizeof(LegacyPartyMon8); count = stored / stride;
   } else if (stored % sizeof(LegacyPartyMon0) == 0) {
@@ -82,7 +94,7 @@ static bool loadRoster(Preferences &prefs, const char *key,
   if (!stride) { free(raw); return false; }
   if (count > capacity) count = capacity;
   for (size_t i = 0; i < count; i++) {
-    if (format == CURRENT) memcpy(&out[i], raw + i * stride, sizeof(PartyMon));
+    if (format == CURRENT) memcpy(&out[i], raw + i * stride, LEGACY_STRIDE);
     else if (format == LEGACY8) {
       LegacyPartyMon8 old;
       memcpy(&old, raw + i * stride, sizeof(old));
@@ -105,7 +117,9 @@ void Party::begin() {
   // old party out of RAM.
   for (auto &s : slots) s = PartyMon();
   prefs.begin("tamapoke", false);
-  if (loadRoster(prefs, "party", slots, PARTY_STORAGE_SLOTS)) save();
+  rosterReadOnly = false;
+  pendingLive = PartyMon();
+  bool legacyLoaded=loadRoster(prefs, "party", slots, PARTY_STORAGE_SLOTS);
   // a blob written by an older/newer build could hold nonsense; drop anything
   // that is not a real Pokedex number rather than indexing DEX_TBL with it
   for (auto &s : slots) {
@@ -116,7 +130,47 @@ void Party::begin() {
   // The box is a separate key and simply absent on an older save, which leaves
   // it zeroed -- exactly what an empty box is.
   for (auto &s : box) s = PartyMon();
-  if (loadRoster(prefs, "box", box, BOX_SLOTS)) boxSave();
+  legacyLoaded=loadRoster(prefs, "box", box, BOX_SLOTS) || legacyLoaded;
+  // One atomic NVS blob owns BOTH rosters, including their form IDs. Old
+  // records remain recovery copies, not the authority when this key exists.
+  if (rosterExists(prefs)) {
+    uint8_t *raw=(uint8_t*)malloc(ROSTER_BYTES);
+    size_t stored=rosterStoredSize(prefs);
+    bool old=false;size_t count=0,stride=0;
+    bool valid=raw && stored>=12 && stored<=ROSTER_BYTES &&
+      rosterRead(prefs,raw,ROSTER_BYTES)==stored;
+    if (valid) {
+      old=!memcmp(raw,"TFR1",4);
+      bool wide=!memcmp(raw,"TFR3",4);
+      count=raw[4]+(wide?((size_t)raw[7]<<8):0);
+      stride=old?36:PARTY_RECORD_BYTES;
+      uint32_t sum=0; memcpy(&sum,raw+stored-4,4);
+      valid=(old || wide || !memcmp(raw,"TFR2",4)) && count>=PARTY_STORAGE_SLOTS && count<=ROSTER_N &&
+        stored==12+stride*(count+(old?0:1)) &&
+        raw[5]<=(old?0:1) && raw[6]==stride && (wide || raw[7]==0) &&
+        sum==rosterHash(raw,stored-4);
+    }
+    if (valid) {
+      for(auto &m:slots)m=PartyMon();for(auto &m:box)m=PartyMon();
+      for(size_t i=0;i<count;i++) {
+        PartyMon &m=i<PARTY_STORAGE_SLOTS ? slots[i] : box[i-PARTY_STORAGE_SLOTS];
+        memcpy(&m,raw+8+(old?36:PARTY_RECORD_BYTES)*i,old?36:PARTY_RECORD_BYTES);
+      }
+      if(!old && raw[5]) memcpy(&pendingLive,raw+8+PARTY_RECORD_BYTES*count,PARTY_RECORD_BYTES);
+      if(!old && raw[5] && (pendingLive.dex<1 || pendingLive.dex>DEX_COUNT || pendingLive.care[0]!=1))
+        rosterReadOnly=true;
+    } else {
+      // Do not replace an unreadable/future authoritative save with defaults.
+      rosterReadOnly=true;
+      Serial.println("forms: roster unreadable; recovery copies are read-only");
+    }
+    free(raw);
+  }
+  for(auto &s:slots) {
+    if(s.dex<1 || s.dex>DEX_COUNT) s.dex=0;
+    s.nick[sizeof(s.nick)-1]=0;
+    for(auto &m:s.moves) if(m>=MOVE_COUNT) m=0;
+  }
   for (auto &s : box) {
     if (s.dex < 1 || s.dex > DEX_COUNT) s.dex = 0;
     s.nick[sizeof(s.nick) - 1] = 0;
@@ -127,24 +181,106 @@ void Party::begin() {
   // If a player's box is completely full, keep it in the reserved physical
   // slot instead of deleting it; the next box opening will migrate it.
   migrateLegacyOverflow();
+  if(legacyLoaded && !rosterExists(prefs)) saveRoster();
 }
 
-void Party::save() {
-  prefs.putBytes("party", slots, sizeof(slots));
+bool Party::save() {
+  saveRoster();
+  return !rosterReadOnly;
 }
 
-void Party::boxSave() {
-  prefs.putBytes("box", box, sizeof(box));
+bool Party::boxSave() {
+  saveRoster();
+  return !rosterReadOnly;
 }
 
-uint8_t Party::boxCount() const {
-  uint8_t n = 0;
+void Party::saveRoster() {
+  if(rosterReadOnly) return;
+  uint8_t *raw=(uint8_t*)calloc(1,ROSTER_BYTES);
+  if(!raw) {rosterReadOnly=true;return;}
+  memcpy(raw,"TFR3",4); raw[4]=(uint8_t)ROSTER_N; raw[7]=ROSTER_N>>8;
+  raw[5]=!pendingLive.empty(); raw[6]=PARTY_RECORD_BYTES;
+  for(size_t i=0;i<ROSTER_N;i++) {
+    const PartyMon &m=i<PARTY_STORAGE_SLOTS ? slots[i] : box[i-PARTY_STORAGE_SLOTS];
+    memcpy(raw+8+PARTY_RECORD_BYTES*i,&m,PARTY_RECORD_BYTES);
+  }
+  memcpy(raw+8+PARTY_RECORD_BYTES*ROSTER_N,&pendingLive,PARTY_RECORD_BYTES);
+  uint32_t sum=rosterHash(raw,ROSTER_BYTES-4);memcpy(raw+ROSTER_BYTES-4,&sum,4);
+  bool written=rosterWrite(prefs,raw,ROSTER_BYTES);
+  // Verify the authoritative write before touching either recovery copy.
+  uint8_t *check=(uint8_t*)malloc(ROSTER_BYTES);
+  bool committed=written && check && rosterStoredSize(prefs)==ROSTER_BYTES &&
+    rosterRead(prefs,check,ROSTER_BYTES)==ROSTER_BYTES && !memcmp(check,raw,ROSTER_BYTES);
+  free(check);
+  if(!committed) {free(raw);rosterReadOnly=true;Serial.println("forms: roster write failed; recovery copies retained");return;}
+  // Keep released-format recovery copies, without ever writing a 36-byte
+  // untagged stride to keys that old releases interpret as 34/30/26 bytes.
+  for(size_t i=0;i<PARTY_STORAGE_SLOTS;i++) memcpy(raw+34*i,&slots[i],34);
+  prefs.putBytes("party",raw,34*PARTY_STORAGE_SLOTS);
+  // Only the released 60-slot recovery prefix fits ESP's original NVS.
+  for(size_t i=0;i<60;i++) memcpy(raw+34*i,&box[i],34);
+  prefs.putBytes("box",raw,34*60);
+  free(raw);
+}
+
+bool Party::swapActive(Pet &pet, bool fromBox, uint16_t index) {
+  if(rosterReadOnly || !pendingLive.empty() || !pet.canSwapActive() ||
+     index>=(fromBox?BOX_SLOTS:PARTY_SLOTS)) return false;
+  PartyMon &slot=fromBox?box[index]:slots[index];
+  if(slot.empty() || (slot.care[0]!=0 && slot.care[0]!=1)) return false;
+  PartyMon before=slot;
+  // Normalize legacy companions without writing NVS or changing player progress.
+  Pet incoming; incoming.lastSeenEpoch=pet.lastSeenEpoch; incoming.reviveFrom(slot);
+  if(!incoming.moveCount()) incoming.relearnFromLevel();
+  pendingLive=incoming.storageSnapshot();
+  slot=pet.storageSnapshot(); // empty when an egg was waiting, as before
+  saveRoster(); // one verified commit owns BOTH individuals before live keys change
+  if(rosterReadOnly) {slot=before;pendingLive=PartyMon();return false;}
+  finishActiveSwap(pet);
+  return true;
+}
+
+bool Party::finishActiveSwap(Pet &pet) {
+  if(pendingLive.empty() || rosterReadOnly) return false;
+  pet.reviveFrom(pendingLive);
+  if(!pet.storedIndividualMatches()) return false;
+  PartyMon committed=pendingLive;
+  pendingLive=PartyMon();
+  saveRoster();
+  if(rosterReadOnly) pendingLive=committed;
+  return !rosterReadOnly;
+}
+
+void Party::recoverActiveSwap(Pet &pet) {
+  // Read fresh storage, not the global Party RAM (backup restore may replace it).
+  Party *recovery=new(std::nothrow) Party;
+  if(!recovery) return;
+  recovery->begin();
+  if(!recovery->pendingLive.empty()) {
+    recovery->finishActiveSwap(pet);
+    party.begin();
+  }
+  delete recovery;
+}
+
+uint16_t Party::boxCount() const {
+  uint16_t n = 0;
   for (auto &s : box)
     if (!s.empty()) n++;
   return n;
 }
 
+bool Party::selectForm(bool fromBox,uint16_t index,FormId id) {
+  if(rosterReadOnly || index>=(fromBox?BOX_SLOTS:PARTY_SLOTS)) return false;
+  PartyMon &m=fromBox?box[index]:slots[index];
+  if(!formEligible(m.dex,id,m.level)) return false;
+  FormId old=m.form;m.form=id;saveRoster();
+  if(rosterReadOnly) {m.form=old;return false;}
+  return true;
+}
+
 bool Party::migrateLegacyOverflow() {
+  if(rosterReadOnly) return false;
   PartyMon &oldSixth = slots[PARTY_SLOTS];
   if (oldSixth.empty()) return false;
   int i = boxFirstFree();
@@ -163,28 +299,29 @@ int Party::boxFirstFree() const {
 }
 
 bool Party::boxAdd(const PartyMon &m) {
+  if(rosterReadOnly)return false;
   migrateLegacyOverflow();
   int i = boxFirstFree();
   if (i < 0) return false;
   box[i] = m;
-  boxSave();
+  if(!boxSave()){box[i]=PartyMon();return false;}
   return true;
 }
 
-void Party::boxReleaseAt(uint8_t i) {
-  if (i >= BOX_SLOTS) return;
+void Party::boxReleaseAt(uint16_t i) {
+  if (rosterReadOnly || i >= BOX_SLOTS) return;
+  PartyMon before=box[i];
   box[i] = PartyMon();
-  boxSave();
+  if(!boxSave()){box[i]=before;return;}
   migrateLegacyOverflow();
 }
 
-void Party::swapPartyBox(uint8_t partyIdx, uint8_t boxIdx) {
-  if (partyIdx >= PARTY_SLOTS || boxIdx >= BOX_SLOTS) return;
+void Party::swapPartyBox(uint8_t partyIdx, uint16_t boxIdx) {
+  if (rosterReadOnly || partyIdx >= PARTY_SLOTS || boxIdx >= BOX_SLOTS) return;
   PartyMon t = slots[partyIdx];
   slots[partyIdx] = box[boxIdx];
   box[boxIdx] = t;
-  save();
-  boxSave();
+  if(!save()){box[boxIdx]=slots[partyIdx];slots[partyIdx]=t;}
 }
 
 uint8_t Party::count() const {
@@ -201,23 +338,26 @@ int Party::firstFree() const {
 }
 
 bool Party::add(const PartyMon &m) {
+  if(rosterReadOnly)return false;
   int i = firstFree();
   if (i < 0) return false;
   slots[i] = m;
-  save();
+  if(!save()){slots[i]=PartyMon();return false;}
   return true;
 }
 
 void Party::replaceAt(uint8_t i, const PartyMon &m) {
-  if (i >= PARTY_SLOTS) return;
+  if (rosterReadOnly || i >= PARTY_SLOTS) return;
+  PartyMon before=slots[i];
   slots[i] = m;
-  save();
+  if(!save())slots[i]=before;
 }
 
 void Party::releaseAt(uint8_t i) {
-  if (i >= PARTY_SLOTS) return;
+  if (rosterReadOnly || i >= PARTY_SLOTS) return;
+  PartyMon before=slots[i];
   slots[i] = PartyMon();
-  save();
+  if(!save())slots[i]=before;
 }
 
 // Mirrors calcStat() in pet.cpp: base + level + IV contribution + training.
@@ -228,21 +368,21 @@ static uint16_t calcStat(uint8_t base, uint8_t iv, uint16_t lvl, uint8_t tr) {
 }
 
 uint16_t Party::atkOf(const PartyMon &m) const {
-  return m.empty() ? 0 : calcStat(DEX_TBL[m.dex].bAtk, m.ivAtk, m.level, m.trAtk);
+  return m.empty() ? 0 : calcStat(formDex(m.dex, m.form).bAtk, m.ivAtk, m.level, m.trAtk);
 }
 uint16_t Party::defOf(const PartyMon &m) const {
-  return m.empty() ? 0 : calcStat(DEX_TBL[m.dex].bDef, m.ivDef, m.level, m.trDef);
+  return m.empty() ? 0 : calcStat(formDex(m.dex, m.form).bDef, m.ivDef, m.level, m.trDef);
 }
 uint16_t Party::speOf(const PartyMon &m) const {
-  return m.empty() ? 0 : calcStat(DEX_TBL[m.dex].bSpe, m.ivSpe, m.level, m.trSpe);
+  return m.empty() ? 0 : calcStat(formDex(m.dex, m.form).bSpe, m.ivSpe, m.level, m.trSpe);
 }
 uint16_t Party::vitOf(const PartyMon &m) const {
-  return m.empty() ? 0 : calcStat(DEX_TBL[m.dex].bHp, m.ivHp, m.level, 10);
+  return m.empty() ? 0 : calcStat(formDex(m.dex, m.form).bHp, m.ivHp, m.level, 10);
 }
 // Special reuses the physical IV and training, same rule as Pet::spaStat().
 uint16_t Party::spaOf(const PartyMon &m) const {
-  return m.empty() ? 0 : calcStat(DEX_TBL[m.dex].bSpA, m.ivAtk, m.level, m.trAtk);
+  return m.empty() ? 0 : calcStat(formDex(m.dex, m.form).bSpA, m.ivAtk, m.level, m.trAtk);
 }
 uint16_t Party::spdOf(const PartyMon &m) const {
-  return m.empty() ? 0 : calcStat(DEX_TBL[m.dex].bSpD, m.ivDef, m.level, m.trDef);
+  return m.empty() ? 0 : calcStat(formDex(m.dex, m.form).bSpD, m.ivDef, m.level, m.trDef);
 }

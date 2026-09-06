@@ -1,0 +1,100 @@
+TamaPoke fw v3.0.0-beta.5
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS  card       pages on a horizontal swipe
+PASS  gyms       pages on a horizontal swipe
+PASS  player     pages on a horizontal swipe
+PASS  box        pages on a horizontal swipe
+PASS  box        all 50 numbered pages are reachable
+PASS  box        closes after the final page
+PASS  movepick   pages on a horizontal swipe
+PASS  movepick   all 91 moves and 19 numbered pages are reachable
+PASS  movepick   closes after the final page
+PASS  teampick   all six battle candidates fit on one page
+PASS  gallery    pages on a horizontal swipe
+PASS  gallery    every one of the 1025 species is reachable
+PASS  gallery    changes region on a vertical swipe
+PASS  gyms       cycles all 9 ladders on a vertical swipe
+PASS  gyms       every ladder still pages horizontally
+PASS  gyms       opens on the region chooser
+PASS  gyms       paging back returns to the chooser
+PASS  gallery    paging back returns to the chooser
+PASS  dexpick    pages on a horizontal swipe
+PASS  dexpick    wraps forward rather than closing
+PASS  dexpick    wraps backward rather than closing
+PASS  dexpick    every region has a row across the pages
+PASS  gympick    lists every ladder (9)
+PASS  gympick    needs 3 pages and says so
+PASS  gympick    pages on a horizontal swipe
+PASS  gympick    the last ladder lands on page 3 of 3
+PASS  gating     a region with no pack is locked
+PASS  gating     the pill skips locked regions and reaches only 2
+PASS  gating     a locked region cannot be chosen
+PASS  gating     eggs never come from a region with no pack
+PASS  picker     no FIRE BLAST for a level 22 Charmeleon
+PASS  picker     still offers what it really knows
+PASS  picker     and the TMs arrive once it is built
+PASS  picker     can recover FLOWER TRICK after evolution
+every paged screen pages
+TamaPoke fw v3.0.0-beta.5
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS party button exchanges a living pet without deleting either
+PASS outgoing individual preserves exact minute, energy, bond, IVs, training, moves, nickname, shiny and form
+PASS legacy companion behavior and player-wide achievements stay intact
+PASS returning the growing individual is allowed
+PASS the original grower resumes rather than becoming a retired companion
+PASS full storage stays full after reversible exchange
+PASS restored live care survives reopening the save
+PASS a full party still opens the last box slot's detail sheet
+PASS box bring-back button swaps directly with active pet at full capacity
+PASS box round trip restores the grower
+PASS TO PARTY still offers a storage-slot exchange when the party is full
+PASS box-to-party exchange leaves the live pet untouched
+PASS pending move decision blocks exchange without changing storage
+PASS an ending cannot be interrupted by exchanging pets
+PASS out-of-range indices are rejected
+PASS full roster, care metadata and recovery copies fit the v5 transport envelope
+PASS whole-save import accepts the enlarged care-aware save
+PASS cross-device save round trip keeps both active and boxed individuals
+PASS interrupted exchange replays the committed incoming pet and clears recovery only after verified saving
+PASS recovery is idempotent across another restart
+forms: roster write failed; recovery copies retained
+PASS failed atomic roster write rolls back RAM and retains both saved individuals
+PASS failed live-key write retains the committed recovery record
+PASS reboot repairs a partially written live save without duplicating or losing a Pokemon
+PASS beta.1/2 TFR1 records retain form and legacy companion policy
+PASS egg-time bring-back still frees the selected slot
+TamaPoke fw v3.0.0-beta.5
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS 300 box slots and 50 numbered pages
+PASS rapid strike has its own learnset, not single strike's
+PASS appliance signatures do not leak between forms
+PASS both Kyurem fusion pools include their signatures
+PASS Galar Slowbro learns Shell Side Arm
+PASS all 69 overridden form pools are nonempty and bounded
+PASS form selection opens an offer without replacing any selected move
+PASS user chooses exactly which of the four moves to replace
+PASS chosen form move persists after restart
+PASS declining leaves all four moves intact and allows later relearning
+PASS all 300 individuals including indices beyond 255 survive reload
+PASS last page opens slot 300, not wrapped slot 44
+PASS boxed move picker targets the 300th individual
+PASS last boxed individual can exchange with the live pet
+PASS form selection accepts box indices above 255
+PASS form modal retains the full box target index
+PASS boxed form offer changes only the user-selected slot on individual 300
+PASS Surging Strikes is exactly three critical hits
+PASS Shell Side Arm chooses the stronger damage category
+PASS strict signatures cannot be used in the wrong form
+PASS full 300-slot save transfers in version 5
+PASS transfer retains the last boxed form
+PASS beta.3/4 TFR2 migration preserves all 60 old positions and clears only the new tail
+PASS: form_moves,active_swap,swipe

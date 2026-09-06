@@ -15,6 +15,7 @@
 #include "dex.h"
 #include "trainers.h"
 #include "noart.h"
+#include "gym_art.h"
 #include <cstdio>
 #include <cstring>
 uint32_t g_seed=1; FakeSerial Serial; FakeESP ESP; FakeWire Wire;
@@ -134,7 +135,7 @@ int main(){
       for (int i = 0; i < TRAINER_COUNT; i++)
         for (int k = 0; k < ts.list[i].count; k++) {
           int16_t d = (int16_t)ts.list[i].team[k].dex;
-          if (!speciesHasArt(d)) {
+          if (!speciesHasArt(d) && !gymNpcHasArt(d)) {
             printf("      %s %s slot%d: dex %d has no sprite\n",
                    ts.region, ts.list[i].name, k, (int)d);
             offenders++;

@@ -1,0 +1,32 @@
+PASS 179 verified-art forms, no appearance category
+PASS every threshold, type, stat and ordinary evolution identity is valid
+PASS 60 / 70 / 80 categories
+PASS Charizard X changes Flying to Dragon in the real type chart
+PASS wrong species and unknown IDs use safe base data
+PASS Hearthflame Ivy Cudgel is Fire
+PASS Judgment follows the Arceus form
+PASS Multi-Attack follows the Silvally form
+PASS Techno Blast uses its drive type, not Bug/Steel
+PASS Dragon STAB changes actual damage after Mega X selection
+PASS battle action uses Fire Ivy Cudgel against Grass, not the original Grass move type
+PASS level 70 can select Mega Charizard X
+PASS live form, shiny and altered stats survive reload
+PASS good farewell still opens at original 73 / 24-hour boundary
+PASS no form unlock or transformation is required for good farewell
+PASS Mega Floette does NOT count as ordinary final evolution
+PASS party-to-box form and moves survive authoritative roster reload
+PASS box-to-party keeps the form with the individual
+PASS reviving carries the selected form
+PASS LAN wire retains form identity and derived stats
+PASS battle level caps do not undo a previously unlocked form
+PASS version-3 whole save fits the new bound, including legacy recovery copies
+PASS form save enters transport
+PASS lossy multi-device transport preserves every form-save byte
+PASS form save restores
+PASS live and party forms restored together
+PASS unrecognized form ID is preserved, never rewritten to zero
+forms: roster unreadable; recovery copies are read-only
+PASS an unreadable/future roster cannot be overwritten through form selection
+PASS a failed roster read preserves the authoritative bytes for recovery
+PASS a new individual never inherits the previous form
+PASS: forms

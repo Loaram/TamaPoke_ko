@@ -1,0 +1,102 @@
+PASS  no ladder is claimed for the ALL pseudo-region
+PASS  and the ladder table is exactly GYM_REGIONS long
+PASS  every ladder that exists has a roster and a name
+PASS  KANTO: every creature is a real dex number
+PASS  KANTO: every level is inside the curve
+PASS  KANTO: every team has 1..6 members
+PASS  KANTO: every trainer is named and placed
+PASS  KANTO: the ladder never collapses in difficulty
+PASS  JOHTO: every creature is a real dex number
+PASS  JOHTO: every level is inside the curve
+PASS  JOHTO: every team has 1..6 members
+PASS  JOHTO: every trainer is named and placed
+PASS  JOHTO: the ladder never collapses in difficulty
+PASS  HOENN: every creature is a real dex number
+PASS  HOENN: every level is inside the curve
+PASS  HOENN: every team has 1..6 members
+PASS  HOENN: every trainer is named and placed
+PASS  HOENN: the ladder never collapses in difficulty
+PASS  SINNOH: every creature is a real dex number
+PASS  SINNOH: every level is inside the curve
+PASS  SINNOH: every team has 1..6 members
+PASS  SINNOH: every trainer is named and placed
+PASS  SINNOH: the ladder never collapses in difficulty
+PASS  UNOVA: every creature is a real dex number
+PASS  UNOVA: every level is inside the curve
+PASS  UNOVA: every team has 1..6 members
+PASS  UNOVA: every trainer is named and placed
+PASS  UNOVA: the ladder never collapses in difficulty
+PASS  KALOS: every creature is a real dex number
+PASS  KALOS: every level is inside the curve
+PASS  KALOS: every team has 1..6 members
+PASS  KALOS: every trainer is named and placed
+PASS  KALOS: the ladder never collapses in difficulty
+PASS  ALOLA: every creature is a real dex number
+PASS  ALOLA: every level is inside the curve
+PASS  ALOLA: every team has 1..6 members
+PASS  ALOLA: every trainer is named and placed
+PASS  ALOLA: the ladder never collapses in difficulty
+PASS  GALAR: every creature is a real dex number
+PASS  GALAR: every level is inside the curve
+PASS  GALAR: every team has 1..6 members
+PASS  GALAR: every trainer is named and placed
+PASS  GALAR: the ladder never collapses in difficulty
+PASS  PALDEA: every creature is a real dex number
+PASS  PALDEA: every level is inside the curve
+PASS  PALDEA: every team has 1..6 members
+PASS  PALDEA: every trainer is named and placed
+PASS  PALDEA: the ladder never collapses in difficulty
+PASS  KANTO: the champion tops the ladder (65 vs 60)
+PASS  JOHTO: the champion tops the ladder (50 vs 47)
+PASS  HOENN: the champion tops the ladder (58 vs 55)
+PASS  SINNOH: the champion tops the ladder (62 vs 59)
+PASS  UNOVA: the champion tops the ladder (59 vs 58)
+PASS  KALOS: the champion tops the ladder (68 vs 65)
+PASS  ALOLA: the champion tops the ladder (58 vs 56)
+PASS  GALAR: the champion tops the ladder (65 vs 55)
+PASS  PALDEA: the champion tops the ladder (62 vs 61)
+PASS  JOHTO: 13 of 49 creatures are its own generation
+PASS  HOENN: 46 of 58 creatures are its own generation
+PASS  SINNOH: 27 of 52 creatures are its own generation
+PASS  UNOVA: 34 of 44 creatures are its own generation
+PASS  KALOS: 22 of 44 creatures are its own generation
+PASS  ALOLA: 23 of 44 creatures are its own generation
+PASS  GALAR: 21 of 53 creatures are its own generation
+PASS  PALDEA: 20 of 54 creatures are its own generation
+PASS  no trainer fields a creature with no sprite art
+PASS  (and noart.h is non-empty, so that check means something)
+PASS  speciesHasArt really does reject an art-less dex
+all good
+TamaPoke fw v3.0.0-beta.2
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS nine gym regions without reindexing the first seven
+PASS short seven-region save preserves every old badge in both modes
+PASS new regions start with no forged wins
+PASS Galar title toggles Sword/Shield without leaving gyms
+PASS difficulty control does not toggle the version
+PASS Bea win does not award Allister badge
+PASS Shield final bit 15 survives saving and loading
+PASS course badge count excludes the other version and Cup wins
+Checked 39 battles, 160 team members
+PASS all new teams chain, retain their region/form and award correct course wins
+PASS Paldea second page remains reachable
+PASS Paldea Elite Four and champion page remains reachable
+PASS expanded badges fit the existing v3 transfer limit
+PASS expanded save passes the actual transfer importer
+PASS all new course wins survive full export/import, including high bit 15
+PASS NPC Pom-Pom defense uses electric/flying, not the base fire/flying type
+PASS NPC Pom-Pom electric attacks receive the matching-type bonus
+TamaPoke fw v3.0.0-beta.2
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS form page arrow navigates without leaving the modal
+PASS visible select button applies the displayed form
+PASS level-80 giant is locked at level 70
+PASS vertical back closes the form preview
+PASS all 179 normal and shiny-or-same-form-fallback sprites load through the real parser
+PASS: gyms_new,roster,forms_ui

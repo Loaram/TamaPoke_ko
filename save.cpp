@@ -2,7 +2,9 @@
 #include <Arduino.h>
 #include <Preferences.h>
 #include <string.h>
+#include <stdlib.h>
 #include "party.h"
+#include "roster_store.h"
 
 // Every key the firmware persists. Adding one here is the whole job of adding
 // it to the backup; save_test fails if a key exists in NVS and not in this list.
@@ -30,16 +32,20 @@ const SaveField SAVE_FIELDS[] = {
   { "badgX", SK_BYTES },{ "badhX", SK_BYTES },
   { "badh", SK_U16 },   { "dexreg", SK_BYTES }, { "dexsh", SK_BYTES },
   { "strk", SK_U16 },   { "bstrk", SK_U16 },  { "cday", SK_U32 },
+  { "byeQuota", SK_U32 },
+  { "cer", SK_U8 }, { "endWait", SK_BYTES }, { "endEgg", SK_U32 },
   { "medal", SK_U16 },  { "tmedal", SK_U16 }, { "mstone", SK_U16 },
   { "ghi", SK_U16 },    { "shi", SK_U16 },    { "qhi", SK_U16 },
   // the banked creatures
   { "party", SK_BYTES }, { "box", SK_BYTES },
+  { "rosterF", SK_BYTES }, { "form", SK_U16 }, { "formDex", SK_I16 },
+  { "liveCare", SK_BYTES },
   // settings, so a restored device plays the way it did
   { "lang", SK_U8 },    { "snd", SK_BOOL },   { "vol", SK_U8 },
 };
 const uint16_t SAVE_FIELD_COUNT = sizeof(SAVE_FIELDS) / sizeof(SAVE_FIELDS[0]);
 
-#define MAX_VAL (sizeof(PartyMon) * BOX_SLOTS) // the box is the largest field
+#define MAX_VAL PARTY_ROSTER_BYTES
 static_assert(MAX_VAL + 1024 < SAVE_MAX_BYTES,
               "whole-save buffer must leave room beyond the box blob");
 
@@ -65,6 +71,11 @@ static uint8_t widthOf(uint8_t kind) {
 // Reads one field out of NVS. Returns its length, or -1 if the key is absent --
 // absent is normal (a fresh save has no party) and is simply left out.
 static int readField(Preferences &p, const SaveField &f, uint8_t *val) {
+  if(!strcmp(f.key,"rosterF") && rosterExists(p)) {
+    size_t n=rosterStoredSize(p);
+    if(n>MAX_VAL || rosterRead(p,val,MAX_VAL)!=n)return -2;
+    return (int)n;
+  }
   if (!p.isKey(f.key)) return -1;
   switch (f.kind) {
     case SK_U8:   val[0] = p.getUChar(f.key, 0); return 1;
@@ -121,14 +132,16 @@ size_t saveExport(uint8_t *out, size_t cap) {
   p.begin("tamapoke", true);
   size_t at = SAVE_HDR;
   uint16_t count = 0;
-  uint8_t val[MAX_VAL];
+  uint8_t *val=(uint8_t*)malloc(MAX_VAL);
+  if(!val) {p.end();return 0;}
   for (uint16_t i = 0; i < SAVE_FIELD_COUNT; i++) {
     const SaveField &f = SAVE_FIELDS[i];
     int n = readField(p, f, val);
+    if(n==-2){free(val);p.end();return 0;} // never export a silently truncated roster
     if (n < 0) continue;             // absent: nothing to back up
     size_t klen = strlen(f.key);
     if (klen > 15) continue;         // NVS keys cannot be longer anyway
-    if (at + 1 + klen + 1 + 2 + (size_t)n + 2 > cap) { p.end(); return 0; }
+    if (at + 1 + klen + 1 + 2 + (size_t)n + 2 > cap) { free(val);p.end(); return 0; }
     out[at++] = (uint8_t)klen;
     memcpy(out + at, f.key, klen); at += klen;
     out[at++] = f.kind;
@@ -138,6 +151,7 @@ size_t saveExport(uint8_t *out, size_t cap) {
     count++;
   }
   p.end();
+  free(val);
   out[0] = SAVE_MAGIC0; out[1] = SAVE_MAGIC1;
   out[2] = SAVE_MAGIC2; out[3] = SAVE_MAGIC3;
   out[4] = SAVE_VERSION;
@@ -184,6 +198,21 @@ bool saveValidate(const uint8_t *in, size_t n) {
     if (vat + 3 + vlen > n - 2) return false;
     uint8_t w = widthOf(kind);
     if (w && vlen != w) return false;          // a scalar of the wrong width
+    // A well-formed checksum is not enough: duplicate or wrong-typed known
+    // keys would otherwise silently discard parts of the receiving save.
+    for(uint8_t i=0;i<klen;i++) {
+      uint8_t c=in[at+1+i];
+      if(!((c>='a'&&c<='z')||(c>='A'&&c<='Z')||(c>='0'&&c<='9')||c=='_'))return false;
+    }
+    char key[16]={};memcpy(key,in+at+1,klen);
+    for(uint16_t i=0;i<SAVE_FIELD_COUNT;i++)
+      if(!strcmp(key,SAVE_FIELDS[i].key) && kind!=SAVE_FIELDS[i].kind)return false;
+    if(kind==SK_STR && vlen>=64)return false;
+    for(size_t prior=SAVE_HDR;prior<at;) {
+      uint8_t k=in[prior];size_t v=prior+1+k;
+      if(k==klen && !memcmp(in+prior+1,key,klen))return false;
+      prior=v+3+in[v+1]+((size_t)in[v+2]<<8);
+    }
     at = vat + 3 + vlen;
     seen++;
   }
@@ -191,28 +220,55 @@ bool saveValidate(const uint8_t *in, size_t n) {
   return true;
 }
 
-bool saveImport(const uint8_t *in, size_t n) {
-  // PASS ONE is deliberately separate so the wireless receiver can validate a
-  // complete preview and ask the player before this committing pass runs.
-  if (!saveValidate(in, n)) return false;
-
-  // PASS TWO: it parses, so commit. Cleared first, or keys the backup does not
-  // contain would survive from whatever save happened to be on the device.
-  Preferences p;
-  p.begin("tamapoke", false);
-  p.clear();
-  size_t at = SAVE_HDR;
-  while (at + 4 <= n - 2) {
-    uint8_t klen = in[at];
-    char key[16] = {0};
-    memcpy(key, in + at + 1, klen);
-    size_t vat = at + 1 + klen;
-    uint8_t kind = in[vat];
-    uint16_t vlen = (uint16_t)in[vat + 1] | ((uint16_t)in[vat + 2] << 8);
-    const SaveField *f = fieldFor(key, kind);
-    if (f) writeField(p, *f, in + vat + 3, vlen);
-    at = vat + 3 + vlen;
+static const uint8_t *snapshotField(const uint8_t *in,size_t n,const SaveField &f,uint16_t &len) {
+  for(size_t at=SAVE_HDR;at+4<=n-2;) {
+    uint8_t k=in[at];size_t v=at+1+k;len=in[v+1]|((uint16_t)in[v+2]<<8);
+    if(k==strlen(f.key) && !memcmp(in+at+1,f.key,k) && in[v]==f.kind)return in+v+3;
+    at=v+3+len;
   }
-  p.end();
+  return nullptr;
+}
+
+static bool applySnapshot(Preferences &p,const uint8_t *in,size_t n,uint8_t *check) {
+  for(uint16_t i=0;i<SAVE_FIELD_COUNT;i++) {
+    const auto &f=SAVE_FIELDS[i];uint16_t len=0;const uint8_t *value=snapshotField(in,n,f,len);
+    if(!value)continue;
+    if(readField(p,f,check)==len && !memcmp(value,check,len))continue;
+#if defined(ESP32) && !defined(ANDROID)
+    if(!strcmp(f.key,"rosterF")) {if(!rosterWrite(p,value,len))return false;}
+    else
+#endif
+    writeField(p,f,value,len);
+    if(readField(p,f,check)!=len || memcmp(value,check,len))return false;
+  }
+  // Remove only after all incoming values were verified. In particular, never
+  // clear the namespace before a potentially failing large roster write.
+  for(uint16_t i=0;i<SAVE_FIELD_COUNT;i++) {
+    const auto &f=SAVE_FIELDS[i];uint16_t len=0;
+    if(snapshotField(in,n,f,len))continue;
+    if(p.isKey(f.key) && !p.remove(f.key))return false;
+#if defined(ESP32) && !defined(ANDROID)
+    if(!strcmp(f.key,"rosterF") && p.isKey("rosterSD") && !p.remove("rosterSD"))return false;
+#endif
+  }
   return true;
+}
+
+bool saveImport(const uint8_t *in,size_t n) {
+  if(!saveValidate(in,n))return false;
+#if defined(ESP32) && !defined(ANDROID)
+  uint8_t *old=(uint8_t*)ps_malloc(SAVE_MAX_BYTES),*check=(uint8_t*)ps_malloc(MAX_VAL);
+#else
+  uint8_t *old=(uint8_t*)malloc(SAVE_MAX_BYTES),*check=(uint8_t*)malloc(MAX_VAL);
+#endif
+  if(!old || !check){free(old);free(check);return false;}
+  size_t oldN=saveExport(old,SAVE_MAX_BYTES);
+  if(!oldN){free(old);free(check);return false;}
+  Preferences p;p.begin("tamapoke",false);
+  bool ok=applySnapshot(p,in,n,check);
+  // Device-local UTC baseline must not survive a successful foreign import.
+  if(ok && p.isKey("aseen"))ok=p.remove("aseen");
+  if(!ok && !applySnapshot(p,old,oldN,check))
+    Serial.println("save: storage failure during rollback; restore external backup");
+  p.end();free(old);free(check);return ok;
 }

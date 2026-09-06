@@ -51,6 +51,8 @@
 struct TrainerMon {
   uint16_t dex;      // NOT uint8_t: Hoenn runs to 386
   uint8_t level;
+  uint16_t form = 0; // NPC only; not a saved PartyMon
+  uint8_t type1 = T_NONE, type2 = T_NONE; // unsupported selectable style, e.g. Pom-Pom
 };
 
 struct Trainer {
@@ -239,7 +241,8 @@ static const Trainer TRAINERS_ALOLA[TRAINER_COUNT] = {
   { "KUKUI",    "CHAMPION",  T_NORMAL,   6, { {745,57},{38,56},{628,56},{462,56},{143,56},{727,58} } },
 };
 
-#define GYM_REGIONS 7
+#include "trainers_new.h"
+#define GYM_REGIONS 9
 static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_KANTO,  "KANTO" },
   { TRAINERS_JOHTO,  "JOHTO" },
@@ -248,7 +251,26 @@ static const TrainerSet TRAINER_SETS[GYM_REGIONS] = {
   { TRAINERS_UNOVA,  "UNOVA" },
   { TRAINERS_KALOS,  "KALOS" },
   { TRAINERS_ALOLA,  "ALOLA" },
+  { TRAINERS_GALAR, "GALAR" },
+  { TRAINERS_PALDEA, "PALDEA" },
 };
+
+static inline const Trainer &trainerAt(uint8_t region, uint8_t index, bool shield = false) {
+  if (region == 7 && shield) {
+    if (index == 3) return GALAR_SHIELD_GHOST;
+    if (index == 5) return GALAR_SHIELD_ICE;
+    if (index == 10) return GALAR_SHIELD_FINAL;
+  }
+  return TRAINER_SETS[region % GYM_REGIONS].list[index < TRAINER_COUNT ? index : 0];
+}
+static inline uint8_t trainerBadgeIndex(uint8_t region, uint8_t index, bool shield) {
+  if (region == 7 && shield) {
+    if (index == 3) return 13;
+    if (index == 5) return 14;
+    if (index == 10) return 15;
+  }
+  return index;
+}
 
 // Hard mode reruns the same ladder with perfect IVs and a smarter AI, so the
 // teams need no second table -- only the difficulty flag changes.

@@ -36,11 +36,14 @@ SVG_BASE = 'https://raw.githubusercontent.com/SteGriff/pokemon-badges/master/svg
 def _gym_regions():
     import os as _os, re as _re
     th = open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
-                            '..', 'trainers.h')).read()
+                            '..', 'trainers.h'), encoding='utf-8').read()
     names = _re.findall(r'\{\s*TRAINERS_\w+,\s*"(\w+)"\s*\}', th)
     return [n.capitalize() for n in names]
 
-REGIONS = _gym_regions()
+# Art covers only this contiguous prefix. Alola/Galar/Paldea deliberately use
+# type-coloured medals; do not fetch nonexistent SVGs or shift later indices.
+REGIONS = ['Kanto','Johto','Hoenn','Sinnoh','Unova','Kalos']
+assert _gym_regions()[:len(REGIONS)] == REGIONS, 'badge/ladder ordering changed'
 
 NAMES = ['BOULDER', 'CASCADE', 'THUNDER', 'RAINBOW',
          'SOUL', 'MARSH', 'VOLCANO', 'EARTH']

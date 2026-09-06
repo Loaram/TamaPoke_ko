@@ -33,7 +33,7 @@
 // whole handshake without a radio, and a deliberately lossy transport exercises
 // all of the above. Only the radio itself is unverifiable here.
 
-#define LINK_PROTO 4        // 16-bit battle move IDs changed the wire layout
+#define LINK_PROTO 5        // form ID affects sprites and battle typing
 #define LINK_SAVE_PROTO 3   // the chunked save transport itself is unchanged
 #define LINK_MAX_PAYLOAD 200
 #define LINK_NAME_LEN 12
@@ -102,6 +102,7 @@ enum LinkMsg : uint8_t {
 // live battle state (stages, ailments, timers) which only the host owns.
 struct LinkMon {
   int16_t dex;
+  FormId form;
   uint8_t level;
   uint16_t maxHp;
   uint16_t base[SI_COUNT];

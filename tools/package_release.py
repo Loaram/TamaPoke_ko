@@ -5,6 +5,7 @@ import json
 import shutil
 import zipfile
 from pathlib import Path
+from pypdf import PdfReader
 from prepare_release_guides import ROOT, firmware_version, sha256, copy_guide
 
 
@@ -19,8 +20,8 @@ def main():
     pdf_name = f'TamaPoke-{version}-Play-Guide-KO.pdf'
     copy_guide(ROOT / 'output' / 'pdf' / pdf_name, guides / pdf_name)
     images = sorted(args.guide_images.glob('page-*.png'))
-    if len(images) != 18:
-        raise SystemExit('Expected 18 rendered play guide pages')
+    if len(images) != len(PdfReader(str(guides / pdf_name)).pages):
+        raise SystemExit('Rendered images must cover every play guide page')
     with zipfile.ZipFile(guides / f'TamaPoke-{version}-Play-Guide-KO-Images.zip', 'w',
                          zipfile.ZIP_DEFLATED) as archive:
         for image in images:
@@ -42,6 +43,8 @@ manifest.json은 NVS와 FFat를 피하는 분할 펌웨어를 사용합니다.
 firmware/tamapoke.bin은 빈 기기용 통합 이미지입니다.
 기존 저장을 유지하는 업데이트에는 통합 이미지를 쓰지 마세요.
 스프라이트 9개 지방 팩은 설치 페이지에서 microSD에 설치하세요.
+폼체인지 팩도 함께 설치하세요. microSD는 300칸 보관 기록에도 필요합니다.
+업데이트 전 전체 세이브를 백업하세요. 새 저장의 구버전 복원은 지원하지 않습니다.
 플레이 가이드와 Galaxy Watch 설치 가이드는 같은 릴리스에 첨부되어 있습니다.
 '''
     with zipfile.ZipFile(out / esp_name, 'w', zipfile.ZIP_DEFLATED) as archive:

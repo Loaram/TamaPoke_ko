@@ -1,0 +1,70 @@
+TamaPoke fw v3.0.0-beta.3
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS  tapping a party slot opens its sheet
+PASS  with no confirm up yet
+PASS  RELEASE arms a confirm
+PASS  and does NOT act on the first tap
+PASS  the confirm is modal: a move row underneath it is inert
+PASS  and the creature is still there
+PASS  NO closes the confirm
+PASS  and keeps the creature
+PASS  YES lets it go
+PASS  and it does NOT reappear in the box
+PASS  the sheet closes behind it
+PASS  the release is persisted, not only in RAM
+PASS  tapping a box slot opens its sheet
+PASS  rather than moving the creature on one tap
+PASS  RELEASE arms a confirm on the box sheet too
+PASS  NO keeps it
+PASS  YES lets a boxed creature go
+PASS  and it is not pushed into the party instead
+PASS  TO PARTY withdraws it
+PASS  and the box slot is freed
+PASS  opening a sheet arms the swap side
+PASS  and releasing disarms it, so nothing points at a creature that is gone
+PASS  the sheet opens with an egg waiting
+PASS  BRING BACK works when tapped at the panel centre
+PASS  and the creature leaves the party to become the pet
+PASS  the panel is awake, so the gate is what is being tested
+PASS  and the party screen is up
+PASS  holding a party slot does NOT open the release dialog
+PASS  and it was a hold, not a tap that opened a sheet
+PASS  still awake for the companion check
+PASS  and back on the main screen, or the check below proves nothing
+PASS  the hold STILL works on the main screen, where it belongs
+all good
+TamaPoke fw v3.0.0-beta.3
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS party button exchanges a living pet without deleting either
+PASS outgoing individual preserves exact minute, energy, bond, IVs, training, moves, nickname, shiny and form
+PASS legacy companion behavior and player-wide achievements stay intact
+PASS returning the growing individual is allowed
+PASS the original grower resumes rather than becoming a retired companion
+PASS full storage stays full after reversible exchange
+PASS restored live care survives reopening the save
+PASS a full party still opens the last box slot's detail sheet
+PASS box bring-back button swaps directly with active pet at full capacity
+PASS box round trip restores the grower
+PASS TO PARTY still offers a storage-slot exchange when the party is full
+PASS box-to-party exchange leaves the live pet untouched
+PASS pending move decision blocks exchange without changing storage
+PASS an ending cannot be interrupted by exchanging pets
+PASS out-of-range indices are rejected
+PASS full roster, care metadata and recovery copies fit the v4 transport envelope
+PASS whole-save import accepts the enlarged care-aware save
+PASS cross-device save round trip keeps both active and boxed individuals
+PASS interrupted exchange replays the committed incoming pet and clears recovery only after verified saving
+PASS recovery is idempotent across another restart
+forms: roster write failed; recovery copies retained
+PASS failed atomic roster write rolls back RAM and retains both saved individuals
+PASS failed live-key write retains the committed recovery record
+PASS reboot repairs a partially written live save without duplicating or losing a Pokemon
+PASS beta.1/2 TFR1 records retain form and legacy companion policy
+PASS egg-time bring-back still frees the selected slot
+PASS: release,active_swap

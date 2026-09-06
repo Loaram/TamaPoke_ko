@@ -1,4 +1,5 @@
 #include "sdmon.h"
+#include "forms.h"
 #include "noart.h"
 #include "pin_config.h"
 #include "pet.h"   // gRegionArt, REGIONS -- the mask this narrows
@@ -10,7 +11,10 @@ bool sdDirty = false;
 bool sdArtDirty = false;
 SdThumbs thumbs;
 
-bool PmdMon::load(int16_t dexNum, bool shiny) {
+bool PmdMon::load(int16_t dexNum, bool shiny) { return loadForm(dexNum,0,shiny); }
+
+bool PmdMon::loadForm(int16_t dexNum, uint16_t form, bool shiny) {
+  this->form = form;
   // int16_t, NOT uint8_t. The dex reached 386 and this did not follow, so
   // everything from 256 up wrapped into Kanto: MARSHTOMP (258) opened
   // p002.bin and drew an IVYSAUR. Same trap that caught DexEntry::evolvesTo
@@ -19,11 +23,13 @@ bool PmdMon::load(int16_t dexNum, bool shiny) {
   unload();
   if (!sdReady) return false;
 
-  char path[28];
-  snprintf(path, sizeof(path), "/mons/p%s%03u.bin", shiny ? "s" : "", (unsigned)dexNum);
+  char path[40], file[28];
+  formSpriteName(file,sizeof(file),dexNum,form,shiny);
+  snprintf(path,sizeof(path),"/mons/%s",file);
   File f = SD_MMC.open(path, FILE_READ);
   if (!f && shiny) {  // sin shiny PMD: usa el normal
-    snprintf(path, sizeof(path), "/mons/p%03u.bin", (unsigned)dexNum);
+    formSpriteName(file,sizeof(file),dexNum,form,false);
+    snprintf(path,sizeof(path),"/mons/%s",file);
     f = SD_MMC.open(path, FILE_READ);
   }
   if (!f) return false;
@@ -155,7 +161,7 @@ void sdScanRegionArt(bool verbose) {
 
 bool sdBegin() {
   SD_MMC.setPins(SDMMC_CLK, SDMMC_CMD, SDMMC_DATA);
-  sdReady = SD_MMC.begin("/sdcard", true /* modo 1-bit */, true /* formatea si no monta */);
+  sdReady = SD_MMC.begin("/sdcard", true /* 1-bit */, false /* never format saved roster data */);
   if (sdReady) {
     Serial.printf("SD montada: %llu MB\n", SD_MMC.cardSize() / (1024ULL * 1024ULL));
     SD_MMC.mkdir("/mons");

@@ -1,0 +1,5686 @@
+{
+  "revision": "529ae655ccc2052a9bffdbaf7549a553959d09f0",
+  "files": {
+    "mons/p006f10134.bin": {
+      "source": "0006/0001",
+      "credit": {
+        "primary": "KEVIN0ITACHI",
+        "secondary": [
+          "<@!350050109741858829>",
+          "<@!479925530129596426>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Kevin0itachi",
+          "Discord": "KEVIN0ITACHI",
+          "Contact": "https://www.deviantart.com/kevin0itachi"
+        },
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        },
+        {
+          "Name": "Kevin",
+          "Discord": "<@!479925530129596426>",
+          "Contact": "<@479925530129596426>"
+        }
+      ]
+    },
+    "mons/ps006f10134.bin": {
+      "source": "0006/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p006f10365.bin": {
+      "source": "0006/0003",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps006f10365.bin": {
+      "source": "0006/0003/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p019f10193.bin": {
+      "source": "0019/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        }
+      ]
+    },
+    "mons/ps019f10193.bin": {
+      "source": "0019/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p020f10194.bin": {
+      "source": "0020/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [
+          "<@!576876006636519434>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        },
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps020f10194.bin": {
+      "source": "0020/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p026f10202.bin": {
+      "source": "0026/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps026f10202.bin": {
+      "source": "0026/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p027f10203.bin": {
+      "source": "0027/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps027f10203.bin": {
+      "source": "0027/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p028f10204.bin": {
+      "source": "0028/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps028f10204.bin": {
+      "source": "0028/0001/0001",
+      "credit": {
+        "primary": "<@!1327394227922931878>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "rhys",
+          "Discord": "<@!1327394227922931878>",
+          "Contact": "https://bsky.app/profile/geckqua.bsky.social"
+        }
+      ]
+    },
+    "mons/p037f10205.bin": {
+      "source": "0037/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps037f10205.bin": {
+      "source": "0037/0001/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p038f10206.bin": {
+      "source": "0038/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps038f10206.bin": {
+      "source": "0038/0001/0001",
+      "credit": {
+        "primary": "<@!117780585635643396>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Audino",
+          "Discord": "<@!117780585635643396>",
+          "Contact": "https://github.com/audinowho"
+        }
+      ]
+    },
+    "mons/p050f10207.bin": {
+      "source": "0050/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps050f10207.bin": {
+      "source": "0050/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p051f10208.bin": {
+      "source": "0051/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        }
+      ]
+    },
+    "mons/ps051f10208.bin": {
+      "source": "0051/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p052f10209.bin": {
+      "source": "0052/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps052f10209.bin": {
+      "source": "0052/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p052f10320.bin": {
+      "source": "0052/0002",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [
+          "<@!185431200783925249>",
+          "<@!330751862590406656>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        },
+        {
+          "Name": "Smingle",
+          "Discord": "<@!185431200783925249>",
+          "Contact": "https://twitter.com/TheSmingle"
+        },
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/p053f10210.bin": {
+      "source": "0053/0001",
+      "credit": {
+        "primary": "<@!872983950732165181>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Pink_no_tori",
+          "Discord": "<@!872983950732165181>",
+          "Contact": "https://twitter.com/pink_avian_poke"
+        }
+      ]
+    },
+    "mons/ps053f10210.bin": {
+      "source": "0053/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p058f10398.bin": {
+      "source": "0058/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps058f10398.bin": {
+      "source": "0058/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p059f10399.bin": {
+      "source": "0059/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [
+          "<@!356635814668664832>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        },
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps059f10399.bin": {
+      "source": "0059/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p065f10137.bin": {
+      "source": "0065/0001",
+      "credit": {
+        "primary": "<@!653416391201783856>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Michael12",
+          "Discord": "<@!653416391201783856>",
+          "Contact": "https://www.deviantart.com/michael12dz"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps065f10137.bin": {
+      "source": "0065/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p074f10211.bin": {
+      "source": "0074/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        }
+      ]
+    },
+    "mons/ps074f10211.bin": {
+      "source": "0074/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p075f10212.bin": {
+      "source": "0075/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        }
+      ]
+    },
+    "mons/ps075f10212.bin": {
+      "source": "0075/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p076f10213.bin": {
+      "source": "0076/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        }
+      ]
+    },
+    "mons/ps076f10213.bin": {
+      "source": "0076/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p077f10321.bin": {
+      "source": "0077/0001",
+      "credit": {
+        "primary": "JHONY_REX",
+        "secondary": [
+          "<@!215638650434617345>",
+          "<@!544245909639397378>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Jhony-Rex",
+          "Discord": "JHONY_REX",
+          "Contact": "https://www.deviantart.com/jhony-rex"
+        },
+        {
+          "Name": "◥θ┴θ◤",
+          "Discord": "<@!215638650434617345>",
+          "Contact": "DC:<@215638650434617345>"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps077f10321.bin": {
+      "source": "0077/0001/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p078f10322.bin": {
+      "source": "0078/0001",
+      "credit": {
+        "primary": "JHONY_REX",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Jhony-Rex",
+          "Discord": "JHONY_REX",
+          "Contact": "https://www.deviantart.com/jhony-rex"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps078f10322.bin": {
+      "source": "0078/0001/0001",
+      "credit": {
+        "primary": "<@!232091727094218752>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "lokatts",
+          "Discord": "<@!232091727094218752>",
+          "Contact": "https://twitter.com/lokatts"
+        }
+      ]
+    },
+    "mons/p079f10323.bin": {
+      "source": "0079/0001",
+      "credit": {
+        "primary": "<@!203640888558223361>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "FissionCube",
+          "Discord": "<@!203640888558223361>",
+          "Contact": "https://twewyfinalmix.tumblr.com"
+        }
+      ]
+    },
+    "mons/ps079f10323.bin": {
+      "source": "0079/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p080f10173.bin": {
+      "source": "0080/0002",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [
+          "<@!356635814668664832>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps080f10173.bin": {
+      "source": "0080/0002/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p080f10324.bin": {
+      "source": "0080/0001",
+      "credit": {
+        "primary": "<@!872983950732165181>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Pink_no_tori",
+          "Discord": "<@!872983950732165181>",
+          "Contact": "https://twitter.com/pink_avian_poke"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps080f10324.bin": {
+      "source": "0080/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p083f10325.bin": {
+      "source": "0083/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps083f10325.bin": {
+      "source": "0083/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p088f10214.bin": {
+      "source": "0088/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps088f10214.bin": {
+      "source": "0088/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p089f10215.bin": {
+      "source": "0089/0001",
+      "credit": {
+        "primary": "<@!319945906600411179>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "NeroIntruder",
+          "Discord": "<@!319945906600411179>",
+          "Contact": "https://twitter.com/NeroIntruder"
+        }
+      ]
+    },
+    "mons/ps089f10215.bin": {
+      "source": "0089/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p094f10138.bin": {
+      "source": "0094/0001",
+      "credit": {
+        "primary": "<@!653416391201783856>",
+        "secondary": [
+          "<@!237286997645983744>",
+          "<@!544245909639397378>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Michael12",
+          "Discord": "<@!653416391201783856>",
+          "Contact": "https://www.deviantart.com/michael12dz"
+        },
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps094f10138.bin": {
+      "source": "0094/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p100f10400.bin": {
+      "source": "0100/0001",
+      "credit": {
+        "primary": "<@!662304890143375391>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Axcel",
+          "Discord": "<@!662304890143375391>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps100f10400.bin": {
+      "source": "0100/0001/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p101f10401.bin": {
+      "source": "0101/0001",
+      "credit": {
+        "primary": "<@!276428982683959296>",
+        "secondary": [
+          "<@!624279546845200394>",
+          "<@!255885525204992000>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Gelius",
+          "Discord": "<@!276428982683959296>",
+          "Contact": "<@276428982683959296>"
+        },
+        {
+          "Name": "electronvolt",
+          "Discord": "<@!624279546845200394>",
+          "Contact": "electronvolt@gamepad.club"
+        },
+        {
+          "Name": "teddg",
+          "Discord": "<@!255885525204992000>",
+          "Contact": "<@255885525204992000>"
+        }
+      ]
+    },
+    "mons/ps101f10401.bin": {
+      "source": "0101/0001/0001",
+      "credit": {
+        "primary": "<@!1327394227922931878>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "rhys",
+          "Discord": "<@!1327394227922931878>",
+          "Contact": "https://bsky.app/profile/geckqua.bsky.social"
+        }
+      ]
+    },
+    "mons/p103f10216.bin": {
+      "source": "0103/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps103f10216.bin": {
+      "source": "0103/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p105f10217.bin": {
+      "source": "0105/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps105f10217.bin": {
+      "source": "0105/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p110f10326.bin": {
+      "source": "0110/0001",
+      "credit": {
+        "primary": "JHONY_REX",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Jhony-Rex",
+          "Discord": "JHONY_REX",
+          "Contact": "https://www.deviantart.com/jhony-rex"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps110f10326.bin": {
+      "source": "0110/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p115f10139.bin": {
+      "source": "0115/0001",
+      "credit": {
+        "primary": "<@!157796074457661440>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/ps115f10139.bin": {
+      "source": "0115/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p122f10327.bin": {
+      "source": "0122/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps122f10327.bin": {
+      "source": "0122/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p128f10419.bin": {
+      "source": "0128/0001",
+      "credit": {
+        "primary": "<@!360948625901223950>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Limomon",
+          "Discord": "<@!360948625901223950>",
+          "Contact": "https://twitter.com/TheLimomon"
+        }
+      ]
+    },
+    "mons/ps128f10419.bin": {
+      "source": "0128/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p128f10420.bin": {
+      "source": "0128/0002",
+      "credit": {
+        "primary": "<@!360948625901223950>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Limomon",
+          "Discord": "<@!360948625901223950>",
+          "Contact": "https://twitter.com/TheLimomon"
+        }
+      ]
+    },
+    "mons/ps128f10420.bin": {
+      "source": "0128/0002/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p128f10421.bin": {
+      "source": "0128/0003",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps128f10421.bin": {
+      "source": "0128/0003/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p142f10142.bin": {
+      "source": "0142/0001",
+      "credit": {
+        "primary": "<@!330751862590406656>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/ps142f10142.bin": {
+      "source": "0142/0001/0001",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/p144f10328.bin": {
+      "source": "0144/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps144f10328.bin": {
+      "source": "0144/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p145f10329.bin": {
+      "source": "0145/0001",
+      "credit": {
+        "primary": "JHONY_REX",
+        "secondary": [
+          "<@!330751862590406656>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Jhony-Rex",
+          "Discord": "JHONY_REX",
+          "Contact": "https://www.deviantart.com/jhony-rex"
+        },
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/ps145f10329.bin": {
+      "source": "0145/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p146f10330.bin": {
+      "source": "0146/0001",
+      "credit": {
+        "primary": "JHONY_REX",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Jhony-Rex",
+          "Discord": "JHONY_REX",
+          "Contact": "https://www.deviantart.com/jhony-rex"
+        }
+      ]
+    },
+    "mons/ps146f10330.bin": {
+      "source": "0146/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p150f10144.bin": {
+      "source": "0150/0002",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps150f10144.bin": {
+      "source": "0150/0002/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p157f10402.bin": {
+      "source": "0157/0001",
+      "credit": {
+        "primary": "<@!330751862590406656>",
+        "secondary": [
+          "<@!157796074457661440>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        },
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/ps157f10402.bin": {
+      "source": "0157/0001/0001",
+      "credit": {
+        "primary": "<@!157796074457661440>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/p194f10422.bin": {
+      "source": "0194/0002",
+      "credit": {
+        "primary": "<@!402958234371227648>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Uni",
+          "Discord": "<@!402958234371227648>",
+          "Contact": "https://github.com/ArianaCastro01"
+        }
+      ]
+    },
+    "mons/ps194f10422.bin": {
+      "source": "0194/0002/0001",
+      "credit": {
+        "primary": "<@!402958234371227648>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Uni",
+          "Discord": "<@!402958234371227648>",
+          "Contact": "https://github.com/ArianaCastro01"
+        }
+      ]
+    },
+    "mons/p199f10331.bin": {
+      "source": "0199/0001",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        }
+      ]
+    },
+    "mons/ps199f10331.bin": {
+      "source": "0199/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p208f10174.bin": {
+      "source": "0208/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps208f10174.bin": {
+      "source": "0208/0001/0001",
+      "credit": {
+        "primary": "<@!823932975916777512>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Pokejavi.",
+          "Discord": "<@!823932975916777512>",
+          "Contact": "<@823932975916777512>"
+        }
+      ]
+    },
+    "mons/p211f10403.bin": {
+      "source": "0211/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [
+          "<@!488809643838144543>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        },
+        {
+          "Name": "Fresco",
+          "Discord": "<@!488809643838144543>",
+          "Contact": "marcfreixer@gmail.com"
+        }
+      ]
+    },
+    "mons/ps211f10403.bin": {
+      "source": "0211/0001/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [
+          "<@!488809643838144543>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        },
+        {
+          "Name": "Fresco",
+          "Discord": "<@!488809643838144543>",
+          "Contact": "marcfreixer@gmail.com"
+        }
+      ]
+    },
+    "mons/p215f10404.bin": {
+      "source": "0215/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps215f10404.bin": {
+      "source": "0215/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p222f10332.bin": {
+      "source": "0222/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps222f10332.bin": {
+      "source": "0222/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p227f10509.bin": {
+      "source": "0227/0001",
+      "credit": {
+        "primary": "<@!225949425292410880>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Johanne2",
+          "Discord": "<@!225949425292410880>",
+          "Contact": "https://github.com/Johanne2"
+        }
+      ]
+    },
+    "mons/p229f10148.bin": {
+      "source": "0229/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps229f10148.bin": {
+      "source": "0229/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p248f10149.bin": {
+      "source": "0248/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p254f10167.bin": {
+      "source": "0254/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps254f10167.bin": {
+      "source": "0254/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p263f10333.bin": {
+      "source": "0263/0001",
+      "credit": {
+        "primary": "<@!402958234371227648>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Uni",
+          "Discord": "<@!402958234371227648>",
+          "Contact": "https://github.com/ArianaCastro01"
+        }
+      ]
+    },
+    "mons/ps263f10333.bin": {
+      "source": "0263/0001/0001",
+      "credit": {
+        "primary": "<@!402958234371227648>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Uni",
+          "Discord": "<@!402958234371227648>",
+          "Contact": "https://github.com/ArianaCastro01"
+        }
+      ]
+    },
+    "mons/p264f10334.bin": {
+      "source": "0264/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps264f10334.bin": {
+      "source": "0264/0001/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p282f10151.bin": {
+      "source": "0282/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps282f10151.bin": {
+      "source": "0282/0001/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p302f10168.bin": {
+      "source": "0302/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps302f10168.bin": {
+      "source": "0302/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p303f10152.bin": {
+      "source": "0303/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps303f10152.bin": {
+      "source": "0303/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p308f10154.bin": {
+      "source": "0308/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p310f10155.bin": {
+      "source": "0310/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps310f10155.bin": {
+      "source": "0310/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p319f10172.bin": {
+      "source": "0319/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps319f10172.bin": {
+      "source": "0319/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p323f10189.bin": {
+      "source": "0323/0001",
+      "credit": {
+        "primary": "<@!330751862590406656>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/ps323f10189.bin": {
+      "source": "0323/0001/0001",
+      "credit": {
+        "primary": "<@!330751862590406656>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/p334f10169.bin": {
+      "source": "0334/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps334f10169.bin": {
+      "source": "0334/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p351f10028.bin": {
+      "source": "0351/0001",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps351f10028.bin": {
+      "source": "0351/0001/0001",
+      "credit": {
+        "primary": "<@!207188665959448576>",
+        "secondary": [
+          "<@!576876006636519434>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Scizivire",
+          "Discord": "<@!207188665959448576>",
+          "Contact": "<@207188665959448576>"
+        },
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p351f10029.bin": {
+      "source": "0351/0002",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps351f10029.bin": {
+      "source": "0351/0002/0001",
+      "credit": {
+        "primary": "<@!207188665959448576>",
+        "secondary": [
+          "<@!576876006636519434>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Scizivire",
+          "Discord": "<@!207188665959448576>",
+          "Contact": "<@207188665959448576>"
+        },
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p351f10030.bin": {
+      "source": "0351/0003",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps351f10030.bin": {
+      "source": "0351/0003/0001",
+      "credit": {
+        "primary": "<@!207188665959448576>",
+        "secondary": [
+          "<@!576876006636519434>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Scizivire",
+          "Discord": "<@!207188665959448576>",
+          "Contact": "<@207188665959448576>"
+        },
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p354f10156.bin": {
+      "source": "0354/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps354f10156.bin": {
+      "source": "0354/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p358f10531.bin": {
+      "source": "0358/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps358f10531.bin": {
+      "source": "0358/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p359f10157.bin": {
+      "source": "0359/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps359f10157.bin": {
+      "source": "0359/0001/0001",
+      "credit": {
+        "primary": "<@!157796074457661440>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/p362f10176.bin": {
+      "source": "0362/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps362f10176.bin": {
+      "source": "0362/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p380f10164.bin": {
+      "source": "0380/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps380f10164.bin": {
+      "source": "0380/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p381f10165.bin": {
+      "source": "0381/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps381f10165.bin": {
+      "source": "0381/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p382f10179.bin": {
+      "source": "0382/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps382f10179.bin": {
+      "source": "0382/0001/0001",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/p383f10180.bin": {
+      "source": "0383/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps383f10180.bin": {
+      "source": "0383/0001/0001",
+      "credit": {
+        "primary": "<@!168414649039978496>",
+        "secondary": [
+          "<@!350050109741858829>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "PoliteHoppip",
+          "Discord": "<@!168414649039978496>",
+          "Contact": ""
+        },
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/p384f10181.bin": {
+      "source": "0384/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps384f10181.bin": {
+      "source": "0384/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p386f10031.bin": {
+      "source": "0386/0001",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps386f10031.bin": {
+      "source": "0386/0001/0001",
+      "credit": {
+        "primary": "<@!288510084273668096>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Sonikku_A",
+          "Discord": "<@!288510084273668096>",
+          "Contact": "https://bsky.app/profile/knopguy.bsky.social"
+        }
+      ]
+    },
+    "mons/p386f10032.bin": {
+      "source": "0386/0002",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps386f10032.bin": {
+      "source": "0386/0002/0001",
+      "credit": {
+        "primary": "<@!288510084273668096>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Sonikku_A",
+          "Discord": "<@!288510084273668096>",
+          "Contact": "https://bsky.app/profile/knopguy.bsky.social"
+        }
+      ]
+    },
+    "mons/p386f10033.bin": {
+      "source": "0386/0003",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps386f10033.bin": {
+      "source": "0386/0003/0001",
+      "credit": {
+        "primary": "<@!288510084273668096>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Sonikku_A",
+          "Discord": "<@!288510084273668096>",
+          "Contact": "https://bsky.app/profile/knopguy.bsky.social"
+        }
+      ]
+    },
+    "mons/p421f10038.bin": {
+      "source": "0421/0001",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [
+          "<@!330751862590406656>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        },
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/ps421f10038.bin": {
+      "source": "0421/0001/0001",
+      "credit": {
+        "primary": "<@!95650095034273792>",
+        "secondary": [
+          "<@!330751862590406656>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Lovi",
+          "Discord": "<@!95650095034273792>",
+          "Contact": "<@95650095034273792>"
+        },
+        {
+          "Name": "Caitemis",
+          "Discord": "<@!330751862590406656>",
+          "Contact": "https://caitemis-art.tumblr.com/"
+        }
+      ]
+    },
+    "mons/p428f10190.bin": {
+      "source": "0428/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps428f10190.bin": {
+      "source": "0428/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p448f10159.bin": {
+      "source": "0448/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps448f10159.bin": {
+      "source": "0448/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p475f10170.bin": {
+      "source": "0475/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps475f10170.bin": {
+      "source": "0475/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p479f10058.bin": {
+      "source": "0479/0001",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        }
+      ]
+    },
+    "mons/ps479f10058.bin": {
+      "source": "0479/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p479f10059.bin": {
+      "source": "0479/0002",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps479f10059.bin": {
+      "source": "0479/0002/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p479f10060.bin": {
+      "source": "0479/0003",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        }
+      ]
+    },
+    "mons/ps479f10060.bin": {
+      "source": "0479/0003/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p479f10061.bin": {
+      "source": "0479/0004",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps479f10061.bin": {
+      "source": "0479/0004/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p479f10062.bin": {
+      "source": "0479/0005",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps479f10062.bin": {
+      "source": "0479/0005/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p483f10414.bin": {
+      "source": "0483/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps483f10414.bin": {
+      "source": "0483/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p484f10415.bin": {
+      "source": "0484/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps484f10415.bin": {
+      "source": "0484/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p487f10063.bin": {
+      "source": "0487/0001",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        }
+      ]
+    },
+    "mons/ps487f10063.bin": {
+      "source": "0487/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p491f10537.bin": {
+      "source": "0491/0002",
+      "credit": {
+        "primary": "<@!225949425292410880>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Johanne2",
+          "Discord": "<@!225949425292410880>",
+          "Contact": "https://github.com/Johanne2"
+        }
+      ]
+    },
+    "mons/p492f10064.bin": {
+      "source": "0492/0001",
+      "credit": {
+        "primary": "CHUNSOFT",
+        "secondary": [
+          "<@!356635814668664832>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "CHUNSOFT",
+          "Discord": "CHUNSOFT",
+          "Contact": "https://www.spike-chunsoft.com/"
+        },
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps492f10064.bin": {
+      "source": "0492/0001/0001",
+      "credit": {
+        "primary": "<@!234720295292895232>",
+        "secondary": [
+          "<@!593113130213572610>",
+          "<@!356635814668664832>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Tacocoa",
+          "Discord": "<@!234720295292895232>",
+          "Contact": "<@234720295292895232>"
+        },
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        },
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p493f10041.bin": {
+      "source": "0493/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10041.bin": {
+      "source": "0493/0001/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10042.bin": {
+      "source": "0493/0002",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10042.bin": {
+      "source": "0493/0002/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10043.bin": {
+      "source": "0493/0003",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10043.bin": {
+      "source": "0493/0003/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10044.bin": {
+      "source": "0493/0004",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10044.bin": {
+      "source": "0493/0004/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10045.bin": {
+      "source": "0493/0005",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10045.bin": {
+      "source": "0493/0005/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10046.bin": {
+      "source": "0493/0006",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10046.bin": {
+      "source": "0493/0006/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10047.bin": {
+      "source": "0493/0007",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10047.bin": {
+      "source": "0493/0007/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10048.bin": {
+      "source": "0493/0008",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10048.bin": {
+      "source": "0493/0008/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10049.bin": {
+      "source": "0493/0009",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10049.bin": {
+      "source": "0493/0009/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10050.bin": {
+      "source": "0493/0010",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10050.bin": {
+      "source": "0493/0010/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10051.bin": {
+      "source": "0493/0011",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10051.bin": {
+      "source": "0493/0011/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10052.bin": {
+      "source": "0493/0012",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10052.bin": {
+      "source": "0493/0012/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10053.bin": {
+      "source": "0493/0013",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10053.bin": {
+      "source": "0493/0013/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10054.bin": {
+      "source": "0493/0014",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10054.bin": {
+      "source": "0493/0014/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10055.bin": {
+      "source": "0493/0015",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10055.bin": {
+      "source": "0493/0015/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10056.bin": {
+      "source": "0493/0016",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10056.bin": {
+      "source": "0493/0016/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p493f10085.bin": {
+      "source": "0493/0017",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps493f10085.bin": {
+      "source": "0493/0017/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p503f10405.bin": {
+      "source": "0503/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps503f10405.bin": {
+      "source": "0503/0001/0001",
+      "credit": {
+        "primary": "<@!157796074457661440>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/p530f10512.bin": {
+      "source": "0530/0001",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [
+          "<@!608107243329814529>",
+          "<@!272761782269902848>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps530f10512.bin": {
+      "source": "0530/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p549f10406.bin": {
+      "source": "0549/0001",
+      "credit": {
+        "primary": "GUSTAVOMUSINTG",
+        "secondary": [
+          "<@!229131140903075840>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "GustavoMusinTG",
+          "Discord": "GUSTAVOMUSINTG",
+          "Contact": "https://x.com/GustavoMusinTG"
+        },
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        }
+      ]
+    },
+    "mons/ps549f10406.bin": {
+      "source": "0549/0001/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p554f10335.bin": {
+      "source": "0554/0001",
+      "credit": {
+        "primary": "<@!402958234371227648>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Uni",
+          "Discord": "<@!402958234371227648>",
+          "Contact": "https://github.com/ArianaCastro01"
+        }
+      ]
+    },
+    "mons/p555f10067.bin": {
+      "source": "0555/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps555f10067.bin": {
+      "source": "0555/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p555f10336.bin": {
+      "source": "0555/0002",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps555f10336.bin": {
+      "source": "0555/0002/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p560f10514.bin": {
+      "source": "0560/0001",
+      "credit": {
+        "primary": "<@!608107243329814529>",
+        "secondary": [
+          "<@!229131140903075840>",
+          "<@!356635814668664832>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps560f10514.bin": {
+      "source": "0560/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p562f10338.bin": {
+      "source": "0562/0001",
+      "credit": {
+        "primary": "<@!823932975916777512>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Pokejavi.",
+          "Discord": "<@!823932975916777512>",
+          "Contact": "<@823932975916777512>"
+        }
+      ]
+    },
+    "mons/ps562f10338.bin": {
+      "source": "0562/0001/0001",
+      "credit": {
+        "primary": "<@!823932975916777512>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Pokejavi.",
+          "Discord": "<@!823932975916777512>",
+          "Contact": "<@823932975916777512>"
+        }
+      ]
+    },
+    "mons/p570f10407.bin": {
+      "source": "0570/0001",
+      "credit": {
+        "primary": "<@!779213287576436746>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Ichor",
+          "Discord": "<@!779213287576436746>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps570f10407.bin": {
+      "source": "0570/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [
+          "<@!365627932888268800>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        },
+        {
+          "Name": "XModxGodX",
+          "Discord": "<@!365627932888268800>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p571f10408.bin": {
+      "source": "0571/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [
+          "<@!157796074457661440>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        },
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/ps571f10408.bin": {
+      "source": "0571/0001/0001",
+      "credit": {
+        "primary": "<@!157796074457661440>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/p604f10515.bin": {
+      "source": "0604/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps604f10515.bin": {
+      "source": "0604/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p628f10409.bin": {
+      "source": "0628/0001",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps628f10409.bin": {
+      "source": "0628/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p645f10081.bin": {
+      "source": "0645/0001",
+      "credit": {
+        "primary": "<@!608107243329814529>",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps645f10081.bin": {
+      "source": "0645/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p646f10082.bin": {
+      "source": "0646/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps646f10082.bin": {
+      "source": "0646/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p646f10083.bin": {
+      "source": "0646/0002",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps646f10083.bin": {
+      "source": "0646/0002/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p648f10074.bin": {
+      "source": "0648/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps648f10074.bin": {
+      "source": "0648/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p649f10075.bin": {
+      "source": "0649/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps649f10075.bin": {
+      "source": "0649/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p649f10076.bin": {
+      "source": "0649/0002",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps649f10076.bin": {
+      "source": "0649/0002/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p649f10077.bin": {
+      "source": "0649/0003",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps649f10077.bin": {
+      "source": "0649/0003/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p649f10078.bin": {
+      "source": "0649/0004",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps649f10078.bin": {
+      "source": "0649/0004/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p670f10521.bin": {
+      "source": "0670/0006",
+      "credit": {
+        "primary": "<@!608107243329814529>",
+        "secondary": [
+          "<@!272761782269902848>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps670f10521.bin": {
+      "source": "0670/0006/0001",
+      "credit": {
+        "primary": "<@!272761782269902848>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/p681f10125.bin": {
+      "source": "0681/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps681f10125.bin": {
+      "source": "0681/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p691f10524.bin": {
+      "source": "0691/0001",
+      "credit": {
+        "primary": "<@!229131140903075840>",
+        "secondary": [
+          "<@!608107243329814529>",
+          "<@!272761782269902848>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps691f10524.bin": {
+      "source": "0691/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p701f10525.bin": {
+      "source": "0701/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [
+          "<@!229131140903075840>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        },
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        }
+      ]
+    },
+    "mons/ps701f10525.bin": {
+      "source": "0701/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p705f10410.bin": {
+      "source": "0705/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps705f10410.bin": {
+      "source": "0705/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p706f10411.bin": {
+      "source": "0706/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps706f10411.bin": {
+      "source": "0706/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p713f10412.bin": {
+      "source": "0713/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [
+          "<@!356635814668664832>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        },
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps713f10412.bin": {
+      "source": "0713/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p716f00716.bin": {
+      "source": "0716",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps716f00716.bin": {
+      "source": "0716/0000/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p718f10222.bin": {
+      "source": "0718/0002",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps718f10222.bin": {
+      "source": "0718/0002/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p718f10340.bin": {
+      "source": "0718/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [
+          "<@!704349360929898516>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        },
+        {
+          "Name": "NikolaP",
+          "Discord": "<@!704349360929898516>",
+          "Contact": "nikolasnonsense@gmail.com"
+        }
+      ]
+    },
+    "mons/ps718f10340.bin": {
+      "source": "0718/0001/0001",
+      "credit": {
+        "primary": "<@!593113130213572610>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Morei",
+          "Discord": "<@!593113130213572610>",
+          "Contact": "https://bsky.app/profile/murpia57.bsky.social"
+        }
+      ]
+    },
+    "mons/p718f10526.bin": {
+      "source": "0718/0005",
+      "credit": {
+        "primary": "<@!608107243329814529>",
+        "secondary": [
+          "<@!272761782269902848>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps718f10526.bin": {
+      "source": "0718/0005/0001",
+      "credit": {
+        "primary": "<@!272761782269902848>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/p719f10177.bin": {
+      "source": "0719/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps719f10177.bin": {
+      "source": "0719/0001/0001",
+      "credit": {
+        "primary": "<@!823932975916777512>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Pokejavi.",
+          "Discord": "<@!823932975916777512>",
+          "Contact": "<@823932975916777512>"
+        }
+      ]
+    },
+    "mons/p720f10188.bin": {
+      "source": "0720/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps720f10188.bin": {
+      "source": "0720/0001/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p724f10413.bin": {
+      "source": "0724/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps724f10413.bin": {
+      "source": "0724/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p746f10229.bin": {
+      "source": "0746/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps746f10229.bin": {
+      "source": "0746/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10232.bin": {
+      "source": "0773/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [
+          "<@!237286997645983744>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        },
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps773f10232.bin": {
+      "source": "0773/0001/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10233.bin": {
+      "source": "0773/0002",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10233.bin": {
+      "source": "0773/0002/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10234.bin": {
+      "source": "0773/0003",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10234.bin": {
+      "source": "0773/0003/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10235.bin": {
+      "source": "0773/0004",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10235.bin": {
+      "source": "0773/0004/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10236.bin": {
+      "source": "0773/0005",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10236.bin": {
+      "source": "0773/0005/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10237.bin": {
+      "source": "0773/0006",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10237.bin": {
+      "source": "0773/0006/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10238.bin": {
+      "source": "0773/0007",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10238.bin": {
+      "source": "0773/0007/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10239.bin": {
+      "source": "0773/0008",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10239.bin": {
+      "source": "0773/0008/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10240.bin": {
+      "source": "0773/0009",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10240.bin": {
+      "source": "0773/0009/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10241.bin": {
+      "source": "0773/0010",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10241.bin": {
+      "source": "0773/0010/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10242.bin": {
+      "source": "0773/0011",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10242.bin": {
+      "source": "0773/0011/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10243.bin": {
+      "source": "0773/0012",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10243.bin": {
+      "source": "0773/0012/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10244.bin": {
+      "source": "0773/0013",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10244.bin": {
+      "source": "0773/0013/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10245.bin": {
+      "source": "0773/0014",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10245.bin": {
+      "source": "0773/0014/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10246.bin": {
+      "source": "0773/0015",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10246.bin": {
+      "source": "0773/0015/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10247.bin": {
+      "source": "0773/0016",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10247.bin": {
+      "source": "0773/0016/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p773f10248.bin": {
+      "source": "0773/0017",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/ps773f10248.bin": {
+      "source": "0773/0017/0001",
+      "credit": {
+        "primary": "<@!276369635304275968>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Top_Kec",
+          "Discord": "<@!276369635304275968>",
+          "Contact": "@topkec.bsky.social"
+        }
+      ]
+    },
+    "mons/p780f10527.bin": {
+      "source": "0780/0001",
+      "credit": {
+        "primary": "<@!608107243329814529>",
+        "secondary": [
+          "<@!229131140903075840>",
+          "<@!272761782269902848>"
+        ],
+        "total": 3
+      },
+      "authors": [
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "Soulja",
+          "Discord": "<@!229131140903075840>",
+          "Contact": "https://twitter.com/OlSoulja"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps780f10527.bin": {
+      "source": "0780/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p800f10316.bin": {
+      "source": "0800/0003",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps800f10316.bin": {
+      "source": "0800/0003/0001",
+      "credit": {
+        "primary": "<@!237286997645983744>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emboarger",
+          "Discord": "<@!237286997645983744>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p807f10544.bin": {
+      "source": "0807/0001",
+      "credit": {
+        "primary": "<@!608107243329814529>",
+        "secondary": [
+          "<@!272761782269902848>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "pi3.14",
+          "Discord": "<@!608107243329814529>",
+          "Contact": "https://twitter.com/Pi_y_ranitas"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps807f10544.bin": {
+      "source": "0807/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p869f10392.bin": {
+      "source": "0869/0063",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps869f10392.bin": {
+      "source": "0869/0063/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p877f10356.bin": {
+      "source": "0877/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [
+          "<@!702275233125630042>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        },
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps877f10356.bin": {
+      "source": "0877/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p888f10357.bin": {
+      "source": "0888/0001",
+      "credit": {
+        "primary": "JHONY_REX",
+        "secondary": [
+          "<@!544245909639397378>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "Jhony-Rex",
+          "Discord": "JHONY_REX",
+          "Contact": "https://www.deviantart.com/jhony-rex"
+        },
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps888f10357.bin": {
+      "source": "0888/0001/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p889f10358.bin": {
+      "source": "0889/0001",
+      "credit": {
+        "primary": "FERMRACK",
+        "secondary": [
+          "<@!272761782269902848>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "FerMrack",
+          "Discord": "FERMRACK",
+          "Contact": "https://x.com/FerMrack_FM"
+        },
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/ps889f10358.bin": {
+      "source": "0889/0001/0001",
+      "credit": {
+        "primary": "<@!272761782269902848>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "DeltaL",
+          "Discord": "<@!272761782269902848>",
+          "Contact": "averyderp.sm2@gmail.com"
+        }
+      ]
+    },
+    "mons/p890f10359.bin": {
+      "source": "0890/0001",
+      "credit": {
+        "primary": "<@!702275233125630042>",
+        "secondary": [
+          "<@!350050109741858829>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        },
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/p892f10360.bin": {
+      "source": "0892/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps892f10360.bin": {
+      "source": "0892/0001/0001",
+      "credit": {
+        "primary": "<@!157796074457661440>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Deeshura",
+          "Discord": "<@!157796074457661440>",
+          "Contact": "https://bsky.app/profile/deeshura.bsky.social"
+        }
+      ]
+    },
+    "mons/p905f10418.bin": {
+      "source": "0905/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps905f10418.bin": {
+      "source": "0905/0001/0001",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/p964f10425.bin": {
+      "source": "0964/0001",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/ps964f10425.bin": {
+      "source": "0964/0001/0001",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        }
+      ]
+    },
+    "mons/p978f10547.bin": {
+      "source": "0978/0003",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/ps978f10547.bin": {
+      "source": "0978/0003/0001",
+      "credit": {
+        "primary": "<@!356635814668664832>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "Emmuffin",
+          "Discord": "<@!356635814668664832>",
+          "Contact": "https://twitter.com/Ernmuffin"
+        }
+      ]
+    },
+    "mons/p1017f10442.bin": {
+      "source": "1017/0001",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps1017f10442.bin": {
+      "source": "1017/0001/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p1017f10443.bin": {
+      "source": "1017/0002",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps1017f10443.bin": {
+      "source": "1017/0002/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p1017f10444.bin": {
+      "source": "1017/0003",
+      "credit": {
+        "primary": "<@!544245909639397378>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "baronessfaron",
+          "Discord": "<@!544245909639397378>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/ps1017f10444.bin": {
+      "source": "1017/0003/0001",
+      "credit": {
+        "primary": "<@!576876006636519434>",
+        "secondary": [],
+        "total": 1
+      },
+      "authors": [
+        {
+          "Name": "ShyStarryRain",
+          "Discord": "<@!576876006636519434>",
+          "Contact": ""
+        }
+      ]
+    },
+    "mons/p1024f10445.bin": {
+      "source": "1024/0001",
+      "credit": {
+        "primary": "<@!350050109741858829>",
+        "secondary": [
+          "<@!702275233125630042>"
+        ],
+        "total": 2
+      },
+      "authors": [
+        {
+          "Name": "G〜",
+          "Discord": "<@!350050109741858829>",
+          "Contact": "https://bsky.app/profile/justtr4sh.pmd.social"
+        },
+        {
+          "Name": "JFain",
+          "Discord": "<@!702275233125630042>",
+          "Contact": ""
+        }
+      ]
+    }
+  }
+}

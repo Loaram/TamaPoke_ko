@@ -23,7 +23,7 @@ extern Pet pet;
 extern bool cardOpen, galleryOpen, clockOpen, kbOpen, menuOpen, partyOpen, partyPick;
 extern bool trainOpen, movePickOpen, battleOpen, gymOpen, playerOpen;
 extern uint8_t cardPage;
-extern uint8_t partyDetail, boxDetail;
+extern uint8_t partyDetail;extern uint16_t boxDetail;
 extern bool boxOpen, releaseConfirm;
 extern Party party;
 void startBattle(int16_t dex, uint8_t lvl);

@@ -1,0 +1,243 @@
+{
+  "version": "3.0.0-beta.6",
+  "published": false,
+  "device_tested": false,
+  "runtime_suites": 42,
+  "daily_cap": 3,
+  "reward_cap_day": 10,
+  "box_pages": 50,
+  "box_page_buttons": true,
+  "box_page_picker": true,
+  "max_shiny_percent": 10,
+  "max_legendary_tier_percent": 14,
+  "save_version": 6,
+  "save_max_bytes": 32768,
+  "artifacts": {
+    "build/daily-rewards/emulator/TamaPoke-3.0.0-beta.6-forms.exe": {
+      "bytes": 1537536,
+      "sha256": "81c87224fc71850ca2c61507538fd6cd48b8b8964f421bca17b41f44f51398f8"
+    },
+    "build/daily-rewards/TamaPoke-3.0.0-beta.6-Android.apk": {
+      "bytes": 387622180,
+      "sha256": "b01f071f9474d58e9c6e20cd5b4ae98ac0aa2647c027657613938dd321575acb"
+    },
+    "build/daily-rewards/TamaPoke-3.0.0-beta.6-WearOS.apk": {
+      "bytes": 387216681,
+      "sha256": "2092236552df42fd3468358ffa3c61b1e87ac30b1e95476fdb00dcfd0657f773"
+    },
+    "build/daily-rewards/firmware/TamaPoke.ino.bin": {
+      "bytes": 2235520,
+      "sha256": "3a047783937189d587d34ad0281cb6652bde3b10f036a1673ff24e25e56454c2"
+    }
+  },
+  "source_files": {
+    "audio.cpp": {
+      "bytes": 11510,
+      "sha256": "079761f426ea1ac1770e2cc8c8b094154dba5f0a306be33529eeb8572dcdab02"
+    },
+    "audio.h": {
+      "bytes": 1618,
+      "sha256": "4ab772e9ef700b72795b1fd04cba43d441d6cfce704b446a692fb0de710ba4cb"
+    },
+    "avatars.h": {
+      "bytes": 14528,
+      "sha256": "25bda143eac68434efaf6122e78775819e2d84c65279705b64808ef310d4e72b"
+    },
+    "backs.h": {
+      "bytes": 877288,
+      "sha256": "22d73794f8cd67b8021da347eef923783b6b61f070cc3d3b197a546d417c665a"
+    },
+    "badges.h": {
+      "bytes": 172798,
+      "sha256": "2104ab66ea92e8a2d0e5b57a516744c7c0cb867e70c37fc5aee64884b55039ea"
+    },
+    "battle.cpp": {
+      "bytes": 12914,
+      "sha256": "7c807052c5590f6e4723c6a03732c35aeab165603020f0ed2b2eb350b2941885"
+    },
+    "battle.h": {
+      "bytes": 3257,
+      "sha256": "c627d4db4a9b06262243aaae1dfc6033aa3fdf35acc89e58780e00e56fc6bc1e"
+    },
+    "catch_rates.h": {
+      "bytes": 5564,
+      "sha256": "4cd3d1c5bd1cc3e6aad8df1e78a1deef541a879345603ce353cd3fe638ee505c"
+    },
+    "dex.h": {
+      "bytes": 114008,
+      "sha256": "118641d7b443de546642871f4a36b2630ea45f8cf36402d29e007929a7ac4f93"
+    },
+    "forms.cpp": {
+      "bytes": 1836,
+      "sha256": "20b5a98fc2bd8e3c91c9fd1fc4032d6ea1aad1f089291b030d525e8d8ab485e5"
+    },
+    "forms.h": {
+      "bytes": 983,
+      "sha256": "c25fcf37dfaae2262df4bc2b8280a325c4f464a259dd5b81f77be1208c23340b"
+    },
+    "forms_data.h": {
+      "bytes": 17888,
+      "sha256": "6bf58aabeea30b52036530167bd0f41d499bf62d0ba7b7f02ff6d1378d8f5356"
+    },
+    "forms_ui.h": {
+      "bytes": 8085,
+      "sha256": "5a4cea3800766420e8f004178316ad9052b044ae8b0f432ffa07cf9bee62102f"
+    },
+    "form_moves.h": {
+      "bytes": 2603,
+      "sha256": "053c812af083caab88dc97defab6065a5f4c7f34cd0d7604c370cb51a74d42af"
+    },
+    "form_moves_data.h": {
+      "bytes": 52259,
+      "sha256": "13c1f756f988508d09caf59b872dd8a7541697d0549b15f2c5208090b23c43ba"
+    },
+    "gbsynth.cpp": {
+      "bytes": 3678,
+      "sha256": "5c349733edd9211ecf373f15255e862586163337986d28ec2c8a005e90415c75"
+    },
+    "gbsynth.h": {
+      "bytes": 2847,
+      "sha256": "cc671a160e6152e8d4d9e5eacab37932a1a4b19405f0b1424a99dd1c1daa2888"
+    },
+    "gym_art.h": {
+      "bytes": 146255,
+      "sha256": "5a40bb1b49631d8ca440ef383886514f17ca31b7b2c545e7904b42a1c9603ce2"
+    },
+    "i18n.cpp": {
+      "bytes": 30380,
+      "sha256": "df54b581f6ef7b95745a25047ea40ff2305416844a6a345939141041c4e83bb5"
+    },
+    "i18n.h": {
+      "bytes": 7410,
+      "sha256": "aee3f8fb04887069b85be198c90599fe60f96419e8cfcebe56904a19d0c84c5d"
+    },
+    "korean_font.h": {
+      "bytes": 81226,
+      "sha256": "61cade00b318d0033278bdca25621cb1fbb8f484373e658a874e700af380c46e"
+    },
+    "korean_names.h": {
+      "bytes": 65572,
+      "sha256": "c5b3afcb42a7532415480666bf38d28ae0946b09eced9ed506520366a436c383"
+    },
+    "korean_text.h": {
+      "bytes": 2831,
+      "sha256": "58ace816efad936334ec9770aa240a2713c2b7b7db991034ac2e082c7f42642f"
+    },
+    "link.cpp": {
+      "bytes": 22554,
+      "sha256": "f3532dcf71c6cd87897b7f37e24ba2a1a2b9ff5b166e0175b39527fc309be3c2"
+    },
+    "link.h": {
+      "bytes": 9345,
+      "sha256": "885c1402bf954e407f222d1fbf7a3af13321937417f49b0b130493505b52c1f7"
+    },
+    "linknow.cpp": {
+      "bytes": 7762,
+      "sha256": "bd2f33841e199c80ce9f66e6473a674c287131cc9e49cd60e4579f59c10be2ef"
+    },
+    "linknow.h": {
+      "bytes": 1547,
+      "sha256": "5fef78c97e8e293f1b4d54a78f41e62d1b99f40c6812e0814022bd536d9f4468"
+    },
+    "linkudp.h": {
+      "bytes": 1876,
+      "sha256": "0ba0839340a82b6c8a32d2ce7401fd2ce8917a0dc166e12461e3de7b3296792c"
+    },
+    "moves.h": {
+      "bytes": 479685,
+      "sha256": "0b42f8f8ab4d6aa15b989378545517dce8032be521b271c7c9696d4e3a4b1422"
+    },
+    "move_id.h": {
+      "bytes": 378,
+      "sha256": "69946d3628cd97832a62840271cfda80ec17810fb3d667efee92379ba4ad38c1"
+    },
+    "music.h": {
+      "bytes": 60691,
+      "sha256": "bdd2f9d8ed1f47dad094ea164ddc132aa84615d155468692bcd334eb6f58f4db"
+    },
+    "noart.h": {
+      "bytes": 1746,
+      "sha256": "7189f96a9eae72dd17bf9b8139983baba65e8faec08e5d33a518d5646d570293"
+    },
+    "party.cpp": {
+      "bytes": 14317,
+      "sha256": "6513cac55fed9090dde85e7d940de2c0d882b8e085d5504c38d3d826d91a2b99"
+    },
+    "party.h": {
+      "bytes": 4186,
+      "sha256": "5ba09f9a0ea7befee49f99d02cc922dadda41e2f4c3ef4c346825de72dccc0a2"
+    },
+    "pet.cpp": {
+      "bytes": 67327,
+      "sha256": "0c13e3e415820abef779dd8991c5ff187088ad692d51116a4719f207720526b8"
+    },
+    "pet.h": {
+      "bytes": 26347,
+      "sha256": "76da59cfd09e9bd97ea36b6607c7f78c4689a8b9d0e4d1a0afd8222cf8b42bad"
+    },
+    "pin_config.h": {
+      "bytes": 1018,
+      "sha256": "8c9fb98ff3ecd26f2a68060ff1a506a9031881c354c5c6c7125d09d92d673d51"
+    },
+    "pokedex_progress.h": {
+      "bytes": 697,
+      "sha256": "adf05a55b6654e0fb28b0fa69581689b5d87c17af3e18265a34d887ee20081b4"
+    },
+    "roster_store.h": {
+      "bytes": 2522,
+      "sha256": "118038435d0df3dc83e9fdf0d604104d895d377d0c22e8eb309e4a253f86a855"
+    },
+    "rtcbat.cpp": {
+      "bytes": 3051,
+      "sha256": "2952f9569283396b818dc579179871c91337924e42c152c7fde0792f793672bc"
+    },
+    "rtcbat.h": {
+      "bytes": 800,
+      "sha256": "b66174b1d65f84ee778a0c5312bc0c731f4d997d0161aab7bf6ebc3b7a6ff18d"
+    },
+    "save.cpp": {
+      "bytes": 9632,
+      "sha256": "d76d5d1b0711d7ce06add235289ed9e3180b38fe251f29332a6f405b72bbce09"
+    },
+    "save.h": {
+      "bytes": 2224,
+      "sha256": "3591ec926c437e3ce77e71b766f6107df29ee582853aed5727d52411b228c5ce"
+    },
+    "sdmon.cpp": {
+      "bytes": 9850,
+      "sha256": "8c4b464908cd56725e3d6574b386d567a2abeb486ddb6a324a96f38f78380add"
+    },
+    "sdmon.h": {
+      "bytes": 3952,
+      "sha256": "5a0ee81049a895f2a6dc9e046b6325d4dde578ed3bf03e28700e7344bea44e76"
+    },
+    "species.h": {
+      "bytes": 21970,
+      "sha256": "6d9943a75b7d7875e9dfc06ce9ef06cb9e63cdca05ae6dcd4ad70a5b03ee6916"
+    },
+    "TamaPoke.ino": {
+      "bytes": 271413,
+      "sha256": "8065619f7987fb2cd8b3dd95578d2f4f2c8380f2d4772aa891fc38d8b3f4f799"
+    },
+    "trainers.h": {
+      "bytes": 16412,
+      "sha256": "8314e73998059b98d1b488b0b3ae85120c7ced6a18aeeb27e0fd7312a47b9bd9"
+    },
+    "trainers_new.h": {
+      "bytes": 2860,
+      "sha256": "198cc1cc6f7a5daf27abc358fee13259664650336c7da870f1df771d7995607d"
+    },
+    "types.h": {
+      "bytes": 3304,
+      "sha256": "c8995581732f3b627c820ee2bda4a7f266b22c7af074b4743595a162a5b7c07b"
+    },
+    "wild.cpp": {
+      "bytes": 3447,
+      "sha256": "f124001318173eab465327c4bce26dbe0fb6bc61c34173f8df95bb030ad36be5"
+    },
+    "wild.h": {
+      "bytes": 1029,
+      "sha256": "6286dda721d0f5a7963b62309187448a68b2efe47d1cd7dfd298e8e50eae9390"
+    }
+  }
+}

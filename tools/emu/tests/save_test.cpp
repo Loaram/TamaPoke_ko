@@ -21,6 +21,7 @@ int FakeSerial::available(){return 0;} String FakeSerial::readStringUntil(char){
 void sfxPlay(uint8_t){}
 static int bad=0;
 static void ck(bool ok,const char*w){printf("%s  %s\n",ok?"PASS":"FAIL",w); if(!ok)bad++;}
+static void checksum(std::vector<uint8_t>& b){uint16_t c=0xffff;for(size_t i=0;i<b.size()-2;i++){c^=(uint16_t)b[i]<<8;for(int j=0;j<8;j++)c=(c&0x8000)?(uint16_t)((c<<1)^0x1021):(uint16_t)(c<<1);}b[b.size()-2]=c;b.back()=c>>8;}
 
 int main(){
   // --- a save worth losing: a raised creature, a full party, a filled box,
@@ -151,6 +152,23 @@ int main(){
        "overwrites it rather than merging with it");
   }
 
+  {
+    auto previous=nvs();p2.renameTrainer("OTHER");q2.box[0].dex=999;q2.save();
+    uint8_t changed[SAVE_MAX_BYTES];size_t size=saveExport(changed,sizeof(changed));
+    for(const char *key:{"tnam","rosterF"}) {
+      nvs()=previous;nvsFailKey()=key;
+      ck(!saveImport(changed,size),"failed scalar or roster write is reported, not claimed successful");
+      ck(nvs()==previous,"failed import restores the entire previous save without clearing it first");
+      nvsFailKey().clear();
+    }
+    std::vector<uint8_t> duplicate(buf,buf+n-2);
+    size_t v=SAVE_HDR+1+buf[SAVE_HDR],end=v+3+buf[v+1]+((size_t)buf[v+2]<<8);
+    duplicate.insert(duplicate.end(),buf+SAVE_HDR,buf+end);duplicate.resize(duplicate.size()+2);
+    unsigned count=duplicate[5]+(duplicate[6]<<8)+1;duplicate[5]=count;duplicate[6]=count>>8;checksum(duplicate);
+    ck(!saveValidate(duplicate.data(),duplicate.size()),"duplicate keys are rejected even with a valid checksum");
+    std::vector<uint8_t> wrong(buf,buf+n);wrong[v]=SK_U8;checksum(wrong);
+    ck(!saveValidate(wrong.data(),wrong.size()),"wrong type for a known key is rejected before import");
+  }
   printf("%s\n", bad?"FAILURES":"all good");
   return bad?1:0;
 }

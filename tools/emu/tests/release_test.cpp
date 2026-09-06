@@ -35,7 +35,7 @@ extern uint8_t dimStage;
 extern bool holdFired;
 extern Pet pet;
 extern bool partyOpen, boxOpen, movePickOpen, releaseConfirm;
-extern uint8_t partyDetail, boxDetail, boxSwapFrom, boxSel;
+extern uint8_t partyDetail, boxSwapFrom;extern uint16_t boxDetail, boxSel;
 
 static int bad=0;
 static void ck(bool ok,const char*w){printf("%s  %s\n",ok?"PASS":"FAIL",w); if(!ok)bad++;}
@@ -157,7 +157,7 @@ int main(){
     party.boxSave();
     partyOpen=true; boxOpen=true;
     boxTap(PCELL_X(0)+40, PCELL_Y(0)+30);
-    boxTap(SHEET_L_X, SHEET_BTN_Y);              // TO PARTY
+    boxTap(213, SHEET_BTN_Y);                    // TO PARTY (middle button)
     ck(party.count()==1 && party.slots[0].dex==143, "TO PARTY withdraws it");
     ck(party.boxCount()==0, "and the box slot is freed");
   }
