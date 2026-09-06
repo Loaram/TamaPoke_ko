@@ -513,7 +513,11 @@ void setLang(Lang l) {
 #include "korean_names.h"
 #include <string.h>
 const char *localName(const char *en) {
-  if (!en || gLang != LANG_KO) return en;
+  return gLang == LANG_KO ? koreanName(en) : en;
+}
+
+const char *koreanName(const char *en) {
+  if (!en) return en;
   int lo=0, hi=sizeof(KOREAN_NAMES)/sizeof(KOREAN_NAMES[0])-1;
   while (lo<=hi) { int mid=(lo+hi)/2; int c=strcmp(en,KOREAN_NAMES[mid].en);
     if (!c) return KOREAN_NAMES[mid].ko; if (c<0) hi=mid-1; else lo=mid+1; }

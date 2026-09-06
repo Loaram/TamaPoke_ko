@@ -46,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.0.1"
+#define FW_VERSION "4.0.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -184,6 +184,8 @@ uint8_t partyDetail = 0;   // 0 = the grid, else slot + 1
 bool boxOpen = false;
 uint8_t boxPage = 0;
 bool boxPagePicker = false;
+bool boxSortOpen = false, boxSortFailed = false;
+uint8_t boxSortChoice = 0; // 0 = menu, 1..3 = confirmation
 uint8_t boxPickerGroup = 0;
 uint8_t boxSwapFrom = 0;   // party slot + 1, armed from the party side
 uint16_t boxSel = 0;        // box slot + 1, armed from the box side
@@ -1303,6 +1305,10 @@ void handleTouch() {
 void openClock();  // prototipo
 
 void onSwipeV(int dir) {
+  if (boxOpen && boxSortOpen) {
+    if(boxSortChoice) boxSortChoice=0; else boxSortOpen=false;
+    boxSortFailed=false;return;
+  }
   if (boxOpen && boxPagePicker) { boxPagePicker = false; return; }
   if(formsOpen) {formClose();return;}
   if (pet.awaitingStarter()) return;  // bloqueado durante la eleccion de inicial
@@ -1621,6 +1627,7 @@ void partyTap(int16_t x, int16_t y) {
     boxOpen = true;                  // open the box, nothing picked yet
     boxPage = 0;
     boxSwapFrom = 0;boxDetail=boxSel=0;releaseConfirm=false;boxPagePicker=false;
+    boxSortOpen=boxSortFailed=false;boxSortChoice=0;
     sfxPlay(SFX_TAP);
     return;
   }
@@ -1649,6 +1656,7 @@ void partyTap(int16_t x, int16_t y) {
         boxOpen = true;
         boxPage = 0;
         boxDetail=boxSel=0;releaseConfirm=false;boxPagePicker=false;
+        boxSortOpen=boxSortFailed=false;boxSortChoice=0;
         sfxPlay(SFX_TAP);
         return;
       }
@@ -1673,6 +1681,10 @@ void partyTap(int16_t x, int16_t y) {
 
 // deslizar: dir +1 = hacia la derecha
 void onSwipe(int dir) {
+  if (boxOpen && boxSortOpen) {
+    if(boxSortChoice) boxSortChoice=0; else boxSortOpen=false;
+    boxSortFailed=false;return;
+  }
   if (boxOpen && boxPagePicker) { boxPickerStep(dir > 0 ? -1 : 1); return; }
   if(formsOpen) {formPageMove(dir>0?-1:1);return;}
   // The region chooser pages, and it is checked before everything else because
@@ -5977,7 +5989,65 @@ void boxPagePickerTap(int16_t x,int16_t y) {
 // Storage past the six that fight. A creature is moved by picking a party slot
 // and then a box slot, which swaps them -- so one gesture covers deposit,
 // withdraw and exchange rather than needing three.
+const char *boxSortLabel(uint8_t choice) {
+  if(choice==1) return gLang==LANG_KO ? "가나다순" : "KOREAN NAME";
+  if(choice==2) return gLang==LANG_KO ? "번호순" : "DEX NUMBER";
+  return gLang==LANG_KO ? "레벨순" : "LEVEL";
+}
+
+void renderBoxSort() {
+  gfx->fillScreen(RGB565_BLACK);gfx->fillCircle(CX,CY,231,UI_BG_DAY);
+  const char *title=gLang==LANG_KO ? "박스 전체 정렬" : "SORT ALL BOXES";
+  gfx->setTextSize(2);gfx->setTextColor(UI_INK);
+  gfx->setCursor(CX-textWidthFactor(title,6),56);gfx->print(title);
+  const char *hint=gLang==LANG_KO ? "빈칸은 뒤로 모아요" : "Empty slots go last";
+  gfx->setTextSize(1);gfx->setCursor(CX-textWidthFactor(hint,3),88);gfx->print(hint);
+  for(uint8_t i=1;i<=3;i++) {
+    int y=116+(i-1)*76;
+    gfx->fillRoundRect(92,y,282,66,12,UI_WHITE);gfx->drawRoundRect(92,y,282,66,12,UI_INK);
+    const char *label=boxSortLabel(i);gfx->setTextSize(2);
+    gfx->setCursor(CX-textWidthFactor(label,6),y+10);gfx->print(label);
+    const char *sub=i==1 ? (gLang==LANG_KO ? "공식 한국어 이름 (별명 제외)" : "Official Korean name, not nickname") :
+                    i==2 ? (gLang==LANG_KO ? "작은 도감 번호부터" : "Lowest number first") :
+                           (gLang==LANG_KO ? "높은 레벨부터" : "Highest level first");
+    gfx->setTextSize(1);gfx->setCursor(CX-textWidthFactor(sub,3),y+40);gfx->print(sub);
+  }
+  const char *error=gLang==LANG_KO ? "정렬 실패: 저장 공간을 확인하세요" : "Sort failed: check storage";
+  if(boxSortFailed) {
+    gfx->setTextColor(UI_BAR_BAD);gfx->setTextSize(1);
+    gfx->setCursor(CX-textWidthFactor(error,3),354);gfx->print(error);
+  }
+  gfx->setTextColor(UI_INK);gfx->setTextSize(2);
+  gfx->setCursor(CX-textWidthFactor(T(S_BACK),6),400);gfx->print(T(S_BACK));
+  if(boxSortChoice) drawConfirmPanel(boxSortLabel(boxSortChoice),
+    gLang==LANG_KO ? "박스 전체를 정렬할까요?" : "Sort every box page?",
+    gLang==LANG_KO ? "기존 칸 순서가 바뀝니다" : "This changes slot positions",
+    UI_BAR_WARN,T(S_YES),UI_BAR_OK,UI_WHITE,T(S_NO),UI_TRACK,UI_INK);
+  gfx->flush();
+}
+
+void boxSortTap(int16_t x,int16_t y) {
+  if(boxSortChoice) {
+    if(x<CONFIRM_BTN_X || x>CONFIRM_BTN_X+CONFIRM_BTN_W) return;
+    if(y>=CONFIRM_B2_Y && y<=CONFIRM_B2_Y+CONFIRM_BTN_H) {boxSortChoice=0;return;}
+    if(y<CONFIRM_B1_Y || y>CONFIRM_B1_Y+CONFIRM_BTN_H) return;
+    bool ok=party.sortBox(static_cast<BoxSortOrder>(boxSortChoice-1));
+    boxSortChoice=0;boxSortFailed=!ok;
+    if(!ok) {sfxPlay(SFX_DENY);return;}
+    // Slot identities changed. Never apply an old selection to the new order.
+    boxSortOpen=false;boxPage=0;boxDetail=boxSel=boxSwapFrom=partyDetail=0;
+    movePickBox=movePickParty=0;releaseConfirm=false;
+    sfxPlay(SFX_TAP);return;
+  }
+  if(y>=392) {boxSortOpen=false;boxSortFailed=false;return;}
+  if(x<92 || x>374) return;
+  for(uint8_t i=1;i<=3;i++) if(y>=116+(i-1)*76 && y<182+(i-1)*76) {
+    boxSortChoice=i;boxSortFailed=false;return;
+  }
+}
+
 void renderBox() {
+  if (boxSortOpen) { renderBoxSort(); return; }
   if (boxPagePicker) { renderBoxPagePicker(); return; }
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
@@ -6026,14 +6096,18 @@ void renderBox() {
     gfx->print(l);
   }
   drawBoxNavigation(false);
-  gfx->setTextColor(0x6B4D);
-  gfx->setTextSize(2);
-  gfx->setCursor(CX - textWidthFactor(T(S_BACK), 6), 392);
-  gfx->print(T(S_BACK));
+  for(int i=0;i<2;i++) {
+    int x=118+i*116;
+    const char *label=i ? T(S_BACK) : (gLang==LANG_KO ? "정렬" : "SORT");
+    gfx->fillRoundRect(x,390,110,44,10,UI_WHITE);gfx->drawRoundRect(x,390,110,44,10,UI_INK);
+    gfx->setTextColor(UI_INK);gfx->setTextSize(2);
+    gfx->setCursor(x+55-textWidthFactor(label,6),404);gfx->print(label);
+  }
   gfx->flush();
 }
 
 void boxTap(int16_t x, int16_t y) {
+  if (boxSortOpen) { boxSortTap(x,y); return; }
   if (boxPagePicker) { boxPagePickerTap(x,y); return; }
   // The sheet is checked first and is modal in the same way the party's is.
   if (boxDetail) {
@@ -6075,6 +6149,9 @@ void boxTap(int16_t x, int16_t y) {
     releaseConfirm = false;
     sfxPlay(SFX_TAP);
     return;
+  }
+  if(x>=118 && x<228 && y>=390 && y<434) {
+    boxSortOpen=true;boxSortChoice=0;boxSortFailed=false;return;
   }
   if (y>=BOX_NAV_Y && y<BOX_NAV_Y+BOX_NAV_H) {
     if (x>=84 && x<150) {

@@ -21,9 +21,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.0.1-Play-Guide-KO.pdf"
-VERSION = "3.0.1"
-PAGE_TOTAL = 22
+OUT = ROOT / "output" / "pdf" / "TamaPoke-4.0.0-Play-Guide-KO.pdf"
+VERSION = "4.0.0"
+PAGE_TOTAL = 23
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.0.1",
+            "플레이 설명서 · 4.0.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -675,7 +675,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.0.1", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/4.0.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -740,6 +740,20 @@ story.extend([
     bullet("작별 진행·보관 대기와 하루 사용 횟수도 저장됩니다. 앱을 다시 열었을 때 대기 중인 작별이 이어져도 새 작별 횟수를 추가로 쓰는 것은 아닙니다."),
     bullet("전체 세이브를 적용하는 동안 전원을 끄거나 SD를 빼지 마세요. 별도의 원본 백업을 보관한 뒤 진행합니다."),
     p("폰·워치 앱을 삭제하면 내부 세이브도 지워집니다. 설치 오류가 나더라도 먼저 기존 앱을 삭제하지 말고, 같은 서명 키의 APK인지 확인하고 세이브를 백업하세요.", DANGER),
+])
+
+page_break(story)
+story.extend(page_heading("22 박스 정렬", "300칸을 원하는 순서로 정리하기", "박스 전체에 한 번 적용합니다. 파티와 현재 키우는 포켓몬은 바뀌지 않습니다."))
+story.append(screenshot_pair(ROOT / "docs/qa/4.0.0/box-sort-menu.png", ROOT / "docs/qa/4.0.0/box-sort-confirm.png"))
+story.extend([
+    Spacer(1, 4*mm),
+    step_table(["파티에서 <b>박스</b>를 열고 아래쪽 <b>정렬</b>을 누릅니다. 어느 페이지에서 열어도 300칸 전체가 대상입니다.", "<b>가나다순 · 번호순 · 레벨순</b> 중 원하는 기준을 고릅니다. 확인창에서 <b>예</b>를 누르면 적용하고 첫 페이지로 돌아옵니다.", "<b>아니요</b>는 정렬 메뉴로 돌아갑니다. 정렬 메뉴에서 뒤로 가면 원래 페이지와 교체 선택을 그대로 유지합니다."]),
+    Spacer(1, 3*mm),
+    info_table([["기준", "정렬 규칙"], ["가나다순", "공식 한국어 종 이름 기준. 별명과 폼 이름은 제외"], ["번호순", "작은 전국도감 번호부터 큰 번호 순"], ["레벨순", "높은 레벨부터 낮은 레벨 순"]], [40*mm,134*mm]),
+    Spacer(1, 3*mm),
+    bullet("빈칸은 뒤로 모읍니다. 가나다·번호가 같으면 레벨 높은 순, 레벨이 같으면 도감 번호순입니다. 기준이 모두 같으면 기존 순서를 유지합니다."),
+    bullet("새로 포획하거나 보관한 포켓몬은 자동 정렬하지 않습니다. 필요할 때 다시 정렬하세요. 정렬을 적용하면 이전 교체 선택은 취소되므로 대상을 다시 고르세요."),
+    p("개체의 별명·이로치·폼·기술·개체값·훈련·돌봄 기록은 그대로 보존됩니다. 정렬 실패가 표시되면 저장 공간을 확인하고, ESP는 원래 SD를 장착한 뒤 재시작하세요. 이전 칸 배치로 되돌리는 버튼은 없습니다.", SAFE),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

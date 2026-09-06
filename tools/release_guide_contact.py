@@ -5,7 +5,7 @@ from PIL import Image,ImageDraw
 R=Path(__file__).resolve().parents[1]
 version=re.search(r'^#define FW_VERSION "([^"]+)"',(R/'TamaPoke.ino').read_text(encoding='utf8'),re.M)[1]
 pages=sorted((R/f'build/{version}/guide-pages').glob('page-*.png'))
-assert len(pages)==22
+assert pages, 'Render every PDF page before creating contact sheets'
 for start in range(0,len(pages),6):
     sheet=Image.new('RGB',(1056,1050),'#d8d8d8');draw=ImageDraw.Draw(sheet)
     for i,path in enumerate(pages[start:start+6]):

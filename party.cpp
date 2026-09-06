@@ -7,6 +7,8 @@
 #include "pet.h"
 #include <new>
 #include "roster_store.h"
+#include "i18n.h"
+#include <algorithm>
 
 Party party;
 bool Party::hasEndedMon(const PartyMon &m) const {
@@ -194,6 +196,41 @@ bool Party::boxSave() {
   return !rosterReadOnly;
 }
 
+bool Party::sortBox(BoxSortOrder order) {
+  if(rosterReadOnly || !pendingLive.empty() || order>BOX_SORT_LEVEL) return false;
+  for(const auto &m:box) if(m.dex>DEX_COUNT) return false;
+  // ESP puts the snapshot/keys in PSRAM, not the small UI task stack.
+  struct SortScratch { PartyMon before[BOX_SLOTS]; uint16_t index[BOX_SLOTS]; const char *name[BOX_SLOTS]; };
+#ifdef ESP32
+  auto *s=static_cast<SortScratch*>(ps_malloc(sizeof(SortScratch)));
+#else
+  auto *s=static_cast<SortScratch*>(malloc(sizeof(SortScratch)));
+#endif
+  if(!s) return false;
+  memcpy(s->before,box,sizeof(box));
+  for(uint16_t i=0;i<BOX_SLOTS;i++) {
+    s->index[i]=i;
+    s->name[i]=box[i].empty()?"":koreanName(DEX_TBL[box[i].dex].name);
+  }
+  std::sort(s->index,s->index+BOX_SLOTS,[&](uint16_t a,uint16_t b) {
+    const auto &x=s->before[a], &y=s->before[b];
+    if(x.empty()!=y.empty()) return !x.empty();
+    if(x.empty()) return a<b;
+    if(order==BOX_SORT_NAME) {
+      int cmp=strcmp(s->name[a],s->name[b]); if(cmp) return cmp<0;
+    }
+    if(order==BOX_SORT_LEVEL && x.level!=y.level) return x.level>y.level;
+    if(x.dex!=y.dex) return x.dex<y.dex;
+    if(x.level!=y.level) return x.level>y.level;
+    return a<b; // stable ties, including different forms and shiny individuals
+  });
+  for(uint16_t i=0;i<BOX_SLOTS;i++) memcpy(&box[i],&s->before[s->index[i]],sizeof(PartyMon));
+  bool ok=!memcmp(box,s->before,sizeof(box)) || boxSave();
+  if(!ok) memcpy(box,s->before,sizeof(box));
+  free(s);
+  return ok;
+}
+
 void Party::saveRoster() {
   if(rosterReadOnly) return;
   uint8_t *raw=(uint8_t*)calloc(1,ROSTER_BYTES);
@@ -206,9 +243,10 @@ void Party::saveRoster() {
   }
   memcpy(raw+8+PARTY_RECORD_BYTES*ROSTER_N,&pendingLive,PARTY_RECORD_BYTES);
   uint32_t sum=rosterHash(raw,ROSTER_BYTES-4);memcpy(raw+ROSTER_BYTES-4,&sum,4);
-  bool written=rosterWrite(prefs,raw,ROSTER_BYTES);
   // Verify the authoritative write before touching either recovery copy.
   uint8_t *check=(uint8_t*)malloc(ROSTER_BYTES);
+  if(!check) {free(raw);rosterReadOnly=true;return;}
+  bool written=rosterWrite(prefs,raw,ROSTER_BYTES);
   bool committed=written && check && rosterStoredSize(prefs)==ROSTER_BYTES &&
     rosterRead(prefs,check,ROSTER_BYTES)==ROSTER_BYTES && !memcmp(check,raw,ROSTER_BYTES);
   free(check);

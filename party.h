@@ -50,6 +50,7 @@ struct PartyMon {
 #define PARTY_RECORD_BYTES 72
 #define PARTY_ROSTER_BYTES (12 + PARTY_RECORD_BYTES * (PARTY_STORAGE_SLOTS + BOX_SLOTS + 1))
 class Pet;
+enum BoxSortOrder : uint8_t { BOX_SORT_NAME, BOX_SORT_DEX, BOX_SORT_LEVEL };
 
 class Party {
 public:
@@ -71,6 +72,7 @@ public:
   bool boxAdd(const PartyMon &m);     // into the first free box slot
   void boxReleaseAt(uint16_t i);
   bool boxSave();
+  bool sortBox(BoxSortOrder order); // one-shot, all pages; leaves party/live pet intact
   // Swaps a party slot with a box slot. Either may be empty, so this doubles as
   // deposit and withdraw rather than needing three separate operations.
   void swapPartyBox(uint8_t partyIdx, uint16_t boxIdx);

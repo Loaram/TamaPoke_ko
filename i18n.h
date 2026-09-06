@@ -153,3 +153,5 @@ void setLang(Lang l);        // cambia y persiste el idioma
 
 // Localized display names; persisted identifiers and nicknames are unchanged.
 const char *localName(const char *english);
+// Canonical Korean name, independent of the current UI language.
+const char *koreanName(const char *english);
