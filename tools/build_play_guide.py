@@ -21,9 +21,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.2.0-Play-Guide-KO.pdf"
-VERSION = "3.2.0"
-PAGE_TOTAL = 24
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.3.0-Play-Guide-KO.pdf"
+VERSION = "3.3.0"
+PAGE_TOTAL = 25
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.2.0",
+            "플레이 설명서 · 3.3.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -262,7 +262,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-06", CENTER),
+        p("2026-09-07", CENTER),
     ]
 )
 page_break(story)
@@ -483,7 +483,7 @@ story.extend(
                 "찾고 싶은 포켓몬이 속한 지방을 고릅니다.",
                 "일반 또는 랜덤을 고릅니다. 시작 순간 활력 30이 차감되며 승패와 관계없이 돌려받지 않습니다.",
                 "야생 포켓몬을 쓰러뜨리면 몬스터볼 포획 판정이 한 번 진행됩니다.",
-                "포획에 성공하면 빈 파티 칸에 들어가고, 파티가 찼으면 박스의 빈 칸으로 이동합니다.",
+                "별도 결과창에서 포획 성공·실패와 보관 위치를 확인합니다. <b>확인</b>을 누르면 탐색으로 돌아갑니다. 자세한 화면은 25쪽을 보세요.",
             ]
         ),
         Spacer(1, 4 * mm),
@@ -675,7 +675,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.2.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.3.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -773,6 +773,19 @@ story.extend([
     info_table([["값", "의미"], ["괄호 밖 능력치", "종·폼·레벨·개체값·훈련 등에 따라 계산된 현재 값"], ["괄호 안 개체값", "각 항목 0~31. 개체마다 고유하며 성장·훈련으로 다시 뽑지 않음"]], [45*mm,129*mm]),
     Spacer(1, 3*mm),
     p("기존 세이브의 포획·작별 동료도 그대로 사용할 수 있습니다. 개체값을 확인하는 것만으로 포켓몬이나 저장 데이터가 바뀌지 않습니다.", SAFE),
+])
+
+page_break(story)
+story.extend(page_heading("24 탐색 결과", "포획 결과를 확인하세요", "전투가 끝나면 메시지 줄과 분리된 결과창이 열립니다. 확인을 누르기 전에는 자동으로 닫히지 않습니다."))
+story.append(screenshot_pair(ROOT / "docs/qa/3.3.0/wild-result-party.png", ROOT / "docs/qa/3.3.0/wild-result-failed.png", 66*mm))
+story.extend([
+    Spacer(1,4*mm),
+    info_table([["결과", "의미"], ["포획 성공", "파티 또는 박스에 보관했습니다. 실제 보관 위치를 안내합니다."], ["포획 실패", "배틀에서는 이겼지만 이번 포획 판정에 실패했습니다."], ["탐색 종료", "배틀에서 패배하여 포획 판정은 진행하지 않았습니다."], ["보관 오류", "보관 완료를 확인하지 못했습니다. 포획 실패와는 다른 저장 문제입니다."]], [35*mm,139*mm]),
+    Spacer(1,3*mm),
+    bullet("아래 <b>확인</b> 버튼을 눌러 탐색으로 돌아갑니다. 창 바깥 터치·스와이프로 닫히지 않으며, 마지막 기술 선택 때의 연속 터치로 바로 닫히지 않도록 잠깐 보호합니다."),
+    bullet("이름 옆 <b>*</b>는 이로치 표시입니다. 성공한 포켓몬은 확인 버튼을 누르기 전에 이미 보관되며, 화면을 다시 그리거나 확인을 눌러도 포획 판정을 반복하지 않습니다."),
+    bullet("포획 실패 후에는 다음 탐색에서 다시 만나 승리해야 합니다. 같은 결과창에서 공을 다시 던지는 기능은 없습니다. 조우·포획 확률과 활력 소모는 기존 규칙 그대로입니다."),
+    p("보관 오류가 나오면 새 포획을 반복하지 말고 저장 공간을 확인하세요. ESP는 원래 microSD를 확인한 뒤 앱/기기를 다시 실행하고 파티·박스의 실제 보관 상태를 확인하세요. 앱 데이터 삭제나 SD 포맷은 하지 마세요.", SAFE),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

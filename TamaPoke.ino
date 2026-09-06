@@ -46,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.2.0"
+#define FW_VERSION "3.3.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -274,6 +274,9 @@ int16_t wildDex = 0;
 uint8_t wildLevel = 1;
 uint8_t wildIvAtk = 8, wildIvDef = 8, wildIvSpe = 8, wildIvHp = 8;
 bool wildShiny = false;
+uint8_t wildResult = WILD_RESULT_NONE;
+bool wildResultRendered = false;
+uint32_t wildResultReadyAt = 0;
 #endif
 
 enum : uint8_t {
@@ -3735,15 +3738,28 @@ static PartyMon wildPartyMon() {
   return m;
 }
 
-static bool storeWildCapture() {
+static uint8_t storeWildCapture() {
   PartyMon m = wildPartyMon();
-  bool stored = party.add(m);
-  if (!stored) stored = party.boxAdd(m);
-  if (stored) pet.registerCaughtSpecies(wildDex, wildShiny);
-  return stored;
+  // Do not try a second destination after an unverified write: that could
+  // duplicate a catch. Report the storage error separately from an escape.
+  uint8_t destination = party.firstFree() >= 0 ? WILD_RESULT_PARTY : WILD_RESULT_BOX;
+  bool stored = destination == WILD_RESULT_PARTY ? party.add(m) : party.boxAdd(m);
+  if (!stored) return WILD_RESULT_STORAGE_ERROR;
+  pet.registerCaughtSpecies(wildDex, wildShiny);
+  return destination;
+}
+
+void finishWildBattle() {
+  if (!btlWild || !btlOver || wildResult != WILD_RESULT_NONE) return;
+  wildResult = !btlWon ? WILD_RESULT_LOST :
+      wildCaptureNow(wildCatchRateForDex(wildDex)) ? storeWildCapture() : WILD_RESULT_ESCAPED;
+  btlMsgCount = 0; // A result is a modal, never a fifth/sixth narration line.
+  wildResultRendered = false;
+  wildResultReadyAt = millis() + 450;
 }
 
 bool startWildBattle(bool hard) {
+  if (battleOpen || wildResult != WILD_RESULT_NONE) return false;
   exploreNotice = 0;
   if (pet.isEgg() || pet.ceremony != CER_NONE || pet.sleeping) return false;
   if (!wildStorageAvailable()) {
@@ -4028,18 +4044,7 @@ static void btlResolve(MoveId yourMove) {
     if (btlLink) { btlSay("%s", btlWon ? T(S_BTL_WIN) : T(S_BTL_LOSE)); return; }
 #if defined(TAMAPOKE_EXPLORE_ENABLED)
     if (btlWild) {
-      // Reserve the final two narration slots even after a very busy last
-      // turn: the player must always see both the win and capture outcome.
-      if (btlMsgCount > 4) btlMsgCount = 4;
-      if (btlWon) {
-        bool caught = wildCaptureNow(wildCatchRateForDex(wildDex));
-        if (caught) caught = storeWildCapture();
-        btlSay("%s", T(S_BTL_WIN));
-        btlSay(caught ? T(S_WILD_CAUGHT_FMT) : T(S_WILD_ESCAPED_FMT),
-               localName(DEX_TBL[wildDex].name));
-      } else {
-        btlSay("%s", T(S_BTL_LOSE));
-      }
+      finishWildBattle();
       return;
     }
 #endif
@@ -4241,7 +4246,58 @@ void renderWin() {
   gfx->flush();
 }
 
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+void renderWildResult() {
+  const bool stored = wildResult == WILD_RESULT_PARTY || wildResult == WILD_RESULT_BOX;
+  const bool error = wildResult == WILD_RESULT_STORAGE_ERROR;
+  gfx->fillScreen(UI_BG_DAY);
+  gfx->fillRoundRect(70, 74, 326, 334, 18, UI_WHITE);
+  gfx->drawRoundRect(70, 74, 326, 334, 18, UI_INK);
+  const char *title = gLang == LANG_KO ?
+      (stored ? "포획 성공" : error ? "보관 오류" : wildResult == WILD_RESULT_LOST ? "탐색 종료" : "포획 실패") :
+      (stored ? "Captured!" : error ? "Storage error" : wildResult == WILD_RESULT_LOST ? "Explore ended" : "Capture failed");
+  gfx->setTextSize(3); gfx->setTextColor(stored ? UI_BAR_OK : UI_BAR_BAD);
+  gfx->setCursor(CX-textWidthFactor(title,9),92); gfx->print(title);
+  if (wildDex >= 1 && wildDex <= DEX_COUNT) {
+    const uint8_t *thumb = thumbs.get(wildDex);
+    if (thumb) drawThumb(thumb,CX-32,142,4,false);
+    char name[128];
+    snprintf(name,sizeof(name),"%s Lv.%u%s",localName(DEX_TBL[wildDex].name),wildLevel,wildShiny?" *":"");
+    uint8_t size=uiTextWidth(name,2)<=324?2:1;
+    gfx->setTextSize(size);gfx->setTextColor(UI_INK);
+    gfx->setCursor(CX-uiTextWidth(name,size)/2,224);gfx->print(name);
+  }
+  const char *detail = gLang == LANG_KO ?
+      (wildResult==WILD_RESULT_PARTY ? "파티에 보관했습니다." : wildResult==WILD_RESULT_BOX ? "박스에 보관했습니다." :
+       error ? "보관 완료를 확인하지 못했습니다." : wildResult==WILD_RESULT_LOST ? "배틀에서 패배했습니다." : "포켓몬을 놓쳤습니다.") :
+      (wildResult==WILD_RESULT_PARTY ? "Saved to your party." : wildResult==WILD_RESULT_BOX ? "Saved to your box." :
+       error ? "Could not verify storage." : wildResult==WILD_RESULT_LOST ? "You lost the battle." : "The Pokemon escaped.");
+  const char *hint = gLang == LANG_KO ?
+      (error ? "저장 장치 확인 후 다시 실행하세요." : wildResult==WILD_RESULT_LOST ? "포획 판정은 진행하지 않았습니다." : "확인을 누르면 탐색으로 돌아갑니다.") :
+      (error ? "Check storage, then restart." : wildResult==WILD_RESULT_LOST ? "No capture attempt was made." : "Confirm to return to Explore.");
+  gfx->setTextSize(1);gfx->setTextColor(UI_INK);
+  gfx->setCursor(CX-textWidthFactor(detail,3),274);gfx->print(detail);
+  gfx->setCursor(CX-textWidthFactor(hint,3),302);gfx->print(hint);
+  const char *label=gLang==LANG_KO?"확인":"Confirm";
+  gfx->fillRoundRect(133,350,200,48,12,UI_TRACK);gfx->drawRoundRect(133,350,200,48,12,UI_INK);
+  gfx->setTextSize(2);gfx->setCursor(CX-uiTextWidth(label,2)/2,366);gfx->print(label);
+  gfx->flush();wildResultRendered=true;
+}
+
+static void wildResultTap(int16_t x,int16_t y) {
+  if(!wildResultRendered || (int32_t)(millis()-wildResultReadyAt)<0 || y<350 || y>398)return;
+  if(x<133 || x>333)return;
+  wildResult=WILD_RESULT_NONE;wildResultRendered=false;
+  btlMsgCount=0;btlWinUntil=0;btlMenu=0;btlSwitchPage=0;
+  btlFreeSprites();audioMusic(MUS_NONE);battleOpen=false;btlWild=false;
+  exploreOpen=true;
+}
+#endif
+
 void renderBattle() {
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (wildResult != WILD_RESULT_NONE) { renderWildResult(); return; }
+#endif
   if (btlWinUntil) { renderWin(); return; }
   btlEaseBars();
   gfx->fillScreen(RGB565_BLACK);
@@ -4463,6 +4519,9 @@ static void btlRun() {
 }
 
 void battleTap(int16_t x, int16_t y) {
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if (wildResult != WILD_RESULT_NONE) { wildResultTap(x,y); return; }
+#endif
   if (btlWinUntil) {          // dismiss the win screen and leave the fight
     btlWinUntil = 0;
     btlFreeSprites();

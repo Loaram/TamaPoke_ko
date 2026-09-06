@@ -6,6 +6,11 @@
 #define WILD_SHINY_SCALE 4096
 #define WILD_SHINY_IV_FLOOR 20
 
+enum WildResult : uint8_t {
+  WILD_RESULT_NONE, WILD_RESULT_PARTY, WILD_RESULT_BOX,
+  WILD_RESULT_ESCAPED, WILD_RESULT_LOST, WILD_RESULT_STORAGE_ERROR
+};
+
 // Encounter mix inherited from the Explore fork: legendary 1%, rare 7%,
 // evolved 22%, common 70%.
 uint8_t wildTierForRoll(uint8_t roll);
