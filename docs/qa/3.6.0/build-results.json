@@ -1,0 +1,57 @@
+{
+  "version": "3.6.0",
+  "runtime_suite_total": 59,
+  "runtime_environment": "GitHub Ubuntu",
+  "windows_full_run": "capture_dex executable blocked by WinError 4551; no security changes",
+  "rate_count_cases": 251648,
+  "capture_simulation_draws": 5000000,
+  "simulation_source_equivalence": true,
+  "ci_url": "https://github.com/Loaram/TamaPoke_ko/actions/runs/34109972150",
+  "sd_failure_checks": 10,
+  "installer_checks": 30,
+  "device_tested": false,
+  "save_version": 7,
+  "record_bytes": 72,
+  "battle_protocol": 5,
+  "trade_protocol": 1,
+  "android_version_code": 3036,
+  "wear_version_code": 3037,
+  "artifacts": {
+    "SHA256SUMS.txt": {
+      "bytes": 855,
+      "sha256": "5382fa5ea46af3c702aa1210ee02604bd90e78e0cc18d84f7b1672956570caef"
+    },
+    "TamaPoke-3.6.0-Android-Full-debug.apk": {
+      "bytes": 387831076,
+      "sha256": "7680a8dc6d3a8e14272dcb7929f7e1cc7a3414bc7f7a080d05e6385f111072fa"
+    },
+    "TamaPoke-3.6.0-ESP32-Web-Installer.zip": {
+      "bytes": 2293152,
+      "sha256": "06706d8b740cbc543f27b930e1dc2acdb65c241a178bbb88aa4b7c022ba6de72"
+    },
+    "TamaPoke-3.6.0-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
+      "bytes": 186624,
+      "sha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce"
+    },
+    "TamaPoke-3.6.0-Play-Guide-KO.pdf": {
+      "bytes": 529027,
+      "sha256": "90b5ce27a1cc2640549d8be27e959a662899b60d84dd11fadc091647337ae7e8"
+    },
+    "TamaPoke-3.6.0-Watch-Installer-Guide-KO.pdf": {
+      "bytes": 195891,
+      "sha256": "222f5122bd1d437e221ba876ffcdec7139185a8225aa9c879040919644a153ed"
+    },
+    "TamaPoke-3.6.0-Watch-Installer-Windows.zip": {
+      "bytes": 18014653,
+      "sha256": "7abd35ad2c51a0664457e3e740a3c7e06587cafae50392db3af2e2622dee2f48"
+    },
+    "TamaPoke-3.6.0-WearOS-GalaxyWatch4-9-debug.apk": {
+      "bytes": 387421481,
+      "sha256": "4b2bffcdb37959e9a9a2916d47075eb5db2675bf6e52068e88e20daba3864e2e"
+    },
+    "WATCH-INSTALLER-SHA256SUMS.txt": {
+      "bytes": 221,
+      "sha256": "be634b987bc0b9ad75c26a7ae103208ccc613e68d256f0c2d75726e6962105c4"
+    }
+  }
+}

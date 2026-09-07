@@ -1,0 +1,21 @@
+﻿2026-09-07T10:19:09.9891051Z ##[group]Run python tools/test_sd_store.py
+[36;1mpython tools/test_sd_store.py[0m
+shell: /usr/bin/bash -e {0}
+env:
+pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+##[endgroup]
+PASS old NVS roster remains readable without SD migration
+PASS missing card cannot replace the old authoritative save
+PASS large roster stages, verifies, and commits on SD
+PASS short write leaves commit pointer unchanged
+PASS interrupted write leaves all previous individuals intact
+PASS failed NVS pointer commit keeps previous snapshot
+PASS retry commits only the verified new snapshot
+PASS missing migrated card cannot silently fall back to stale NVS
+PASS corrupt or wrong card content fails the selected hash
+PASS factory reset cannot resurrect orphan SD snapshots
