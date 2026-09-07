@@ -106,11 +106,13 @@ void Pet::newEgg() {
   form = 0;
   prevSpeciesId = -1;
   for (int i = 0; i < REGION_COUNT; i++) eggByRegion[i] = 0;
+  // Decide shininess before selecting the species: shiny eggs must not be
+  // restricted to families missing from the normal Pokedex. Roll only here,
+  // never on reload or a companion swap; existing eggs retain their result.
+  eggShiny = (rollEggOdds(EggRewards::SHINY_ROLL) < eggShinyWeight());
   eggTarget = pickEggSpecies();  // especie oculta segun rareza y pokedex
   eggByRegion[region % REGION_COUNT] = eggTarget;
   starterPick = (registeredCount() == 0);  // primera partida: el jugador elige inicial
-  // Rolled only when creating an egg, never on reload or a companion swap.
-  eggShiny = (rollEggOdds(EggRewards::SHINY_ROLL) < eggShinyWeight());
   // Early retirement no longer delays the next creature's evolution.
   evoPen = 0;
   retirePending = false;
@@ -609,7 +611,9 @@ int16_t Pet::pickEggSpecies() {
 
   // candidatos del tier con linea incompleta; si no hay, baja de tier;
   // si la pokedex del tier esta completa, vale cualquiera del tier
-  for (int pass = 0; pass < 2; pass++) {
+  // Normal eggs prefer incomplete families. Shiny eggs skip that preference
+  // entirely (including the shiny Dex), but retain rarity/art/region gates.
+  for (int pass = eggShiny ? 1 : 0; pass < 2; pass++) {
     for (int t = tier; t >= R_COMUN; t--) {
       // Reservoir sampling keeps every eligible species equally likely without
       // a fixed candidate array. The old 260-entry cap silently cut late

@@ -3,7 +3,7 @@
 
 #define WILD_ENERGY_COST 30
 #define WILD_LEVEL_SPREAD 5
-#define WILD_SHINY_SCALE 4096
+#define WILD_SHINY_SCALE 100
 #define WILD_SHINY_IV_FLOOR 20
 
 enum WildResult : uint8_t {
@@ -18,6 +18,7 @@ int16_t wildPickSpecies(uint8_t region, uint8_t tier, uint32_t roll);
 uint8_t wildLevelMin(uint8_t playerLevel, bool hard);
 uint8_t wildLevelMax(uint8_t playerLevel, bool hard);
 bool wildShinyForRoll(uint32_t roll);
+bool wildShinyNow();
 void wildApplyShiny(bool shiny, uint8_t &ivAtk, uint8_t &ivDef,
                     uint8_t &ivSpe, uint8_t &ivHp);
 

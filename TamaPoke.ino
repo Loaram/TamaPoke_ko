@@ -3792,7 +3792,7 @@ bool startWildBattle(bool hard) {
   wildIvDef = (uint8_t)(8 + random(24));
   wildIvSpe = (uint8_t)(8 + random(24));
   wildIvHp = (uint8_t)(8 + random(24));
-  wildShiny = wildShinyForRoll((uint32_t)random(65536));
+  wildShiny = wildShinyNow();
   wildApplyShiny(wildShiny, wildIvAtk, wildIvDef, wildIvSpe, wildIvHp);
 
   // Charge only after the encounter and squad are known to be valid. The

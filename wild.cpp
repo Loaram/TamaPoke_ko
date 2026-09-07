@@ -67,6 +67,15 @@ bool wildShinyForRoll(uint32_t roll) {
   return (roll % WILD_SHINY_SCALE) == 0;
 }
 
+bool wildShinyNow() {
+  // Reject the incomplete tail: 65536 is not divisible by 100. This keeps
+  // the same exact 1/100 rule on the emulator, Android/Wear and ESP.
+  const uint32_t limit = 65536UL / WILD_SHINY_SCALE * WILD_SHINY_SCALE;
+  uint32_t roll;
+  do { roll = (uint32_t)random(65536L); } while (roll >= limit);
+  return wildShinyForRoll(roll);
+}
+
 void wildApplyShiny(bool shiny, uint8_t &ivAtk, uint8_t &ivDef,
                     uint8_t &ivSpe, uint8_t &ivHp) {
   if (!shiny) return;

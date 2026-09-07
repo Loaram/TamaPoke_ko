@@ -24,6 +24,19 @@ static void ck(bool ok, const char *what) {
 }
 
 int main() {
+  int shinyRolls = 0;
+  for (uint32_t roll = 0; roll < 100; ++roll) shinyRolls += wildShinyForRoll(roll);
+  ck(WILD_SHINY_SCALE == 100 && shinyRolls == 1,
+     "wild shiny probability is exactly one of 100 equally likely rolls");
+  bool exactRolls = true; int rejected = 0;
+  for (uint32_t seed = 1; seed <= 10000; ++seed) {
+    g_seed = seed; uint32_t roll;
+    do { roll = (uint32_t)random(65536L); if (roll >= 65500) ++rejected; } while (roll >= 65500);
+    bool expected = roll % 100 == 0; uint32_t expectedSeed = g_seed;
+    g_seed = seed;
+    if (wildShinyNow() != expected || g_seed != expectedSeed) exactRolls = false;
+  }
+  ck(exactRolls && rejected > 0, "live wild shiny lottery rejects the biased tail before applying 1/100");
   ck(wildTierForRoll(0) == R_LEGENDARIO &&
      wildTierForRoll(1) == R_RARO && wildTierForRoll(7) == R_RARO &&
      wildTierForRoll(8) == R_EVO && wildTierForRoll(29) == R_EVO &&
