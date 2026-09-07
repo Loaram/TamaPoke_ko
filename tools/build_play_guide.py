@@ -378,7 +378,7 @@ page_break(story)
 
 # 6. Dex and gyms
 story.extend(page_heading("05 도감", "1025종 도감과 9개 지방 체육관", "관동부터 팔데아까지 모험하고, 가라르에서는 소드·실드 코스를 선택합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", ROOT / "docs/qa/3.5.1/gymsj.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/3.6.1/collection-locks.png", ROOT / "docs/qa/3.5.1/gymsj.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
