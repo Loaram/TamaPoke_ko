@@ -29,6 +29,7 @@ jobs:
           name: collection-screens
           path: build/collection-screens/*.png
       - run: python tools/test_runtime.py
+      - run: python tools/test_android_lan_java.py
       - run: python tools/test_sd_store.py
       - uses: arduino/setup-arduino-cli@v2
       - run: arduino-cli core update-index --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json

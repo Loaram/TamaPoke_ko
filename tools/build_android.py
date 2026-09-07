@@ -63,7 +63,7 @@ def main() -> int:
     parser.add_argument("--wear", action="store_true",
                         help="build a standalone ARM32/ARM64 Wear OS APK for Galaxy Watch4-9")
     parser.add_argument("--version-code", type=int,
-                        help="defaults to 3040 for Android or 3041 for Wear OS")
+                        help="defaults to 3042 for Android or 3043 for Wear OS")
     parser.add_argument("--android-revision", type=int,
                         help="defaults to 1")
     parser.add_argument("--output", type=Path,
@@ -93,7 +93,7 @@ def main() -> int:
 
     version = firmware_version()
     flavor = "wear" if args.wear else "android"
-    version_code = args.version_code if args.version_code is not None else (3041 if args.wear else 3040)
+    version_code = args.version_code if args.version_code is not None else (3043 if args.wear else 3042)
     revision = args.android_revision if args.android_revision is not None else 1
     version_name = f"{version}-{flavor}.{revision}"
     default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk" if args.wear

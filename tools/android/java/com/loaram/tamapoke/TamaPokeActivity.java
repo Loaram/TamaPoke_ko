@@ -5,6 +5,15 @@ import android.app.NativeActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.LinkAddress;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
+import android.net.wifi.WifiManager;
+import android.util.Log;
+import java.net.Inet4Address;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +24,126 @@ import android.widget.Toast;
 
 public final class TamaPokeActivity extends NativeActivity {
     private static final int LOCAL_NETWORK_REQUEST = 38631;
+    // All callback/session changes are synchronized. Native polling reads through
+    // synchronized getters, never through a callback-owned Network object.
+    private ConnectivityManager.NetworkCallback lanCallback;
+    private Network lanNetwork;
+    private WifiManager.MulticastLock lanMulticast;
+    private int lanState; // 0 idle, 1 waiting, 2 IPv4 ready, -1 unavailable, -2 permission/error
+    private int lanIpv4, lanBroadcast, lanEpoch;
+
+    public synchronized int getLanState() { return lanState; }
+    public synchronized int getLanIpv4() { return lanIpv4; }
+    public synchronized int getLanBroadcast() { return lanBroadcast; }
+    public synchronized int getLanEpoch() { return lanEpoch; }
+
+    private void updateLanAddress(LinkProperties properties) {
+        int ip = 0, broadcast = 0;
+        if (properties != null) for (LinkAddress address : properties.getLinkAddresses()) {
+            if (!(address.getAddress() instanceof Inet4Address)) continue;
+            int prefix = address.getPrefixLength();
+            if (prefix < 1 || prefix > 30) continue;
+            byte[] b = address.getAddress().getAddress();
+            ip = ((b[0] & 255) << 24) | ((b[1] & 255) << 16)
+                    | ((b[2] & 255) << 8) | (b[3] & 255);
+            broadcast = ip | (-1 >>> prefix);
+            break;
+        }
+        if (ip != lanIpv4 || broadcast != lanBroadcast) ++lanEpoch;
+        lanIpv4 = ip;
+        lanBroadcast = broadcast;
+        lanState = ip != 0 ? 2 : 1;
+    }
+
+    public synchronized boolean beginLanNetwork() {
+        if (lanCallback != null) return true;
+        final ConnectivityManager cm = getSystemService(ConnectivityManager.class);
+        lanState = 1;
+        lanIpv4 = lanBroadcast = 0;
+        if (cm == null) { lanState = -1; return false; }
+        final ConnectivityManager.NetworkCallback callback = new ConnectivityManager.NetworkCallback() {
+            @Override public void onAvailable(Network network) {
+                synchronized (TamaPokeActivity.this) {
+                    if (lanCallback != this) return; // stale callback after leave/retry
+                    if (!cm.bindProcessToNetwork(network)) { lanState = -1; return; }
+                    lanNetwork = network;
+                    lanIpv4 = lanBroadcast = 0;
+                    ++lanEpoch;
+                    // Wait for onLinkPropertiesChanged; onAvailable does not yet
+                    // guarantee that querying LinkProperties returns this network.
+                    lanState = 1;
+                    Log.i("TamaPoke-LAN", "Wi-Fi network selected");
+                }
+            }
+            @Override public void onLinkPropertiesChanged(Network network, LinkProperties properties) {
+                synchronized (TamaPokeActivity.this) {
+                    if (lanCallback == this && network.equals(lanNetwork)) updateLanAddress(properties);
+                }
+            }
+            @Override public void onLost(Network network) {
+                synchronized (TamaPokeActivity.this) {
+                    if (lanCallback != this || !network.equals(lanNetwork)) return;
+                    cm.bindProcessToNetwork(null);
+                    lanNetwork = null;
+                    lanIpv4 = lanBroadcast = 0;
+                    ++lanEpoch;
+                    lanState = -1;
+                }
+            }
+            @Override public void onUnavailable() {
+                synchronized (TamaPokeActivity.this) {
+                    if (lanCallback == this) lanState = -1;
+                }
+            }
+        };
+        lanCallback = callback;
+        try {
+            WifiManager wifi = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
+            if (wifi != null) {
+                lanMulticast = wifi.createMulticastLock("TamaPoke-LAN");
+                lanMulticast.setReferenceCounted(false);
+                lanMulticast.acquire();
+            }
+            // Deliberately no INTERNET capability: the ESP room has no Internet.
+            cm.requestNetwork(new NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build(), callback, 20000);
+            return true;
+        } catch (RuntimeException error) {
+            Log.w("TamaPoke-LAN", "Wi-Fi request failed", error);
+            endLanNetwork();
+            lanState = -2;
+            return false;
+        }
+    }
+
+    public synchronized boolean endLanNetwork() {
+        ConnectivityManager.NetworkCallback old = lanCallback;
+        lanCallback = null; // invalidate queued callbacks before releasing anything
+        ConnectivityManager cm = getSystemService(ConnectivityManager.class);
+        if (cm != null) {
+            if (old != null) try { cm.unregisterNetworkCallback(old); }
+                catch (IllegalArgumentException ignored) { /* already unavailable */ }
+            if (lanNetwork != null) cm.bindProcessToNetwork(null);
+        }
+        lanNetwork = null;
+        if (lanMulticast != null && lanMulticast.isHeld()) lanMulticast.release();
+        lanMulticast = null;
+        lanState = lanIpv4 = lanBroadcast = 0;
+        ++lanEpoch;
+        return true;
+    }
+
+    @Override protected void onDestroy() {
+        endLanNetwork();
+        super.onDestroy();
+    }
+
+    @Override protected void onStop() {
+        // Native ticking pauses in the background. Do not retain the watch's
+        // Wi-Fi/filter lock for an invisible transfer; resuming requires retry.
+        endLanNetwork();
+        super.onStop();
+    }
 
     public boolean showSaveReadError() {
         runOnUiThread(new Runnable() {

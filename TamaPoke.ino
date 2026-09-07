@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.7.0"
+#define FW_VERSION "3.7.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -881,6 +881,9 @@ void loop() {
     linkNowPoll();
     lan.tick(now);
     if(lan.extension)trade.tick(now);
+#ifdef ANDROID
+    if (!lan.live()) linkNowEnd(); // release Wi-Fi request/filter lock on timeout
+#endif
   }
 
   // avisa con un sonido cuando el bicho pasa a estar listo para evolucionar
@@ -5185,7 +5188,9 @@ void renderLan() {
     case LINK_SQUADS:    msg = T(S_LAN_WAIT); break;
     case LINK_READY:     msg = T(S_LAN_READY); break;
     case LINK_REFUSED:   msg = T(S_LAN_REFUSED); break;
-    case LINK_LOST:      msg = T(S_LAN_GONE); break;
+    case LINK_LOST:
+      msg = !lan.peerId && gLang == LANG_KO ? "상대를 찾지 못했습니다" : T(S_LAN_GONE);
+      break;
     case LINK_DONE:      msg = lan.youWon ? T(S_BTL_WIN) : T(S_BTL_LOSE); break;
     case LINK_SAVE_LISTENING:
     case LINK_SAVE_HANDSHAKE: msg = T(S_LAN_WAIT); break;
@@ -5208,6 +5213,28 @@ void renderLan() {
   gfx->setTextSize(1);
   gfx->setCursor(CX - textWidthFactor(msg, 3), 76);
   gfx->print(msg);
+
+#ifdef ANDROID
+  extern const char *androidLanStatus();
+  extern const char *androidLanAddress();
+  extern int androidLanLastError();
+  if (lan.state != LINK_OFF) {
+    const char *connection = androidLanStatus();
+    gfx->setCursor(CX - textWidthFactor(connection, 3), 320);
+    gfx->print(connection);
+    char diagnostic[96];
+    const LinkNowStats &counts = linkNowStats();
+    snprintf(diagnostic, sizeof(diagnostic), "IP %s  TX %lu RX %lu E %d",
+             androidLanAddress(), (unsigned long)counts.tx,
+             (unsigned long)counts.rx, androidLanLastError());
+    // The menu needs all four action rows; retain only the connection hint at
+    // 320 on failure, and show full counters on the active connection screen.
+    if (lan.state != LINK_REFUSED && lan.state != LINK_LOST && lan.state != LINK_SAVE_INVALID) {
+      gfx->setCursor(CX - textWidthFactor(diagnostic, 3), 344);
+      gfx->print(diagnostic);
+    }
+  }
+#endif
 
   if (lan.state == LINK_OFF || lan.state == LINK_REFUSED ||
       lan.state == LINK_LOST || lan.state == LINK_SAVE_INVALID) {

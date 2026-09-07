@@ -3,6 +3,9 @@
 #include "linknow.h"
 #include "linkudp.h"
 
+#ifdef TAMAPOKE_UDP_TEST
+#include "tests/udp_platform_stub.h"
+#else
 #include <android/log.h>
 #include <arpa/inet.h>
 #include <errno.h>
@@ -15,11 +18,19 @@
 #include <sys/socket.h>
 #include <time.h>
 #include <unistd.h>
+#endif
+#include <stdio.h>
 
 #define LOG_TAG "TamaPoke-LAN"
 
 bool androidEnsureLocalNetworkPermission();
 bool androidHasLocalNetworkPermission();
+bool androidBeginLanNetwork();
+void androidEndLanNetwork();
+int androidLanState();
+int androidLanEpoch();
+uint32_t androidLanIpv4();
+uint32_t androidLanBroadcast();
 
 namespace {
 int gSocket = -1;
@@ -27,6 +38,12 @@ Link *gLink = nullptr;
 bool gLocked = false;
 bool gWaitingForPermission = false;
 uint64_t gPermissionPollAt = 0;
+bool gNetworkRequested = false;
+int gNetworkEpoch = -1;
+uint32_t gIpv4 = 0, gBroadcast = 0;
+int gLastError = 0;
+const char *gStatus = "";
+char gAddress[32]{};
 sockaddr_in gPeer{};
 uint32_t gNodeId = 0;
 LinkNowStats gStats{};
@@ -63,26 +80,45 @@ bool sendDatagram(const sockaddr_in &to, const uint8_t *frame, uint8_t len) {
   uint8_t packet[LINK_UDP_MAX_PACKET];
   size_t packetLen = linkUdpEncode(packet, sizeof(packet), gNodeId, frame, len);
   if (!packetLen) return false;
-  return sendto(gSocket, packet, packetLen, 0,
-                reinterpret_cast<const sockaddr *>(&to), sizeof(to)) >= 0;
+  ssize_t result = sendto(gSocket, packet, packetLen, 0,
+                         reinterpret_cast<const sockaddr *>(&to), sizeof(to));
+  if (result != (ssize_t)packetLen) {
+    gLastError = errno;
+    __android_log_print(ANDROID_LOG_WARN, LOG_TAG, "sendto failed: %d", errno);
+    return false;
+  }
+  return true;
 }
 
 bool openLanSocket() {
   int sock = socket(AF_INET, SOCK_DGRAM, 0);
-  if (sock < 0) return false;
+  if (sock < 0) { gLastError = errno; return false; }
   int yes = 1;
-  setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
-  setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &yes, sizeof(yes));
+  // Do not share the receive port with another process: that silently splits
+  // unicast packets. Surface a real bind error instead.
+  if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &yes, sizeof(yes)) != 0) {
+    gLastError = errno;
+    close(sock);
+    return false;
+  }
   sockaddr_in local{};
   local.sin_family = AF_INET;
   local.sin_port = htons(LINK_UDP_PORT);
   local.sin_addr.s_addr = htonl(INADDR_ANY);
   if (bind(sock, reinterpret_cast<sockaddr *>(&local), sizeof(local)) != 0 ||
       fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK) != 0) {
+    gLastError = errno;
     close(sock);
     return false;
   }
   gSocket = sock;
+  gNetworkEpoch = androidLanEpoch();
+  gIpv4 = androidLanIpv4();
+  gBroadcast = androidLanBroadcast();
+  in_addr address{};
+  address.s_addr = htonl(gIpv4);
+  inet_ntop(AF_INET, &address, gAddress, sizeof(gAddress));
+  gStatus = "Wi-Fi 연결됨 / 상대 검색 중";
   __android_log_print(ANDROID_LOG_INFO, LOG_TAG, "UDP ready on port %u, id %04X",
                       LINK_UDP_PORT, gLink ? gLink->id : 0);
   return true;
@@ -94,6 +130,15 @@ void udpSend(void *, const uint8_t *frame, uint8_t len) {
   if (gLocked) {
     sent = sendDatagram(gPeer, frame, len);
   } else {
+    // LinkProperties comes from the selected Wi-Fi Network; unlike getifaddrs
+    // it does not depend on app access to the system's routing/netlink tables.
+    if (gBroadcast) {
+      sockaddr_in to{};
+      to.sin_family = AF_INET;
+      to.sin_port = htons(LINK_UDP_PORT);
+      to.sin_addr.s_addr = htonl(gBroadcast);
+      sent = sendDatagram(to, frame, len);
+    }
     // Android may keep mobile data as its default route when the TamaPoke AP
     // has no Internet. Send through every active Wi-Fi/LAN interface instead
     // of relying only on 255.255.255.255 and the default route.
@@ -123,16 +168,11 @@ void udpSend(void *, const uint8_t *frame, uint8_t len) {
 
 bool linkNowBegin(Link *link) {
   if (!link) return false;
-  if (gSocket >= 0) {
-    gLink = link;
-    gLocked = false;
-    gStats = LinkNowStats();
-    link->id = (uint16_t)(gNodeId ^ (gNodeId >> 16));
-    if (!link->id) link->id = 1;
-    link->send = udpSend;
-    link->ctx = nullptr;
-    return true;
-  }
+  // Recreate even on retry: an old socket retains its old network binding and
+  // may contain packets (including BYE) from the previous session.
+  linkNowEnd();
+  gLastError = 0;
+  gAddress[0] = 0;
   gLink = link;
   gLocked = false;
   gNodeId = makeNodeId();
@@ -142,16 +182,17 @@ bool linkNowBegin(Link *link) {
   link->send = udpSend;
   link->ctx = nullptr;
   if (!androidEnsureLocalNetworkPermission()) {
+    gStatus = "근거리 네트워크 권한을 허용하세요";
     gWaitingForPermission = true;
     gPermissionPollAt = 0;
     __android_log_print(ANDROID_LOG_INFO, LOG_TAG,
                         "Waiting for local network permission");
     return true;
   }
-  if (!openLanSocket()) {
-    gLink = nullptr;
-    return false;
-  }
+  gNetworkRequested = true;
+  gStatus = "Wi-Fi 연결 준비 중";
+  androidBeginLanNetwork();
+  // Open only after the requested Wi-Fi route and its IPv4 address are ready.
   return true;
 }
 
@@ -162,28 +203,48 @@ void linkNowEnd() {
   gLocked = false;
   gWaitingForPermission = false;
   gPermissionPollAt = 0;
+  if (gNetworkRequested) androidEndLanNetwork();
+  gNetworkRequested = false;
+  gNetworkEpoch = -1;
+  gIpv4 = gBroadcast = 0;
 }
 
-bool linkNowUp() { return gSocket >= 0 || gWaitingForPermission; }
+bool linkNowUp() { return gSocket >= 0 || gWaitingForPermission || gNetworkRequested; }
 const char *linkNowNetworkName() { return ""; }
 const char *linkNowNetworkPassword() { return ""; }
 
 void linkNowPoll() {
   if (!gLink) return;
-  if (gSocket < 0) {
-    if (!gWaitingForPermission) return;
+  if (gWaitingForPermission) {
     uint64_t now = monotonicMillis();
     if (now - gPermissionPollAt < 250) return;
     gPermissionPollAt = now;
     if (!androidHasLocalNetworkPermission()) return;
     gWaitingForPermission = false;
+    gNetworkRequested = true;
+    gStatus = "Wi-Fi 연결 준비 중";
+    androidBeginLanNetwork();
+  }
+  int networkState = androidLanState();
+  if (networkState <= 0 || (gSocket >= 0 &&
+      (networkState != 2 || androidLanEpoch() != gNetworkEpoch))) {
+    gStatus = networkState == -2 ? "Wi-Fi 권한 또는 연결 오류" : "Wi-Fi 연결을 확인하고 다시 시도하세요";
+    gLink->state = LINK_LOST;
+    linkNowEnd();
+    return;
+  }
+  if (gSocket < 0) {
+    if (networkState != 2) return;
     if (!openLanSocket()) {
+      gStatus = "통신 소켓을 열지 못했습니다";
       gLink->state = LINK_LOST;
-      gLink = nullptr;
+      linkNowEnd();
       return;
     }
   }
-  for (;;) {
+  // Bound work per frame, even on a noisy LAN, so receive traffic cannot starve
+  // protocol timers, UI, cancellation or the game's saving loop.
+  for (int received = 0; received < 64; ++received) {
     uint8_t packet[LINK_UDP_MAX_PACKET];
     sockaddr_in from{};
     socklen_t fromLen = sizeof(from);
@@ -202,6 +263,7 @@ void linkNowPoll() {
     if (!gLocked) {
       gPeer = from;
       gLocked = true;
+      gStatus = "상대 연결됨";
       char ip[INET_ADDRSTRLEN]{};
       inet_ntop(AF_INET, &from.sin_addr, ip, sizeof(ip));
       __android_log_print(ANDROID_LOG_INFO, LOG_TAG, "Peer locked: %s:%u", ip,
@@ -216,3 +278,6 @@ void linkNowPoll() {
 }
 
 const LinkNowStats &linkNowStats() { return gStats; }
+const char *androidLanStatus() { return gStatus; }
+const char *androidLanAddress() { return gAddress; }
+int androidLanLastError() { return gLastError; }

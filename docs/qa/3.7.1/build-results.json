@@ -1,0 +1,59 @@
+{
+  "version": "3.7.1",
+  "runtime_suite_total": 62,
+  "runtime_environment": "Windows local",
+  "shared_energy": true,
+  "exploration_cost": 22,
+  "stored_energy_swap_cases": 202,
+  "swap_write_faults": 10,
+  "capture_loop": "party and box success/bring/reload loops stop after four attempts from 100 energy",
+  "rate_count_cases": 247808,
+  "capture_simulation_draws": 5000000,
+  "sd_failure_checks": 10,
+  "installer_checks": 30,
+  "device_tested": "User reported phone-watch fix successful; other models and ESP hardware unverified",
+  "save_version": 7,
+  "record_bytes": 72,
+  "battle_protocol": 5,
+  "trade_protocol": 1,
+  "android_version_code": 3042,
+  "wear_version_code": 3043,
+  "artifacts": {
+    "SHA256SUMS.txt": {
+      "bytes": 863,
+      "sha256": "1213d84750f1cae1c7a02f00d0ec32aee0683bead5ebf560cc4e4b6fe4c31f3c"
+    },
+    "TamaPoke-3.7.1-Android-Full-debug.apk": {
+      "bytes": 387851556,
+      "sha256": "733b33d743aa927de31a520cefbd243cf5126f5e9acd36f7cc6cb0bd8c9789f5"
+    },
+    "TamaPoke-3.7.1-ESP32-Web-Installer.zip": {
+      "bytes": 2294098,
+      "sha256": "ec991491717e123708d29892c7829c0e5ae97c08362ee215134505fbbfcfa066"
+    },
+    "TamaPoke-3.7.1-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
+      "bytes": 186624,
+      "sha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce"
+    },
+    "TamaPoke-3.7.1-Play-Guide-KO.pdf": {
+      "bytes": 537041,
+      "sha256": "78e0e0c44e356ae274fb6fdb642c75b5bacafd70075b011e2c28cfd0d1db0f97"
+    },
+    "TamaPoke-3.7.1-Watch-Installer-Guide-KO.pdf": {
+      "bytes": 196200,
+      "sha256": "005230454745db9712a475a3ae26d3376d58645accadd7c67d1fc47b9698f4f7"
+    },
+    "TamaPoke-3.7.1-Watch-Installer-Windows.zip": {
+      "bytes": 18021135,
+      "sha256": "568eb8c8530491543318b8bf566ddf64cd69dfaac444eb2804f55a9a962d04cc"
+    },
+    "TamaPoke-3.7.1-WearOS-GalaxyWatch4-9-debug.apk": {
+      "bytes": 387425577,
+      "sha256": "71de71748b1ffe895384cc225dbc21e5e8c67b7986060f042eb95f27078d32f8"
+    },
+    "WATCH-INSTALLER-SHA256SUMS.txt": {
+      "bytes": 221,
+      "sha256": "d15e20505245262d6c0ee8d7c2512915095501bf1b651b759eaeaf5829d51b30"
+    }
+  }
+}

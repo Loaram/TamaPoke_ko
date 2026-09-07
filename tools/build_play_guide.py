@@ -22,8 +22,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.0-Play-Guide-KO.pdf"
-VERSION = "3.7.0"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.1-Play-Guide-KO.pdf"
+VERSION = "3.7.1"
 PAGE_TOTAL = 29
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -252,7 +252,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.7.0",
+            "플레이 설명서 · 3.7.1",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -593,7 +593,7 @@ story.append(
     step_table(
         [
             "두 기기를 같은 Wi-Fi에 연결하고 TamaPoke를 실행합니다.",
-            "휴대전화와 워치를 같은 Wi-Fi에 연결합니다. 모바일 데이터만 켠 상태는 사용할 수 없습니다.",
+            "워치도 같은 Wi-Fi에 실제로 연결합니다. 블루투스나 모바일 데이터만으로는 사용할 수 없습니다. 통신 중 앱이 Wi-Fi를 확보하므로 연결 준비를 기다리세요.",
             "통신 메뉴를 처음 열 때 로컬 네트워크 권한이 나오면 허용합니다.",
             "양쪽에서 트레이너 메뉴의 <b>통신 메뉴</b>를 엽니다.",
             "방 만들기 또는 참가하기를 선택하고 사용할 파티를 고릅니다.",
@@ -606,8 +606,9 @@ story.extend(
         Spacer(1, 6 * mm),
         p("연결이 안 될 때", H2),
         bullet("공유기의 게스트 Wi-Fi나 AP 격리 기능은 기기끼리 보지 못하게 할 수 있습니다."),
-        bullet("VPN, 방화벽, 배터리 절약 모드를 잠시 끄고 TamaPoke의 로컬 네트워크 권한을 확인합니다."),
-        bullet("실패 후에는 양쪽 모두 뒤로 나갔다가 다시 들어오고 최대 90초 기다립니다."),
+        bullet("앱의 로컬 네트워크 권한과 Wi-Fi 연결을 확인합니다. 두 앱을 화면에 띄우고, 통신 중 다른 앱으로 이동하지 마세요."),
+        bullet("IP는 내 Wi-Fi 주소, TX/RX는 보낸/받은 신호 수, E는 마지막 송신·소켓 오류입니다. RX가 계속 0이면 상대 검색이나 네트워크를 확인하세요."),
+        bullet("상대를 찾지 못했다면 양쪽에서 뒤로 나가 다시 시도합니다. 상대 검색은 최대 약 90초, Wi-Fi 확보는 최대 약 20초 기다립니다."),
         p("근거리 배틀은 인터넷 서버를 거치지 않습니다. 같은 장소의 로컬 연결에서만 상대를 찾습니다.", CALLOUT),
     ]
 )
@@ -679,7 +680,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.1", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

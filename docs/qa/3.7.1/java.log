@@ -1,0 +1,21 @@
+PASS begin waits for Wi-Fi
+PASS request timeout and multicast acquisition
+PASS duplicate begin does not leak requests
+PASS socket must wait for LinkProperties after binding
+PASS IPv4 and directed /24 broadcast
+PASS unrelated property updates do not break active socket
+PASS hotspot /28 subnet and address-change epoch
+PASS unrelated network loss ignored
+PASS Wi-Fi loss clears routing/address
+PASS leave releases callback and filter lock
+PASS late callbacks cannot resurrect an ended session
+PASS retry can acquire a fresh network
+PASS background releases Wi-Fi and binding
+PASS background late callback ignored
+PASS request timeout is distinguishable from peer timeout
+PASS permission/request exception cleans resources
+PASS binding failure never reports ready
+PASS IPv6-only network cannot falsely report IPv4 readiness
+PASS destroy releases pending IPv4 session
+PASS cleanup is idempotent
+PASS: 20 actual Activity callback checks (fake Android OS)

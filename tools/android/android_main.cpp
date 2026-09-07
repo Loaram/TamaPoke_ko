@@ -116,6 +116,13 @@ bool androidHasLocalNetworkPermission() {
   return callActivityBoolean("hasLocalNetworkPermission");
 }
 
+bool androidBeginLanNetwork() { return callActivityBoolean("beginLanNetwork"); }
+void androidEndLanNetwork() { callActivityBoolean("endLanNetwork"); }
+int androidLanState() { return callActivityInt("getLanState", -2); }
+int androidLanEpoch() { return callActivityInt("getLanEpoch", -1); }
+uint32_t androidLanIpv4() { return (uint32_t)callActivityInt("getLanIpv4", 0); }
+uint32_t androidLanBroadcast() { return (uint32_t)callActivityInt("getLanBroadcast", 0); }
+
 int androidBatteryPercent() {
   return callActivityInt("getBatteryPercent", -1);
 }

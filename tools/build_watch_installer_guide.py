@@ -48,7 +48,7 @@ def main():
         c.setFont('KRB', 9); c.drawString(48, 798, f'TamaPoke {version}  |  Windows 워치 설치 도우미')
         c.setFillColor(ink); c.setFont('KRB', 24); c.drawString(48, 751, title)
         c.setStrokeColor(colors.HexColor('#D8E2E9')); c.line(48, 48, 547, 48)
-        c.setFont('KR', 8); c.drawString(48, 32, '설치 도우미 시험판 · 실제 워치 설치 미검증 · 2026-09-08')
+        c.setFont('KR', 8); c.drawString(48, 32, '설치 도우미 시험판 · 모든 워치 모델 검증 아님 · 2026-09-08')
         c.drawRightString(547, 32, f'{n} / 7')
         y = 720
         text(intro, size=11, gap=23)
