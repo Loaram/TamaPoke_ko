@@ -21,8 +21,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.3.0-Play-Guide-KO.pdf"
-VERSION = "3.3.0"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.4.0-Play-Guide-KO.pdf"
+VERSION = "3.4.0"
 PAGE_TOTAL = 25
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.3.0",
+            "플레이 설명서 · 3.4.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -331,6 +331,7 @@ story.extend(
     [
         Spacer(1, 5 * mm),
         bullet("후보를 본 뒤 <b>지방 선택</b>으로 돌아가 다른 지방 스타팅과 비교할 수 있습니다."),
+        bullet("일반 알은 아직 덜 모은 진화 계보를 우선합니다. <b>이로치 알은 도감 등록 여부와 무관하게</b> 선택 지방·희귀도에서 뽑으므로, 파이리 계보를 모두 모았어도 이로치 파이리가 다시 나올 수 있습니다. 이미 생성된 알은 다시 뽑지 않습니다."),
         bullet("포켓몬을 짧게 누르면 쓰다듬고, 이름을 누르면 상세 메뉴가 열립니다."),
         bullet("먹이는 포만을 채웁니다. 좋아하는 열매는 포만 +35·기쁨 +10, 다른 열매는 포만 +25입니다."),
         bullet("사탕은 포만 +10·기쁨 +12 대신 무게 +12가 오릅니다. 운동하면 무게를 줄일 수 있습니다."),
@@ -443,7 +444,7 @@ story.extend(
         Spacer(1, 5 * mm),
         bullet("공격·방어 훈련은 활력 12, 스피드 훈련은 활력 10을 사용합니다. 모두 한 번에 최대 +18이며 결과 화면의 +N은 실제 상승량입니다."),
         bullet("배틀에서는 기술을 고르거나 교체, 도망가기 등 표시된 행동을 선택합니다."),
-        bullet("기절한 포켓몬과 활력이 부족한 포켓몬을 확인하고 파티 순서를 정리합니다."),
+        bullet("현재 포켓몬이 쓰러지면 다음 순서부터 파티 전체를 돌아 살아 있는 동료를 내보냅니다. 끝 칸이어도 앞쪽 동료가 남아 있으면 계속 싸우며, 쓰러진 동료는 건너뜁니다."),
         bullet("타입 상성에 따라 효과가 굉장함, 별로임 또는 없음으로 표시됩니다."),
         p("근거리 배틀은 다른 사용자의 파티와 연결하는 기능입니다. 다음 장의 네트워크 준비를 먼저 완료해야 합니다.", CALLOUT),
     ]
@@ -519,6 +520,7 @@ story.extend(
         ),
         Spacer(1, 4 * mm),
         p("먼저 위 종류를 뽑고, 선택한 지방에서 그림이 준비된 해당 종류의 포켓몬 중 하나를 같은 확률로 고릅니다. 지방별 후보 수가 달라 특정 포켓몬의 최종 조우 확률도 달라집니다.", BODY),
+        p("<b>탐색 이로치 확률은 1/100(1%)</b>이며 일반·랜덤 탐색에 공통입니다. 종류와 별도로 판정하며 연속 돌봄·도감 보너스는 붙지 않습니다. 이로치라도 승리 후 포획 판정은 따로 진행합니다.", SAFE),
         p("승리 뒤 포획 확률", H2),
         info_table(
             [
@@ -675,7 +677,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.3.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.4.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

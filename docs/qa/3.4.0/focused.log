@@ -1,0 +1,88 @@
+TamaPoke fw v3.4.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS  the host starts a linked battle
+PASS  the squad is the advertised one, not the current party
+PASS  and leads with what we sent
+PASS  including the rest of it
+PASS  the rival leads with theirs, at full health
+PASS  the peer's whole team is held as combatants
+PASS  so a creature that switches out can stay hurt
+PASS  the guest does not switch locally
+PASS  it sends the request instead
+PASS  and the request names the slot it wants
+PASS  the host latches its move while the rival is still choosing
+PASS  and nothing is resolved yet
+PASS  and the turn goes as soon as the rival's action lands
+PASS  a lost peer ends the battle instead of waiting forever
+PASS  the guest takes the host's numbers
+PASS  and the ailment it was handed
+PASS  a result is consumed once
+PASS  so a second frame does not replay the turn
+PASS  the rival's next creature comes off the wire
+PASS  the guest takes the ending from the host
+PASS  a runt result is dropped, not half-applied
+PASS  a LAN battle is uncapped: bring what you like
+PASS  two chosen
+PASS  confirming the team opens the LAN screen
+PASS  and offers exactly what was chosen, not the whole party
+PASS  including the right party member
+PASS  with no radio it says so rather than hanging
+all good
+TamaPoke fw v3.4.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS six-message win opens a separate captured-to-party modal
+PASS capture stores the exact individual and registers the shiny Dex
+PASS unrendered result cannot be dismissed
+PASS finishing-turn double tap cannot skip the result
+PASS outside taps and swipes leave the result open
+PASS redraws and repeated finish calls never reroll or duplicate a capture
+PASS a second exploration cannot replace an unread result
+PASS only Confirm returns to Explore and clears result state
+PASS confirmed catch survives roster reload
+PASS full party reports the actual box destination
+PASS failed capture has its own modal and adds no Pokemon
+PASS defeat explicitly reports no capture attempt without using RNG
+forms: roster write failed; recovery copies retained
+PASS unverified write reports storage error, not success or escape, without a second destination attempt
+PASS new exploration starts normally after confirmation
+PASS real final-turn resolution opens the result modal
+PASS trainer battles do not inherit a wild-result modal
+PASS actual shiny eggs can hatch Charmander before normal Kanto completion, even with a full shiny Dex
+PASS normal eggs still prefer incomplete evolution families
+PASS both colours retain common-only runaway, region and hatch-art restrictions
+shiny eggs 342, shiny Charmander 6, normal eggs 15658
+PASS fixture finds requested persisted egg colour
+PASS reload preserves existing species and shiny result
+PASS region revisit preserves cached species and colour
+PASS unchanged whole-save transfers the waiting egg
+PASS import preserves species and colour without reroll
+PASS fixture finds requested persisted egg colour
+PASS reload preserves existing species and shiny result
+PASS region revisit preserves cached species and colour
+PASS unchanged whole-save transfers the waiting egg
+PASS import preserves species and colour without reroll
+PASS new players still select their first starter
+TamaPoke fw v3.4.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS all 30 active/reserve arrangements survive, wrap around, skip fainted slots and preserve HP
+PASS all reserves fainted ends battle even when later slots exist and active cache looks alive
+PASS LAN rival in last slot survives with an earlier reserve
+PASS host replacement immediately reports the correct rival slot and HP
+PASS LAN host wraps to its living reserve and reports it
+PASS LAN win requires no live rival reserve, not the active index
+PASS simultaneous poison KO uses final HP and does not end two living teams
+PASS second fainted side remains queued after the first replacement
+PASS both replacements finish without an extra attack and synchronize to the guest
+PASS simultaneous active KO loses when only the rival has reserves
+PASS defeating the sole wild/one-off opponent wins without an unnecessary replacement
+PASS real gym entry also returns from the last slot to an earlier survivor
+PASS: battle_reserves,lan,wild_result,shiny_eggs

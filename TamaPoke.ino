@@ -46,7 +46,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.3.0"
+#define FW_VERSION "3.4.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -3937,6 +3937,17 @@ static void btlShipResult(MoveId yourMove, MoveId theirMove,
   lan.sendResult((const uint8_t *)&r, (uint8_t)sizeof(r));
 }
 
+// Search every reserve in cyclic order, excluding the active slot whose
+// cached HP can be stale. Manual switches make slot order unrelated to lives.
+static int8_t btlNextAlive(const Combatant *team, uint8_t count, uint8_t active) {
+  if (!count || active >= count) return -1;
+  for (uint8_t step = 1; step < count; ++step) {
+    uint8_t at = (uint8_t)((active + step) % count);
+    if (!team[at].fainted()) return (int8_t)at;
+  }
+  return -1;
+}
+
 // One exchange: both sides act in speed order, then burn/poison chip.
 static void btlResolve(MoveId yourMove) {
   TurnLog lg;
@@ -3991,34 +4002,30 @@ static void btlResolve(MoveId yourMove) {
   // whoever actually lost health flinches, whichever side dealt it
   if (btlYou.hp < hp0You) btlHitUntil[0] = now + BTL_HIT_MS;
   if (btlFoe.hp < hp0Foe) btlHitUntil[1] = now + BTL_HIT_MS;
-  if (btlLink && btlLinkHost) btlShipResult(yourMove, foeMove, hp0You, hp0Foe);
   if (!btlYou.fainted() && !btlFoe.fainted()) {
     battleEndTurn(btlYou, lg);
     if (lg.damage) btlNarrate(btlYou, btlYou, lg);
     battleEndTurn(btlFoe, lg);
     if (lg.damage) btlNarrate(btlFoe, btlFoe, lg);
   }
+  if (btlLink && btlLinkHost) btlShipResult(yourMove, foeMove, hp0You, hp0Foe);
   // Someone went down. The replacement is NOT swapped in here -- that made the
   // change instant and read as a jump cut. Flag it, let the sprite drop out of
   // frame, and swap when the player dismisses the message.
-  if (btlFoe.fainted() && btlLink && btlFoeAt + 1 < btlFoeSquadN) {
-    btlFaintUntil[1] = millis() + BTL_FAINT_MS;
-    btlSwapWho = 1;
-    return;
-  }
-  if (btlFoe.fainted() && btlTrainer >= 0 && btlFoeAt + 1 < BTL_TRAINER_AT(btlTrainer).count) {
-    btlFaintUntil[1] = millis() + BTL_FAINT_MS;
-    btlSwapWho = 1;
-    return;
-  }
-  if (btlYou.fainted() && btlSquadAt + 1 < btlSquadN) {
-    btlFaintUntil[0] = millis() + BTL_FAINT_MS;
-    btlSwapWho = 0;
+  const bool youRemain = !btlYou.fainted() || btlNextAlive(btlSquad,btlSquadN,btlSquadAt) >= 0;
+  const bool foeRemain = !btlFoe.fainted() || (btlLink
+      ? btlNextAlive(btlFoeSquad,btlFoeSquadN,btlFoeAt) >= 0
+      : btlTrainer >= 0 && btlFoeAt + 1 < BTL_TRAINER_AT(btlTrainer).count);
+  if (youRemain && foeRemain) {
+    if (btlFoe.fainted() || btlYou.fainted()) {
+      btlSwapWho = btlFoe.fainted() ? 1 : 0;
+      btlFaintUntil[btlSwapWho] = millis() + BTL_FAINT_MS;
+    }
     return;
   }
   if (btlFoe.fainted() || btlYou.fainted()) {
     btlOver = true;
-    btlWon = btlFoe.fainted();
+    btlWon = !foeRemain; // Preserve the existing win rule if both teams exhaust together.
     btlNewBadge = false;
     btlTrainGain = 0;
     if (btlWon && btlTrainer >= 0 && !pet.hasBadge(btlRegion, trainerBadgeIndex(btlRegion,btlTrainer,btlShield), btlHard)) {
@@ -4425,9 +4432,8 @@ static void btlDoSwap() {
   if (btlSwapWho == 1 && btlLink) {
     btlFoeSquad[btlFoeAt] = btlFoe;
     // the next one still standing, not simply the next index
-    uint8_t nxt = btlFoeAt;
-    while (++nxt < btlFoeSquadN && btlFoeSquad[nxt].fainted()) {}
-    if (nxt >= btlFoeSquadN) { btlSwapWho = -1; return; }
+    int8_t nxt = btlNextAlive(btlFoeSquad,btlFoeSquadN,btlFoeAt);
+    if (nxt < 0) { btlSwapWho = -1; return; }
     btlFoeAt = nxt;
     btlFoe = btlFoeSquad[btlFoeAt];
     btlHpShown[1] = btlFoe.hp;
@@ -4448,7 +4454,9 @@ static void btlDoSwap() {
     btlSay(T(S_BTL_SENDS), localName(t.name), combatantName(btlFoe));
   } else if (btlSwapWho == 0) {
     btlSquad[btlSquadAt] = btlYou;     // remember how battered it was
-    btlSquadAt++;
+    int8_t nxt = btlNextAlive(btlSquad,btlSquadN,btlSquadAt);
+    if (nxt < 0) { btlSwapWho = -1; return; }
+    btlSquadAt = (uint8_t)nxt;
     btlYou = btlSquad[btlSquadAt];
     btlHpShown[0] = btlYou.hp;
     btlSyncSprite(0, btlYou);
@@ -4457,6 +4465,14 @@ static void btlDoSwap() {
     btlSay(T(S_BTL_GO), combatantName(btlYou));
   }
   btlSwapWho = -1;
+  // Poison/burn can knock out both active members in the same exchange.
+  // Finish the second replacement before accepting a new move.
+  if (btlYou.fainted() && btlNextAlive(btlSquad,btlSquadN,btlSquadAt) >= 0) {
+    btlSwapWho = 0;
+    btlFaintUntil[0] = now + BTL_FAINT_MS;
+  }
+  if (btlLink && btlLinkHost && btlSwapWho < 0)
+    btlShipResult(0,0,btlYou.hp,btlFoe.hp); // authoritative replacement, no extra attack
 }
 
 // Switching spends your turn: the opponent still acts. That is what stops it
