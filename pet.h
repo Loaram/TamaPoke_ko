@@ -316,6 +316,7 @@ public:
   void newEgg();   // empezar de cero con un inicial aleatorio
   void release();  // soltar (pulsacion larga + confirmar)
   void syncClock(uint32_t nowEpoch);  // aplica el tiempo transcurrido apagado
+  void resumeProgressClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch);
   void setClock(uint32_t nowEpoch);   // fija la hora sin aplicar progresion
   void startFarewell();  // tambien usable desde la consola serie (BYE)
   // Retire on demand. Before the farewell is earned it uses the same ceremony,

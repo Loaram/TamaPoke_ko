@@ -1,0 +1,22 @@
+TamaPoke fw v3.5.2
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS trainer-name tap opens the visible keyboard
+KEYBOARD before=4 after=5 text=TESTA playerOpen=1
+PASS first visible keyboard letter reaches the keyboard, not the underlying trainer screen
+PASS two identical keyboard taps enter two characters
+PASS first Pokemon opens its release confirmation
+RELEASE after_swipe vertical=0 detail=0 confirm=0
+RELEASE second detail=2 confirm=0 first=25 second=133
+PASS opening the second Pokemon does not inherit the first Pokemon's release confirmation
+PASS first Pokemon opens its release confirmation
+RELEASE after_swipe vertical=1 detail=0 confirm=0
+RELEASE second detail=2 confirm=0 first=25 second=133
+PASS opening the second Pokemon does not inherit the first Pokemon's release confirmation
+forms: roster write failed; recovery copies retained
+PASS failed roster write enters read-only protection
+EXPLORE_READONLY start=0 energy=100 -> 100 writable=0
+PASS exploration refuses an unwritable roster before charging energy
+SUMMARY checks=9 findings=0

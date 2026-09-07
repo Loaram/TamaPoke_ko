@@ -1,0 +1,36 @@
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+PASS normal swap commits before boundary crash sweep
+MATRIX cases=1056 inventory_errors=0 attribute_errors=0 paused=0
+PASS every interrupted swap preserves the complete Pokemon inventory over two restarts
+PASS unambiguous current-version interruptions finish recovery without a permanent lock
+PASS all interrupted swaps preserve every individual's IVs, training, shiny and form
+SOAK swaps_train_restart=1200 errors=0
+PASS 1200 mixed party/box swaps, training, sorting and restarts preserve individuals and training
+PASS persistent live-key failure enters the recovery pause
+PASS cold boot with a continuing write failure remains paused
+RECOVERY_CLOCK age=1180 -> 1180 blocked=1 dex=25
+PASS startup offline progression does not run behind the recovery pause
+RECOVERY_AFTER_REPAIR dex=25 age=1180
+LEGACY_TZ offset_hours=0 training=22/33/44 -> 22/33/44 blocked=0
+PASS unchanged-timezone legacy recovery preserves newer verified training
+LEGACY_TZ offset_hours=1 training=22/33/44 -> 22/33/44 blocked=0
+PASS timezone-adjusted legacy recovery preserves newer verified training
+LEGACY_TZ offset_hours=-9 training=22/33/44 -> 22/33/44 blocked=0
+PASS timezone-adjusted legacy recovery preserves newer verified training
+LEGACY_TZ offset_hours=9 training=22/33/44 -> 22/33/44 blocked=0
+PASS timezone-adjusted legacy recovery preserves newer verified training
+SUMMARY checks=27 findings=0

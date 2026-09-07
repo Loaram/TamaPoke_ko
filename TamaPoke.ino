@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.5.2"
+#define FW_VERSION "3.5.3"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -1356,6 +1356,7 @@ void onSwipeV(int dir) {
   }
   if (boxOpen && boxPagePicker) { boxPagePicker = false; return; }
   if(formsOpen) {formClose();return;}
+  if(kbOpen) return; // The visible keyboard owns gestures, not its parent page.
   if (pet.awaitingStarter()) return;  // bloqueado durante la eleccion de inicial
   if (uiCurrentScreen() == SCR_DEXPICK || uiCurrentScreen() == SCR_GYMPICK)
     return;                 // on the chooser, vertical does nothing: pick a row
@@ -1382,6 +1383,7 @@ void onSwipeV(int dir) {
     boxOpen=false;boxSel=boxSwapFrom=partyDetail=0;return;
   }
   if (partyOpen) {
+    releaseConfirm = false;
     if (partyDetail) { partyDetail = 0; return; }
     if (partyPick) { if(!pet.acknowledgeEnding())return; partyPick = false; }
     partyOpen = false;
@@ -1716,6 +1718,7 @@ void partyTap(int16_t x, int16_t y) {
       }
       if (party.slots[i].empty()) { boxSwapFrom = i + 1; sfxPlay(SFX_TAP); return; }
       partyDetail = i + 1;
+      releaseConfirm = false;      // a new individual never inherits a release intent
       boxSwapFrom = i + 1;           // armed, in case the box is opened next
       sfxPlay(SFX_TAP);
       return;
@@ -1743,6 +1746,7 @@ void onSwipe(int dir) {
   }
   if (boxOpen && boxPagePicker) { boxPickerStep(dir > 0 ? -1 : 1); return; }
   if(formsOpen) {formPageMove(dir>0?-1:1);return;}
+  if(kbOpen) return;
   // The region chooser pages, and it is checked before everything else because
   // it sits on TOP of the starter/gallery/gym screens -- each of which has its
   // own horizontal handler that would otherwise swallow the gesture. Paging a
@@ -1813,6 +1817,7 @@ void onSwipe(int dir) {
     return;
   }
   if (partyOpen) {
+    releaseConfirm = false;
     if (partyDetail) { partyDetail = 0; return; }
     if (partyPick) { if(!pet.acknowledgeEnding())return; partyPick = false; }
     partyOpen = false;
@@ -1858,7 +1863,16 @@ void onSwipe(int dir) {
 
 void onTap(int16_t x, int16_t y) {
   if(activeSwapBlocked){
-    if(x>=90 && x<=376 && y>=310 && y<=354){pet.begin();party.begin();}
+    if(x>=90 && x<=376 && y>=310 && y<=354){
+      pet.begin();party.begin();
+      if(!activeSwapBlocked){
+#ifdef ANDROID
+        pet.resumeProgressClock(millis(),rtcEpoch(),androidUtcEpoch());
+#else
+        pet.resumeProgressClock(millis(),rtcEpoch(),0);
+#endif
+      }
+    }
     return;
   }
   if(tradeOpen){tradeTap(x,y);return;}
@@ -1892,6 +1906,8 @@ void onTap(int16_t x, int16_t y) {
     }
     return;
   }
+  // Keyboard rendering precedes the trainer/card pages; input must too.
+  if (kbOpen) { keyboardTap(x, y); return; }
   if (battleOpen) {
     battleTap(x, y);
     return;
@@ -2098,10 +2114,6 @@ void onTap(int16_t x, int16_t y) {
       return;
     }
     galleryTap(x, y);
-    return;
-  }
-  if (kbOpen) {
-    keyboardTap(x, y);
     return;
   }
   if (clockOpen) {
@@ -3778,7 +3790,7 @@ void startBattle(int16_t dex, uint8_t lvl) {
 
 #if defined(TAMAPOKE_EXPLORE_ENABLED)
 static bool wildStorageAvailable() {
-  return !party.isFull() || party.boxFirstFree() >= 0;
+  return party.writable() && (!party.isFull() || party.boxFirstFree() >= 0);
 }
 
 static PartyMon wildPartyMon() {
@@ -3816,6 +3828,11 @@ bool startWildBattle(bool hard) {
   if (battleOpen || wildResult != WILD_RESULT_NONE) return false;
   exploreNotice = 0;
   if (pet.isEgg() || pet.ceremony != CER_NONE || pet.sleeping) return false;
+  if (!party.writable()) {
+    exploreNotice = 3;
+    sfxPlay(SFX_DENY);
+    return false;
+  }
   if (!wildStorageAvailable()) {
     exploreNotice = 2;
     sfxPlay(SFX_DENY);
@@ -5915,7 +5932,9 @@ void renderExplore() {
   gfx->setCursor(CX - textWidthFactor(cost, 3), 145);
   gfx->print(cost);
 
-  const char *notice = exploreNotice == 1 ? T(S_EXPLORE_NEED_ENERGY)
+  const char *notice = !party.writable() || exploreNotice == 3 ?
+                       (gLang == LANG_KO ? "저장 상태 확인 후 다시 실행하세요" : "Check storage, then restart")
+                       : exploreNotice == 1 ? T(S_EXPLORE_NEED_ENERGY)
                        : exploreNotice == 2 ? T(S_EXPLORE_STORAGE_FULL) : "";
   gfx->setTextColor(UI_BAR_BAD);
   gfx->setCursor(CX - textWidthFactor(notice, 3), 166);

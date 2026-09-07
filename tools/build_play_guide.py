@@ -21,8 +21,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.5.2-Play-Guide-KO.pdf"
-VERSION = "3.5.2"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.5.3-Play-Guide-KO.pdf"
+VERSION = "3.5.3"
 PAGE_TOTAL = 28
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.5.2",
+            "플레이 설명서 · 3.5.3",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -677,7 +677,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.5.2", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.5.3", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -823,7 +823,7 @@ story.extend([
     step_table(["<b>기술 습득 선택이 남아 있을 때:</b> 데려오기를 누르면 실제 기술 선택창으로 이동합니다. 배울 기술과 교체할 칸을 확인하거나 배우지 않기를 선택한 뒤 파티·박스를 다시 여세요.", "<b>진행 중인 통신:</b> 포켓몬 전송·교환을 먼저 완료하세요. 확정한 거래가 끊겼다면 같은 상대와 다시 연결합니다.", "<b>교체 저장 확인 필요:</b> 더 진행하면 기록이 되돌아갈 수 있어 일시 정지한 상태입니다. 기기 저장 공간을 확보하고 ESP는 원래 SD 연결을 확인한 뒤 <b>다시 확인</b>을 누르세요.", "다시 확인해도 계속 멈추면 앱 삭제·데이터 초기화·SD 포맷을 하지 말고 화면과 증상을 알려주세요. 구분이 불확실한 저장은 자동으로 덮어쓰지 않습니다."]),
     Spacer(1,4*mm),
     p("훈련과 저장을 지키는 습관",H2),
-    bullet("훈련 결과를 확인하고 같은 포켓몬의 훈련 표시를 비교하세요. 정상적인 보관·데려오기·재시작은 이미 얻은 훈련값을 줄이지 않습니다."),
+    bullet("저장 확인 중에는 오프라인 성장도 멈춥니다. 다시 확인에 성공한 시점부터 시간이 흐릅니다. 탐색이 잠겼다면 저장 상태를 먼저 확인하세요. 시작이 차단되면 활력은 쓰지 않습니다."),
     bullet("훈련 막대는 개체값으로 정해지는 훈련 상한 대비 진행도입니다. 능력치 화면의 공격·방어·속도 숫자나 괄호 속 개체값과는 다른 값입니다."),
     p("업데이트는 기존 앱 위에 설치합니다. 온전한 최신 저장이 확인되면 그 진행을 보존하지만, 이미 덮어써져 사라진 과거 훈련값을 추측해서 복원하지는 않습니다.",SAFE),
 ])

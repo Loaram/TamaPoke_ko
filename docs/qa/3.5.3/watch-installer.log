@@ -1,0 +1,33 @@
+PASS: endpoint
+PASS: invalid host host & calc
+PASS: invalid host 192.168.0.1:1234
+PASS: invalid host 999.2.3.4
+PASS: invalid host 127.1
+PASS: invalid host -s
+PASS: invalid host
+PASS: invalid port 0
+PASS: invalid port 65536
+PASS: invalid port 12 & calc
+PASS: invalid port
+PASS: leading zero pairing code
+PASS: short code
+PASS: code injection
+PASS: signature guidance
+PASS: downgrade guidance
+PASS: storage guidance
+PASS: process output
+PASS: secret redacted
+PASS: nonzero rejected
+PASS: timeout bounded
+PASS: bundle verification
+PASS: damaged APK rejected
+PASS: duplicate manifest entries rejected
+PASS: manifest traversal rejected
+PASS: missing DLL rejected
+PASS: empty manifest rejected
+PASS: GUI constructed
+PASS: ADB actions blocked before bundle verification
+PASS: PDF help available before bundle verification
+30 checks passed. Physical watch install not tested.
+Built and verified: C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\build\watch-installer-353-final\TamaPoke-3.5.3-Watch-Installer-Windows.zip (18,014,451 bytes)
+Physical watch pairing/install remains untested. No upload was performed.

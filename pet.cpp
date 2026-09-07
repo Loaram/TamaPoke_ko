@@ -152,6 +152,7 @@ void Pet::setClock(uint32_t nowEpoch) {
 }
 
 void Pet::syncClock(uint32_t nowEpoch) {
+  if (activeSwapBlocked) return; // setup must not advance or rewrite an unresolved swap.
   uint32_t seen = prefs.getUInt("seen", 0);
   lastSeenEpoch = nowEpoch;
   deviceClockRemainder = 0;
@@ -162,7 +163,7 @@ void Pet::syncClock(uint32_t nowEpoch) {
 }
 
 void Pet::applyOfflineMinutes(uint32_t mins) {
-  if (!mins || ceremony != CER_NONE || starterPick) return;
+  if (activeSwapBlocked || !mins || ceremony != CER_NONE || starterPick) return;
   if (mins > 14UL * 24 * 60) mins = 14UL * 24 * 60;  // tope: 2 semanas
 
   for (uint32_t i = 0; i < mins; i++) {
@@ -194,6 +195,17 @@ void Pet::applyOfflineMinutes(uint32_t mins) {
     // tocando al bicho cuando vuelve (para que vea la transformacion)
   }
   Serial.printf("offline: %u min aplicados (nv.%u)\n", mins, level());
+}
+
+void Pet::resumeProgressClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch) {
+  if (activeSwapBlocked) return;
+  // Called only after verified recovery. Time spent in the blocking overlay
+  // must not be replayed as active care on the next Android frame.
+  lastTick = nowMs;
+  deviceClockRemainder = 0;
+  deviceProgressEpoch = utcEpoch;
+  if (localEpoch) lastSeenEpoch = localEpoch;
+  save();
 }
 
 void Pet::update(uint32_t nowMs) {
@@ -423,10 +435,17 @@ bool Pet::storedIndividualMatches() {
 
 bool Pet::readStoredSnapshot(PartyMon &out) const {
   Pet check; check.prefs.begin("tamapoke",true);
-  check.lastSeenEpoch=check.prefs.getUInt("seen",0);
   PartyMon durable;
   bool ok=check.prefs.getBytesLength("liveCare")==sizeof(durable) &&
     check.prefs.getBytes("liveCare",&durable,sizeof(durable))==sizeof(durable);
+  if(!ok) {check.prefs.end();return false;}
+  // Android rebases `seen` to the current timezone BEFORE recovery. The date
+  // in care is a derived snapshot field, not evidence of a torn individual.
+  // Reconstruct at the snapshot's own date, retaining the full byte comparison
+  // for ordinary keys (IVs/training/moves/age/etc.) and care metadata.
+  uint32_t savedDay=0;memcpy(&savedDay,durable.care+28,4);
+  if(savedDay>UINT32_MAX/86400UL) {check.prefs.end();return false;}
+  check.lastSeenEpoch=savedDay*86400UL;
   check.load(false);
   out=check.storageSnapshot();
   check.prefs.end();
