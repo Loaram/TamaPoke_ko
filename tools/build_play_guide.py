@@ -21,8 +21,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.5.0-Play-Guide-KO.pdf"
-VERSION = "3.5.0"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.5.1-Play-Guide-KO.pdf"
+VERSION = "3.5.1"
 PAGE_TOTAL = 27
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.5.0",
+            "플레이 설명서 · 3.5.1",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -377,7 +377,7 @@ page_break(story)
 
 # 6. Dex and gyms
 story.extend(page_heading("05 도감", "1025종 도감과 9개 지방 체육관", "관동부터 팔데아까지 모험하고, 가라르에서는 소드·실드 코스를 선택합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", screens / "gymsj.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", ROOT / "docs/qa/3.5.1/gymsj.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -453,7 +453,7 @@ page_break(story)
 
 # 10. Gym regional behavior
 story.extend(page_heading("09 체육관", "지방별 관장과 배지 진행", "왼쪽 화면에서 지방과 상대를 고르고 준비된 파티로 도전합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", screens / "gymsj.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/2.0.2/guide-gallery.png", ROOT / "docs/qa/3.5.1/gymsj.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -543,10 +543,10 @@ story.append(
     info_table(
         [
             ["조합", "연결 방식", "먼저 할 일"],
-            ["ESP32 ↔ ESP32", "ESP-NOW 직접 연결", "두 기기에서 근거리 대전 열기"],
+            ["ESP32 ↔ ESP32", "ESP-NOW 직접 연결", "두 기기에서 통신 메뉴 열기"],
             ["Android ↔ Android", "같은 Wi-Fi의 UDP", "두 앱을 같은 공유기에 연결"],
             ["Android ↔ Wear OS", "같은 Wi-Fi의 UDP", "휴대전화와 워치를 같은 공유기에 연결"],
-            ["ESP32 ↔ 앱/워치", "ESP32 Wi-Fi 방의 UDP", "ESP32에서 먼저 근거리 대전 열기"],
+            ["ESP32 ↔ 앱/워치", "ESP32 Wi-Fi 방의 UDP", "ESP32에서 먼저 통신 메뉴 열기"],
         ],
         [39 * mm, 58 * mm, 77 * mm],
     )
@@ -565,17 +565,17 @@ page_break(story)
 
 # 14. LAN with ESP
 story.extend(page_heading("13 근거리 배틀", "ESP32와 Android/워치 연결", "ESP32가 Wi-Fi 방을 만든 뒤 상대 기기가 그 방에 참가합니다."))
-story.append(screenshot(qa_current / "guide-lan.png", 74 * mm))
+story.append(screenshot(ROOT / "docs/qa/3.5.1/lan.png", 74 * mm))
 story.extend(
     [
         Spacer(1, 4 * mm),
         step_table(
             [
-                "ESP32에서 트레이너 메뉴의 <b>근거리 대전</b>을 엽니다.",
+                "ESP32에서 트레이너 메뉴의 <b>통신 메뉴</b>를 엽니다.",
                 "<b>방 만들기</b> 또는 <b>참가하기</b>를 누르고 사용할 파티를 선택합니다.",
                 "ESP32 화면의 <b>TamaPoke-XXXX</b>를 확인합니다.",
                 "Android 또는 워치를 해당 Wi-Fi에 연결하고 암호 <b>tamapoke</b>를 입력합니다.",
-                "앱 또는 워치에서도 근거리 대전을 열고 방 선택과 파티 선택을 진행합니다.",
+                "앱 또는 워치에서도 통신 메뉴를 열고 방 선택과 파티 선택을 진행합니다.",
                 "상대 이름과 준비 완료가 표시되면 전투를 시작합니다.",
             ]
         ),
@@ -592,8 +592,8 @@ story.append(
         [
             "두 기기를 같은 Wi-Fi에 연결하고 TamaPoke를 실행합니다.",
             "휴대전화와 워치를 같은 Wi-Fi에 연결합니다. 모바일 데이터만 켠 상태는 사용할 수 없습니다.",
-            "근거리 대전을 처음 열 때 로컬 네트워크 권한이 나오면 허용합니다.",
-            "양쪽에서 트레이너 메뉴의 <b>근거리 대전</b>을 엽니다.",
+            "통신 메뉴를 처음 열 때 로컬 네트워크 권한이 나오면 허용합니다.",
+            "양쪽에서 트레이너 메뉴의 <b>통신 메뉴</b>를 엽니다.",
             "방 만들기 또는 참가하기를 선택하고 사용할 파티를 고릅니다.",
             "상대가 나타나면 이름을 확인하고 준비 완료 상태에서 전투를 시작합니다.",
         ]
@@ -613,7 +613,7 @@ page_break(story)
 
 # 16. Save transfer overview
 story.extend(page_heading("15 세이브 이전", "보내기와 받기 전에 확인", "세이브 전송은 원본을 복사해 대상 기기의 저장을 교체하는 기능입니다."))
-story.append(screenshot_pair(qa_current / "guide-lan.png", qa_current / "guide-savereceive.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/3.5.1/lan.png", qa_current / "guide-savereceive.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -677,7 +677,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.5.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.5.1", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -795,7 +795,7 @@ story.extend(page_heading("25 포켓몬 전송과 교환", "한 마리만 보내
 story.append(screenshot_pair(ROOT / "docs/qa/3.5.0/trade-menu.png", ROOT / "docs/qa/3.5.0/trade-preview.png", 62*mm))
 story.extend([
     Spacer(1,3*mm),
-    step_table(["양쪽을 같은 지원 버전으로 업데이트합니다. 앱·워치는 같은 Wi-Fi, ESP와 연결할 때는 ESP의 TamaPoke 방에 연결합니다. 자세한 연결 방법은 13~15쪽을 보세요.", "<b>근거리 대전 → 포켓몬 전송 / 교환</b>을 엽니다. 선물하려면 한쪽은 <b>한 마리 보내기</b>, 다른 쪽은 <b>한 마리 받기</b>를 누릅니다. 맞교환은 양쪽 모두 <b>서로 한 마리 교환</b>을 누릅니다.", "파티·박스 목록에서 보낼 개체를 선택합니다. 이전·다음 버튼과 스와이프로 페이지를 넘깁니다. 현재 키우는 포켓몬은 먼저 파티·박스에 보관해야 하며 알은 보낼 수 없습니다.", "양쪽의 <b>상대 이름·6자리 코드·보낼 개체·받을 개체</b>를 비교합니다. 보내기 정보 / 받기 정보에서 폼·별명·개체값·기술을 확인합니다.", "양쪽 모두 <b>확인 후 확정</b>을 누르고 완료 표시를 기다립니다. 보내기는 원본에서 제거하고 상대에게 보관하며, 교환은 선택했던 칸에 상대 개체가 들어옵니다."]),
+    step_table(["양쪽을 같은 지원 버전으로 업데이트합니다. 앱·워치는 같은 Wi-Fi, ESP와 연결할 때는 ESP의 TamaPoke 방에 연결합니다. 자세한 연결 방법은 13~15쪽을 보세요.", "<b>통신 메뉴 → 포켓몬 전송 / 교환</b>을 엽니다. 선물하려면 한쪽은 <b>한 마리 보내기</b>, 다른 쪽은 <b>한 마리 받기</b>를 누릅니다. 맞교환은 양쪽 모두 <b>서로 한 마리 교환</b>을 누릅니다.", "파티·박스 목록에서 보낼 개체를 선택합니다. 이전·다음 버튼과 스와이프로 페이지를 넘깁니다. 현재 키우는 포켓몬은 먼저 파티·박스에 보관해야 하며 알은 보낼 수 없습니다.", "양쪽의 <b>상대 이름·6자리 코드·보낼 개체·받을 개체</b>를 비교합니다. 보내기 정보 / 받기 정보에서 폼·별명·개체값·기술을 확인합니다.", "양쪽 모두 <b>확인 후 확정</b>을 누르고 완료 표시를 기다립니다. 보내기는 원본에서 제거하고 상대에게 보관하며, 교환은 선택했던 칸에 상대 개체가 들어옵니다."]),
     Spacer(1,3*mm),
     bullet("받기는 파티 빈칸을 먼저 사용하고 없으면 박스 빈칸을 사용합니다. 모두 차 있으면 시작할 수 없습니다. 맞교환은 내보내는 칸을 쓰므로 가득 찬 박스에서도 가능합니다."),
     p("레벨·폼·이로치·개체값·훈련·기술·별명·개별 돌봄 상태를 보존합니다. 전송 때문에 능력치를 다시 뽑거나 통신 진화를 시키지 않습니다.", SAFE),

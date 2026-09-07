@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.5.0"
+#define FW_VERSION "3.5.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -5098,6 +5098,11 @@ void pickTap(int16_t x, int16_t y) {
 // Pairing on a touch-only screen: one device hosts, the other joins, and the
 // protocol does the rest. There is no MAC entry because there is no keyboard
 // worth typing one on.
+const char *communicationMenuTitle() {
+  // Keep the battle-specific S_LAN label and saved/localized IDs unchanged.
+  return gLang == LANG_KO ? "통신 메뉴" : T(S_LAN);
+}
+
 void renderLan() {
   gfx->fillScreen(RGB565_BLACK);
   gfx->fillCircle(CX, CY, 231, UI_BG_DAY);
@@ -5106,7 +5111,7 @@ void renderLan() {
   bool saveActive = lan.saveMode && lan.state != LINK_OFF &&
                     lan.state != LINK_REFUSED && lan.state != LINK_LOST &&
                     lan.state != LINK_SAVE_INVALID;
-  const char *title = saveActive ? T(S_SAVE_TITLE) : T(S_LAN);
+  const char *title = saveActive ? T(S_SAVE_TITLE) : communicationMenuTitle();
   gfx->setCursor(CX - textWidthFactor(title, 6), 44);
   gfx->print(title);
 
@@ -5456,8 +5461,8 @@ void renderGyms() {
   gfx->drawRoundRect(148, 380, 170, 32, 9, UI_INK);
   gfx->setTextColor(UI_INK);
   gfx->setTextSize(2);
-  gfx->setCursor(CX - textWidthFactor(T(S_LAN), 6), 388);
-  gfx->print(T(S_LAN));
+  gfx->setCursor(CX - textWidthFactor(communicationMenuTitle(), 6), 388);
+  gfx->print(communicationMenuTitle());
   gfx->flush();
 }
 
@@ -5651,8 +5656,8 @@ static void renderRegionPick(uint8_t mode) {
     gfx->drawRoundRect(LANBTN_X, LANBTN_Y, LANBTN_W, LANBTN_H, 11, UI_INK);
     gfx->setTextColor(UI_INK);
     gfx->setTextSize(2);
-    gfx->setCursor(CX - textWidthFactor(T(S_LAN), 6), LANBTN_Y + 14);
-    gfx->print(T(S_LAN));
+    gfx->setCursor(CX - textWidthFactor(communicationMenuTitle(), 6), LANBTN_Y + 14);
+    gfx->print(communicationMenuTitle());
   }
   if (pages > 1) {                        // dots: which page of regions this is
     int total = pages * 16 - 8;

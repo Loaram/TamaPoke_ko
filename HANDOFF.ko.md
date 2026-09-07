@@ -1,5 +1,9 @@
 # TamaPoke 한국어판 — 다른 PC에서 이어가기
 
+## 현재 3.5.1 통신 메뉴 문구 패치
+
+체육관 지방 선택·관장 목록 입구와 연결 메뉴 제목에 `communicationMenuTitle()`의 한국어 **통신 메뉴**를 사용합니다. 실제 대전 선택지의 `S_LAN`과 번역 ID·다른 언어는 그대로입니다. 저장 v7·개체 72바이트·배틀 5·거래 1은 유지하며 Android 3030/Wear 3031입니다. 플레이 PDF와 Windows 도우미를 3.5.1로 갱신합니다. [릴리스 설명](docs/RELEASE-3.5.1.ko.md). 아래 내용은 이전 버전의 이력입니다.
+
 ## 3.5.0 Windows 워치 설치 도우미 부속 배포
 
 `tools/watch_installer/`의 Windows GUI를 3.5.0 정식 Wear APK로 묶습니다. `tools/build_watch_installer.py --guide <검수한 PDF>`로 빌드하며 게임은 재빌드하지 않습니다. `tools/build_watch_installer_guide.py --preview <창 PNG>`는 ReportLab으로 별도 7쪽 PDF를 생성합니다. 설치 전 백업·미완료 교환 확인과 PDF 열기 버튼을 추가했습니다. 자동 검사 30개와 화면·ZIP 검증을 수행하며 실기 설치는 미검증으로 표시합니다. 공개 릴리스에 ZIP/PDF/전용 SHA 3개만 추가하고 기존 6개 자산과 게임 태그는 유지합니다. 상세: [도우미 안내](docs/WATCH-INSTALLER-3.5.0.ko.md).

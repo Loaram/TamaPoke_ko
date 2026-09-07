@@ -12,6 +12,7 @@
 #include "party.h"
 #include "battle.h"
 #include "link.h"
+#include "i18n.h"
 #include <cstdio>
 uint32_t g_seed=5; FakeSerial Serial; FakeESP ESP; FakeWire Wire;
 volatile int g_touchX=0,g_touchY=0; volatile bool g_touchDown=false;
@@ -33,6 +34,7 @@ extern bool pickOpen, lanWantHost;
 extern uint8_t pickTrainer, pickPage;
 extern bool pickHard;
 void startLinkBattle();
+const char *communicationMenuTitle();
 void pickTap(int16_t x, int16_t y);
 void pickDefault(uint8_t cap);
 uint8_t squadCap(uint8_t, bool);
@@ -60,6 +62,12 @@ static LinkMon mon(int16_t dex, uint8_t lvl, const char *nm){
 
 int main(){
   setup();
+  gLang=LANG_KO;
+  ck(!strcmp(communicationMenuTitle(),"통신 메뉴"), "communication entry uses the broader Korean label");
+  ck(!strcmp(T(S_LAN),"근거리 대전"), "battle actions retain their specific label");
+  gLang=LANG_EN;
+  ck(!strcmp(communicationMenuTitle(),T(S_LAN)), "other language labels remain unchanged");
+  gLang=LANG_KO;
   for (int i=0;i<4;i++) render();
   if (pet.awaitingStarter()) pet.chooseStarter(4);
   if (pet.isEgg()) pet.dbgHatchAs(6,false);

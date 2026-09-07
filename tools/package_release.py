@@ -12,6 +12,7 @@ from prepare_release_guides import ROOT, firmware_version, sha256, copy_guide
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--guide-images', type=Path, required=True)
+    parser.add_argument('--watch-installer', type=Path, help='Verified Windows installer output directory')
     args = parser.parse_args()
     version = firmware_version()
     out = ROOT / 'build' / 'release' / version
@@ -62,6 +63,25 @@ firmware/tamapoke.bin은 빈 기기용 통합 이미지입니다.
     watch_name = f'TamaPoke-{version}-Galaxy-Watch4-9-Install-Guide-KO.pdf'
     copy_guide(ROOT / 'docs/guides/TamaPoke-Galaxy-Watch4-9-Install-Guide-KO.pdf', out / watch_name)
     names.append(watch_name)
+    if args.watch_installer:
+        tool_name = f'TamaPoke-{version}-Watch-Installer-Windows.zip'
+        tool_guide = f'TamaPoke-{version}-Watch-Installer-Guide-KO.pdf'
+        shutil.copy2(args.watch_installer / tool_name, out / tool_name)
+        copy_guide(ROOT / 'output/pdf' / tool_guide, out / tool_guide)
+        with zipfile.ZipFile(out / tool_name) as archive:
+            prefix = tool_name[:-4] + '/'
+            if archive.testzip() is not None:
+                raise SystemExit('Installer ZIP is corrupt')
+            import hashlib
+            with archive.open(prefix + 'TamaPoke-WearOS.apk') as stream:
+                included = hashlib.file_digest(stream, 'sha256').hexdigest()
+            if included != sha256(out / f'TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk'):
+                raise SystemExit('Installer does not contain this release Wear APK')
+            if hashlib.sha256(archive.read(prefix + 'Watch-Installer-Guide-KO.pdf')).hexdigest() != sha256(out / tool_guide):
+                raise SystemExit('Installer PDF differs from public PDF')
+        tool_sums = 'WATCH-INSTALLER-SHA256SUMS.txt'
+        (out / tool_sums).write_text(''.join(f'{sha256(out / n)}  {n}\n' for n in sorted((tool_name, tool_guide))), encoding='ascii')
+        names.extend((tool_name, tool_guide, tool_sums))
     (out / 'SHA256SUMS.txt').write_text(''.join(
         f'{sha256(out / name)}  {name}\n' for name in sorted(names)), encoding='utf-8')
     for name in sorted(names):

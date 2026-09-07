@@ -1,0 +1,133 @@
+TamaPoke fw v3.5.1
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS LAN menu opens individual transfer separately from whole-save
+PASS swap opens roster selection
+PASS previous button wraps to last page
+PASS last box Pokemon selected without truncating index
+PASS receiver details shown before approval
+PASS detail back does not approve
+PASS only explicit confirm persists approval
+PASS confirmed trade cannot be closed by tap or swipe
+PASS preview/approval leave active Pokemon and player rewards untouched
+PASS actual UI commit callback saves the received Pokemon and registers its Dex
+PASS received Dex registration preserves active Pokemon, farewell quota and streak
+PASS receiving with full party and box is refused before connection
+PASS: 7-language table, Korean preference reload, all display names, UTF-8 errors, widths and actual glyph drawing
+PASS: 7 languages x 194 strings
+widest label ends at x=118
+PASS: Pokedex counts fit national and regional labels in all languages
+PASS  the representative save spans many chunks
+PASS  sender accepts a valid save
+PASS  receiver enters save mode
+PASS  sender finishes after final receipt
+PASS  receiver validates the complete save
+PASS  both report 100 percent
+PASS  every byte arrives in order
+PASS  both show the same six-digit code
+PASS  receiving alone does not overwrite the current save
+PASS  the confirmed save can be applied
+PASS  confirmation replaces it with the sender's save
+PASS  the representative save spans many chunks
+PASS  sender accepts a valid save
+PASS  receiver enters save mode
+PASS  sender finishes after final receipt
+PASS  receiver validates the complete save
+PASS  both report 100 percent
+PASS  every byte arrives in order
+PASS  both show the same six-digit code
+PASS  receiving alone does not overwrite the current save
+PASS  the confirmed save can be applied
+PASS  confirmation replaces it with the sender's save
+PASS  the representative save spans many chunks
+PASS  sender accepts a valid save
+PASS  receiver enters save mode
+PASS  sender finishes after final receipt
+PASS  receiver validates the complete save
+PASS  both report 100 percent
+PASS  every byte arrives in order
+PASS  both show the same six-digit code
+PASS  receiving alone does not overwrite the current save
+PASS  the confirmed save can be applied
+PASS  confirmation replaces it with the sender's save
+PASS  a corrupt source is rejected before radio use
+PASS  two senders refuse instead of overwriting either side
+all good
+PASS  the old record is shorter than the new one
+PASS  and every field before moves[] sits at the same offset
+PASS  the released one-byte and expanded two-byte move layouts are exact
+      wrote an old save: 26-byte party records, 19-byte dex
+PASS  the creature survives the update
+PASS  at the level it was
+PASS  with its IVs intact
+PASS  and its training
+PASS  the nickname survives
+PASS  streak and medals survive
+PASS  and the bond
+PASS  the Kanto badges are still there
+PASS  including the hard-mode ones
+PASS  and the new regions start empty rather than inheriting them
+PASS  the old Pokedex bits keep their meaning
+PASS  including the very last Kanto species
+PASS  and the shiny registrations
+PASS  and nothing in Johto or Hoenn is falsely registered
+PASS  the party still has four members
+PASS  every banked creature keeps its species, level, IVs and nickname
+PASS  and the medals it earned in life
+PASS  the moveset a pre-moves save never had comes up empty, not garbage
+PASS  a banked shiny is still shiny
+PASS  the box, which did not exist then, comes up empty
+PASS  the egg region defaults sanely
+PASS  an upgraded save exports
+PASS  and imports again
+PASS  with the upgraded contents intact
+PASS  ko.1.1.4 party moves migrate without adjacent IDs merging
+PASS  all 18 box slots survive and the former sixth party member follows them
+PASS  a real version-1 backup envelope is accepted
+PASS  the version-1 backup restores before migration
+PASS  version-1 live moves migrate to 16-bit IDs
+PASS  version-1 party and box records migrate intact
+PASS  a party written by a build with MORE slots keeps its first five
+PASS  and so does the box
+PASS  a Pokedex written by a LATER build still loads after downgrading
+PASS  and so do the badges it recorded for a region this build still has
+all good
+TamaPoke fw v3.5.1
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS  communication entry uses the broader Korean label
+PASS  battle actions retain their specific label
+PASS  other language labels remain unchanged
+PASS  the host starts a linked battle
+PASS  the squad is the advertised one, not the current party
+PASS  and leads with what we sent
+PASS  including the rest of it
+PASS  the rival leads with theirs, at full health
+PASS  the peer's whole team is held as combatants
+PASS  so a creature that switches out can stay hurt
+PASS  the guest does not switch locally
+PASS  it sends the request instead
+PASS  and the request names the slot it wants
+PASS  the host latches its move while the rival is still choosing
+PASS  and nothing is resolved yet
+PASS  and the turn goes as soon as the rival's action lands
+PASS  a lost peer ends the battle instead of waiting forever
+PASS  the guest takes the host's numbers
+PASS  and the ailment it was handed
+PASS  a result is consumed once
+PASS  so a second frame does not replay the turn
+PASS  the rival's next creature comes off the wire
+PASS  the guest takes the ending from the host
+PASS  a runt result is dropped, not half-applied
+PASS  a LAN battle is uncapped: bring what you like
+PASS  two chosen
+PASS  confirming the team opens the LAN screen
+PASS  and offers exactly what was chosen, not the whole party
+PASS  including the right party member
+PASS  with no radio it says so rather than hanging
+all good
+PASS: korean,i18n,label,lan,trade_ui,savetransfer,upgrade

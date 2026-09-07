@@ -103,7 +103,7 @@ def main():
     text('다음에 설치할 때', 15, True)
     text('같은 PC의 등록이 남아 있으면 PC 등록 단계는 생략할 수 있습니다. 무선 디버깅을 다시 켜거나 네트워크를 바꿨다면 현재 IP와 연결 포트를 다시 확인하세요. 예전 포트를 그대로 쓰지 마세요.')
 
-    page(4, '도우미 화면 한눈에 보기', '3.5.0용 도우미의 실제 창을 크게 펼친 예시입니다. 작은 PC 화면에서는 창 안을 아래로 스크롤하면 나머지 버튼과 작업 기록이 보입니다.')
+    page(4, '도우미 화면 한눈에 보기', '3.5.1용 도우미의 실제 창을 크게 펼친 예시입니다. 작은 PC 화면에서는 창 안을 아래로 스크롤하면 나머지 버튼과 작업 기록이 보입니다.')
     pic = ImageReader(str(args.preview)); iw, ih = pic.getSize()
     w = 380; h = w*ih/iw
     c.drawImage(pic, (595.28-w)/2, y-h, width=w, height=h)
@@ -125,7 +125,7 @@ def main():
 
     page(6, '업데이트 전 세이브 지키기', '도우미는 앱 삭제·데이터 초기화·강제 다운그레이드를 하지 않습니다. 기존 앱 위에 설치하는 방식이지만, 자동 백업이나 세이브 복구 기능은 없습니다.')
     text('미완료 한 마리 전송·교환부터 끝내세요', 15, True)
-    text('3.5.0의 <b>포켓몬 전송 / 교환</b>이 확정된 뒤 중단됐다면, 먼저 같은 상대와 재연결해 양쪽 모두 완료하세요. 미완료 거래 중에는 전체 세이브 백업·복원이 막힙니다. 해결하려고 앱을 삭제하거나 데이터를 지우지 마세요.')
+    text('3.5.1의 <b>포켓몬 전송 / 교환</b>이 확정된 뒤 중단됐다면, 먼저 같은 상대와 재연결해 양쪽 모두 완료하세요. 미완료 거래 중에는 전체 세이브 백업·복원이 막힙니다. 해결하려고 앱을 삭제하거나 데이터를 지우지 마세요.')
     text('전체 세이브를 다른 기기에 보관하는 방법', 15, True)
     text('전체 세이브 전송을 지원하는 호환 버전의 별도 기기가 있을 때 사용합니다. 연결과 저장 호환은 함께 제공되는 플레이 가이드 16~18쪽을 참고하세요. 한 마리 전송은 전체 백업이 아닙니다.')
     text('1. 워치와 백업받을 기기를 게임의 근거리 연결 방식으로 연결합니다.<br/>2. 원본 워치에서 <b>세이브 보내기</b>, 대상에서 <b>세이브 받기</b>를 선택합니다.<br/>3. 양쪽 확인 코드가 같은지 확인하고 전송이 끝날 때까지 기다립니다.<br/>4. 대상에서 <b>세이브 적용 → 예</b>를 선택하면 대상의 기존 저장이 교체됩니다.<br/>5. 대상 앱을 다시 열어 파티·박스·도감 등이 옮겨졌는지 확인합니다.')
@@ -147,7 +147,7 @@ def main():
     ], [142, 357])
     text('검증 범위와 참고 자료', 13, True, gap=6)
     text('자동 입력·오류·손상 파일 검사, 화면 및 ZIP 검사를 수행했습니다. 실제 워치 페어링·신규 설치·세이브 유지 업데이트는 미검증입니다. SHA-256은 파일 손상 확인용이며 배포자 신원을 보증하는 전자서명이 아닙니다.', 9, gap=7)
-    text('<link href="https://developer.android.com/training/wearables/get-started/debug-wifi" color="#167D91"><u>Android Developers: Wear OS Wi-Fi 디버깅</u></link><br/><link href="https://developer.android.com/tools/releases/platform-tools" color="#167D91"><u>Android Developers: Platform-Tools</u></link><br/>게임 저장 안내: 함께 배포하는 3.5.0 플레이 가이드와 릴리스 설명. 연결 도구의 출처·라이선스는 동봉 NOTICE.txt를 확인하세요.', 9, gap=0)
+    text('<link href="https://developer.android.com/training/wearables/get-started/debug-wifi" color="#167D91"><u>Android Developers: Wear OS Wi-Fi 디버깅</u></link><br/><link href="https://developer.android.com/tools/releases/platform-tools" color="#167D91"><u>Android Developers: Platform-Tools</u></link><br/>게임 저장 안내: 함께 배포하는 3.5.1 플레이 가이드와 릴리스 설명. 연결 도구의 출처·라이선스는 동봉 NOTICE.txt를 확인하세요.', 9, gap=0)
     c.save()
     print(out)
 
