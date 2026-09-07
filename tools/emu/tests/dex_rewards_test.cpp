@@ -16,14 +16,14 @@ static int bad=0;
 static void ck(bool ok,const char*s){printf("%s %s\n",ok?"PASS":"FAIL",s);if(!ok)bad++;}
 static void fill(Pet&p,int count){
   memset(p.dexReg,0,sizeof(p.dexReg));
-  for(int d=1;d<=DEX_COUNT && count;d++)if(speciesHasArt(d)){
+  for(int d=1;d<=DEX_COUNT && count;d++)if(speciesIsCollectible(d)){
     p.dexReg[(d-1)>>3]|=1<<((d-1)&7);count--;
   }
 }
 int main(){
   using namespace EggRewards;
   const uint16_t total=pokedexCollectibleCount(), half=(total+1)/2;
-  ck(total==982 && half==491,"collectible target is 982 species, half is 491");
+  ck(total==967 && half==484,"collectible target is 967 species, half is 484");
   for(bool shiny : {false,true}){
     const uint16_t base=shiny?SHINY_BASE:LEGEND_BASE,solo=shiny?SHINY_SOLO:LEGEND_SOLO,max=shiny?SHINY_MAX:LEGEND_MAX;
     ck(weight(base,solo,max,0,0,total)==base,"neither goal retains original base probability");
@@ -51,8 +51,8 @@ int main(){
   p.streak=10;p.bestStreak=10;p.lastCareDay=200;fill(p,half);
   ck(p.eggShinyWeight()==SHINY_MAX && p.eggLegendWeight()==LEGEND_MAX,
      "real Pet routes both-goal odds into the existing egg lottery");
-  for(int dex:NO_ART)p.dexReg[(dex-1)>>3]|=1<<((dex-1)&7);
-  ck(p.registeredCount()==half+NO_ART_COUNT && p.collectibleRegisteredCount()==half,
+  for(int dex:NO_HATCH)p.dexReg[(dex-1)>>3]|=1<<((dex-1)&7);
+  ck(p.registeredCount()==half+NO_HATCH_COUNT && p.collectibleRegisteredCount()==half,
      "legacy no-art registrations do not inflate collectible completion");
   p.registerCaughtSpecies(25,true);p.registerCaughtSpecies(25,false);
   ck(p.collectibleRegisteredCount()==half,"shiny and duplicate registrations count the species only once");

@@ -5,7 +5,7 @@ EXAMPLES = [(255, '캐터피', 10), (190, '피카츄', 25), (120, '단데기', 1
             (45, '파이리', 4), (3, '뮤츠', 150)]
 
 def probability(rate, registered):
-    tenths = 10 + 2 * (min(registered, 982) // 100)
+    tenths = 10 + 2 * (min(registered, 967) // 100)
     if rate == 3:
         return (25 * tenths // 10) / 1000
     odds = (rate * tenths // 10) * 14 // 15
@@ -20,6 +20,6 @@ def capture_rows():
     rows = [['등록 종수', '볼 배율'] + [f'{r}<br/>{name}' for r, name, _ in EXAMPLES]]
     for count in range(0, 901, 100):
         values = [probability(r, count) for r, _, _ in EXAMPLES]
-        rows.append([f'{count}~{min(count+99,982)}', f'{1+count//100*0.2:.1f}배'] +
+        rows.append([f'{count}~{min(count+99,967)}', f'{1+count//100*0.2:.1f}배'] +
                     [('100%' if value == 1 else f'{100*value:.2f}%') for value in values])
     return rows

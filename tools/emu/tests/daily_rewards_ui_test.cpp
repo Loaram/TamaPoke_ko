@@ -25,11 +25,11 @@ int main(){
   playerPage=0;renderPlayer();shot("daily-rewards-player.ppm");
   memset(pet.dexReg,0,sizeof(pet.dexReg));
   int need=(pokedexCollectibleCount()+1)/2;
-  for(int d=1;d<=DEX_COUNT && need;d++)if(speciesHasArt(d)){
+  for(int d=1;d<=DEX_COUNT && need;d++)if(speciesIsCollectible(d)){
     pet.dexReg[(d-1)>>3]|=1<<((d-1)&7);--need;
   }
   renderPlayer();shot("egg-bonus-max.ppm");
-  ck(pet.collectibleRegisteredCount()==491 && pet.eggShinyWeight()==3240 && pet.eggLegendWeight()==189,
+  ck(pet.collectibleRegisteredCount()==484 && pet.eggShinyWeight()==3240 && pet.eggLegendWeight()==189,
      "trainer screen displays collectible goal with both capped probabilities");
   pet.streak=0;renderPlayer();shot("egg-bonus-dex-only.ppm");
   ck(pet.eggShinyWeight()==2160 && pet.eggLegendWeight()==126,"dex-only screen retains the standalone goal odds");

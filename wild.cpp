@@ -38,14 +38,14 @@ int16_t wildPickSpecies(uint8_t region, uint8_t tier, uint32_t roll) {
   // Two passes avoid a 1025-entry candidate array on the eventual ESP build.
   uint16_t count = 0;
   for (uint16_t dex = lo; dex <= hi; dex++) {
-    if (DEX_TBL[dex].rarity != tier || !speciesHasArt((int16_t)dex)) continue;
+    if (DEX_TBL[dex].rarity != tier || !speciesIsCollectible((int16_t)dex)) continue;
     if (!regionAvailable(regionOfDex((int16_t)dex))) continue;
     count++;
   }
   if (!count) return 0;
   uint16_t wanted = (uint16_t)(roll % count);
   for (uint16_t dex = lo; dex <= hi; dex++) {
-    if (DEX_TBL[dex].rarity != tier || !speciesHasArt((int16_t)dex)) continue;
+    if (DEX_TBL[dex].rarity != tier || !speciesIsCollectible((int16_t)dex)) continue;
     if (!regionAvailable(regionOfDex((int16_t)dex))) continue;
     if (!wanted--) return (int16_t)dex;
   }

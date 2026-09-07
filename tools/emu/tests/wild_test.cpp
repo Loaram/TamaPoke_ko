@@ -73,7 +73,7 @@ int main() {
   bool availabilityOk = true;
   for (int16_t dex = 1; dex <= DEX_COUNT; ++dex) {
     if (reachable[dex]) ++collectible;
-    if (reachable[dex] != speciesHasArt(dex) ||
+    if (reachable[dex] != speciesIsCollectible(dex) ||
         (reachable[dex] && !wildCatchRateForDex(dex))) availabilityOk = false;
   }
   for (uint8_t region = 0; region < REGION_ALL; ++region) {

@@ -148,6 +148,7 @@ void onTap(int16_t x, int16_t y);   // the first-boot shots tap their way in
 extern bool gymOpen, playerOpen;
 extern bool galleryDirty;
 extern uint8_t galleryRegion;
+extern int galleryPage;
 extern int16_t galleryDetail;
 extern uint8_t gymRegion;
 extern bool gymPick, galleryPick;
@@ -297,6 +298,9 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
   }
   else if (!strcmp(screen, "detail")) {
     galleryOpen=true; galleryDirty=true; galleryDetail=dex;
+  }
+  else if (!strcmp(screen, "collection-locks")) {
+    galleryOpen=true; galleryDirty=true; galleryRegion=8; galleryPage=3;
   }
   else if (!strcmp(screen, "gallery2")) {   // the second region
     galleryOpen = true;

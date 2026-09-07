@@ -759,9 +759,10 @@ uint16_t Pet::eggLegendWeight() const {
 
 uint16_t Pet::collectibleRegisteredCount() const {
   uint16_t n = registeredCount();
-  // Saved no-art bits remain in the historical Dex but cannot earn a bonus.
-  for (int i = 0; i < NO_ART_COUNT; ++i)
-    if (NO_ART[i] >= 1 && NO_ART[i] <= DEX_COUNT && isRegistered(NO_ART[i])) --n;
+  // Keep historical registrations, but all locked evolution families are
+  // excluded from both the numerator and denominator of collection bonuses.
+  for (int i = 0; i < NO_HATCH_COUNT; ++i)
+    if (NO_HATCH[i] >= 1 && NO_HATCH[i] <= DEX_COUNT && isRegistered(NO_HATCH[i])) --n;
   return n;
 }
 
@@ -1271,6 +1272,8 @@ void Pet::hatch() {
 // usuario tocando al bicho (evolve()), para que vea la transformacion.
 bool Pet::canEvolveNow() const {
   if (isEgg() || sleeping || ceremony != CER_NONE) return false;
+  // Legacy owned members remain usable, but must not evolve into blank art.
+  if (!speciesIsCollectible(speciesId)) return false;
   const DexEntry &d = DEX_TBL[speciesId];
   if (d.evolvesTo == 0) return false;
   return level() >= (uint16_t)(d.evolveLevel + careMistakes) &&

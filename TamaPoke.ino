@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.6.0"
+#define FW_VERSION "3.6.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -6562,6 +6562,12 @@ void drawThumb(const uint8_t *b, int x, int y, int s, bool sil) {
   }
 }
 
+void drawCollectionLock(int x, int y) {
+  gfx->drawRoundRect(x + 4, y, 12, 14, 5, UI_INK);
+  gfx->fillRoundRect(x, y + 8, 20, 15, 3, UI_INK);
+  gfx->fillRect(x + 9, y + 12, 2, 6, UI_BG_DAY);
+}
+
 void renderGallery() {
   if (galleryDetail) {  // vista detalle: se redibuja siempre (animada)
     gfx->fillScreen(RGB565_BLACK);
@@ -6587,6 +6593,7 @@ void renderGallery() {
     gfx->setTextColor(UI_INK);
     gfx->setTextSize(2);
     gfx->setCursor(CX - textWidthFactor(T(S_DETAIL_BACK), 6), 408);
+    if (!speciesIsCollectible(galleryDetail)) drawCollectionLock(CX - 10, 354);
     gfx->print(T(S_DETAIL_BACK));
     gfx->flush();
     return;
@@ -6632,6 +6639,13 @@ void renderGallery() {
         gfx->print(num);
       }
     }
+  }
+  // The lock is independent of historical registration: keep owned data,
+  // while making currently unavailable evolution families visible in the Dex.
+  for (int r = 0; r < 4; ++r) for (int c = 0; c < 4; ++c) {
+    int16_t dex = GAL_LO + galleryPage * GAL_PER_PAGE + r * 4 + c;
+    if (dex <= GAL_HI && dex <= DEX_COUNT && !speciesIsCollectible(dex))
+      drawCollectionLock(GAL_X + c * GAL_CELL + 56, GAL_Y + r * GAL_CELL + 52);
   }
   // A page number, not a row of dots. 25 dots do not fit across the bottom of
   // a round panel -- the chord at that height is only ~228 px -- and counting

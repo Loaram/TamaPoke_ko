@@ -3,6 +3,7 @@
 #include "Arduino.h"
 #include "Preferences.h"
 #include "pet.h"
+#include "pokedex_progress.h"
 #include "dex.h"
 #include <cstdio>
 #include <cstring>
@@ -57,6 +58,7 @@ int main(){
   gRegionArt=0xFFFF;
   bool prefersMissing=true;
   for(uint8_t b=0;b<EVO_BRANCH_COUNT;b++){
+    if(!speciesIsCollectible(EVO_BRANCHES[b].base))continue;
     Pet p; p.begin(); p.factoryReset(); p.begin();
     p.dbgHatchAs(EVO_BRANCHES[b].base,false);
     fillDex(p);

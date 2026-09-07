@@ -25,7 +25,7 @@ static uint32_t reference(int rate,int count){
 }
 static void fill(int count){
   memset(pet.dexReg,0,sizeof(pet.dexReg));memset(pet.dexShinyReg,0,sizeof(pet.dexShinyReg));
-  for(int d=1;d<=DEX_COUNT&&count;d++)if(d!=150&&speciesHasArt(d)){
+  for(int d=1;d<=DEX_COUNT&&count;d++)if(d!=150&&speciesIsCollectible(d)){
     pet.dexReg[(d-1)>>3]|=1<<((d-1)&7);count--;
   }
 }
@@ -38,7 +38,7 @@ static void fixture(int count){
 }
 int main(){
   nvs().clear();setup();const int total=pokedexCollectibleCount();
-  ck(total==982,"current collectible catalog has 982 species");
+  ck(total==967,"current collectible catalog has 967 species");
   bool exact=true,monotone=true,bounds=true;int cases=0;
   for(int r=0;r<=255;r++){
     uint32_t previous=0;
@@ -53,7 +53,7 @@ int main(){
       }
     }
   }
-  ck(exact&&monotone&&bounds,"all 256 rates x 983 counts match independent integer reference and shake boundaries");
+  ck(exact&&monotone&&bounds,"all 256 rates x 968 counts match independent integer reference and shake boundaries");
   printf("MATRIX rate_count_cases=%d\n",cases);
   bool rare=true;
   for(int n=0;n<=total;n++){
@@ -76,7 +76,7 @@ int main(){
   ck(sampled,"5000000 independent draws agree with the five guide examples at all ten tiers");
   fixture(99);pet.registerCaughtSpecies(1,false);pet.registerCaughtSpecies(1,true);
   ck(pet.collectibleRegisteredCount()==99,"duplicate and shiny registration do not increase the tier");
-  for(int d=1;d<=DEX_COUNT;d++)if(!speciesHasArt(d))pet.dexReg[(d-1)>>3]|=1<<((d-1)&7);
+  for(int d=1;d<=DEX_COUNT;d++)if(!speciesIsCollectible(d))pet.dexReg[(d-1)>>3]|=1<<((d-1)&7);
   ck(pet.collectibleRegisteredCount()==99,"unavailable species bits do not grant capture bonus");
   pet.saveNow();Pet reloaded;reloaded.begin();ck(reloaded.collectibleRegisteredCount()==99,"count derives from existing save without new schema");
   uint8_t data[SAVE_MAX_BYTES];size_t size=saveExport(data,sizeof(data));

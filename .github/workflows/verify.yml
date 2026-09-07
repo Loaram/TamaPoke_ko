@@ -18,6 +18,16 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y libsdl2-dev
       - run: python tools/build_emulator.py
       - run: python tools/unpack_sprites.py
+      - name: Render collection lock screenshots
+        run: |
+          mkdir -p build/collection-screens
+          SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/emulator/tamapoke-emu --shot collection-locks --out build/collection-screens/collection-locks.ppm
+          SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/emulator/tamapoke-emu --shot detail --dex 955 --out build/collection-screens/locked-detail.ppm
+          python -c "from PIL import Image; from pathlib import Path; [Image.open(p).save(p.with_suffix('.png')) for p in Path('build/collection-screens').glob('*.ppm')]"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: collection-screens
+          path: build/collection-screens/*.png
       - run: python tools/test_runtime.py
       - run: python tools/test_sd_store.py
       - uses: arduino/setup-arduino-cli@v2
