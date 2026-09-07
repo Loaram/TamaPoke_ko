@@ -11,7 +11,7 @@ FONT = ROOT / 'tools/fonts/Galmuri11.ttf'
 def generate():
     # Includes local UI literals and all display names, but no web-only text.
     texts = [(ROOT / p).read_text(encoding='utf-8') for p in
-             ('i18n.cpp', 'TamaPoke.ino', 'korean_names.h', 'forms.cpp', 'forms_data.h')]
+             ('i18n.cpp', 'TamaPoke.ino', 'trade_ui.h', 'korean_names.h', 'forms.cpp', 'forms_data.h')]
     chars = sorted({c for s in texts for literal in re.findall(r'"([^"\n]*)"', s)
                     for c in literal if ord(c) > 127})
     cmap = TTFont(FONT).getBestCmap()

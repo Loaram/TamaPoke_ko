@@ -7,6 +7,7 @@
 #include "i18n.h"
 #include "Preferences.h"
 #include "nvs_file.h"
+#include "trade.h"
 #include "pet.h"
 #include "party.h"
 #include "battle.h"
@@ -122,7 +123,10 @@ String FakeSerial::readStringUntil(char) {
 
 // --- NVS persistence ---
 static NvsFile gNvsFile;
+static std::string gTradeSavePath;
 void nvsLoad(const char *path) {
+  gTradeSavePath=path;
+  trade.checkpoint=[](){return !gTradeSavePath.empty() && gNvsFile.save(gTradeSavePath.c_str(),nvs(),true);};
   if (!gNvsFile.load(path, nvs())) {
     fprintf(stderr, "Cannot read complete save; original file preserved: %s\n", path);
     exit(EXIT_FAILURE);

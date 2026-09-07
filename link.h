@@ -127,6 +127,8 @@ struct LinkResult {
 };
 
 struct Link {
+  void (*extension)(void*,const uint8_t*,uint8_t)=nullptr;
+  void *extensionContext=nullptr;
   uint8_t state = LINK_OFF;
   bool isHost = false;
   uint8_t protoTheirs = 0;

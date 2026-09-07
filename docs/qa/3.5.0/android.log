@@ -1,0 +1,75 @@
+proto.h: 151 declarations
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+Note: C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\android-project\java\com\loaram\tamapoke\TamaPokeActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+3 warnings
++ C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\.venv\Scripts\python.exe C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu\genproto.py C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\TamaPoke.ino
++ C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe --target=aarch64-linux-android26 -O2 -fPIC -IC:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\sources\android\native_app_glue -c C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\sources\android\native_app_glue\android_native_app_glue.c -o C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\arm64-v8a\android_native_app_glue.o
++ C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-linux-android26 -std=c++17 -O2 -fPIC -ffunction-sections -fdata-sections -w -DANDROID -D__ANDROID__ -IC:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu -IC:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko -IC:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android -IC:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\sources\android\native_app_glue -shared -Wl,--gc-sections -Wl,--no-undefined -Wl,--build-id=sha1 -Wl,-soname,libtamapoke.so C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\sketch.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\gbsynth.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\pet.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\i18n.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\party.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\battle.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\wild.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\forms.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\trade.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\link.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\save.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu\font.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu\clock.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\host_android.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\android_audio.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\link_udp.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\android_main.cpp C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\arm64-v8a\android_native_app_glue.o -static-libstdc++ -landroid -laaudio -llog -latomic -lm -o C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\arm64-v8a\libtamapoke.so
++ C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe --strip-unneeded C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\arm64-v8a\libtamapoke.so
++ C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe --target=x86_64-linux-android26 -O2 -fPIC -IC:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\sources\android\native_app_glue -c C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\sources\android\native_app_glue\android_native_app_glue.c -o C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\x86_64\android_native_app_glue.o
++ C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=x86_64-linux-android26 -std=c++17 -O2 -fPIC -ffunction-sections -fdata-sections -w -DANDROID -D__ANDROID__ -IC:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu -IC:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko -IC:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android -IC:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\sources\android\native_app_glue -shared -Wl,--gc-sections -Wl,--no-undefined -Wl,--build-id=sha1 -Wl,-soname,libtamapoke.so C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\sketch.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\gbsynth.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\pet.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\i18n.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\party.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\battle.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\wild.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\forms.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\trade.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\link.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\save.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu\font.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\emu\clock.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\host_android.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\android_audio.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\link_udp.cpp C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\android\android_main.cpp C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\x86_64\android_native_app_glue.o -static-libstdc++ -landroid -laaudio -llog -latomic -lm -o C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\x86_64\libtamapoke.so
++ C:\Users\hyung\AppData\Local\Android\Sdk\ndk\30.0.16138531\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-strip.exe --strip-unneeded C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\native\x86_64\libtamapoke.so
++ C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\aapt2.exe compile --dir C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\android-project\res -o C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\compiled-res.zip
++ C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\aapt2.exe link -o C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\base.apk -I C:\Users\hyung\AppData\Local\Android\Sdk\platforms\android-37.0\android.jar --manifest C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\android-project\AndroidManifest.xml --java C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\generated-java --min-sdk-version 26 --target-sdk-version 37 --version-code 3028 --version-name 3.5.0-android.1 C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\compiled-res.zip
++ C:\Program Files\Android\Android Studio\jbr\bin\javac.exe -source 8 -target 8 -bootclasspath C:\Users\hyung\AppData\Local\Android\Sdk\platforms\android-37.0\android.jar -encoding UTF-8 -d C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\classes C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\android-project\java\com\loaram\tamapoke\TamaPokeActivity.java C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\generated-java\com\loaram\tamapoke\R.java
++ C:\Program Files\Android\Android Studio\jbr\bin\jar.exe cf C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\classes.jar -C C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\classes .
++ C:\WINDOWS\system32\cmd.exe /d /s /c C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\d8.bat --min-api 26 --output C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\dex C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\classes.jar
++ C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\zipalign.exe -P 16 -f 4 C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\unsigned-unaligned.apk C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\unsigned-aligned.apk
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/C:/Users/hyung/AppData/Local/Android/Sdk/build-tools/36.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/C:/Users/hyung/AppData/Local/Android/Sdk/build-tools/36.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
++ C:\WINDOWS\system32\cmd.exe /d /s /c C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\apksigner.bat sign --ks C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\build\android\debug.keystore --ks-key-alias androiddebugkey --ks-pass pass:android --key-pass pass:android --out C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\unsigned-aligned.apkVerifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Android Debug, O=Android, C=US
+Signer #1 certificate SHA-256 digest: 17aaf3ebfaa9b51599e2b0d0970f99651bd8be6700da981b7f240677535b7f47
+Signer #1 certificate SHA-1 digest: 4fa1083f1126cb8594ce9949cd688391226097a9
+Signer #1 certificate MD5 digest: f05ce5f50bcc6b7dd06476e539c54588
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 2048
+Signer #1 public key SHA-256 digest: 8dad2ba876258cd5cf7c5ae13467912304fecb5d7b5df983c23b22e859f0bd7d
+Signer #1 public key SHA-1 digest: 233dec9e15692f1bfd461fd24f904c5d172e9b2b
+Signer #1 public key MD5 digest: a62da405839e157d09ab4a6053c229f5
+package: name='com.loaram.tamapoke' versionCode='3028' versionName='3.5.0-android.1' platformBuildVersionName='17' platformBuildVersionCode='37' compileSdkVersion='37' compileSdkVersionCodename='17'
+sdkVersion:'26'
+targetSdkVersion:'37'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.ACCESS_LOCAL_NETWORK'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.ACCESS_WIFI_STATE'
+application-label:'TamaPoke 한국어판'
+application-icon-160:'res/drawable/ic_launcher.xml'
+application: label='TamaPoke 한국어판' icon='res/drawable/ic_launcher.xml'
+application-debuggable
+launchable-activity: name='com.loaram.tamapoke.TamaPokeActivity'  label='' icon=''
+feature-group: label=''
+  uses-feature: name='android.hardware.touchscreen'
+  uses-feature: name='android.hardware.wifi'
+  uses-implied-feature: name='android.hardware.wifi' reason='requested android.permission.ACCESS_WIFI_STATE permission'
+main
+supports-screens: 'small' 'normal' 'large' 'xlarge'
+supports-any-density: 'true'
+locales: '--_--'
+densities: '160'
+native-code: 'arm64-v8a' 'x86_64'
+
++ C:\WINDOWS\system32\cmd.exe /d /s /c C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\apksigner.bat verify --verbose --print-certs C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk
++ C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\zipalign.exe -c -P 16 4 C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk
++ C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\aapt.exe dump badging C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk
+Built C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\build\android\TamaPoke-3.5.0-Android-Full-debug.apk (387,822,884 bytes)
+Version 3.5.0-android.1, versionCode 3028, ABIs arm64-v8a, x86_64

@@ -22,6 +22,7 @@
 #include "battle.h"
 #include "trainers.h"
 #include "link.h"
+#include "trade.h"
 #include "linknow.h"
 #include "backs.h"
 #include "badges.h"
@@ -46,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.4.0"
+#define FW_VERSION "3.5.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -744,6 +745,8 @@ int16_t tX0, tY0, tXl, tYl; // gesto en curso (inicio y ultima posicion)
 uint32_t tStart = 0;
 bool holdFired = false;
 
+#include "trade_ui.h"
+
 void setup() {
   Serial.setRxBufferSize(8192);  // la transferencia a SD llega en bloques de 2 KB
   Serial.begin(115200);
@@ -790,6 +793,7 @@ void setup() {
   sdBegin();
   party.begin();
   pet.begin();
+  tradeInitialize();
   thumbs.load();
 
   // reloj real: aplica el tiempo que estuvo apagado
@@ -830,9 +834,9 @@ void ensureMon() {
 void loop() {
   uint32_t now = millis();
 #ifdef ANDROID
-  pet.updateDeviceClock(now, rtcEpoch(), androidUtcEpoch());
+  if(!tradeStorageBlocked)pet.updateDeviceClock(now, rtcEpoch(), androidUtcEpoch());
 #else
-  pet.update(now);
+  if(!tradeStorageBlocked)pet.update(now);
 #endif
 
   // The link is pumped here rather than from the LAN screen, because it has to
@@ -842,6 +846,7 @@ void loop() {
   if (lan.live()) {
     linkNowPoll();
     lan.tick(now);
+    if(lan.extension)trade.tick(now);
   }
 
   // avisa con un sonido cuando el bicho pasa a estar listo para evolucionar
@@ -969,6 +974,7 @@ void updateBrightness(uint32_t now) {
 void handleSerial() {
   if (!Serial.available()) return;
   String line = Serial.readStringUntil('\n');
+  if(tradeStorageBlocked){Serial.println("TRADE PENDING: finish or recover the transaction first");return;}
   line.trim();
   if (line.length() == 0) return;
   if (sdSerialCommand(line)) return;
@@ -1308,6 +1314,7 @@ void handleTouch() {
 void openClock();  // prototipo
 
 void onSwipeV(int dir) {
+  if(tradeOpen){if(tradeDetail)tradeDetail=0;else if(tradeMenu==1)tradePage=(tradePage+(dir>0?50:1))%51;return;}
   if (boxOpen && boxSortOpen) {
     if(boxSortChoice) boxSortChoice=0; else boxSortOpen=false;
     boxSortFailed=false;return;
@@ -1691,6 +1698,7 @@ void partyTap(int16_t x, int16_t y) {
 
 // deslizar: dir +1 = hacia la derecha
 void onSwipe(int dir) {
+  if(tradeOpen){if(tradeDetail)tradeDetail=0;else if(tradeMenu==1)tradePage=(tradePage+(dir>0?50:1))%51;return;}
   if (boxOpen && boxSortOpen) {
     if(boxSortChoice) boxSortChoice=0; else boxSortOpen=false;
     boxSortFailed=false;return;
@@ -1811,6 +1819,7 @@ void onSwipe(int dir) {
 }
 
 void onTap(int16_t x, int16_t y) {
+  if(tradeOpen){tradeTap(x,y);return;}
   if(formsOpen) {formsTap(x,y);return;}
   if (pet.awaitingStarter()) {  // primera partida: region y luego inicial
     if (!starterRegionDone) {
@@ -2407,6 +2416,7 @@ void bootReport() {
 }
 
 void render() {
+  if(tradeOpen){renderTrade();return;}
   if(formsOpen) {renderForms();return;}
   crumbDrop();   // so a crash can name the screen it happened on
   if (pet.awaitingStarter()) {  // primera partida: region y luego inicial
@@ -5148,6 +5158,7 @@ void renderLan() {
       gfx->setCursor(CX - textWidthFactor(lab[i], 6), y + 16);
       gfx->print(lab[i]);
     }
+    tradeButton("포켓몬 전송 / 교환",90,336);
   } else if (lan.saveMode) {
     if (lan.peerName[0]) {
       gfx->setTextColor(UI_INK);
@@ -5306,6 +5317,7 @@ static void lanSaveStart(bool sender) {
 void lanTap(int16_t x, int16_t y) {
   if (lan.state == LINK_OFF || lan.state == LINK_REFUSED ||
       lan.state == LINK_LOST || lan.state == LINK_SAVE_INVALID) {
+    if(x>=90&&x<=376&&y>=336&&y<=380){tradeOpen=true;tradeMenu=0;tradeError=nullptr;return;}
     for (int i = 0; i < 4; i++) {
       int by = 92 + i * 60;
       if (x < 90 || x > 376 || y < by || y > by + 48) continue;

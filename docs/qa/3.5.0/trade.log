@@ -1,0 +1,89 @@
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS both previews wait without exchanging
+PASS matching confirmation codes
+PASS whole-save backup is blocked during a transaction
+PASS release cannot change reserved Pokemon
+PASS explicit local approval is durable
+PASS one approval cannot commit
+PASS explicit local approval is durable
+PASS lossy swap reaches durable completion
+PASS exact selected records exchanged without IV/shiny reroll
+PASS restarts and repeated completion do not duplicate/reverse trade
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS gift moves exactly one Pokemon into 300th box slot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS cancel is allowed before local confirmation
+PASS cancel keeps both originals
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS confirmed transaction cannot be unilaterally cancelled
+PASS explicit local approval is durable
+PASS prepared trade resumes after both devices reboot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS disk flush failure blocks confirmation
+PASS peer cannot commit an unpersisted approval
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS failed checkpoint recovers from durable snapshot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+forms: roster write failed; recovery copies retained
+PASS roster storage fault blocks completion
+PASS roster fault recovery retains both individuals
+PASS whole-save backup is available after completion
+PASS device transaction journal never travels in a whole-save backup
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS same send roles refused without mutations
+PASS invalid IV rejected
+PASS unknown move rejected
+PASS: individual transfer transaction tests
+PASS: trade

@@ -20,6 +20,7 @@
 #include "Arduino_GFX_Library.h"
 #include "Preferences.h"
 #include "nvs_file.h"
+#include "trade.h"
 #include "korean_text.h"
 #include "pet.h"
 #include "game_lifecycle.h"
@@ -406,6 +407,7 @@ void android_main(android_app *app) {
     clockMigration.putUInt("aseen", utcNow);
     clockMigration.putBool("andclk1", true);
   }
+  trade.checkpoint=[](){return gNvsLoaded && gNvsFile.save(gSavePath.c_str(),nvs(),true);};
   setup();
   gGameLifecycle.start();
 

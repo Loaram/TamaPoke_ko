@@ -187,16 +187,19 @@ void Party::begin() {
 }
 
 bool Party::save() {
+  if(tradeStorageBlocked)return false;
   saveRoster();
   return !rosterReadOnly;
 }
 
 bool Party::boxSave() {
+  if(tradeStorageBlocked)return false;
   saveRoster();
   return !rosterReadOnly;
 }
 
 bool Party::sortBox(BoxSortOrder order) {
+  if(tradeStorageBlocked)return false;
   if(rosterReadOnly || !pendingLive.empty() || order>BOX_SORT_LEVEL) return false;
   for(const auto &m:box) if(m.dex>DEX_COUNT) return false;
   // ESP puts the snapshot/keys in PSRAM, not the small UI task stack.
@@ -232,6 +235,7 @@ bool Party::sortBox(BoxSortOrder order) {
 }
 
 void Party::saveRoster() {
+  if(tradeStorageBlocked)return;
   if(rosterReadOnly) return;
   uint8_t *raw=(uint8_t*)calloc(1,ROSTER_BYTES);
   if(!raw) {rosterReadOnly=true;return;}
@@ -262,6 +266,7 @@ void Party::saveRoster() {
 }
 
 bool Party::swapActive(Pet &pet, bool fromBox, uint16_t index) {
+  if(tradeStorageBlocked)return false;
   if(rosterReadOnly || !pendingLive.empty() || !pet.canSwapActive() ||
      index>=(fromBox?BOX_SLOTS:PARTY_SLOTS)) return false;
   PartyMon &slot=fromBox?box[index]:slots[index];
@@ -309,6 +314,7 @@ uint16_t Party::boxCount() const {
 }
 
 bool Party::selectForm(bool fromBox,uint16_t index,FormId id) {
+  if(tradeStorageBlocked)return false;
   if(rosterReadOnly || index>=(fromBox?BOX_SLOTS:PARTY_SLOTS)) return false;
   PartyMon &m=fromBox?box[index]:slots[index];
   if(!formEligible(m.dex,id,m.level)) return false;
@@ -318,6 +324,7 @@ bool Party::selectForm(bool fromBox,uint16_t index,FormId id) {
 }
 
 bool Party::migrateLegacyOverflow() {
+  if(tradeStorageBlocked)return false;
   if(rosterReadOnly) return false;
   PartyMon &oldSixth = slots[PARTY_SLOTS];
   if (oldSixth.empty()) return false;
@@ -337,6 +344,7 @@ int Party::boxFirstFree() const {
 }
 
 bool Party::boxAdd(const PartyMon &m) {
+  if(tradeStorageBlocked)return false;
   if(rosterReadOnly)return false;
   migrateLegacyOverflow();
   int i = boxFirstFree();
@@ -347,6 +355,7 @@ bool Party::boxAdd(const PartyMon &m) {
 }
 
 void Party::boxReleaseAt(uint16_t i) {
+  if(tradeStorageBlocked)return;
   if (rosterReadOnly || i >= BOX_SLOTS) return;
   PartyMon before=box[i];
   box[i] = PartyMon();
@@ -355,6 +364,7 @@ void Party::boxReleaseAt(uint16_t i) {
 }
 
 void Party::swapPartyBox(uint8_t partyIdx, uint16_t boxIdx) {
+  if(tradeStorageBlocked)return;
   if (rosterReadOnly || partyIdx >= PARTY_SLOTS || boxIdx >= BOX_SLOTS) return;
   PartyMon t = slots[partyIdx];
   slots[partyIdx] = box[boxIdx];
@@ -376,6 +386,7 @@ int Party::firstFree() const {
 }
 
 bool Party::add(const PartyMon &m) {
+  if(tradeStorageBlocked)return false;
   if(rosterReadOnly)return false;
   int i = firstFree();
   if (i < 0) return false;
@@ -385,6 +396,7 @@ bool Party::add(const PartyMon &m) {
 }
 
 void Party::replaceAt(uint8_t i, const PartyMon &m) {
+  if(tradeStorageBlocked)return;
   if (rosterReadOnly || i >= PARTY_SLOTS) return;
   PartyMon before=slots[i];
   slots[i] = m;
@@ -392,6 +404,7 @@ void Party::replaceAt(uint8_t i, const PartyMon &m) {
 }
 
 void Party::releaseAt(uint8_t i) {
+  if(tradeStorageBlocked)return;
   if (rosterReadOnly || i >= PARTY_SLOTS) return;
   PartyMon before=slots[i];
   slots[i] = PartyMon();

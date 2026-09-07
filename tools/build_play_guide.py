@@ -21,9 +21,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.4.0-Play-Guide-KO.pdf"
-VERSION = "3.4.0"
-PAGE_TOTAL = 25
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.5.0-Play-Guide-KO.pdf"
+VERSION = "3.5.0"
+PAGE_TOTAL = 27
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -251,7 +251,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.4.0",
+            "플레이 설명서 · 3.5.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -677,7 +677,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.4.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.5.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -788,6 +788,31 @@ story.extend([
     bullet("이름 옆 <b>*</b>는 이로치 표시입니다. 성공한 포켓몬은 확인 버튼을 누르기 전에 이미 보관되며, 화면을 다시 그리거나 확인을 눌러도 포획 판정을 반복하지 않습니다."),
     bullet("포획 실패 후에는 다음 탐색에서 다시 만나 승리해야 합니다. 같은 결과창에서 공을 다시 던지는 기능은 없습니다. 조우·포획 확률과 활력 소모는 기존 규칙 그대로입니다."),
     p("보관 오류가 나오면 새 포획을 반복하지 말고 저장 공간을 확인하세요. ESP는 원래 microSD를 확인한 뒤 앱/기기를 다시 실행하고 파티·박스의 실제 보관 상태를 확인하세요. 앱 데이터 삭제나 SD 포맷은 하지 마세요.", SAFE),
+])
+
+page_break(story)
+story.extend(page_heading("25 포켓몬 전송과 교환", "한 마리만 보내거나 서로 교환하기", "전체 세이브 복사와 별개입니다. 선택한 포켓몬만 옮기고 다른 동료·배지·설정·연속 기록은 유지합니다."))
+story.append(screenshot_pair(ROOT / "docs/qa/3.5.0/trade-menu.png", ROOT / "docs/qa/3.5.0/trade-preview.png", 62*mm))
+story.extend([
+    Spacer(1,3*mm),
+    step_table(["양쪽을 같은 지원 버전으로 업데이트합니다. 앱·워치는 같은 Wi-Fi, ESP와 연결할 때는 ESP의 TamaPoke 방에 연결합니다. 자세한 연결 방법은 13~15쪽을 보세요.", "<b>근거리 대전 → 포켓몬 전송 / 교환</b>을 엽니다. 선물하려면 한쪽은 <b>한 마리 보내기</b>, 다른 쪽은 <b>한 마리 받기</b>를 누릅니다. 맞교환은 양쪽 모두 <b>서로 한 마리 교환</b>을 누릅니다.", "파티·박스 목록에서 보낼 개체를 선택합니다. 이전·다음 버튼과 스와이프로 페이지를 넘깁니다. 현재 키우는 포켓몬은 먼저 파티·박스에 보관해야 하며 알은 보낼 수 없습니다.", "양쪽의 <b>상대 이름·6자리 코드·보낼 개체·받을 개체</b>를 비교합니다. 보내기 정보 / 받기 정보에서 폼·별명·개체값·기술을 확인합니다.", "양쪽 모두 <b>확인 후 확정</b>을 누르고 완료 표시를 기다립니다. 보내기는 원본에서 제거하고 상대에게 보관하며, 교환은 선택했던 칸에 상대 개체가 들어옵니다."]),
+    Spacer(1,3*mm),
+    bullet("받기는 파티 빈칸을 먼저 사용하고 없으면 박스 빈칸을 사용합니다. 모두 차 있으면 시작할 수 없습니다. 맞교환은 내보내는 칸을 쓰므로 가득 찬 박스에서도 가능합니다."),
+    p("레벨·폼·이로치·개체값·훈련·기술·별명·개별 돌봄 상태를 보존합니다. 전송 때문에 능력치를 다시 뽑거나 통신 진화를 시키지 않습니다.", SAFE),
+])
+page_break(story)
+story.extend(page_heading("26 교환 중단과 복구", "포켓몬을 지키며 교환 마무리하기", "한쪽만 확정하거나 연결이 끊겨도 임의로 새 거래를 시작하지 마세요."))
+story.extend([
+    info_table([["표시 / 상황", "해야 할 일"], ["정보와 확인 코드를 비교하세요", "아직 내 쪽에서 확정하지 않았다면 취소할 수 있습니다. 양쪽 모두 원래 포켓몬을 유지합니다."], ["확정됨 - 상대 승인 대기", "내 승인이 저장됐습니다. 상대도 확인 후 확정해야 합니다. 이 단계부터는 일방 취소할 수 없습니다."], ["상대 연결 대기 / 재연결 필요", "같은 상대와 Wi-Fi를 다시 연결하고 다시 연결을 누릅니다. 앱을 껐다 켜도 진행 기록을 불러옵니다."], ["저장 오류", "앱 데이터·저장 파일을 지우지 마세요. 저장 공간 또는 ESP의 원래 SD를 확인하고 재시작합니다."], ["전송 / 교환 완료", "닫기를 누릅니다. 상대가 아직 대기 중이면 이전 거래 재연결로 다시 만나 완료 확인을 전달합니다."]], [51*mm,123*mm]),
+    Spacer(1,5*mm),
+    p("교환 중 제한", H2),
+    bullet("진행 중인 개체를 놓아주거나 정렬·교체하지 못하도록 보관 변경을 막습니다. 거래가 미완료인 동안 전체 세이브 백업·복원도 막습니다. 백업은 거래 시작 전에 준비하세요."),
+    bullet("확정 이후에는 상대가 오프라인이면 복구를 위해 다시 만나야 할 수 있습니다. 상대 기기를 초기화하거나 앱을 삭제하면 자동 복구가 불가능해질 수 있습니다."),
+    bullet("지원하지 않는 기술·폼·데이터 또는 필요한 그림 팩이 없으면 연결을 거부합니다. 양쪽 역할과 버전, ESP의 지역·폼 그림 팩을 확인하세요."),
+    p("도감과 성장 규칙", H2),
+    bullet("받은 종과 이로치를 도감에 등록합니다. 이미 등록된 종은 중복 집계하지 않습니다. 보내도 내 도감 기록은 지우지 않으며, 받은 종은 기존 수집 가능 도감 보너스 계산에 반영됩니다."),
+    bullet("전송·교환은 좋은 작별이 아니며 하루 작별 3회를 사용하지 않습니다. 받은 포켓몬은 홈에서 성장·진화할 수 있고 기존 작별 완료·도망 방지 등의 개별 상태는 그대로 유지합니다."),
+    p("통신 오류의 중복 반영을 막지만, 예전 전체 세이브를 고의로 복원해 만드는 복제를 완전히 막는 온라인 인증 기능은 없습니다. 믿을 수 있는 가까운 상대와 이용하세요.", CALLOUT),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

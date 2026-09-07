@@ -171,6 +171,7 @@ static void sendSquad(Link &l, uint8_t rot = 0) {
 }
 
 void Link::begin(bool host, const char *myName) {
+  extension=nullptr;extensionContext=nullptr;
   state = LINK_LISTENING;
   isHost = host;
   protoTheirs = 0;
@@ -299,6 +300,7 @@ void Link::rearm() {
 // Resend what we last said, and give up on a peer that has gone quiet. Called
 // once a frame; `now` is passed in so a test can drive time directly.
 void Link::tick(uint32_t now) {
+  if(extension)return;
   if (!live() || state == LINK_DONE || state == LINK_SAVE_DONE) return;
   // Once a receiver has acknowledged the final blob it waits for the player to
   // confirm the overwrite. That can take any amount of time and is not a lost
@@ -337,6 +339,7 @@ void Link::tick(uint32_t now) {
 }
 
 void Link::onPacket(const uint8_t *buf, uint8_t len) {
+  if(extension){extension(extensionContext,buf,len);return;}
   if (len < HDR) return;               // runt
   uint8_t type = buf[0], n = buf[1];
   if (n > LINK_MAX_PAYLOAD || (uint16_t)HDR + n > len) return;   // truncated

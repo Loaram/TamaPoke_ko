@@ -9,8 +9,8 @@ p.add_argument('--sketch',type=Path,default=R/'build/emulator/sketch.cpp',help='
 a=p.parse_args()
 out=R/'build/runtime-tests';out.mkdir(parents=True,exist_ok=True)
 env=os.environ.copy();env['PATH']=str(Path(a.cxx).resolve().parent)+os.pathsep+env.get('PATH','')
-core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp','forms.cpp']]
-for test in ['korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
+core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp','forms.cpp','trade.cpp']]
+for test in ['trade','trade_ui','korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
              'lan','battle','ai','gym','roster','gyms_new','evo','balance','retire','moves','box',
              'dexdata','eevee','branch','region','sprite','full_dex','full_shiny','hit',
              'touch','swipe','starter','release','joy','wild','explore','wild_result','shiny_eggs','battle_reserves','android_lifecycle','nvs_file','streak_persistence','dex_rewards','forms','forms_ui','active_swap','form_moves','daily_rewards','daily_rewards_ui','box_pages','ending_recovery','box_direct','box_sort','revive','companion_growth']:
@@ -20,7 +20,7 @@ for test in ['korean','i18n','label','save','savetransfer','upgrade','link','lin
     if test in ('korean','label'):src.append(str(E/'font.cpp'))
     if test == 'sprite':
         src += [str(E/'host_impl.cpp'),str(E/'font.cpp')]
-    if test in ('lan','hit','touch','swipe','starter','release','joy','explore','wild_result','battle_reserves','forms_ui','gyms_new','active_swap','form_moves','daily_rewards_ui','box_pages','box_direct','box_sort','companion_growth'):
+    if test in ('trade_ui','lan','hit','touch','swipe','starter','release','joy','explore','wild_result','battle_reserves','forms_ui','gyms_new','active_swap','form_moves','daily_rewards_ui','box_pages','box_direct','box_sort','companion_growth'):
         src += [str(a.sketch),*[str(E/x) for x in ['host_impl.cpp','font.cpp','clock.cpp']]]
     defs=(['-DTAMAPOKE_FULL_DEX=1'] if test == 'full_dex' else
           ['-DTAMAPOKE_FULL_SHINY=1'] if test == 'full_shiny' else
@@ -28,4 +28,4 @@ for test in ['korean','i18n','label','save','savetransfer','upgrade','link','lin
           ['-DANDROID=1'] if test == 'android_lifecycle' else [])
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*defs,*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: '+(a.only or '53 runtime suites including full-team survival, shiny eggs and Explore results'))
+print('PASS: '+(a.only or '55 runtime suites including durable individual transfer, full-team survival and shiny eggs'))

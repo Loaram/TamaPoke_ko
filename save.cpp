@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "party.h"
+#include "trade.h"
 #include "roster_store.h"
 
 // Every key the firmware persists. Adding one here is the whole job of adding
@@ -127,6 +128,7 @@ size_t saveExportSize() {
 }
 
 size_t saveExport(uint8_t *out, size_t cap) {
+  if(tradeStorageBlocked)return 0;
   if (cap < SAVE_HDR + 2) return 0;
   Preferences p;
   p.begin("tamapoke", true);
@@ -255,6 +257,7 @@ static bool applySnapshot(Preferences &p,const uint8_t *in,size_t n,uint8_t *che
 }
 
 bool saveImport(const uint8_t *in,size_t n) {
+  if(tradeStorageBlocked)return false;
   if(!saveValidate(in,n))return false;
 #if defined(ESP32) && !defined(ANDROID)
   uint8_t *old=(uint8_t*)ps_malloc(SAVE_MAX_BYTES),*check=(uint8_t*)ps_malloc(MAX_VAL);

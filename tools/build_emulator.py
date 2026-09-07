@@ -27,7 +27,7 @@ def main():
     out=(a.out or default_out).resolve();out.mkdir(parents=True,exist_ok=True)
     subprocess.run([sys.executable,str(E/'genproto.py'),str(R/'TamaPoke.ino')],cwd=E,check=True)
     sketch=out/'sketch.cpp';sketch.write_text('#include "proto.h"\n'+(R/'TamaPoke.ino').read_text(encoding='utf-8'),encoding='utf-8')
-    sources=[str(sketch)]+[str(E/x) for x in ['wavout.cpp','host_impl.cpp','font.cpp','clock.cpp','main_sdl.cpp']]+[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp','forms.cpp']]
+    sources=[str(sketch)]+[str(E/x) for x in ['wavout.cpp','host_impl.cpp','font.cpp','clock.cpp','main_sdl.cpp']]+[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp','forms.cpp','trade.cpp']]
     flags=['-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"']
     if a.full_dex: flags.append('-DTAMAPOKE_FULL_DEX=1')
     if a.full_shiny: flags.append('-DTAMAPOKE_FULL_SHINY=1')

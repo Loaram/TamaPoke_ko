@@ -1,0 +1,578 @@
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS six-message win opens a separate captured-to-party modal
+PASS capture stores the exact individual and registers the shiny Dex
+PASS unrendered result cannot be dismissed
+PASS finishing-turn double tap cannot skip the result
+PASS outside taps and swipes leave the result open
+PASS redraws and repeated finish calls never reroll or duplicate a capture
+PASS a second exploration cannot replace an unread result
+PASS only Confirm returns to Explore and clears result state
+PASS confirmed catch survives roster reload
+PASS full party reports the actual box destination
+PASS failed capture has its own modal and adds no Pokemon
+PASS defeat explicitly reports no capture attempt without using RNG
+forms: roster write failed; recovery copies retained
+PASS unverified write reports storage error, not success or escape, without a second destination attempt
+PASS new exploration starts normally after confirmation
+PASS real final-turn resolution opens the result modal
+PASS trainer battles do not inherit a wild-result modal
+PASS actual shiny eggs can hatch Charmander before normal Kanto completion, even with a full shiny Dex
+PASS normal eggs still prefer incomplete evolution families
+PASS both colours retain common-only runaway, region and hatch-art restrictions
+shiny eggs 342, shiny Charmander 6, normal eggs 15658
+PASS fixture finds requested persisted egg colour
+PASS reload preserves existing species and shiny result
+PASS region revisit preserves cached species and colour
+PASS unchanged whole-save transfers the waiting egg
+PASS import preserves species and colour without reroll
+PASS fixture finds requested persisted egg colour
+PASS reload preserves existing species and shiny result
+PASS region revisit preserves cached species and colour
+PASS unchanged whole-save transfers the waiting egg
+PASS import preserves species and colour without reroll
+PASS new players still select their first starter
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS all 30 active/reserve arrangements survive, wrap around, skip fainted slots and preserve HP
+PASS all reserves fainted ends battle even when later slots exist and active cache looks alive
+PASS LAN rival in last slot survives with an earlier reserve
+PASS host replacement immediately reports the correct rival slot and HP
+PASS LAN host wraps to its living reserve and reports it
+PASS LAN win requires no live rival reserve, not the active index
+PASS simultaneous poison KO uses final HP and does not end two living teams
+PASS second fainted side remains queued after the first replacement
+PASS both replacements finish without an extra attack and synchronize to the guest
+PASS simultaneous active KO loses when only the rival has reserves
+PASS defeating the sole wild/one-off opponent wins without an unnecessary replacement
+PASS real gym entry also returns from the last slot to an earlier survivor
+PASS  sender snapshot exported
+PASS  received save imported
+PASS  restart flag stops the applying frame before autosave
+PASS  restart blocks pause/stop/resume/exit checkpoints and game ticks
+PASS  every imported key survives the Android shutdown sequence
+PASS  reopen restores received creature, dex, badges, party and box together
+PASS  repeated background callbacks never apply active-care ticks
+offline: 120 min aplicados (nv.7)
+PASS  two hours in background uses offline floors and adds no neglect
+PASS  background growth advances exactly once
+PASS  duplicate resume/focus events cannot replay time
+offline: 120 min aplicados (nv.7)
+PASS  cold launch and warm resume agree on offline growth and care
+offline: 60 min aplicados (nv.63)
+PASS  active companion gains three levels after an offline hour
+offline: 60 min aplicados (nv.66)
+PASS  active companion gains three more levels after warm resume
+PASS  backward clock correction never adds offline growth
+PASS  sleeping app checkpoint writes full 300-box disk snapshot
+PASS  process restart restores disabled sound and chosen volume after large roster
+PASS  cold startup restores manual sleep and first/last box residents
+offline: 2 min aplicados (nv.1)
+PASS  sleep survives offline minutes and restores exactly 8 energy per minute
+offline: 2 min aplicados (nv.1)
+PASS  warm resume preserves sleep without duplicate energy recovery
+PASS  manual wake saved
+PASS  manual wake also persists across process restart
+all good
+PASS  missing file starts a new save
+PASS  writes 22116-byte roster and later settings
+PASS  cold disk reopen preserves every byte including sound, volume and sleep
+PASS  atomic overwrite persists awake state and enabled sound at zero volume
+PASS  legacy small records and empty values remain compatible
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  truncation never exposes partial records or overwrites source
+PASS  trailing garbage rejected without changing original
+PASS  excessive record count rejected
+PASS  duplicate key rejected
+PASS  oversized value rejected before allocation
+PASS  valid save can be reopened after read failure
+PASS  write failure reported
+PASS  failed write stays dirty and succeeds on retry without force
+PASS  invalid output never replaces existing good save
+all good
+PASS new isolated fixture
+PASS ten actual daily care actions establish a ten-day streak
+PASS bringing a protected companion from box slot 300 retains current/best/date
+PASS box exchange does not rewrite player history to zero
+PASS returning the original growing individual also retains player history
+PASS save a genuine post-box-exchange snapshot in the unchanged disk format
+PASS 3.0.0 disk reader reproduces loss of current streak but retains best/date
+PASS old restart shows 0/10 and same-day care cannot increment it
+PASS old next-day care incorrectly restarts at one
+PASS 3.1.1 reader restores the identical file in full
+PASS 3.1.1 cold restart keeps ten-day history, bonus and incoming companion
+PASS same-day companion care keeps ten days
+PASS next-day companion care advances to eleven
+PASS simulate interruption while committing the active creature
+PASS persist interrupted swap fixture
+PASS disk restart and swap recovery preserve all player history
+PASS whole-save transfer imports streak fixture
+PASS Android/Wear/ESP transfer codec keeps streak, best and date
+PASS genuinely missing a full day still removes the bonus
+PASS real care gap resets only current streak, not best history
+all good
+PASS collectible target is 982 species, half is 491
+PASS neither goal retains original base probability
+PASS care ten days alone retains 10% shiny / 14% legend
+PASS dex fifty percent alone gives 10% shiny / 14% legend
+PASS both goals give exactly 15% shiny / 21% legend
+PASS every care day and collection count is monotonic, bounded and reaches cap only with both goals
+PASS over-goal and empty-future-dataset inputs are bounded without division by zero
+PASS odd future collectible counts require the first species above exact 50%
+PASS neither goal retains original base probability
+PASS care ten days alone retains 10% shiny / 14% legend
+PASS dex fifty percent alone gives 10% shiny / 14% legend
+PASS both goals give exactly 15% shiny / 21% legend
+PASS every care day and collection count is monotonic, bounded and reaches cap only with both goals
+PASS over-goal and empty-future-dataset inputs are bounded without division by zero
+PASS odd future collectible counts require the first species above exact 50%
+PASS real Pet routes both-goal odds into the existing egg lottery
+PASS legacy no-art registrations do not inflate collectible completion
+PASS shiny and duplicate registrations count the species only once
+PASS care gap removes care bonus but leaves permanent fifty-percent dex bonus
+PASS runaway still blocks legendary eggs, not dex shiny bonus
+PASS existing 25-registration legend gate remains
+PASS 25 registrations unlock legendary odds with dex contribution
+PASS changing bonus does not reroll an existing egg
+PASS unchanged v7 save transfer carries existing dex and care fields
+PASS reload/import recomputes identical bonuses without a new save field
+all good
+PASS 176 animated forms, no appearance category
+PASS three still-only forms are absent from the supported table
+PASS removed forms cannot be selected even at level 100
+PASS only still-only forms disappear; animated Eternamax remains
+PASS an old excluded form uses base art even if the former still file remains installed
+PASS every threshold, type, stat and ordinary evolution identity is valid
+PASS 60 / 70 / 80 categories
+PASS Charizard X changes Flying to Dragon in the real type chart
+PASS wrong species and unknown IDs use safe base data
+PASS Hearthflame Ivy Cudgel is Fire
+PASS Judgment follows the Arceus form
+PASS Multi-Attack follows the Silvally form
+PASS Techno Blast uses its drive type, not Bug/Steel
+PASS Dragon STAB changes actual damage after Mega X selection
+PASS battle action uses Fire Ivy Cudgel against Grass, not the original Grass move type
+PASS level 70 can select Mega Charizard X
+PASS live form, shiny and altered stats survive reload
+PASS good farewell still opens at original 73 / 24-hour boundary
+PASS no form unlock or transformation is required for good farewell
+PASS Mega Floette does NOT count as ordinary final evolution
+PASS party-to-box form and moves survive authoritative roster reload
+PASS box-to-party keeps the form with the individual
+PASS reviving carries the selected form
+PASS LAN wire retains form identity and derived stats
+PASS battle level caps do not undo a previously unlocked form
+PASS current whole save fits the new bound, including legacy recovery copies
+PASS form save enters transport
+PASS lossy multi-device transport preserves every form-save byte
+PASS form save restores
+PASS live and party forms restored together
+PASS unrecognized form ID is preserved, never rewritten to zero
+forms: roster unreadable; recovery copies are read-only
+PASS an unreadable/future roster cannot be overwritten through form selection
+PASS a failed roster read preserves the authoritative bytes for recovery
+PASS a new individual never inherits the previous form
+PASS old selected-form records still pass full-save transfer
+PASS excluded-form save keeps both individuals and IDs without deleting or renumbering them
+PASS excluded form safely uses base stats and can be reset explicitly
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS form page arrow navigates without leaving the modal
+PASS visible select button applies the displayed form
+PASS page wrap skips the removed Charizard Gmax entry
+PASS base form is still selectable after the list shrinks
+PASS animated Eternamax still requires level 80
+PASS animated Eternamax remains selectable at level 80
+PASS vertical back closes the form preview
+PASS all 176 normal and shiny-or-same-form-fallback sprites load through the real parser
+PASS old installed stills cannot reappear through the actual sprite loader
+PASS old installed stills cannot reappear through the actual sprite loader
+PASS old installed stills cannot reappear through the actual sprite loader
+PASS missing form thumbnail placeholder persists on cached redraws
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS party button exchanges a living pet without deleting either
+PASS outgoing individual preserves exact minute, energy, bond, IVs, training, moves, nickname, shiny and form
+PASS legacy companion behavior and player-wide achievements stay intact
+PASS returning the growing individual is allowed
+PASS the original grower resumes rather than becoming a retired companion
+PASS full storage stays full after reversible exchange
+PASS restored live care survives reopening the save
+PASS a full party still opens the last box slot's detail sheet
+PASS box bring-back button swaps directly with active pet at full capacity
+PASS box round trip restores the grower
+PASS TO PARTY still offers a storage-slot exchange when the party is full
+PASS box-to-party exchange leaves the live pet untouched
+PASS pending move decision blocks exchange without changing storage
+PASS an ending cannot be interrupted by exchanging pets
+PASS out-of-range indices are rejected
+PASS full roster, care metadata and recovery copies fit the v5 transport envelope
+PASS whole-save import accepts the enlarged care-aware save
+PASS cross-device save round trip keeps both active and boxed individuals
+PASS interrupted exchange replays the committed incoming pet and clears recovery only after verified saving
+PASS recovery is idempotent across another restart
+forms: roster write failed; recovery copies retained
+PASS failed atomic roster write rolls back RAM and retains both saved individuals
+PASS failed live-key write retains the committed recovery record
+PASS reboot repairs a partially written live save without duplicating or losing a Pokemon
+PASS beta.1/2 TFR1 records retain form and legacy companion policy
+PASS egg-time bring-back still frees the selected slot
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS 300 box slots and 50 numbered pages
+PASS rapid strike has its own learnset, not single strike's
+PASS appliance signatures do not leak between forms
+PASS both Kyurem fusion pools include their signatures
+PASS Galar Slowbro learns Shell Side Arm
+PASS all 69 overridden form pools are nonempty and bounded
+PASS form selection opens an offer without replacing any selected move
+PASS user chooses exactly which of the four moves to replace
+PASS chosen form move persists after restart
+PASS declining leaves all four moves intact and allows later relearning
+PASS all 300 individuals including indices beyond 255 survive reload
+PASS last page opens slot 300, not wrapped slot 44
+PASS boxed move picker targets the 300th individual
+PASS last boxed individual can exchange with the live pet
+PASS form selection accepts box indices above 255
+PASS form modal retains the full box target index
+PASS boxed form offer changes only the user-selected slot on individual 300
+PASS Surging Strikes is exactly three critical hits
+PASS Shell Side Arm chooses the stronger damage category
+PASS strict signatures cannot be used in the wrong form
+PASS full 300-slot save transfers in version 5
+PASS transfer retains the last boxed form
+PASS beta.3/4 TFR2 migration preserves all 60 old positions and clears only the new tail
+PASS unknown clock keeps only the earned 25-species dex bonus
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS daily care increases both weights, capped at day ten
+PASS multiple care actions do not count as multiple days
+PASS day ten retains its full care bonus plus the 25-species contribution
+  day 1: 481 shiny / 5000 actual hatches
+PASS actual egg creation and hatching use daily shiny odds
+  day 10: 731 shiny / 5000 actual hatches
+PASS actual egg creation and hatching use daily shiny odds
+PASS farewell classification and individual bond no longer set these bonuses
+PASS farewell classification and individual bond no longer set these bonuses
+PASS farewell classification and individual bond no longer set these bonuses
+PASS actual egg species lottery uses the day-ten legendary weight
+PASS runaway retains common-only restriction, not a shiny bonus penalty
+PASS legendary gate still requires 25 registered species
+PASS yesterday's care remains valid before today's first action
+PASS missing a full care day removes only care bonus, retaining the dex contribution
+PASS care after a gap restarts at day one
+PASS clock rollback cannot farm care days
+PASS care resumes normally after the clock catches up
+PASS caring for a companion counts for the player too
+PASS early retire consumes exactly one allowance
+PASS duplicate requests during ceremony do not consume more
+PASS earned farewell shares the allowance and keeps correct classification
+PASS long-press live release consumes the third allowance
+PASS all three voluntary paths reject a fourth farewell
+PASS restart does not refill the allowance
+PASS free companion exchange preserves player streak and spent allowance
+PASS returning to the original creature is still allowed
+PASS deleting banked creatures does not consume or reset live allowance
+PASS whole-save includes the daily counter
+PASS cross-device payload imports successfully
+PASS save transfer retains both allowance and streak
+PASS backward clock does not refill allowance
+PASS last second before midnight remains exhausted
+PASS local midnight replenishes three farewells
+PASS quota write failure does not start retirement or lose the creature
+PASS retry after storage recovers charges once
+PASS existing egg species and shiny roll are preserved on reload
+PASS old saves without the new field preserve care history and start with three
+PASS missing clock cannot refill three uses on restart
+all good
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS trainer screen displays collectible goal with both capped probabilities
+PASS dex-only screen retains the standalone goal odds
+PASS retire menu opens confirmation while allowance remains
+PASS exhausted menu cannot open a fourth farewell
+PASS rendering and opening menus do not refill allowance
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS previous on first page stays in box
+PASS next button advances to page two
+PASS previous button returns to page one
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS page number opens a modal page picker
+PASS each of fifty numbered pages is directly reachable
+PASS next on last page is inert, not an accidental exit
+PASS picker cannot advance past the final group
+PASS picker margins do not tap the box underneath
+PASS swipe pages the picker group without moving stored creatures
+PASS vertical swipe cancels picker without leaving the box
+PASS picker back button returns to the same box page
+PASS all paging operations leave all 300 stored individuals unchanged
+PASS direct page jump preserves a pending party-to-box exchange
+PASS pending exchange first opens the 300th slot sheet
+PASS explicit exchange on page fifty affects exactly the 300th slot
+PASS last stored creature still opens its detail sheet
+PASS closing detail returns to box without entering navigation
+PASS box back still closes the box
+PASS restart resumes ceremony without charging another farewell
+PASS ceremony commits a durable bank handoff before creating an egg
+PASS restart before banking keeps the waiting individual and egg
+PASS waiting individual can be banked normally
+PASS restart between banking and acknowledgement detects the exact already-banked individual
+PASS handoff acknowledgement persists
+PASS another restart neither duplicates nor drops the retired Pokemon
+PASS crash after handoff but before egg save cannot leave both live and banked copies
+PASS pending farewell survives whole-save transport
+PASS import resumes the same pending handoff
+PASS handoff storage failure keeps the live Pokemon instead of erasing it
+PASS failed acknowledgement retains a retryable handoff without another insertion
+PASS early retirement remains unbanked after a ceremony restart
+save: invalid live species; safely restoring an egg
+PASS invalid saved live species cannot index outside the Pokedex
+save: invalid live species; safely restoring an egg
+PASS invalid saved live species cannot index outside the Pokedex
+save: invalid live species; safely restoring an egg
+PASS invalid saved live species cannot index outside the Pokedex
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS box button opens ordinary browsing without a swap
+PASS direct tap with full party and 300 boxes opens details without moving anything
+PASS direct release asks before deleting
+PASS No keeps the individual and its sheet
+PASS Yes removes only the boxed Pokemon and returns to box
+PASS boxed release does not consume a farewell or touch active Pokemon
+PASS direct release persists across reload
+PASS party-side exchange is explicitly armed
+PASS pending party exchange cannot bypass box details
+PASS release remains reachable during pending exchange
+PASS back cancels release without changing the page
+PASS only the explicit middle button completes the pending exchange
+PASS horizontal back closes details before paging
+PASS vertical back closes details before leaving box
+PASS leaving box clears stale exchange state
+PASS last page supports the same direct menu
+PASS 300th slot direct release is independent of daily quota
+PASS ordinary TO PARTY still selects a slot when party is full
+PASS box-to-party full exchange preserves both Pokemon
+PASS empty destination still supports party deposit
+forms: roster write failed; recovery copies retained
+PASS failed storage write cannot pretend release succeeded
+PASS failed release preserves the saved individual
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS empty sort does not write storage
+PASS single last-slot individual moves to front
+PASS full 300-slot dex sort succeeds
+PASS dex ascending preserves every byte of all 300 records, forms and care included
+PASS same dex and level retain original order across forms and shinies
+PASS level sort succeeds
+PASS level descending preserves full records
+PASS repeated sort is idempotent
+PASS Korean canonical sort also works in English UI
+PASS Gadi, Kkobugi, Isanghaessi, Pairi, Pikachu order ignores nicknames; ties use level
+PASS holes are packed to end across all 50 pages
+PASS sorted order survives reload
+PASS sorted v7 save exports and imports without a format change
+PASS whole-save import retains exact sorted record order
+PASS sorting does not change party, live care or farewell quota
+PASS invalid sort criterion is rejected
+PASS invalid species cannot index outside name table
+PASS sort button opens full-box menu on last page
+PASS name row asks for confirmation
+PASS confirmation margins cannot select underlying box
+PASS No returns to sort menu
+PASS cancel preserves current page, pending exchange and save
+PASS swipe first cancels confirmation, not page
+PASS confirmed sort resets page and stale slot selections
+PASS sorted slot opens correct individual
+PASS cancelled release after sort preserves the selected individual
+PASS sorted slot supports full-party exchange selection
+PASS exchange acts on sorted slot, not stale index
+forms: roster write failed; recovery copies retained
+PASS write failure displays error and retains UI context
+PASS write failure restores every RAM record and keeps durable snapshot
+PASS read-only storage rejects further sorting
+PASS failure recovery reloads the original order
+PASS unfinished active-swap journal prevents sorting until recovery
+PASS  comes back at the level it was banked at
+PASS  keeps its shininess and its name
+PASS  and its moveset
+PASS  and retains the serialized companion protection flag
+     after ~400 game-minutes: level 81 (was 61)
+PASS  gains 20 levels in 400 active minutes
+PASS  is never offered a farewell
+PASS  cannot run away even when wholly neglected
+PASS  final species has no further normal evolution
+PASS  captured pre-evolution grows to its evolution gate
+PASS  normal evolution retains companion protection
+PASS  new growth and companion protection survive reload
+PASS  a new egg is not frozen
+all good
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS legacy captured record starts active at its stored level with protection
+PASS captured level does not increase before 20 minutes
+PASS captured companion reaches normal evolution gate after 20 minutes
+PASS evolution changes species and keeps ending protection
+PASS evolution keeps all four IVs unchanged
+PASS growing captured companion can be parked again
+PASS parked companion does not age while another Pokemon is active
+PASS bringing it back restores partial progress within a level
+PASS remaining 13 minutes complete the next level without rerolling IVs
+PASS growth and protection persist across an ordinary save reload
+PASS good farewell produces a level 73 stored individual
+PASS farewelled individual can be brought back from the final box slot
+PASS farewelled companion grows without repeat farewell or quota use
+PASS growth does not remove runaway protection
+PASS companion level remains capped at 100
+PASS attack/defense use form-adjusted stats with raw IVs in compact parentheses
+PASS speed/HP pair uses the right IVs with no extra label in the UI
+PASS English detail UI uses the same unambiguous IV mapping
+PASS: wild_result,shiny_eggs,battle_reserves,android_lifecycle,nvs_file,streak_persistence,dex_rewards,forms,forms_ui,active_swap,form_moves,daily_rewards,daily_rewards_ui,box_pages,ending_recovery,box_direct,box_sort,revive,companion_growth

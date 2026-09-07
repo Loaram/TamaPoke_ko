@@ -1,0 +1,18 @@
+TamaPoke fw v3.5.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS LAN menu opens individual transfer separately from whole-save
+PASS swap opens roster selection
+PASS previous button wraps to last page
+PASS last box Pokemon selected without truncating index
+PASS receiver details shown before approval
+PASS detail back does not approve
+PASS only explicit confirm persists approval
+PASS confirmed trade cannot be closed by tap or swipe
+PASS preview/approval leave active Pokemon and player rewards untouched
+PASS actual UI commit callback saves the received Pokemon and registers its Dex
+PASS received Dex registration preserves active Pokemon, farewell quota and streak
+PASS receiving with full party and box is refused before connection
+PASS: trade_ui
