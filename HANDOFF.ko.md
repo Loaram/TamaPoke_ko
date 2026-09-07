@@ -6,7 +6,7 @@
 
 정식 3.3.0 배포 이후 로컬 수정입니다. 탐색 이로치를 1/100으로 조정하고, 새 알의 이로치 여부를 종보다 먼저 뽑아 이로치 알은 일반 도감 미등록 계보 우선을 건너뜁니다. 일반 알의 우선순위·첫 스타팅·지역/희귀도/그림 지원 조건과 기존 알 저장은 유지합니다. 다음 배포 번호는 밸런스 변경에 해당하는 **3.4.0**으로 준비해야 하며, 아직 FW_VERSION·APK 번호·공개 파일은 올리지 않았습니다.
 
-`tools/emu/tests/shiny_eggs_test.cpp`와 `wild_test.cpp`에 재현 검사를 추가했습니다. 새 전체 검사 수는 52개입니다. PC 및 ESP 빌드는 통과했습니다(ESP 앱 2,264,096바이트). Windows Smart App Control이 새 wild.exe와 explore.exe를 WinError 4551로 차단하여, 사용자 승인 후 `codex/shiny-balance-check` 검사 브랜치에서 GitHub 자동 검증을 진행합니다. 보안 설정을 해제하거나 검사 통과로 처리하지 마세요. 로컬 점검 파일은 `build/shiny-balance/`입니다. 새 APK/가이드와 정식 배포는 별도 후속 단계이며 main·현재 릴리스·Pages를 변경하지 않습니다. 자세한 규칙은 [작업 메모](docs/SHINY-BALANCE.ko.md)를 확인하세요.
+`tools/emu/tests/shiny_eggs_test.cpp`와 `wild_test.cpp`에 재현 검사를 추가했습니다. Windows Smart App Control이 로컬 실행을 차단하여, 사용자 승인 후 `codex/shiny-balance-check`의 코드 커밋 `dd23e61bf5c97033c7105bae3c2cb4949d661714`을 GitHub에서 검증했습니다. **전체 52개 런타임·SD 실패 10개·정적 검사·PC/ESP 빌드가 모두 통과**했습니다([자동 검사 34074244599](https://github.com/Loaram/TamaPoke_ko/actions/runs/34074244599)). 보안 설정은 변경하지 않았습니다. 로컬 ESP 앱은 2,264,096바이트, CI ESP 앱은 2,264,032바이트입니다. 로컬 로그는 `build/shiny-balance/`입니다. 새 APK/가이드와 정식 배포는 별도 후속 단계이며 main·현재 릴리스·Pages를 변경하지 않았습니다. 자세한 규칙은 [작업 메모](docs/SHINY-BALANCE.ko.md)를 확인하세요.
 
 ## 현재 3.3.0 탐색 결과 확인창
 
