@@ -2,7 +2,7 @@
 import argparse, hashlib, json, os, re, subprocess, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('action',choices=['status','create','upload','publish','verify','workflows','jobs','discard-draft'])
+p=argparse.ArgumentParser();p.add_argument('action',choices=['status','create','upload','publish','verify','workflows','jobs','discard-draft','add-watch-installer'])
 p.add_argument('--notes',type=Path);p.add_argument('--commit');p.add_argument('--assets',type=Path);p.add_argument('--run',type=int)
 p.add_argument('--discard-version',help='explicit obsolete draft version; local matching assets are required')
 a=p.parse_args()
@@ -57,7 +57,53 @@ if release is None:
     matches=[x for x in api('/releases?per_page=100') if x['tag_name']==version]
     assert len(matches)<=1,'Multiple releases use this version; inspect before continuing'
     release=matches[0] if matches else None
-if a.action=='create':
+if a.action=='add-watch-installer':
+    # Add only the explicitly requested installer supplement; never replace public assets.
+    import zipfile
+    assert release and not release['draft'] and a.assets and a.notes
+    archive_name=f'TamaPoke-{version}-Watch-Installer-Windows.zip'
+    guide_name=f'TamaPoke-{version}-Watch-Installer-Guide-KO.pdf'
+    sums_name='WATCH-INSTALLER-SHA256SUMS.txt'
+    files={f.name:f for f in a.assets.iterdir()}
+    assert set(files)=={archive_name,guide_name,sums_name} and all(f.is_file() for f in files.values())
+    expected_sums=''.join(digest(files[n])[7:]+'  '+n+'\n' for n in sorted((archive_name,guide_name)))
+    assert files[sums_name].read_text(encoding='ascii')==expected_sums
+    existing={v['name']:v for v in release['assets']}
+    original={v['name']:(v['id'],v['size'],v.get('digest')) for v in release['assets']}
+    wear=existing[f'TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk']
+    prefix=archive_name[:-4]+'/'
+    with zipfile.ZipFile(files[archive_name]) as z:
+        names=z.namelist()
+        required={'TamaPoke-Watch-Installer.exe','TamaPoke-WearOS.apk','adb.exe','AdbWinApi.dll','AdbWinUsbApi.dll','Watch-Installer-Guide-KO.pdf','SHA256SUMS.txt','version.txt','NOTICE.txt','LICENSE','CREDITS.md','먼저 읽어주세요.txt'}
+        assert len(names)==len(set(names)) and {prefix+n for n in required}<=set(names)
+        assert set(names)<={prefix+n for n in required|{'libwinpthread-1.dll','source.properties'}}
+        assert z.testzip() is None
+        with z.open(prefix+'TamaPoke-WearOS.apk') as stream:
+            assert 'sha256:'+hashlib.file_digest(stream,'sha256').hexdigest()==wear['digest'],'Not the published official APK'
+        assert 'sha256:'+hashlib.sha256(z.read(prefix+'Watch-Installer-Guide-KO.pdf')).hexdigest()==digest(files[guide_name])
+    backup=a.assets.parent/'release-before-watch-installer.json'
+    if not backup.exists():backup.write_text(json.dumps(release,ensure_ascii=False,indent=2),encoding='utf8')
+    for name,f in sorted(files.items()):
+        if name in existing:
+            assert existing[name]['size']==f.stat().st_size and existing[name].get('digest')==digest(f),'Never overwrite an existing asset'
+            print('Already uploaded: '+name,flush=True);continue
+        print('Uploading: '+name,flush=True)
+        url=release['upload_url'].split('{')[0]+'?name='+urllib.parse.quote(name)
+        with f.open('rb') as stream:
+            uploaded=api(url,'POST',stream,{'Content-Type':'application/octet-stream','Content-Length':str(f.stat().st_size)})
+        assert uploaded['size']==f.stat().st_size and uploaded.get('digest')==digest(f)
+    addition=a.notes.read_text(encoding='utf8').strip()
+    marker='<!-- watch-installer-supplement -->'
+    body=release.get('body') or ''
+    if marker in body:
+        assert addition in body,'Existing supplement notes differ; inspect manually'
+    else:
+        release=api('/releases/'+str(release['id']),'PATCH',{'body':body+'\n\n'+marker+'\n'+addition})
+    release=api('/releases/tags/'+version)
+    after={v['name']:(v['id'],v['size'],v.get('digest')) for v in release['assets']}
+    assert all(after[n]==v for n,v in original.items()),'Original assets changed'
+    assert not release['draft'] and set(after)==set(original)|set(files)
+elif a.action=='create':
     assert a.notes and a.commit and re.fullmatch(r'[0-9a-f]{40}',a.commit)
     assert api('/commits/'+a.commit),'Commit has not been pushed'
     payload=dict(tag_name=version,target_commitish=a.commit,name='TamaPoke '+version,body=a.notes.read_text(encoding='utf8'),draft=True,prerelease=False)

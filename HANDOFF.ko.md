@@ -1,5 +1,9 @@
 # TamaPoke 한국어판 — 다른 PC에서 이어가기
 
+## 3.5.0 Windows 워치 설치 도우미 부속 배포
+
+`tools/watch_installer/`의 Windows GUI를 3.5.0 정식 Wear APK로 묶습니다. `tools/build_watch_installer.py --guide <검수한 PDF>`로 빌드하며 게임은 재빌드하지 않습니다. `tools/build_watch_installer_guide.py --preview <창 PNG>`는 ReportLab으로 별도 7쪽 PDF를 생성합니다. 설치 전 백업·미완료 교환 확인과 PDF 열기 버튼을 추가했습니다. 자동 검사 30개와 화면·ZIP 검증을 수행하며 실기 설치는 미검증으로 표시합니다. 공개 릴리스에 ZIP/PDF/전용 SHA 3개만 추가하고 기존 6개 자산과 게임 태그는 유지합니다. 상세: [도우미 안내](docs/WATCH-INSTALLER-3.5.0.ko.md).
+
 ## 현재 3.5.0 개체 전송 / 교환
 
 사용자 지정 3.5.0, Android 3028 / Wear 3029입니다. 파티·박스 한 마리 보내기와 1:1 교환을 별도 거래 규격 1로 추가합니다. 기존 저장 v7, 개체 72바이트, 배틀 프로토콜 5는 유지합니다. 기기 로컬 거래 저널·완료 영수증과 파일 영구 저장 성공 확인을 사용하며 거래 중 백업/복원과 보관 변경을 막습니다. 미완료 확정은 같은 상대와 재연결해 끝냅니다. 원본 전체 복사 기능과 혼동하지 마세요. [사용법](docs/RELEASE-3.5.0.ko.md), [설계·한계](docs/INDIVIDUAL-TRANSFER.ko.md). 아래는 이전 버전의 기록입니다.
