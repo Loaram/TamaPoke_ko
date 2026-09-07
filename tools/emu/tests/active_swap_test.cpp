@@ -60,7 +60,7 @@ int main(){
   ck(!memcmp(&before,&after,sizeof(before))&&party.box[59].dex==159,"cross-device save round trip keeps both active and boxed individuals");
   // Simulate power loss after the atomic roster commit but before any live key write.
   auto committed=nvs()["rosterF"];PartyMon next=party.slots[0];
-  Pet normalized;normalized.reviveFrom(next);next=normalized.storageSnapshot();
+  Pet normalized;normalized.energy=pet.energy;normalized.reviveFrom(next);next=normalized.storageSnapshot();
   memcpy(committed.data()+8,&before,PARTY_RECORD_BYTES);
   memcpy(committed.data()+8+PARTY_RECORD_BYTES*(PARTY_STORAGE_SLOTS+BOX_SLOTS),&next,PARTY_RECORD_BYTES);
   committed[5]=1;checksum(committed);nvs()["rosterF"]=committed;

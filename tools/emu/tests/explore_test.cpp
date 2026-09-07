@@ -58,11 +58,11 @@ int main() {
   ck(wildLevel >= 55 && wildLevel <= 65,
      "a level-60 team gets the requested normal level range");
   ck(btlSquadN == 6, "the live Pokemon plus five party members form a six-Pokemon squad");
-  ck(pet.energy == 70, "starting that battle charges exactly 30 energy");
+  ck(pet.energy == 100-WILD_ENERGY_COST, "starting a battle charges exactly the configured energy cost");
 
   battleOpen = false; btlWild = false;
-  pet.energy = 29;
-  ck(!startWildBattle(false) && exploreNotice == 1 && pet.energy == 29,
+  pet.energy = WILD_ENERGY_COST-1;
+  ck(!startWildBattle(false) && exploreNotice == 1 && pet.energy == WILD_ENERGY_COST-1,
      "insufficient energy blocks the attempt without charging");
 
   party.replaceAt(5, level60(143));

@@ -66,6 +66,7 @@ void Pet::begin() {
   for (int i = 0; i < REGION_COUNT; i++) eggByRegion[i] = 0;
   if (!prefs.getBool("init", false)) {
     prefs.putBool("init", true);
+    energy = 80; // Only a new game/reset creates the shared energy pool.
     newEgg();
   } else {
     load();
@@ -119,7 +120,7 @@ void Pet::newEgg() {
   eggTaps = 0;
   fullness = 80;
   joy = 80;
-  energy = 80;
+  // Energy belongs to the player; a new egg must not refill it.
   hygiene = 100;
   poops = 0;
   ageMinutes = 0;
@@ -346,6 +347,7 @@ void Pet::tick() {
 // Legacy companions retain ending protection; all active individuals can grow.
 void Pet::reviveFrom(const PartyMon &m) {
   if (m.empty()) return;
+  const uint8_t sharedEnergy = energy;
   ceremony = CER_NONE;
   neglectTicks = 0;
   speciesId = m.dex;
@@ -369,7 +371,7 @@ void Pet::reviveFrom(const PartyMon &m) {
   bondToday = 0;
   berryKnown = false;
   weight = 0;
-  fullness = joy = energy = 80;
+  fullness = joy = 80;
   hygiene = 100;
   poops = 0;
   frozen = true;
@@ -380,6 +382,9 @@ void Pet::reviveFrom(const PartyMon &m) {
   evoDeclinedLv = 0;
   farDeclinedAge = 0;
   restoreCare(m);
+  // Banked/traded care is individual, but its old energy is only a legacy
+  // snapshot. Bringing a different Pokemon never replaces the player's pool.
+  energy = sharedEnergy;
   endedMon = PartyMon(); endedKind = CER_NONE;
   retirePending = false;
   eatUntil = heartUntil = evolveUntil = ceremonyUntil = medalUntil = 0;

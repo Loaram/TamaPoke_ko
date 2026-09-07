@@ -56,6 +56,6 @@ int main(){
      "read-only, trade and recovery locks refuse both Explore modes before charging or rolling");
  }
  fresh();exploreRegion=REGION_ALL;
- ck(startWildBattle(false)&&pet.energy==70,"healthy storage still allows Explore at its original cost");
+ ck(startWildBattle(false)&&pet.energy==100-WILD_ENERGY_COST,"healthy storage allows Explore at its configured cost");
  return bad?1:0;
 }

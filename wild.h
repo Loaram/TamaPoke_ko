@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 
-#define WILD_ENERGY_COST 30
+#define WILD_ENERGY_COST 22
 #define WILD_LEVEL_SPREAD 5
 #define WILD_SHINY_SCALE 100
 #define WILD_SHINY_IV_FLOOR 20

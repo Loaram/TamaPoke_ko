@@ -275,7 +275,9 @@ bool Party::swapActive(Pet &pet, bool fromBox, uint16_t index) {
   if(slot.empty() || (slot.care[0]!=0 && slot.care[0]!=1)) return false;
   PartyMon before=slot;
   // Normalize legacy companions without writing NVS or changing player progress.
-  Pet incoming; incoming.lastSeenEpoch=pet.lastSeenEpoch; incoming.reviveFrom(slot);
+  Pet incoming; incoming.lastSeenEpoch=pet.lastSeenEpoch;
+  incoming.energy=pet.energy;
+  incoming.reviveFrom(slot);
   if(!incoming.moveCount()) incoming.relearnFromLevel();
   pendingLive=incoming.storageSnapshot();
   slot=pet.storageSnapshot(); // empty when an egg was waiting, as before
@@ -329,7 +331,12 @@ bool Party::finishActiveSwap(Pet &pet, bool recovering) {
     if(!oldLive)return false;
   }
   if(retain) pet.saveNow(); // pet.begin() already loaded the latest moves/care/queue
-  else pet.reviveFrom(pendingLive);
+  else {
+    // The atomic roster journal owns the shared energy at the swap boundary.
+    // Replay this value even if an interrupted live-key write left stale energy.
+    pet.energy=pendingLive.care[4];
+    pet.reviveFrom(pendingLive);
+  }
   if(!pet.storedIndividualMatches()) return false;
   PartyMon committed=pendingLive;
   pendingLive=PartyMon();

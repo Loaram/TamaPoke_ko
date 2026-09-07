@@ -22,8 +22,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.6.1-Play-Guide-KO.pdf"
-VERSION = "3.6.1"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.0-Play-Guide-KO.pdf"
+VERSION = "3.7.0"
 PAGE_TOTAL = 29
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -252,7 +252,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.6.1",
+            "플레이 설명서 · 3.7.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -263,7 +263,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-07", CENTER),
+        p("2026-09-08", CENTER),
     ]
 )
 page_break(story)
@@ -474,8 +474,8 @@ story.extend(
 page_break(story)
 
 # 11. Explore overview
-story.extend(page_heading("10 탐색", "야생 포켓몬을 만나는 방법", "메뉴에서 탐색을 열고 지방과 탐색 방식을 선택합니다. 조우가 시작될 때 활력 30을 사용합니다."))
-story.append(screenshot_pair(qa_current / "guide-explore.png", qa_current / "guide-wild.png"))
+story.extend(page_heading("10 탐색", "야생 포켓몬을 만나는 방법", "메뉴에서 탐색을 열고 지방과 탐색 방식을 선택합니다. 조우가 시작될 때 공용 활력 22를 사용합니다."))
+story.append(screenshot_pair(ROOT / "docs/qa/3.7.0/guide-explore.png", qa_current / "guide-wild.png"))
 story.extend(
     [
         Spacer(1, 4 * mm),
@@ -483,14 +483,15 @@ story.extend(
             [
                 "홈에서 포켓몬 이름을 눌러 메뉴를 열고 <b>탐색</b>을 선택합니다.",
                 "찾고 싶은 포켓몬이 속한 지방을 고릅니다.",
-                "일반 또는 랜덤을 고릅니다. 시작 순간 활력 30이 차감되며 승패와 관계없이 돌려받지 않습니다.",
+                "일반 또는 랜덤을 고릅니다. 시작 순간 공용 활력 22가 차감되며 승패와 관계없이 돌려받지 않습니다.",
                 "야생 포켓몬을 쓰러뜨리면 몬스터볼 포획 판정이 한 번 진행됩니다.",
                 "별도 결과창에서 포획 성공·실패와 보관 위치를 확인합니다. <b>확인</b>을 누르면 탐색으로 돌아갑니다. 자세한 화면은 25쪽을 보세요.",
             ]
         ),
         Spacer(1, 4 * mm),
         p("탐색 시작 조건", H2),
-        p("현재 포켓몬이 알·수면·작별 연출 상태가 아니어야 하며 활력이 30 이상이어야 합니다. 포획할 자리를 위해 파티 또는 300칸 박스에 빈 칸도 하나 이상 필요합니다.", CALLOUT),
+        p("알·수면·작별 연출 중이 아니며 활력이 22 이상이어야 합니다. 파티 또는 박스에 빈 칸도 필요합니다. 활력 100에서는 회복 없이 최대 4회 탐색하며 12가 남습니다.", CALLOUT),
+        p("활력은 모든 동료가 함께 씁니다. 포획·데려오기·새 알 생성으로 회복되지 않습니다. 잠을 자면 분당 8씩 회복하며 최대 100입니다.", SAFE),
     ]
 )
 page_break(story)
@@ -678,7 +679,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.6.1", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -735,7 +736,7 @@ story.extend([
 page_break(story)
 story.extend(page_heading("21 보관과 안전", "자유 교체와 세이브를 지키는 방법", "현재 포켓몬과 보관 개체의 교환은 알이 아닐 때도 가능합니다."))
 story.extend([
-    step_table(["파티나 박스에서 데려올 포켓몬을 누릅니다.", "상세창의 <b>데려오기</b>를 누르면 현재 포켓몬은 그 보관 칸으로 들어오고 선택한 포켓몬이 홈으로 옵니다.", "키우던 개체의 성장 분·폼·기술·개체값·훈련·돌봄·유대는 그대로 보존됩니다. 보관 중에는 성장과 돌봄 시간이 흐르지 않습니다.", "포획한 개체나 좋은 작별로 남은 동료도 홈으로 데려오면 현재 레벨에서 성장하고 조건을 만족하면 진화합니다. 보관 중에는 멈춥니다."]),
+    step_table(["파티나 박스에서 데려올 포켓몬을 누릅니다.", "상세창의 <b>데려오기</b>를 누르면 현재 포켓몬은 그 보관 칸으로 들어오고 선택한 포켓몬이 홈으로 옵니다.", "성장 분·폼·기술·개체값·훈련·돌봄·유대는 보존되며 보관 중에는 멈춥니다. 단, <b>활력은 공용</b>이므로 교체 전 수치를 그대로 이어받습니다.", "포획한 개체나 좋은 작별로 남은 동료도 홈으로 데려오면 현재 레벨에서 성장하고 조건을 만족하면 진화합니다. 보관 중에는 멈춥니다."]),
     Spacer(1, 5*mm),
     p("ESP32의 SD 카드", H2),
     bullet("300칸 보관 기록은 SD에 기기별 이중 저장합니다. 기존 NVS 파티션을 바꾸지 않고 이전 저장을 읽습니다. Android·워치·PC는 기존 내부 저장 방식을 사용합니다."),
@@ -787,7 +788,7 @@ story.extend([
     Spacer(1,3*mm),
     bullet("아래 <b>확인</b> 버튼을 눌러 탐색으로 돌아갑니다. 창 바깥 터치·스와이프로 닫히지 않으며, 마지막 기술 선택 때의 연속 터치로 바로 닫히지 않도록 잠깐 보호합니다."),
     bullet("이름 옆 <b>*</b>는 이로치 표시입니다. 성공한 포켓몬은 확인 버튼을 누르기 전에 이미 보관되며, 화면을 다시 그리거나 확인을 눌러도 포획 판정을 반복하지 않습니다."),
-    bullet("포획 실패 후에는 다음 탐색에서 다시 만나 승리해야 합니다. 같은 결과창에서 공을 다시 던지는 기능은 없습니다. 탐색 시작에는 활력 30을 쓰며, 다음 포획은 그때의 도감 등록 수에 따른 보너스를 적용합니다."),
+    bullet("포획 실패 후에는 다음 탐색에서 다시 만나 승리해야 합니다. 같은 결과창에서 공을 다시 던지는 기능은 없습니다. 탐색 시작에는 공용 활력 22를 쓰며, 다음 포획은 그때의 도감 등록 수에 따른 보너스를 적용합니다."),
     p("보관 오류가 나오면 새 포획을 반복하지 말고 저장 공간을 확인하세요. ESP는 원래 microSD를 확인한 뒤 앱/기기를 다시 실행하고 파티·박스의 실제 보관 상태를 확인하세요. 앱 데이터 삭제나 SD 포맷은 하지 마세요.", SAFE),
 ])
 

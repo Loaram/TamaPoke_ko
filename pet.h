@@ -86,7 +86,7 @@ public:
   // Estadisticas 0..100
   uint8_t fullness = 80;  // comida
   uint8_t joy = 80;       // felicidad
-  uint8_t energy = 80;    // energia
+  uint8_t energy = 80;    // player-wide pool; preserved across companions/eggs
   uint8_t hygiene = 100;  // limpieza
   uint8_t poops = 0;      // cacas en pantalla (max 3)
   uint8_t weight = 0;     // 0-100: las chuches engordan, el minijuego quema

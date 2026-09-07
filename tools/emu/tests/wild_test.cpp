@@ -120,11 +120,11 @@ int main() {
 
   nvs().clear();
   Pet p; p.begin(); p.dbgHatchAs(9, false);
-  p.energy = 30;
+  p.energy = WILD_ENERGY_COST;
   ck(p.spendEnergy(WILD_ENERGY_COST) && p.energy == 0,
-     "an encounter spends 30 existing energy");
+     "an encounter spends exactly the configured energy");
   ck(!p.spendEnergy(WILD_ENERGY_COST) && p.energy == 0,
-     "an encounter cannot start without 30 energy");
+     "an encounter cannot start below the configured energy cost");
   Pet reloaded; reloaded.begin();
   ck(reloaded.energy == 0, "the energy charge is persisted immediately");
   p.registerCaughtSpecies(150, true);
