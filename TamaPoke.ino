@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.5.3"
+#define FW_VERSION "3.6.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -3818,7 +3818,7 @@ static uint8_t storeWildCapture() {
 void finishWildBattle() {
   if (!btlWild || !btlOver || wildResult != WILD_RESULT_NONE) return;
   wildResult = !btlWon ? WILD_RESULT_LOST :
-      wildCaptureNow(wildCatchRateForDex(wildDex)) ? storeWildCapture() : WILD_RESULT_ESCAPED;
+      wildCaptureNow(wildCatchRateForDex(wildDex), pet.collectibleRegisteredCount()) ? storeWildCapture() : WILD_RESULT_ESCAPED;
   btlMsgCount = 0; // A result is a modal, never a fifth/sixth narration line.
   wildResultRendered = false;
   wildResultReadyAt = millis() + 450;

@@ -3,6 +3,7 @@
 #include "dex.h"
 #include "noart.h"
 #include "pet.h"
+#include "pokedex_progress.h"
 
 static uint32_t isqrt32(uint32_t value) {
   uint32_t result = 0;
@@ -88,11 +89,21 @@ uint8_t wildCatchRateForDex(int16_t dex) {
   return catchRateForDex(dex);
 }
 
-uint32_t wildCaptureShakeThreshold(uint8_t catchRate) {
+uint16_t wildCaptureBallTenths(uint16_t registered) {
+  const uint16_t total = pokedexCollectibleCount();
+  if (registered > total) registered = total;
+  return 10U + 2U * (registered / 100U);
+}
+
+uint16_t wildCaptureRarePermille(uint16_t registered) {
+  return 25U * wildCaptureBallTenths(registered) / 10U;
+}
+
+uint32_t wildCaptureShakeThreshold(uint8_t catchRate, uint16_t registered) {
   if (!catchRate) return 0;
-  // Emerald: a = catchRate * (3*maxHP - 2*HP) / (3*maxHP).
-  // With a Pokeball (x1), HP fixed to exactly 10%, and no status this is 14/15.
-  uint32_t odds = (uint32_t)catchRate * 14U / 15U;
+  // Preserve Emerald's two integer truncations: apply the ball bonus first,
+  // then the fixed HP ratio 14/15. Widen before multiplying (not uint8_t).
+  uint32_t odds = ((uint32_t)catchRate * wildCaptureBallTenths(registered) / 10U) * 14U / 15U;
   if (odds > 254) return 65536;
   if (!odds) return 0;
   uint32_t root = isqrt32(isqrt32(16711680UL / odds));
@@ -100,19 +111,17 @@ uint32_t wildCaptureShakeThreshold(uint8_t catchRate) {
 }
 
 bool wildCaptureCheck(uint8_t catchRate, uint16_t rareRoll,
-                      const uint16_t shakeRolls[4]) {
-  // Canonical rate 3 is about 0.8% here. The beta deliberately raises only
-  // that lowest tier to exactly 25/1000 = 2.5% per defeated encounter.
-  if (catchRate == 3) return (rareRoll % 1000U) < 25U;
-  uint32_t threshold = wildCaptureShakeThreshold(catchRate);
+                      const uint16_t shakeRolls[4], uint16_t registered) {
+  if (catchRate == 3) return (rareRoll % 1000U) < wildCaptureRarePermille(registered);
+  uint32_t threshold = wildCaptureShakeThreshold(catchRate, registered);
   if (threshold >= 65536) return true;
   for (uint8_t i = 0; i < 4; i++)
     if (shakeRolls[i] >= threshold) return false;
   return true;
 }
 
-bool wildCaptureNow(uint8_t catchRate) {
+bool wildCaptureNow(uint8_t catchRate, uint16_t registered) {
   uint16_t shakes[4];
   for (uint8_t i = 0; i < 4; i++) shakes[i] = (uint16_t)random(65536);
-  return wildCaptureCheck(catchRate, (uint16_t)random(1000), shakes);
+  return wildCaptureCheck(catchRate, (uint16_t)random(1000), shakes, registered);
 }

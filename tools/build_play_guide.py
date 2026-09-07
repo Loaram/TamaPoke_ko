@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from capture_guide_data import capture_rows
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
@@ -21,9 +22,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.5.3-Play-Guide-KO.pdf"
-VERSION = "3.5.3"
-PAGE_TOTAL = 28
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.6.0-Play-Guide-KO.pdf"
+VERSION = "3.6.0"
+PAGE_TOTAL = 29
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -251,7 +252,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.5.3",
+            "플레이 설명서 · 3.6.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -527,12 +528,12 @@ story.extend(
                 ["포획률 값·예시", "1회 승리 시 확률", "설명"],
                 ["255 · 캐터피", "약 99.99%", "거의 반드시 포획"],
                 ["45 · 이상해씨", "약 16.78%", "대략 6번 승리당 1번 수준"],
-                ["3 · 뮤츠", "2.5%", "정식 게임식 약 0.83% 대신 완화한 고정값"],
+                ["3 · 뮤츠", "기본 2.5%", "완화 보정에도 도감 볼 배율 적용"],
             ],
             [46 * mm, 40 * mm, 88 * mm],
         ),
         Spacer(1, 3 * mm),
-        p("몬스터볼 1배, 상대 HP 10%, 상태이상 보너스 없음 조건의 포획식을 사용합니다. 볼 아이템이나 추가 던지기는 없으며, 실패하면 다음 탐색에서 다시 만나 승리해야 합니다.", CALLOUT),
+        p("표는 도감 0~99종의 기본 확률입니다. 상대 HP 10%·상태이상 없음 기준이며, 수집 가능 도감 100종마다 볼 배율이 0.2씩 증가합니다. 단계별 다섯 종의 확률표는 <b>29쪽</b>을 보세요. 볼 아이템이나 추가 던지기는 없습니다.", CALLOUT),
     ]
 )
 page_break(story)
@@ -677,7 +678,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.5.3", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.6.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -826,6 +827,22 @@ story.extend([
     bullet("저장 확인 중에는 오프라인 성장도 멈춥니다. 다시 확인에 성공한 시점부터 시간이 흐릅니다. 탐색이 잠겼다면 저장 상태를 먼저 확인하세요. 시작이 차단되면 활력은 쓰지 않습니다."),
     bullet("훈련 막대는 개체값으로 정해지는 훈련 상한 대비 진행도입니다. 능력치 화면의 공격·방어·속도 숫자나 괄호 속 개체값과는 다른 값입니다."),
     p("업데이트는 기존 앱 위에 설치합니다. 온전한 최신 저장이 확인되면 그 진행을 보존하지만, 이미 덮어써져 사라진 과거 훈련값을 추측해서 복원하지는 않습니다.",SAFE),
+])
+
+page_break(story)
+story.extend(page_heading("28 도감 포획 보너스", "100종마다 야생 포획이 쉬워집니다", "배틀 승리 후 한 번의 포획 판정 기준입니다. 조우·이로치 확률과는 별개입니다."))
+story.extend([
+    p("볼 배율 = 1 + 0.2 × (수집 가능한 등록 종수 ÷ 100의 정수 부분)", SAFE),
+    bullet("전체 지방의 수집 가능한 종을 합산합니다. 같은 종의 중복·이로치·폼은 한 종으로 세며, 그림 미지원 종은 제외합니다. 현재 수집 가능 종수는 982종입니다."),
+    bullet("부화·진화·포획·전송으로 이미 등록한 도감도 반영됩니다. 업데이트 후 도감을 다시 채울 필요가 없고, 보관한 포켓몬을 놓아줘도 도감 기록은 유지됩니다."),
+    Spacer(1, 3*mm),
+    info_table(capture_rows(), [24*mm,15*mm,27*mm,27*mm,27*mm,27*mm,27*mm]),
+    Spacer(1, 4*mm),
+    p("표를 읽는 방법", H2),
+    bullet("255·190·120·45·3은 확률(%)이 아니라 종별 포획률 값입니다. 예시는 각각 캐터피·피카츄·단데기·파이리·뮤츠입니다. 각 칸이 실제 승리 후 포획 성공 확률이며 반올림한 값입니다."),
+    bullet("남은 HP 10%·상태이상 보너스 없음 조건입니다. 볼 배율은 최종 확률이 아닌 계산식 안에 적용됩니다. 정수 계산 때문에 배율이 올라도 같은 확률인 구간이 있습니다. 99.99%와 정확한 100%는 다릅니다."),
+    bullet("포획률 3은 특별 보정 2.5%에 같은 볼 배율을 곱합니다. 도감 100종은 3%, 500종은 5%, 900종 이상은 7%입니다. 현재 도감 최대 배율은 2.8배이며 500종에서 멈추지 않습니다."),
+    p("100번째 종을 잡는 판정은 기존 99종 배율을 사용합니다. 성공해 도감에 등록된 뒤 다음 포획부터 1.2배입니다. 패배 시에는 포획하지 않으며, 100%라도 저장 오류나 보관 문제까지 성공으로 처리하지는 않습니다.", CALLOUT),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

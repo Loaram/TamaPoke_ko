@@ -22,10 +22,13 @@ bool wildShinyNow();
 void wildApplyShiny(bool shiny, uint8_t &ivAtk, uint8_t &ivDef,
                     uint8_t &ivSpe, uint8_t &ivHp);
 
-// Generation III Pokeball capture math at a fixed 10% HP and no status.
-// Species whose canonical catch rate is 3 use the beta balance override: 2.5%.
+// Generation III capture math at fixed 10% HP and no status.
+// Every 100 collectible registered species adds 0.2 to the ball multiplier.
+// Catch rate 3 uses 2.5% multiplied by the same bonus, not the shake formula.
 uint8_t wildCatchRateForDex(int16_t dex);
-uint32_t wildCaptureShakeThreshold(uint8_t catchRate);
+uint16_t wildCaptureBallTenths(uint16_t registered);
+uint16_t wildCaptureRarePermille(uint16_t registered);
+uint32_t wildCaptureShakeThreshold(uint8_t catchRate, uint16_t registered = 0);
 bool wildCaptureCheck(uint8_t catchRate, uint16_t rareRoll,
-                      const uint16_t shakeRolls[4]);
-bool wildCaptureNow(uint8_t catchRate);
+                      const uint16_t shakeRolls[4], uint16_t registered = 0);
+bool wildCaptureNow(uint8_t catchRate, uint16_t registered = 0);

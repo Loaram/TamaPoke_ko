@@ -46,7 +46,7 @@ site = 'https://loaram.github.io/TamaPoke_ko/'
 assert json.loads(get(site + 'manifest.json?verify=' + commit))['version'] == version
 html = get(site + '?verify=' + commit).decode('utf8')
 guide_name = f'TamaPoke-{version}-Play-Guide-KO.pdf'
-assert guide_name in html and '28쪽' in html
+assert guide_name in html and '29쪽' in html
 assert hashlib.sha256(get(site + 'firmware/app.bin?verify=' + commit)).hexdigest() == sha256(ROOT / 'web/firmware/app.bin')
 assert hashlib.sha256(get(site + 'guides/' + guide_name)).hexdigest() == local[guide_name]['sha256']
 print('PASS public Pages version, firmware and PDF', flush=True)
