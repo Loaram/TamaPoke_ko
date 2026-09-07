@@ -11,6 +11,7 @@
 #include <algorithm>
 
 Party party;
+bool activeSwapBlocked=false;
 bool Party::hasEndedMon(const PartyMon &m) const {
   uint32_t ticket=0;memcpy(&ticket,m.care+32,4);
   if(!ticket || m.empty() || !writable())return false;
@@ -182,18 +183,19 @@ void Party::begin() {
   // the live pet. Move that former sixth member into the first box opening.
   // If a player's box is completely full, keep it in the reserved physical
   // slot instead of deleting it; the next box opening will migrate it.
-  migrateLegacyOverflow();
+  activeSwapBlocked=!pendingLive.empty();
+  if(!activeSwapBlocked) migrateLegacyOverflow();
   if(legacyLoaded && !rosterExists(prefs)) saveRoster();
 }
 
 bool Party::save() {
-  if(tradeStorageBlocked)return false;
+  if(!writable())return false;
   saveRoster();
   return !rosterReadOnly;
 }
 
 bool Party::boxSave() {
-  if(tradeStorageBlocked)return false;
+  if(!writable())return false;
   saveRoster();
   return !rosterReadOnly;
 }
@@ -279,18 +281,61 @@ bool Party::swapActive(Pet &pet, bool fromBox, uint16_t index) {
   slot=pet.storageSnapshot(); // empty when an egg was waiting, as before
   saveRoster(); // one verified commit owns BOTH individuals before live keys change
   if(rosterReadOnly) {slot=before;pendingLive=PartyMon();return false;}
+  activeSwapBlocked=true;
   finishActiveSwap(pet);
   return true;
 }
 
-bool Party::finishActiveSwap(Pet &pet) {
+static bool sameIndividualIdentity(const PartyMon &a,const PartyMon &b) {
+  // Dex/form, level, moves and training may have changed since an old journal.
+  // IVs, shiny and nickname cannot change during ordinary care. Ambiguous
+  // matches against banked individuals are explicitly refused below.
+  return !a.empty() && !b.empty() && a.ivAtk==b.ivAtk && a.ivDef==b.ivDef &&
+    a.ivSpe==b.ivSpe && a.ivHp==b.ivHp && a.shiny==b.shiny &&
+    !memcmp(a.nick,b.nick,sizeof(a.nick));
+}
+
+bool Party::finishActiveSwap(Pet &pet, bool recovering) {
   if(pendingLive.empty() || rosterReadOnly) return false;
-  pet.reviveFrom(pendingLive);
+  bool retain=false;
+  PartyMon stored;
+  bool coherent=recovering && pet.readStoredSnapshot(stored);
+  if(coherent && sameIndividualIdentity(stored,pendingLive)) {
+    retain=!memcmp(&stored,&pendingLive,sizeof(stored));
+    if(!retain) {
+      // 3.5.1 could continue playing after a failed verification. A complete,
+      // newer live save is authoritative, not the old incoming snapshot.
+      for(const auto &m:slots) if(sameIndividualIdentity(m,stored)) return false;
+      for(const auto &m:box) if(sameIndividualIdentity(m,stored)) return false;
+      uint32_t oldAge=0,newAge=0;
+      memcpy(&oldAge,pendingLive.care+20,4);memcpy(&newAge,stored.care+20,4);
+      if(newAge<oldAge) return false; // uncertain provenance: preserve both copies
+      retain=true;
+    }
+  }
+  else if(coherent) {
+    // A complete save with a changed nickname/identity is not evidence of a
+    // torn write. Replay only when the old live individual is demonstrably
+    // already banked by this transaction; otherwise keep both copies intact.
+    auto bankedOldLive=[&stored](const PartyMon &m){
+      uint32_t liveAge=0,bankedAge=0;
+      memcpy(&liveAge,stored.care+20,4);memcpy(&bankedAge,m.care+20,4);
+      return sameIndividualIdentity(stored,m) && stored.dex==m.dex && stored.form==m.form &&
+        m.care[0]==1 && liveAge<=bankedAge;
+    };
+    bool oldLive=false;
+    for(const auto &m:slots)oldLive=oldLive || bankedOldLive(m);
+    for(const auto &m:box)oldLive=oldLive || bankedOldLive(m);
+    if(!oldLive)return false;
+  }
+  if(retain) pet.saveNow(); // pet.begin() already loaded the latest moves/care/queue
+  else pet.reviveFrom(pendingLive);
   if(!pet.storedIndividualMatches()) return false;
   PartyMon committed=pendingLive;
   pendingLive=PartyMon();
   saveRoster();
   if(rosterReadOnly) pendingLive=committed;
+  activeSwapBlocked=!pendingLive.empty();
   return !rosterReadOnly;
 }
 
@@ -300,7 +345,7 @@ void Party::recoverActiveSwap(Pet &pet) {
   if(!recovery) return;
   recovery->begin();
   if(!recovery->pendingLive.empty()) {
-    recovery->finishActiveSwap(pet);
+    recovery->finishActiveSwap(pet,true);
     party.begin();
   }
   delete recovery;
@@ -314,7 +359,7 @@ uint16_t Party::boxCount() const {
 }
 
 bool Party::selectForm(bool fromBox,uint16_t index,FormId id) {
-  if(tradeStorageBlocked)return false;
+  if(!writable())return false;
   if(rosterReadOnly || index>=(fromBox?BOX_SLOTS:PARTY_SLOTS)) return false;
   PartyMon &m=fromBox?box[index]:slots[index];
   if(!formEligible(m.dex,id,m.level)) return false;

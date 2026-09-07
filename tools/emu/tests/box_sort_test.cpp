@@ -77,6 +77,6 @@ int main(){
   memcpy(raw.data()+8+PARTY_RECORD_BYTES*(PARTY_STORAGE_SLOTS+BOX_SLOTS),&pending,sizeof(pending));
   uint32_t hash=2166136261u;for(size_t i=0;i<raw.size()-4;i++){hash^=raw[i];hash*=16777619u;}
   memcpy(raw.data()+raw.size()-4,&hash,4);party.begin();before=nvs();
-  ck(party.writable()&&!party.sortBox(BOX_SORT_DEX)&&before==nvs(),"unfinished active-swap journal prevents sorting until recovery");
+  ck(!party.writable()&&activeSwapBlocked&&!party.sortBox(BOX_SORT_DEX)&&before==nvs(),"unfinished active-swap journal locks all storage changes until recovery");
   return bad?1:0;
 }

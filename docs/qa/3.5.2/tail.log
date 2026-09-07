@@ -1,0 +1,54 @@
+TamaPoke fw v3.5.2
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS empty sort does not write storage
+PASS single last-slot individual moves to front
+PASS full 300-slot dex sort succeeds
+PASS dex ascending preserves every byte of all 300 records, forms and care included
+PASS same dex and level retain original order across forms and shinies
+PASS level sort succeeds
+PASS level descending preserves full records
+PASS repeated sort is idempotent
+PASS Korean canonical sort also works in English UI
+PASS Gadi, Kkobugi, Isanghaessi, Pairi, Pikachu order ignores nicknames; ties use level
+PASS holes are packed to end across all 50 pages
+PASS sorted order survives reload
+PASS sorted v7 save exports and imports without a format change
+PASS whole-save import retains exact sorted record order
+PASS sorting does not change party, live care or farewell quota
+PASS invalid sort criterion is rejected
+PASS invalid species cannot index outside name table
+PASS sort button opens full-box menu on last page
+PASS name row asks for confirmation
+PASS confirmation margins cannot select underlying box
+PASS No returns to sort menu
+PASS cancel preserves current page, pending exchange and save
+PASS swipe first cancels confirmation, not page
+PASS confirmed sort resets page and stale slot selections
+PASS sorted slot opens correct individual
+PASS cancelled release after sort preserves the selected individual
+PASS sorted slot supports full-party exchange selection
+PASS exchange acts on sorted slot, not stale index
+forms: roster write failed; recovery copies retained
+PASS write failure displays error and retains UI context
+PASS write failure restores every RAM record and keeps durable snapshot
+PASS read-only storage rejects further sorting
+PASS failure recovery reloads the original order
+PASS unfinished active-swap journal locks all storage changes until recovery
+PASS  comes back at the level it was banked at
+PASS  keeps its shininess and its name
+PASS  and its moveset
+PASS  and retains the serialized companion protection flag
+     after ~400 game-minutes: level 81 (was 61)
+PASS  gains 20 levels in 400 active minutes
+PASS  is never offered a farewell
+PASS  cannot run away even when wholly neglected
+PASS  final species has no further normal evolution
+PASS  captured pre-evolution grows to its evolution gate
+PASS  normal evolution retains companion protection
+PASS  new growth and companion protection survive reload
+PASS  a new egg is not frozen
+all good
+PASS: box_sort,revive

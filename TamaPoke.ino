@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.5.1"
+#define FW_VERSION "3.5.2"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -747,6 +747,39 @@ bool holdFired = false;
 
 #include "trade_ui.h"
 
+bool learnDialogVisible() {
+  if(activeSwapBlocked || tradeOpen || formsOpen || pet.awaitingStarter() ||
+     galleryOpen || movePickOpen || partyOpen || gameOpen || sackOpen || spdOpen ||
+     trainOpen || kbOpen || clockOpen || battleOpen || pickOpen || lanOpen ||
+     gymOpen || playerOpen) return false;
+#if defined(TAMAPOKE_EXPLORE_ENABLED)
+  if(exploreOpen) return false;
+#endif
+  return pet.hasLearnOffer();
+}
+
+void renderSwapRecovery() {
+  gfx->fillScreen(RGB565_BLACK);gfx->fillCircle(CX,CY,231,UI_BG_DAY);
+  gfx->setTextColor(UI_INK);
+  tradeText(gLang==LANG_KO?"교체 저장 확인 필요":"Swap recovery needed",100,2);
+  tradeText(gLang==LANG_KO?"기록 보호를 위해 진행을 멈췄습니다":"Progress paused to protect your save",162,1);
+  tradeText(gLang==LANG_KO?"저장 공간과 SD 연결을 확인하세요":"Check free storage and the SD card",194,1);
+  tradeText(gLang==LANG_KO?"계속 실패하면 초기화하지 말고 문의하세요":"If retry fails, keep your save and ask for help",226,1);
+  tradeButton(gLang==LANG_KO?"다시 확인":"Retry",90,310);
+  gfx->flush();
+}
+
+bool requestActiveSwap(bool fromBox,uint16_t index) {
+  if(pet.hasLearnOffer()) {
+    // Open the real decision, but never pass this Bring tap to its Skip button.
+    partyOpen=boxOpen=releaseConfirm=movePickOpen=false;
+    partyDetail=boxDetail=boxSel=boxSwapFrom=0;
+    sfxPlay(SFX_TAP);return false;
+  }
+  if(!party.swapActive(pet,fromBox,index)){sfxPlay(SFX_DENY);return false;}
+  return true;
+}
+
 void setup() {
   Serial.setRxBufferSize(8192);  // la transferencia a SD llega en bloques de 2 KB
   Serial.begin(115200);
@@ -832,6 +865,7 @@ void ensureMon() {
 }
 
 void loop() {
+  if(activeSwapBlocked){handleTouch();renderSwapRecovery();return;}
   uint32_t now = millis();
 #ifdef ANDROID
   if(!tradeStorageBlocked)pet.updateDeviceClock(now, rtcEpoch(), androidUtcEpoch());
@@ -1257,7 +1291,7 @@ void handleTouch() {
   bool pressed = touch.getPoint(&x, &y, 1) > 0;
 
   // saco de entrenamiento: cada toque cuenta al instante (aporrear rapido)
-  if (sackOpen) {
+  if (sackOpen && !activeSwapBlocked) {
     if (pressed && !wasPressed) {
       lastInteract = millis();
       if (y < 72) leaveSack();       // tocar arriba = salir, conservando lo ganado
@@ -1314,6 +1348,7 @@ void handleTouch() {
 void openClock();  // prototipo
 
 void onSwipeV(int dir) {
+  if(activeSwapBlocked)return;
   if(tradeOpen){if(tradeDetail)tradeDetail=0;else if(tradeMenu==1)tradePage=(tradePage+(dir>0?50:1))%51;return;}
   if (boxOpen && boxSortOpen) {
     if(boxSortChoice) boxSortChoice=0; else boxSortOpen=false;
@@ -1430,7 +1465,7 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
   }
 
   // A live exchange reuses the selected slot, even with completely full storage.
-  bool leftOk = pet.canSwapActive();
+  bool leftOk = pet.canSwapActive() && party.writable();
   const char *leftLbl = T(S_REVIVE);
   int liveW=fromBox?96:PDET_L_W;
   gfx->fillRoundRect(PDET_L_X, PDET_BTN_Y, liveW, PDET_BTN_H, 10,
@@ -1460,6 +1495,8 @@ void renderMonSheet(const PartyMon &m, bool fromBox) {
 
   if (!leftOk) {
     const char *why = T(S_REVIVE_EGG);
+    if(tradeStorageBlocked) why=gLang==LANG_KO?"진행 중인 통신을 완료하세요":"Finish the pending transfer";
+    else if(!party.writable()) why=gLang==LANG_KO?"저장 상태를 확인하세요":"Check storage before swapping";
     gfx->setTextColor(UI_BAR_WARN);
     gfx->setTextSize(1);
     gfx->setCursor(CX - textWidthFactor(why, 3), PDET_BTN_Y - 14);
@@ -1611,7 +1648,7 @@ void partyTap(int16_t x, int16_t y) {
     // or a miss on YES would fall through to the move rows underneath it.
     if (releaseConfirm) { monSheetConfirmTap(x, y, false); return; }
     if (monSheetBtn(x, y, true)) {           // BRING BACK
-      if (!party.swapActive(pet,false,partyDetail-1)) { sfxPlay(SFX_DENY); return; }
+      if (!requestActiveSwap(false,partyDetail-1)) return;
       partyDetail = 0;
       boxSwapFrom = 0;
       partyOpen = false;
@@ -1698,6 +1735,7 @@ void partyTap(int16_t x, int16_t y) {
 
 // deslizar: dir +1 = hacia la derecha
 void onSwipe(int dir) {
+  if(activeSwapBlocked)return;
   if(tradeOpen){if(tradeDetail)tradeDetail=0;else if(tradeMenu==1)tradePage=(tradePage+(dir>0?50:1))%51;return;}
   if (boxOpen && boxSortOpen) {
     if(boxSortChoice) boxSortChoice=0; else boxSortOpen=false;
@@ -1819,6 +1857,10 @@ void onSwipe(int dir) {
 }
 
 void onTap(int16_t x, int16_t y) {
+  if(activeSwapBlocked){
+    if(x>=90 && x<=376 && y>=310 && y<=354){pet.begin();party.begin();}
+    return;
+  }
   if(tradeOpen){tradeTap(x,y);return;}
   if(formsOpen) {formsTap(x,y);return;}
   if (pet.awaitingStarter()) {  // primera partida: region y luego inicial
@@ -1941,7 +1983,7 @@ void onTap(int16_t x, int16_t y) {
     gymOpen = false;
     return;
   }
-  if (pet.hasLearnOffer()) {
+  if (learnDialogVisible()) {
     for (int i = 0; i < MOVE_SLOTS; i++) {
       int ry = LEARN_ROW_Y(i);
       if (x < 70 || x > 396 || y < ry || y > ry + 50) continue;
@@ -2352,6 +2394,7 @@ RTC_NOINIT_ATTR uint32_t gCrumbHeap;
 
 // Which screen is on the panel RIGHT NOW, in the same order render() tests.
 uint8_t uiCurrentScreen() {
+  if(activeSwapBlocked)return SCR_CARD;
   if(formsOpen) return SCR_CARD;
   if (pet.awaitingStarter()) return starterRegionDone ? SCR_STARTER : SCR_REGION;
   if (galleryOpen) return galleryPick ? SCR_DEXPICK : SCR_GALLERY;
@@ -2369,7 +2412,7 @@ uint8_t uiCurrentScreen() {
   if (pickOpen) return SCR_PICK;
   if (lanOpen) return SCR_LAN;
   if (gymOpen) return gymPick ? SCR_GYMPICK : SCR_GYM;
-  if (pet.hasLearnOffer()) return SCR_LEARN;
+  if (learnDialogVisible()) return SCR_LEARN;
   if (gameOpen || sackOpen || spdOpen) return SCR_GAME;
   if (trainOpen) return SCR_TRAIN;
   if (menuOpen) return SCR_MENU;
@@ -2416,6 +2459,7 @@ void bootReport() {
 }
 
 void render() {
+  if(activeSwapBlocked){renderSwapRecovery();return;}
   if(tradeOpen){renderTrade();return;}
   if(formsOpen) {renderForms();return;}
   crumbDrop();   // so a crash can name the screen it happened on
@@ -5981,7 +6025,7 @@ void drawMenu() {
 // means this individual cannot train the stat any higher, which is the whole
 // point of trMaxFor() gating training by IV.
 static uint8_t trainPct(uint8_t cur, uint8_t cap) {
-  return cap ? (uint8_t)((uint16_t)cur * 100 / cap) : 0;
+  return cap ? (uint8_t)min<uint16_t>(100,(uint16_t)cur * 100 / cap) : 0;
 }
 
 void renderTrain() {
@@ -6227,7 +6271,7 @@ void boxTap(int16_t x, int16_t y) {
     }
     if (monSheetBtn(x, y, true)) {          // TO PARTY
       if(x<=166) {
-        if(!party.swapActive(pet,true,boxDetail-1)) {sfxPlay(SFX_DENY);return;}
+        if(!requestActiveSwap(true,boxDetail-1)) return;
         boxDetail=boxSel=boxSwapFrom=partyDetail=0;
         boxOpen=partyOpen=false; sfxPlay(SFX_HATCH); return;
       }

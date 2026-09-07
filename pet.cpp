@@ -197,6 +197,7 @@ void Pet::applyOfflineMinutes(uint32_t mins) {
 }
 
 void Pet::update(uint32_t nowMs) {
+  if(activeSwapBlocked) return;
   // fin de ceremonia: la criatura se va y queda un huevo nuevo
   if (ceremony != CER_NONE && millis() > ceremonyUntil) {
     if(snapshotForParty())newEgg();
@@ -210,6 +211,7 @@ void Pet::update(uint32_t nowMs) {
 
 void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch,
                             bool offline) {
+  if(activeSwapBlocked) return;
   // Animations still use the monotonic clock; only care/growth minutes follow
   // Android's user-visible device clock.
   if (ceremony != CER_NONE && millis() > ceremonyUntil) {
@@ -243,6 +245,7 @@ void Pet::updateDeviceClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpo
 }
 
 void Pet::tick() {
+  if(activeSwapBlocked)return;
   if (ceremony != CER_NONE) return;  // el tiempo se detiene en la despedida
   if (starterPick) return;  // la partida no empieza hasta elegir inicial: si el
                             // tiempo corriera aqui, el huevo eclosionaria solo a
@@ -412,9 +415,24 @@ void Pet::restoreCare(const PartyMon &m) {
 bool Pet::storedIndividualMatches() {
   if(!opened) return false;
   Pet check; check.prefs.begin("tamapoke",true); check.lastSeenEpoch=lastSeenEpoch;
-  check.load();
+  check.load(false); // Verification must not offer moves or normalize saved training.
   PartyMon expected=storageSnapshot(), actual=check.storageSnapshot();
+  check.prefs.end();
   return !memcmp(&expected,&actual,sizeof(expected));
+}
+
+bool Pet::readStoredSnapshot(PartyMon &out) const {
+  Pet check; check.prefs.begin("tamapoke",true);
+  check.lastSeenEpoch=check.prefs.getUInt("seen",0);
+  PartyMon durable;
+  bool ok=check.prefs.getBytesLength("liveCare")==sizeof(durable) &&
+    check.prefs.getBytes("liveCare",&durable,sizeof(durable))==sizeof(durable);
+  check.load(false);
+  out=check.storageSnapshot();
+  check.prefs.end();
+  // Every ordinary key and the last complete snapshot must agree. Never adopt
+  // a mixed individual left by a power cut in the middle of the live-key save.
+  return ok && !out.empty() && !memcmp(&out,&durable,sizeof(out));
 }
 
 bool Pet::snapshotForParty() {
@@ -1305,7 +1323,7 @@ void Pet::feedCandy() {
 }
 
 uint8_t Pet::playResult(uint8_t score) {
-  if (ceremony != CER_NONE || isEgg()) return 0;
+  if (activeSwapBlocked || ceremony != CER_NONE || isEgg()) return 0;
   // The ball game is DEFENCE's trainer now. It used to train SPEED, which was
   // moved to its own reaction test to stop playing being a stat grind -- and
   // that left DEF with no active trainer at all, only the slow passive tick.
@@ -1315,7 +1333,7 @@ uint8_t Pet::playResult(uint8_t score) {
   uint8_t gain = score / 2;
   if (gain > 18) gain = 18;          // the same per-session ceiling as the bag
   uint16_t v = (uint16_t)trDef + gain;
-  trDef = v > trMaxDef() ? trMaxDef() : (uint8_t)v;
+  if(before < trMaxDef()) trDef = v > trMaxDef() ? trMaxDef() : (uint8_t)v;
   gain = trDef - before;
   joy = clamp100(joy + 5 + (score > 15 ? 30 : score * 2));
   // A better result should improve the reward, not multiply the price. The old
@@ -1339,7 +1357,7 @@ uint8_t Pet::playResult(uint8_t score) {
 // saco de entrenamiento: los golpes entrenan la fuerza. Devuelve la subida.
 uint8_t Pet::rewardTraining(uint8_t amount, uint8_t &which) {
   which = 0;
-  if (ceremony != CER_NONE || isEgg() || !amount) return 0;
+  if (activeSwapBlocked || ceremony != CER_NONE || isEgg() || !amount) return 0;
   // Only the stats with headroom are candidates.
   uint8_t room[3], n = 0;
   if (trAtk < trMaxAtk()) room[n++] = 0;
@@ -1367,12 +1385,11 @@ bool Pet::spendEnergy(uint8_t amount) {
 }
 
 uint8_t Pet::trainSpeed(uint16_t hits) {
-  if (ceremony != CER_NONE || isEgg()) return 0;
-  uint8_t gain = hits / 2;          // ~2 reactions = 1 point
-  if (gain > 18) gain = 18;         // same per-session ceiling as the bag
+  if (activeSwapBlocked || ceremony != CER_NONE || isEgg()) return 0;
+  uint8_t gain = min<uint16_t>(hits / 2,18);
   uint8_t before = trSpe;
-  uint8_t v = trSpe + gain;
-  trSpe = v > trMaxSpe() ? trMaxSpe() : v;   // el IV pone el techo
+  uint16_t v = (uint16_t)trSpe + gain;
+  if(before < trMaxSpe()) trSpe = v > trMaxSpe() ? trMaxSpe() : (uint8_t)v;
   gain = trSpe - before;
   energy = dropTo(energy, SPE_TRAIN_ENERGY_COST, 5);
   fullness = dropTo(fullness, 4, 5);
@@ -1391,12 +1408,11 @@ uint8_t Pet::trainSpeed(uint16_t hits) {
 }
 
 uint8_t Pet::trainStrength(uint16_t hits) {
-  if (ceremony != CER_NONE || isEgg()) return 0;
-  uint8_t gain = hits / 4;          // ~4 golpes = 1 punto de entrenamiento
-  if (gain > 18) gain = 18;         // tope por sesion: la FUE se forja a fuego lento
+  if (activeSwapBlocked || ceremony != CER_NONE || isEgg()) return 0;
+  uint8_t gain = min<uint16_t>(hits / 4,18);
   uint8_t before = trAtk;
-  uint8_t v = trAtk + gain;
-  trAtk = v > trMaxAtk() ? trMaxAtk() : v;  // el IV pone el techo
+  uint16_t v = (uint16_t)trAtk + gain;
+  if(before < trMaxAtk()) trAtk = v > trMaxAtk() ? trMaxAtk() : (uint8_t)v;
   gain = trAtk - before;            // lo que de verdad subio (puede topar)
   energy = dropTo(energy, ATK_TRAIN_ENERGY_COST, 5);   // cansa
   fullness = dropTo(fullness, 5, 5);
@@ -1593,7 +1609,7 @@ void Pet::save() {
   prefs.putBytes("liveCare",&care,sizeof(care));
 }
 
-void Pet::load() {
+void Pet::load(bool progress) {
 #ifdef ANDROID
   deviceProgressEpoch = prefs.getUInt("aseen", 0);
 #endif
@@ -1620,10 +1636,8 @@ void Pet::load() {
   trAtk = prefs.getUChar("tatk", 0);
   trDef = prefs.getUChar("tdef", 0);
   trSpe = prefs.getUChar("tspe", 0);
-  // un guardado antiguo puede traer entrenamiento por encima del nuevo tope
-  if (trAtk > trMaxAtk()) trAtk = trMaxAtk();
-  if (trDef > trMaxDef()) trDef = trMaxDef();
-  if (trSpe > trMaxSpe()) trSpe = trMaxSpe();
+  // Preserve already banked legacy training. The current IV cap limits NEW
+  // rewards; loading or training must never reduce a saved individual's value.
   berryKnown = prefs.getBool("bk", false);
   shiny = prefs.getBool("shy", false);
   eggShiny = prefs.getBool("eshy", false);
@@ -1763,7 +1777,7 @@ void Pet::load() {
     uint32_t day=0; memcpy(&day,c+28,4);
     if(today() && day!=today()) bondToday=0;
   }
-  checkLearnGates();
+  if(progress) checkLearnGates();
   // Unknown form IDs are retained for forward-compatible saves.
   // siembra: la mascota actual cuenta como criada (guardados antiguos)
   if (speciesId >= 1) registerSpecies(speciesId);

@@ -51,6 +51,7 @@ struct PartyMon {
 #define PARTY_ROSTER_BYTES (12 + PARTY_RECORD_BYTES * (PARTY_STORAGE_SLOTS + BOX_SLOTS + 1))
 class Pet;
 extern bool tradeStorageBlocked;
+extern bool activeSwapBlocked;
 enum BoxSortOrder : uint8_t { BOX_SORT_NAME, BOX_SORT_DEX, BOX_SORT_LEVEL };
 
 class Party {
@@ -66,7 +67,7 @@ public:
   void replaceAt(uint8_t i, const PartyMon &m);
   void releaseAt(uint8_t i);    // free a slot again
   bool save();
-  bool writable() const { return !rosterReadOnly && !tradeStorageBlocked; }
+  bool writable() const { return !rosterReadOnly && !tradeStorageBlocked && !activeSwapBlocked; }
   bool hasEndedMon(const PartyMon &m) const;
   uint16_t boxCount() const;
   int boxFirstFree() const;
@@ -94,7 +95,7 @@ private:
   void saveRoster();
   bool rosterReadOnly = false;
   PartyMon pendingLive; // committed with the outgoing roster, replayed after interruption
-  bool finishActiveSwap(Pet &pet);
+  bool finishActiveSwap(Pet &pet, bool recovering = false);
   Preferences prefs;
 };
 

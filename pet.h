@@ -210,6 +210,7 @@ public:
   PartyMon storageSnapshot() const;
   bool canSwapActive() const;
   bool storedIndividualMatches();
+  bool readStoredSnapshot(PartyMon &out) const;
 
   // The player's own name, alongside the badges and the streak: it belongs to
   // whoever is playing, not to the creature, so newEgg() must never clear it.
@@ -501,6 +502,6 @@ private:
   void hatch();
   void registerSpecies(int16_t dex);
   void save();
-  void load();
+  void load(bool progress = true);
   static uint8_t clamp100(int v) { return v < 0 ? 0 : (v > 100 ? 100 : v); }
 };

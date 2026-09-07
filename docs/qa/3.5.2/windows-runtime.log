@@ -1,0 +1,157 @@
+TamaPoke fw v3.5.2
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS level-up move is deferred while storage details are visible
+PASS Bring opens the real move decision without rejecting or accepting an unseen move
+PASS only a separate tap on the visible Skip resolves the offer
+PASS level-up move is deferred while storage details are visible
+PASS Bring opens the real move decision without rejecting or accepting an unseen move
+PASS only a separate tap on the visible Skip resolves the offer
+PASS training menu cannot dispatch taps to a hidden learning dialog
+PASS legacy over-cap training does not leave an unfinished swap
+PASS training at a legacy value above the current cap never reduces it
+PASS legacy training survives reload without clamping
+PASS pending level-up checks cannot make successful disk writes look failed
+PASS unfinished swap freezes training and growth
+PASS recovery overlay blocks hidden Bring and swipe actions
+PASS Retry repairs interrupted save without losing incoming training
+PASS unfinished swap freezes training and growth
+PASS recovery overlay blocks hidden Bring and swipe actions
+PASS Retry repairs interrupted save without losing incoming training
+PASS unfinished swap freezes training and growth
+PASS recovery overlay blocks hidden Bring and swipe actions
+PASS Retry repairs interrupted save without losing incoming training
+PASS unfinished swap freezes training and growth
+PASS recovery overlay blocks hidden Bring and swipe actions
+PASS Retry repairs interrupted save without losing incoming training
+PASS unfinished swap freezes training and growth
+PASS recovery overlay blocks hidden Bring and swipe actions
+PASS Retry repairs interrupted save without losing incoming training
+PASS unfinished swap freezes training and growth
+PASS recovery overlay blocks hidden Bring and swipe actions
+PASS Retry repairs interrupted save without losing incoming training
+PASS Retry repairs interrupted save without losing incoming training
+PASS old-version fixture contains trained values newer than its journal
+PASS upgrade preserves newer verified training instead of replaying 12/23/34
+PASS recovery is stable over a second restart
+PASS ambiguous old saves remain intact and visibly paused, never guessed or rolled back
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS both previews wait without exchanging
+PASS matching confirmation codes
+PASS whole-save backup is blocked during a transaction
+PASS release cannot change reserved Pokemon
+PASS explicit local approval is durable
+PASS one approval cannot commit
+PASS explicit local approval is durable
+PASS lossy swap reaches durable completion
+PASS exact selected records exchanged without IV/shiny reroll
+PASS restarts and repeated completion do not duplicate/reverse trade
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS gift moves exactly one Pokemon into 300th box slot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS cancel is allowed before local confirmation
+PASS cancel keeps both originals
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS confirmed transaction cannot be unilaterally cancelled
+PASS explicit local approval is durable
+PASS prepared trade resumes after both devices reboot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS disk flush failure blocks confirmation
+PASS peer cannot commit an unpersisted approval
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS failed checkpoint recovers from durable snapshot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+forms: roster write failed; recovery copies retained
+PASS roster storage fault blocks completion
+PASS roster fault recovery retains both individuals
+PASS whole-save backup is available after completion
+PASS device transaction journal never travels in a whole-save backup
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS same send roles refused without mutations
+PASS invalid IV rejected
+PASS unknown move rejected
+PASS: individual transfer transaction tests
+TamaPoke fw v3.5.2
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS LAN menu opens individual transfer separately from whole-save
+PASS swap opens roster selection
+PASS previous button wraps to last page
+PASS last box Pokemon selected without truncating index
+PASS receiver details shown before approval
+PASS detail back does not approve
+PASS only explicit confirm persists approval
+PASS confirmed trade cannot be closed by tap or swipe
+PASS preview/approval leave active Pokemon and player rewards untouched
+PASS actual UI commit callback saves the received Pokemon and registers its Dex
+PASS received Dex registration preserves active Pokemon, farewell quota and streak
+PASS receiving with full party and box is refused before connection
+PASS: 7-language table, Korean preference reload, all display names, UTF-8 errors, widths and actual glyph drawing
+Traceback (most recent call last):
+  File "C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\tools\test_runtime.py", line 30, in <module>
+    subprocess.run([str(exe)],cwd=out,env=env,check=True)
+  File "C:\Users\hyung\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hyung\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\hyung\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] ���ø����̼� ���� ��å���� �� ������ �����߽��ϴ�
