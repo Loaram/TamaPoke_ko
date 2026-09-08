@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.7.1"
+#define FW_VERSION "3.7.2"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -6285,7 +6285,7 @@ void renderBox() {
     }
     const uint8_t *th = thumbs.get(m.dex);
     if(m.form) drawFormMini(m.dex,m.form,m.shiny,x+28,y+30);
-    else if (th) drawThumb(th, x - 14, y - 4, 2, false);
+    else if (th) {int edge=spriteMiniEdge(m.dex,0);drawThumbFit(th,x+28,y+30,edge,edge,false);}
     gfx->setTextColor(UI_INK);
     gfx->setTextSize(1);
     gfx->setCursor(x + 52, y + 16);
@@ -6412,7 +6412,7 @@ void drawPartySlot(int i, int x, int y) {
   }
   const uint8_t *th = thumbs.get(m.dex);
   if(m.form) drawFormMini(m.dex,m.form,m.shiny,x+30,y+33);
-  else if (th) drawThumb(th, x - 6, y - 3, 1, false);
+  else if (th) {int edge=spriteMiniEdge(m.dex,0);drawThumbFit(th,x+30,y+33,edge,edge,false);}
   const DexEntry d = formDex(m.dex,m.form);
   const char *nm = m.nick[0] ? m.nick : localName(d.name);
   gfx->setTextColor(d.accent);
@@ -7091,42 +7091,39 @@ uint8_t pmdFrameAt(const PmdAct &a, uint32_t t, bool loop) {
 
 // dibuja una accion anclada por la base (centro-x, suelo) y devuelve su escala
 // dibuja una accion de un PmdMon concreto (m); drawPmdAct usa el global pmd
+// Nearest-neighbour preserves the original pixel colours. Coalesce horizontal
+// runs instead of issuing a graphics call for every enlarged destination pixel.
+void drawIndexedFit(const uint8_t *frame,int stride,const uint16_t *pal,int colors,
+                    const SpriteBounds &b,int x0,int y0,int w,int h,bool sil) {
+  if(!frame || !b.w || !b.h || w<=0 || h<=0)return;
+  for(int y=0;y<h;y++) {
+    const uint8_t *row=frame+(b.y+y*b.h/h)*stride;
+    int x=0;
+    while(x<w) {
+      int start=x;uint8_t idx=row[b.x+x*b.w/w];
+      while(++x<w && row[b.x+x*b.w/w]==idx) {}
+      if(idx!=255 && idx<colors)gfx->fillRect(x0+start,y0+y,x-start,1,sil?INK_K:pal[idx]);
+    }
+  }
+}
+
+void drawThumbFit(const uint8_t *thumb,int cx,int cy,int maxW,int maxH,bool sil) {
+  if(!thumb)return;
+  int colors=thumb[2];const uint8_t *palette=thumb+3,*data=palette+colors*2;
+  const auto b=spriteBounds(data,thumb[0],thumb[1],1,colors);
+  const auto size=spriteFit(b,maxW,maxH);
+  uint16_t pal[256];for(int i=0;i<colors;i++)pal[i]=palette[i*2]|(palette[i*2+1]<<8);
+  drawIndexedFit(data,thumb[0],pal,colors,b,cx-size.w/2,cy-size.h/2,size.w,size.h,sil);
+}
+
 void drawPmdActM(PmdMon &m, uint8_t actId, int cx, int groundY, uint32_t t, bool loop, bool sil, uint8_t maxS) {
-  const PmdAct &a = m.acts[actId];
-  if (!a.frames) return;
-  uint8_t sBase = m.acts[PMD_IDLE].h ? 170 / m.acts[PMD_IDLE].h : 5;
-  if (sBase < 2) sBase = 2;
-  if (sBase > maxS) sBase = maxS;
-  uint8_t s = sBase;
-  while (s > 2 && a.h * s > 250) s--;  // acciones con frame grande (ataque)
-  uint8_t fi = pmdFrameAt(a, t, loop);
-  const uint8_t *fr = a.data + (uint32_t)fi * a.w * a.h;
-  if(m.form) {
-    // Large forms (notably Eternamax) must fit the actual round-screen lane.
-    bool battleSprite=&m==&btlPmd[0] || &m==&btlPmd[1];
-    int maxW=battleSprite?156:330,maxH=battleSprite?132:200;
-    int den=256, num=s*256;
-    if(a.w*num/den>maxW) num=maxW*den/a.w;
-    if(a.h*num/den>maxH) num=maxH*den/a.h;
-    int w=a.w*num/den,h=a.h*num/den;
-    int x0=cx-w/2,y0=groundY-(a.base?a.base:a.h)*num/den;
-    for(int y=0;y<h;y++) for(int x=0;x<w;x++) {
-      uint8_t idx=fr[(y*a.h/h)*a.w+x*a.w/w];
-      if(idx<m.palCount) gfx->fillRect(x0+x,y0+y,1,1,sil?INK_K:m.pal[idx]);
-    }
-    return;
-  }
-  // anclar por los pies (a.base), no por el alto del lienzo: asi las acciones
-  // con padding distinto (Hurt, Eat...) quedan todas a la misma altura de suelo
-  int x0 = cx - a.w * s / 2, y0 = groundY - (a.base ? a.base : a.h) * s;
-  for (int r = 0; r < a.h; r++) {
-    const uint8_t *row = fr + r * a.w;
-    for (int c = 0; c < a.w; c++) {
-      uint8_t idx = row[c];
-      if (idx == 0xFF) continue;
-      gfx->fillRect(x0 + c * s, y0 + r * s, s, s, sil ? INK_K : m.pal[idx]);
-    }
-  }
+  if(!m.has(actId))return;
+  const PmdAct &a=m.acts[actId];
+  // Species height sets a soft body-size tier after cropping transparent space.
+  // Compact cards/battles scale the same tiers into their smaller drawing lane.
+  const auto size=spriteDisplaySize(m.acts[PMD_IDLE].visible,a.visible,m.dex,m.form,maxS);
+  const uint8_t *fr=a.data+(uint32_t)pmdFrameAt(a,t,loop)*a.w*a.h;
+  drawIndexedFit(fr,a.w,m.pal,m.palCount,a.visible,cx-size.w/2,groundY-size.h,size.w,size.h,sil);
 }
 void drawPmdAct(uint8_t actId, int cx, int groundY, uint32_t t, bool loop, bool sil, uint8_t maxS) {
   drawPmdActM(pmd, actId, cx, groundY, t, loop, sil, maxS);
@@ -7201,7 +7198,10 @@ void drawPetPMD() {
     if (!pmd.has(act)) act = PMD_IDLE;
   }
 
-  drawPmdAct(act, (int)beh.x, PET_GROUND, now - beh.t0, loop || act == PMD_IDLE, false, 5);
+  const auto size=spriteDisplaySize(pmd.acts[PMD_IDLE].visible,pmd.acts[act].visible,pmd.dex,pmd.form,5);
+  const int drawX=spriteHomeCenter((int)beh.x,size);
+  // Constrain wandering only. Farewell/runaway animations must still exit.
+  drawPmdAct(act, drawX, PET_GROUND, now - beh.t0, loop || act == PMD_IDLE, false, 5);
 
   if (pet.showHeart()) drawMap(SPR_HEART, 32, (int)beh.x + 50, PET_GROUND - 190, 2, false);
 }

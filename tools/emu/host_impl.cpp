@@ -86,16 +86,8 @@ bool PmdMon::loadForm(int16_t dexNum, uint16_t form, bool shiny) {
     for (uint8_t k = 0; k < nf; k++) { a.ms[k] = q[0] | (q[1] << 8); q += 2; }
     a.data = q;
     q += (uint32_t)w * h * nf;
-    uint8_t base = 1;
-    for (uint8_t f = 0; f < nf; f++) {
-      const uint8_t *fr = a.data + (uint32_t)f * w * h;
-      for (int r = h - 1; r >= 0; r--) {
-        bool any = false;
-        for (int c = 0; c < w && !any; c++) if (fr[r * w + c] != 0xFF) any = true;
-        if (any) { if (r + 1 > base) base = r + 1; break; }
-      }
-    }
-    a.base = base;
+    a.visible = spriteBounds(a.data,w,h,nf,palCount);
+    a.base = a.visible.h ? a.visible.y+a.visible.h : 1;
   }
   dex = dexNum;
   loaded = true;
@@ -104,7 +96,7 @@ bool PmdMon::loadForm(int16_t dexNum, uint16_t form, bool shiny) {
 
 void PmdMon::unload() {
   if (blob) { free(blob); blob = nullptr; }
-  for (auto &a : acts) { a.w = a.h = a.frames = a.base = 0; a.data = nullptr; }
+  for (auto &a : acts) { a.w = a.h = a.frames = a.base = 0; a.visible={}; a.data = nullptr; }
   loaded = false;
 }
 

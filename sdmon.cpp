@@ -69,18 +69,8 @@ bool PmdMon::loadForm(int16_t dexNum, uint16_t form, bool shiny) {
     }
     a.data = p;
     p += (uint32_t)w * h * nf;
-    // fila mas baja con contenido en cualquier frame: anclar por los pies
-    uint8_t base = 1;
-    for (uint8_t f = 0; f < nf; f++) {
-      const uint8_t *fr = a.data + (uint32_t)f * w * h;
-      for (int r = h - 1; r >= 0; r--) {
-        bool any = false;
-        for (int c = 0; c < w && !any; c++)
-          if (fr[r * w + c] != 0xFF) any = true;
-        if (any) { if (r + 1 > base) base = r + 1; break; }
-      }
-    }
-    a.base = base;
+    a.visible = spriteBounds(a.data,w,h,nf,palCount);
+    a.base = a.visible.h ? a.visible.y+a.visible.h : 1;
   }
   loaded = true;
   Serial.printf("cargado %s (%u KB)\n", path, size / 1024);
@@ -94,6 +84,7 @@ void PmdMon::unload() {
   }
   for (auto &a : acts) {
     a.w = a.h = a.frames = a.base = 0;
+    a.visible = {};
     a.data = nullptr;
   }
   loaded = false;

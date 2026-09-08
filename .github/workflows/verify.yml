@@ -12,6 +12,7 @@ jobs:
       - run: python tools/check_gen89.py
       - run: python tools/check_forms.py
       - run: python tools/gen_form_moves.py && git diff --exit-code -- form_moves_data.h
+      - run: python tools/gen_sprite_sizes.py && git diff --exit-code -- sprite_sizes.h
       - run: python tools/check_web.py
       - run: python tools/prepare_release_guides.py --out build/release-guides
       - run: node tools/tests/installer.test.cjs

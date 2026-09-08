@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include "dex.h"
 #include "noart.h"
+#include "sprite_layout.h"
 
 // Sprite animado TPK1 (formato heredado, camino de respaldo). El proyecto usa
 // PMD/TPK2 (PmdMon) para todo; esta ruta queda inactiva si no hay NNN.bin en la SD.
@@ -28,6 +29,7 @@ enum : uint8_t {
 struct PmdAct {
   uint8_t w = 0, h = 0, frames = 0;
   uint8_t base = 0;  // fila+1 del pixel mas bajo (anclar por los pies, no el lienzo)
+  SpriteBounds visible;
   uint16_t ms[24];
   const uint8_t *data = nullptr;  // frames * w * h en el blob
 };

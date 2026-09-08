@@ -13,6 +13,7 @@
 #include "battle.h"
 #include "sdmon.h"
 #include <chrono>
+#include <thread>
 #include <string>
 #include <deque>
 #ifdef _WIN32
@@ -169,7 +170,7 @@ extern bool gymShield;
 extern uint8_t gymPage;
 extern PmdMon btlPmd[2];
 extern uint8_t partyDetail;
-extern bool boxOpen; extern uint8_t boxSwapFrom; extern uint16_t boxDetail;
+extern bool boxOpen; extern uint8_t boxSwapFrom,boxPage; extern uint16_t boxDetail;
 extern bool btlNewBadge; extern uint32_t btlWinUntil;
 extern uint8_t pickTrainer, pickPage;
 void pickDefault(uint8_t cap);
@@ -500,6 +501,21 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
       party.replaceAt(i, m);
     }
     if (!strcmp(screen, "partyfull")) partyPick = true;
+  }
+  if(!strncmp(screen,"size-",5)) {
+    // Isolated screenshot fixture; never populated during ordinary play.
+    // Let one-time medal overlays expire without ticking/changing a real save.
+    emuSetTimeScale(10000);std::this_thread::sleep_for(std::chrono::milliseconds(5));millis();emuSetTimeScale(1);
+    if(!strcmp(screen,"size-box") || !strcmp(screen,"size-party") || !strcmp(screen,"size-forms")) {
+      static const int ids[]={38,40,45,47,52,55};
+      for(int i=0;i<6;i++) {
+        PartyMon m;m.dex=ids[i];m.level=90;
+        if(i==4)m.form=10320;
+        if(!strcmp(screen,"size-forms")) {m.dex=52;m.form=i%3==0?0:i%3==1?10209:10320;m.shiny=i>=3;}
+        party.box[i]=m;if(i<PARTY_STORAGE_SLOTS)party.replaceAt(i,m);
+      }
+      partyOpen=true;boxOpen=strcmp(screen,"size-party")!=0;boxPage=0;boxDetail=0;boxSwapFrom=0;
+    }
   }
   render();
   writePPM(out);

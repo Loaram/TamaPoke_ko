@@ -132,7 +132,8 @@ void formsTap(int16_t x,int16_t y) {
 // Six bounded thumbnail cache entries. A form never borrows a base-species
 // image; absent exact art is represented by a question mark instead.
 void drawFormMini(int16_t dex, FormId form, bool shiny, int cx, int cy) {
-  struct Mini {uint32_t key;bool loaded;uint16_t pixels[32*32];};
+  constexpr int edge=40;
+  struct Mini {uint32_t key;bool loaded;uint16_t pixels[edge*edge];bool opaque[edge*edge];};
   static Mini cache[6]={};static uint8_t next=0;
   uint32_t key=((uint32_t)form<<12)|((uint16_t)dex<<1)|(shiny?1:0);
   Mini *hit=nullptr;
@@ -140,21 +141,25 @@ void drawFormMini(int16_t dex, FormId form, bool shiny, int cx, int cy) {
   if(!hit) {
     hit=&cache[next++%6];hit->key=key;
     hit->loaded=false;
-    for(auto &p:hit->pixels) p=0x0001;
+    memset(hit->opaque,0,sizeof(hit->opaque));
     PmdMon sprite;
     if(sprite.loadForm(dex,form,shiny) && sprite.has(PMD_IDLE)) {
-      hit->loaded=true;
       const auto &a=sprite.acts[PMD_IDLE];
-      int w=a.w,h=a.h,den=w>h?w:h;
-      int dw=w*32/den,dh=h*32/den;
-      for(int y=0;y<dh;y++) for(int x=0;x<dw;x++) {
-        uint8_t index=a.data[(y*h/dh)*w+x*w/dw];
-        if(index<sprite.palCount) hit->pixels[(y+(32-dh)/2)*32+x+(32-dw)/2]=sprite.pal[index];
+      const auto b=spriteBounds(a.data,a.w,a.h,1,sprite.palCount);
+      const int target=spriteMiniEdge(dex,form);
+      const auto size=spriteFit(b,target,target);
+      hit->loaded=size.w>0 && size.h>0;
+      for(int y=0;y<size.h;y++) for(int x=0;x<size.w;x++) {
+        uint8_t index=a.data[(b.y+y*b.h/size.h)*a.w+b.x+x*b.w/size.w];
+        if(index!=255 && index<sprite.palCount) {
+          int dst=(y+(edge-size.h)/2)*edge+x+(edge-size.w)/2;
+          hit->pixels[dst]=sprite.pal[index];hit->opaque[dst]=true;
+        }
       }
     }
     sprite.unload();
   }
   if(!hit->loaded) {gfx->setTextColor(UI_INK);gfx->setTextSize(2);gfx->setCursor(cx-6,cy-8);gfx->print("?");return;}
-  for(int y=0;y<32;y++) for(int x=0;x<32;x++)
-    if(hit->pixels[y*32+x]!=0x0001) gfx->fillRect(cx-16+x,cy-16+y,1,1,hit->pixels[y*32+x]);
+  for(int y=0;y<edge;y++) for(int x=0;x<edge;x++)
+    if(hit->opaque[y*edge+x]) gfx->fillRect(cx-edge/2+x,cy-edge/2+y,1,1,hit->pixels[y*edge+x]);
 }

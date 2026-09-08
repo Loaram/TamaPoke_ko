@@ -410,7 +410,12 @@ PartyMon Pet::storageSnapshot() const {
   uint8_t *c=m.care;
   c[0]=1; c[1]=(frozen?1:0)|(sleeping?2:0)|(berryKnown?4:0);
   c[2]=fullness; c[3]=joy; c[4]=energy; c[5]=hygiene; c[6]=poops; c[7]=weight;
-  c[8]=careMistakes; c[9]=bond; c[10]=bondToday; c[11]=mistakeCooldown;
+  c[8]=careMistakes; c[9]=bond;
+  // A clock/save or storage swap may precede today's first care. Do not stamp
+  // yesterday's exhausted allowance with today's snapshot date: another
+  // companion may receive the player's daily care before this one returns.
+  c[10]=(today() && today()>lastCareDay) ? 0 : bondToday;
+  c[11]=mistakeCooldown;
   c[12]=neglectTicks; c[13]=evoDeclinedLv; c[14]=lastLearnLevel; c[15]=sleepAuto;
   memcpy(c+16,&goodTicks,2); memcpy(c+20,&ageMinutes,4);
   memcpy(c+24,&farDeclinedAge,4); uint32_t day=today(); memcpy(c+28,&day,4);
@@ -818,9 +823,14 @@ void Pet::registerCare() {
 }
 
 void Pet::addBond(uint8_t amt) {
+  // Refresh the day BEFORE testing or spending the action allowance. The
+  // callers also register non-bond care, so their later call stays harmless.
+  registerCare();
   if (bondToday >= 20) return;  // tope diario: el vinculo no se farmea
+  if (amt > 20-bondToday) amt=20-bondToday;
   bond = clamp100(bond + amt);
   bondToday += amt;
+  checkMedals();
 }
 
 void Pet::checkMedals() {
@@ -1548,6 +1558,7 @@ void Pet::caress() {
   heartUntil = millis() + HEART_MS;
   addBond(1);
   registerCare();
+  save(); // Same-day registerCare is a no-op; persist the actual caress too.
 }
 
 void Pet::eggTap() {
