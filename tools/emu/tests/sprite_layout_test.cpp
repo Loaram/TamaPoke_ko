@@ -36,7 +36,7 @@ int main() {
   ck(spriteBodyHeight(870,0)==108&&spriteMiniEdge(870,0)==34,"single Falinks Trooper is not enlarged to formation size");
   ck(spriteHeightDm(52,10209)==4&&spriteHeightDm(52,10320)==4&&spriteMiniEdge(52,10320)==34,
      "Meowth regional forms share a readable 34 px icon target");
-  ck(spriteHeightDm(26,10002)==7&&spriteHeightDm(890,10359)>spriteHeightDm(890,0),
+  ck(spriteHeightDm(26,10202)==7&&spriteHeightDm(890,10359)>spriteHeightDm(890,0),
      "form-specific heights resolve without changing canonical species IDs");
   bool fits=true,metadata=true;int loaded=0,actions=0;
   auto audit=[&](PmdMon &m) {
