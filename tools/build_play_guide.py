@@ -22,8 +22,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.1-Play-Guide-KO.pdf"
-VERSION = "3.7.1"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.2-Play-Guide-KO.pdf"
+VERSION = "3.7.2"
 PAGE_TOTAL = 29
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -238,6 +238,7 @@ def header_footer(canvas, doc) -> None:
 
 screens = ROOT / "docs" / "screens"
 qa_current = ROOT / "docs" / "qa" / "2.0.0"
+qa_size = ROOT / "docs" / "qa" / "3.7.2"
 
 story: list = []
 
@@ -252,11 +253,11 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.7.1",
+            "플레이 설명서 · 3.7.2",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
-        screenshot(screens / "main.png", 79 * mm),
+        screenshot(qa_size / "guide-home.png", 79 * mm),
         Spacer(1, 8 * mm),
         p("Waveshare ESP32-S3-Touch-AMOLED-1.75", CENTER),
         p("Android · Galaxy Watch4~9 연동 안내 포함", CENTER),
@@ -337,7 +338,7 @@ story.extend(
         bullet("먹이는 포만을 채웁니다. 좋아하는 열매는 포만 +35·기쁨 +10, 다른 열매는 포만 +25입니다."),
         bullet("사탕은 포만 +10·기쁨 +12 대신 무게 +12가 오릅니다. 운동하면 무게를 줄일 수 있습니다."),
         bullet("수면은 활력을 회복합니다. 앱을 닫아도 직접 재운 상태가 유지되며, 다시 눌러 깨울 수 있습니다. 목욕은 배설물을 치우고 위생을 100으로 회복합니다."),
-        bullet("홈에서 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다."),
+        bullet("홈에서 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다. 그림 크기는 종의 크기 차이를 살려 화면에 맞추며 능력치와 무관합니다."),
         bullet("PWR를 짧게 누르면 화면을 끄고, 길게 누르면 전원을 끕니다."),
         bullet("화면 위 배터리 그림은 ESP32·휴대전화·워치의 실제 잔량을 따르며 충전 중에는 번개가 표시됩니다."),
         p("트레이너 설정에서 언어·소리·음량을 조절합니다. 선택한 소리 켜기/끄기와 음량은 앱을 다시 실행해도 유지됩니다. 한국어가 아니면 언어 버튼에서 <b>한국어</b>를 선택하세요.", CALLOUT),
@@ -359,6 +360,7 @@ story.append(
             ["공격 훈련", "활력 12 · 4회당 +1", "1회 최대 +18"],
             ["방어 훈련", "활력 12 · 점수 2당 +1", "1회 최대 +18"],
             ["스피드 훈련", "활력 10 · 2회당 +1", "1회 최대 +18"],
+            ["유대", "행동으로 하루 +20 · 최대 100", "하루 첫 돌봄 +4는 별도"],
         ],
         [37 * mm, 57 * mm, 80 * mm],
     )
@@ -368,7 +370,7 @@ story.extend(
         Spacer(1, 6 * mm),
         p("기기의 시간이 기준입니다", H2),
         p("Android·워치는 기기의 날짜와 시간, ESP32는 설정 시각을 따릅니다. 앱 종료·백그라운드 중에는 오프라인 규칙을 적용해 깨어 있을 때 돌봄 수치가 15 아래로 더 떨어지지 않고 방치 실수가 추가되지 않습니다. 홈으로 데려온 동료도 이 시간 기준으로 성장합니다.", CALLOUT),
-        p("작별을 거절하면 하루 뒤 다시 제안합니다. 최종 진화 전, 수면 중, 영구 동료 상태에서는 작별이 열리지 않습니다.", BODY),
+        p("유대는 쓰다듬기·목욕 +1, 좋아하는 열매 +2, 훈련 +2~5입니다. 사탕은 직접 올리지 않습니다. 유대와 당일 행동 상승량은 개체별로 유지되므로 같은 날 교체해도 한도가 새로 생기지 않습니다. 다음 날 다시 돌보면 오릅니다. 첫 돌봄 +4는 하루에 한 마리만 받습니다.", BODY),
         p("좋은 작별과 두 가지 알 보너스", H2),
         p("좋은 작별은 <b>부화 이후 실제 누적 성장 24시간</b>과 일반 최종진화가 조건입니다. 최종진화 후 24시간을 더 기다리는 뜻이 아니며 폼체인지도 필수가 아닙니다. 사용자가 작별을 선택하면 파티 우선, 가득 차면 박스에 보관합니다.", SAFE),
         p("알 보너스는 <b>연속 돌봄 10일과 수집 가능 도감 50%</b>를 모두 달성하면 최대 이로치 15%·전설 21%입니다. 좋은 작별·일반 작별·현재 포켓몬 보내기는 합쳐 하루 3회이며 자정에 초기화됩니다. 자세한 확률은 21쪽에서 확인하세요.", BODY),
@@ -395,7 +397,7 @@ page_break(story)
 
 # 7. Moves and evolution
 story.extend(page_heading("06 기술", "레벨업과 진화 기술", "새 기술을 배우는 순간과 네 칸의 기술 구성을 관리하는 방법입니다."))
-story.append(screenshot_pair(qa_current / "guide-moves.png", qa_current / "guide-profile.png"))
+story.append(screenshot_pair(qa_current / "guide-moves.png", qa_size / "guide-profile.png"))
 story.extend(
     [
         Spacer(1, 4 * mm),
@@ -421,7 +423,7 @@ page_break(story)
 
 # 8. Party and box
 story.extend(page_heading("07 파티", "현재 동료 포함 6마리와 300칸 박스", "함께 키우는 포켓몬 1마리와 파티 5마리가 한 전투에 참가합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/3.1.0/companion-box-ivs.png", ROOT / "docs/qa/daily-rewards/box-picker.png"))
+story.append(screenshot_pair(qa_size / "guide-box.png", ROOT / "docs/qa/daily-rewards/box-picker.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -439,7 +441,7 @@ page_break(story)
 
 # 9. Training and battles
 story.extend(page_heading("08 전투", "훈련과 배틀 기본", "활력과 기술 구성을 확인한 뒤 전투를 시작하세요."))
-story.append(screenshot_pair(qa_current / "guide-defense.png", qa_current / "guide-battle.png"))
+story.append(screenshot_pair(qa_current / "guide-defense.png", qa_size / "guide-battle.png"))
 story.extend(
     [
         Spacer(1, 5 * mm),
@@ -475,7 +477,7 @@ page_break(story)
 
 # 11. Explore overview
 story.extend(page_heading("10 탐색", "야생 포켓몬을 만나는 방법", "메뉴에서 탐색을 열고 지방과 탐색 방식을 선택합니다. 조우가 시작될 때 공용 활력 22를 사용합니다."))
-story.append(screenshot_pair(ROOT / "docs/qa/3.7.0/guide-explore.png", qa_current / "guide-wild.png"))
+story.append(screenshot_pair(ROOT / "docs/qa/3.7.0/guide-explore.png", qa_size / "guide-wild.png"))
 story.extend(
     [
         Spacer(1, 4 * mm),
@@ -680,7 +682,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.1", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.2", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
