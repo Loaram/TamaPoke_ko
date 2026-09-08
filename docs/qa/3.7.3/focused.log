@@ -1,0 +1,46 @@
+TamaPoke fw v3.7.3
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS bounds unite all frames, ignoring transparent padding
+PASS fit preserves aspect within the icon lane
+PASS empty and invalid palette indices stay invisible, including palette size 256
+PASS empty and zero-size fits are safe
+PASS approved smaller body tiers preserve small/large species distinction
+PASS single Falinks Trooper is not enlarged to formation size
+PASS very small source stays at four times resolution, not the target height
+PASS Meowth regional forms share a readable 34 px icon target
+PASS form-specific heights resolve without changing canonical species IDs
+Audited 2316 loaded sprites / 18547 action unions at four display scales
+PASS all species/forms/shiny loaders produce bounded, resettable metadata
+PASS all action layouts fit lanes and 4x source cap; wandering stays inside circle and below text
+PASS all base/form/shiny thumbnails remain inside their cell icon lane
+PASS Meowth base/Alola/Galar is no longer a tiny padded thumbnail
+PASS Meowth base/Alola/Galar is no longer a tiny padded thumbnail
+PASS Meowth base/Alola/Galar is no longer a tiny padded thumbnail
+PASS Pichu matches approved 74x80 preview
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS Pikachu matches approved 61x92 preview
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS Charizard matches approved 116x116 preview
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS Snorlax matches approved 120x124 preview
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS every representative Idle frame uses a fixed scale and ground anchor
+PASS a caress increases bond below the daily limit
+PASS same-day caress is saved immediately
+PASS twenty daily action points can stop exactly at 44
+PASS daily limit is intentional; candy is not a direct bond reward
+PASS first next-day caress gives daily four plus action one
+PASS training cannot overshoot the twenty-point daily action limit
+PASS first care action counts toward the new day's twenty-point limit
+PASS overnight storage before first care does not retain yesterday's exhausted quota
+PASS restart on the same date cannot refill the quota
+PASS same-day bring-back cannot refill the quota
+PASS bond remains capped at one hundred
+PASS the final caress awards the bond medal without waiting for a minute tick
+all good
+PASS: sprite_layout,bond

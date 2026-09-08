@@ -8,7 +8,7 @@ import json,struct
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'build/size-preview/audit';OUT.mkdir(parents=True,exist_ok=True)
+OUT=ROOT/'build/size-cap-patch/audit';OUT.mkdir(parents=True,exist_ok=True)
 SIZES=json.loads((ROOT/'data/sprite_sizes.json').read_text(encoding='utf-8'))
 try:font=ImageFont.truetype('C:/Windows/Fonts/malgun.ttf',11)
 except OSError:font=ImageFont.load_default()
@@ -35,7 +35,7 @@ def load(path):
     assert at==len(blob),path
     return actions
 
-def body(dm):return 96 if dm<=3 else 108 if dm<=4 else 120 if dm<=7 else 144 if dm<=12 else 168
+def body(dm):return 80 if dm<=3 else 92 if dm<=4 else 104 if dm<=7 else 120 if dm<=12 else 144
 def sheet(entries,name):
     for p in range(0,len(entries),96):
         page=entries[p:p+96];im=Image.new('RGB',(1440,976),'#eee7df');draw=ImageDraw.Draw(im)
@@ -63,7 +63,7 @@ for dex,form,dm in targets:
         acts=load(path);total_frames+=sum(len(a[2]) for a in acts)
         idle=next(a for a in acts if a[0]==0);_,b,frames=idle
         assert b,(dex,form,shiny)
-        w,h=b[2]-b[0],b[3]-b[1];target=108 if dex==870 and not form else body(dm)
+        w,h=b[2]-b[0],b[3]-b[1];target=92 if dex==870 and not form else body(dm)
         for _,ab,_ in acts:
             if not ab:continue
             aw,ah=ab[2]-ab[0],ab[3]-ab[1]
@@ -71,9 +71,10 @@ for dex,form,dm in targets:
                 lane_w,lane_h={3:(120,84),4:(156,112),5:(240,168),6:(270,192)}[lane]
                 lw=300 if lane>=5 else lane_w
                 lh=204 if lane>=6 else 192 if lane>=5 else lane_h+20
-                scale=min((lane_w*target//168)*65536//w,(lane_h*target//168)*65536//h,lw*65536//aw,lh*65536//ah)
+                scale=min(4*65536,(lane_w*target//168)*65536//w,(lane_h*target//168)*65536//h,lw*65536//aw,lh*65536//ah)
                 sw=max(1,(aw*scale+32768)//65536);sh=max(1,(ah*scale+32768)//65536)
                 assert 0<sw<=lw and 0<sh<=lh,(dex,form,lane,sw,sh)
+                assert sw<=aw*4 and sh<=ah*4,(dex,form,lane,'4x cap')
                 if lane==5:
                     assert 304-sh>=112
                     dy=max(abs(304-sh-233),71);half=231
@@ -82,7 +83,7 @@ for dex,form,dm in targets:
                         cx=max(233-half+sw//2+1,min(desired,233+half-(sw+1)//2-1))
                         assert all((x-233)**2+(y-233)**2<=231**2 for x in [cx-sw//2,cx+(sw+1)//2] for y in [304-sh,304])
                 layout_checks+=1
-        scale=min((240*target//168)*65536//w,target*65536//h)
+        scale=min(4*65536,(240*target//168)*65536//w,target*65536//h)
         dw=(w*scale+32768)//65536;dh=(h*scale+32768)//65536
         first=frames[0].getbbox();assert first,(dex,form,shiny)
         ratios=[((f.getbbox()[2]-f.getbbox()[0])*(f.getbbox()[3]-f.getbbox()[1]))/(w*h) for f in frames if f.getbbox()]

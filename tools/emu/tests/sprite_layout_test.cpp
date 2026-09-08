@@ -31,9 +31,12 @@ int main() {
   ck(!spriteBounds(empty,2,1,1,2).w&&!spriteBounds(empty,1,1,1,256).w,
      "empty and invalid palette indices stay invisible, including palette size 256");
   ck(!spriteFit({},40,40).w&&!spriteFit(b,0,40).w,"empty and zero-size fits are safe");
-  ck(spriteBodyHeight(172,0)==96&&spriteBodyHeight(25,0)==108&&
-     spriteBodyHeight(6,0)==168&&spriteBodyHeight(143,0)==168,"Pichu < Pikachu < Charizard/Snorlax after normalisation");
-  ck(spriteBodyHeight(870,0)==108&&spriteMiniEdge(870,0)==34,"single Falinks Trooper is not enlarged to formation size");
+  ck(spriteBodyHeight(172,0)==80&&spriteBodyHeight(25,0)==92&&
+     spriteBodyHeight(6,0)==144&&spriteBodyHeight(143,0)==144,"approved smaller body tiers preserve small/large species distinction");
+  ck(spriteBodyHeight(870,0)==92&&spriteMiniEdge(870,0)==34,"single Falinks Trooper is not enlarged to formation size");
+  SpriteBounds tiny{0,0,2,3};
+  auto cap=spriteActionSize(tiny,tiny,240,144,300,192);
+  ck(cap.w==8&&cap.h==12,"very small source stays at four times resolution, not the target height");
   ck(spriteHeightDm(52,10209)==4&&spriteHeightDm(52,10320)==4&&spriteMiniEdge(52,10320)==34,
      "Meowth regional forms share a readable 34 px icon target");
   ck(spriteHeightDm(26,10202)==7&&spriteHeightDm(890,10359)>spriteHeightDm(890,0),
@@ -51,6 +54,7 @@ int main() {
         int limitW=scale>=5?300:w,limitH=scale>=6?204:scale>=5?192:h+20;
         auto size=spriteDisplaySize(m.acts[0].visible,v,m.dex,m.form,scale);
         fits &= size.w>0&&size.h>0&&size.w<=limitW&&size.h<=limitH;
+        fits &= size.w<=v.w*4&&size.h<=v.h*4;
         if(scale==5)for(int desired:{150,233,326}) {
           int cx=spriteHomeCenter(desired,size);
           fits &= 304-size.h>=112;
@@ -69,7 +73,7 @@ int main() {
   }
   printf("Audited %d loaded sprites / %d action unions at four display scales\n",loaded,actions);
   ck(loaded>2200&&metadata,"all species/forms/shiny loaders produce bounded, resettable metadata");
-  ck(fits,"all installed action layouts fit their lanes; wandering stays inside the circle and below text");
+  ck(fits,"all action layouts fit lanes and 4x source cap; wandering stays inside circle and below text");
   bool icons=true;
   for(int dex=1;dex<=DEX_COUNT;dex++) {
     const uint8_t *th=thumbs.get(dex);if(!th)continue;
@@ -93,6 +97,10 @@ int main() {
     PmdMon m;m.load(dex);const auto &a=m.acts[0];uint32_t t=0;
     bool frameFit=true;
     auto size=spriteActionSize(a.visible,a.visible,240*spriteBodyHeight(dex,0)/168,spriteBodyHeight(dex,0),300,220);
+    if(dex==6)ck(size.w==116&&size.h==116,"Charizard matches approved 116x116 preview");
+    if(dex==143)ck(size.w==120&&size.h==124,"Snorlax matches approved 120x124 preview");
+    if(dex==172)ck(size.w==74&&size.h==80,"Pichu matches approved 74x80 preview");
+    if(dex==25)ck(size.w==61&&size.h==92,"Pikachu matches approved 61x92 preview");
     for(int f=0;f<a.frames;f++) {
       gfx->fillScreen(0x1234);drawPmdActM(m,0,233,304,t,true,false,5);auto p=painted();
       frameFit &= p.w>0&&p.h>0&&p.x>=233-size.w/2&&p.x+p.w<=233+(size.w+1)/2&&p.y>=304-size.h&&p.y+p.h<=304;

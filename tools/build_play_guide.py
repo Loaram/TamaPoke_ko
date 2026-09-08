@@ -22,8 +22,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.2-Play-Guide-KO.pdf"
-VERSION = "3.7.2"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.7.3-Play-Guide-KO.pdf"
+VERSION = "3.7.3"
 PAGE_TOTAL = 29
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -238,7 +238,7 @@ def header_footer(canvas, doc) -> None:
 
 screens = ROOT / "docs" / "screens"
 qa_current = ROOT / "docs" / "qa" / "2.0.0"
-qa_size = ROOT / "docs" / "qa" / "3.7.2"
+qa_size = ROOT / "docs" / "qa" / "3.7.3"
 
 story: list = []
 
@@ -253,7 +253,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.7.2",
+            "플레이 설명서 · 3.7.3",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -338,7 +338,7 @@ story.extend(
         bullet("먹이는 포만을 채웁니다. 좋아하는 열매는 포만 +35·기쁨 +10, 다른 열매는 포만 +25입니다."),
         bullet("사탕은 포만 +10·기쁨 +12 대신 무게 +12가 오릅니다. 운동하면 무게를 줄일 수 있습니다."),
         bullet("수면은 활력을 회복합니다. 앱을 닫아도 직접 재운 상태가 유지되며, 다시 눌러 깨울 수 있습니다. 목욕은 배설물을 치우고 위생을 100으로 회복합니다."),
-        bullet("홈에서 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다. 그림 크기는 종의 크기 차이를 살려 화면에 맞추며 능력치와 무관합니다."),
+        bullet("홈에서 오른쪽으로 밀면 파티, 왼쪽으로 밀면 체육관으로 이동합니다. 그림은 종별 크기를 조정하되 원본의 4배까지만 확대합니다. 표시 크기는 능력치와 무관합니다."),
         bullet("PWR를 짧게 누르면 화면을 끄고, 길게 누르면 전원을 끕니다."),
         bullet("화면 위 배터리 그림은 ESP32·휴대전화·워치의 실제 잔량을 따르며 충전 중에는 번개가 표시됩니다."),
         p("트레이너 설정에서 언어·소리·음량을 조절합니다. 선택한 소리 켜기/끄기와 음량은 앱을 다시 실행해도 유지됩니다. 한국어가 아니면 언어 버튼에서 <b>한국어</b>를 선택하세요.", CALLOUT),
@@ -682,7 +682,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.2", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.7.3", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

@@ -12,9 +12,9 @@ inline int spriteHeightDm(int dex,int form) {
 inline int spriteBodyHeight(int dex,int form) {
   // p870 uses one PMD Trooper, not the full 3 m formation in the height table.
   // This is an explicit art-layout adjustment, not a change to species data.
-  if(dex==870 && !form)return 108;
+  if(dex==870 && !form)return 92;
   int dm=spriteHeightDm(dex,form);
-  return dm<=3?96:dm<=4?108:dm<=7?120:dm<=12?144:168;
+  return dm<=3?80:dm<=4?92:dm<=7?104:dm<=12?120:144;
 }
 inline int spriteMiniEdge(int dex,int form) {
   if(dex==870 && !form)return 34;
@@ -57,6 +57,9 @@ inline SpriteSize spriteActionSize(const SpriteBounds &idle,const SpriteBounds &
   if(!action.w || !action.h)return {};
   const auto &ref=idle.w&&idle.h?idle:action;
   uint32_t scale=(uint32_t)targetW*65536/ref.w;
+  // Source-resolution ceiling: never stretch one art pixel beyond 4x4.
+  // Apply once per action union, not per frame, so animation stays stable.
+  if(scale>4UL*65536)scale=4UL*65536;
   uint32_t s=(uint32_t)targetH*65536/ref.h;if(s<scale)scale=s;
   s=(uint32_t)limitW*65536/action.w;if(s<scale)scale=s;
   s=(uint32_t)limitH*65536/action.h;if(s<scale)scale=s;
