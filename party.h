@@ -80,6 +80,7 @@ public:
   void swapPartyBox(uint8_t partyIdx, uint16_t boxIdx);
   bool selectForm(bool fromBox, uint16_t index, FormId id);
   bool swapActive(Pet &pet, bool fromBox, uint16_t index);
+  bool hasPendingSwap() const { return !pendingLive.empty(); }
   static void recoverActiveSwap(Pet &pet);
 
   // combat stats of a party member, same formula as the live pet's

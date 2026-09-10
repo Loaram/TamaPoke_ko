@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.7.3"
+#define FW_VERSION "3.8.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -761,7 +761,8 @@ bool learnDialogVisible() {
 void renderSwapRecovery() {
   gfx->fillScreen(RGB565_BLACK);gfx->fillCircle(CX,CY,231,UI_BG_DAY);
   gfx->setTextColor(UI_INK);
-  tradeText(gLang==LANG_KO?"교체 저장 확인 필요":"Swap recovery needed",100,2);
+  tradeText(pet.eggClaimPending() ? (gLang==LANG_KO?"알 수령 저장 확인 필요":"Egg recovery needed") :
+            (gLang==LANG_KO?"교체 저장 확인 필요":"Swap recovery needed"),100,2);
   tradeText(gLang==LANG_KO?"기록 보호를 위해 진행을 멈췄습니다":"Progress paused to protect your save",162,1);
   tradeText(gLang==LANG_KO?"저장 공간과 SD 연결을 확인하세요":"Check free storage and the SD card",194,1);
   tradeText(gLang==LANG_KO?"계속 실패하면 초기화하지 말고 문의하세요":"If retry fails, keep your save and ask for help",226,1);
@@ -1330,7 +1331,7 @@ void handleTouch() {
     if (!holdFired && !swallowGesture && uiCurrentScreen() == SCR_MAIN && millis() - tStart > 3000 &&
         abs(tXl - tX0) < 30 && abs(tYl - tY0) < 30 && inPetZone(tX0, tY0) &&
         !pet.isEgg() && !confirmUntil && !pet.ceremony) {
-      confirmUntil = millis() + 10000;
+      // Daily egg menu replaces voluntary live release; swallow this hold.
       holdFired = true;
     }
   } else if (wasPressed) {  // levanta el dedo: resolver gesto
@@ -2061,7 +2062,7 @@ void onTap(int16_t x, int16_t y) {
       else if (i == 2) { openClock(); }
       else if (i == 3) {
 #endif
-        if (!pet.canRetireNow()) { sfxPlay(SFX_DENY); return; }
+        if (!pet.canReceiveEgg()) { sfxPlay(SFX_DENY); return; }
         choiceKind = 3; choiceUntil = millis() + 12000;
       }
       return;                         // the last row is CLOSE: just shut
@@ -2163,7 +2164,7 @@ void onTap(int16_t x, int16_t y) {
       if (b1) { int16_t old = pet.speciesId; pet.evolve(); evoPmd.load(old, pet.shiny); }
       else if (b2) pet.declineEvolve();
     } else if (choiceKind == 3) {          // retirada a peticion
-      if (b1) pet.startRetire();
+      if (b1 && !pet.receiveEgg()) sfxPlay(SFX_DENY);
       // b2 is simply "no": nothing to decline, the row is always there
     } else if (choiceKind == 2) {          // despedida
       if (b1) pet.startFarewell();
@@ -4789,7 +4790,7 @@ static void renderPlayerBadges() {
   snprintf(l, sizeof(l), T(S_POKEDEX_FMT), pet.registeredCount(), DEX_COUNT, pokedexCollectibleCount());
   gfx->setCursor(CX - textWidthFactor(l, 6), 289);
   gfx->print(l);
-  snprintf(l, sizeof(l), gLang == LANG_KO ? "연속 %u/10 · 작별 %u/3" : "Care %u/10 days / bye %u/3", pet.eggBonusDays(), pet.farewellsRemaining());
+  snprintf(l, sizeof(l), gLang == LANG_KO ? "연속 %u/10 · 알 %u/2" : "Care %u/10 days / eggs %u/2", pet.eggBonusDays(), pet.eggsRemaining());
   gfx->setCursor(CX - textWidthFactor(l, 6), 312);
   gfx->print(l);
   const uint16_t collected = pet.collectibleRegisteredCount(), total = pokedexCollectibleCount();
@@ -6027,10 +6028,10 @@ static void menuRowLabel(int i, char *out, size_t n) {
 #if defined(TAMAPOKE_EXPLORE_ENABLED)
     case 2: snprintf(out, n, "%s", T(S_EXPLORE)); break;
     case 3: snprintf(out, n, "%s", T(S_SETTINGS)); break;
-    case 4: snprintf(out, n, "%s (%u/3)", T(S_RETIRE), pet.farewellsRemaining()); break;
+    case 4: snprintf(out, n, gLang==LANG_KO ? "알 받기 (%u/2)" : "Receive egg (%u/2)", pet.eggsRemaining()); break;
 #else
     case 2: snprintf(out, n, "%s", T(S_SETTINGS)); break;
-    case 3: snprintf(out, n, "%s (%u/3)", T(S_RETIRE), pet.farewellsRemaining()); break;
+    case 3: snprintf(out, n, gLang==LANG_KO ? "알 받기 (%u/2)" : "Receive egg (%u/2)", pet.eggsRemaining()); break;
 #endif
     default: snprintf(out, n, "%s", T(S_CLOSE)); break;
   }
@@ -6049,9 +6050,9 @@ void drawMenu() {
     int y = MENU_ROW_Y(i);
     bool close = (i == MENU_ROWS - 1);
 #if defined(TAMAPOKE_EXPLORE_ENABLED)
-    bool dead = (i == 4 && !pet.canRetireNow());   // an egg or a companion
+    bool dead = (i == 4 && !pet.canReceiveEgg());
 #else
-    bool dead = (i == 3 && !pet.canRetireNow());
+    bool dead = (i == 3 && !pet.canReceiveEgg());
 #endif
     gfx->fillRoundRect(MENU_X + 18, y, MENU_W - 36, MENU_ROW_H, 12,
                        close || dead ? UI_TRACK : UI_BG_DAY);
@@ -6851,17 +6852,18 @@ void drawChoiceDialog() {
   const char *q, *o1, *o2;
   const char *sub1 = nullptr, *sub2 = nullptr;
   char daily[96];
-  snprintf(daily, sizeof(daily), gLang == LANG_KO ? "오늘 남은 작별 %u/3 (자정 초기화)" : "Left today: %u/3 (resets at midnight)", pet.farewellsRemaining());
+  snprintf(daily, sizeof(daily), gLang == LANG_KO ? "오늘 남은 알 %u/2 (자정 초기화)" : "Eggs left: %u/2 (resets at midnight)", pet.eggsRemaining());
   uint16_t c1, c2, t1, t2;
   if (choiceKind == 1) {  // evolucion
     q = T(S_EVO_Q); o1 = T(S_EVO_TAP); o2 = T(S_EVO_KEEP);
     c1 = UI_BAR_BAD; t1 = UI_WHITE; c2 = UI_TRACK; t2 = UI_INK;
   } else if (choiceKind == 3) {   // retirada a peticion
-    q = T(S_RETIRE_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);
+    q = gLang==LANG_KO ? "새 알을 받을까요?" : "Receive a new egg?";
+    o1 = gLang==LANG_KO ? "알 받기" : "Receive egg"; o2 = T(S_NO);
     c1 = UI_BAR_WARN; t1 = UI_INK; c2 = UI_BAR_OK; t2 = UI_WHITE;
     // An early retirement gives the creature up; it no longer delays the next
     // creature's evolution. Say only what is still lost.
-    if (!pet.retireIsFree()) sub1 = T(S_RETIRE_GONE);
+    sub1 = gLang==LANG_KO ? "현재 포켓몬은 파티/박스로 보관" : "Your Pokemon goes to party/box";
     sub2 = daily;
   } else {                // despedida
     q = T(S_FAR_Q); o1 = T(S_FAR_GO); o2 = T(S_FAR_STAY);

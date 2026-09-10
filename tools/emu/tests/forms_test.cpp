@@ -58,8 +58,8 @@ int main(){
   auto atk=p.atkStat();p.saveNow();Pet re;re.begin();
   ck(re.form==mega.id && re.shiny && re.atkStat()==atk,"live form, shiny and altered stats survive reload");
   p.ageMinutes=FAREWELL_AGE_MIN;
-  ck(p.canFarewellNow(),"good farewell still opens at original 73 / 24-hour boundary");
-  p.selectForm(0);ck(p.canFarewellNow(),"no form unlock or transformation is required for good farewell");
+  ck(!p.canFarewellNow(),"good farewell is removed at the former 73 / 24-hour boundary");
+  p.selectForm(0);ck(!p.canFarewellNow(),"base forms also never offer the removed farewell");
   p.dbgHatchAs(670,false);p.ageMinutes=FAREWELL_AGE_MIN;p.selectForm(byKey("floette-mega").id);
   ck(!p.canFarewellNow(),"Mega Floette does NOT count as ordinary final evolution");
   PartyMon m;m.dex=6;m.level=80;m.form=mega.id;m.shiny=1;m.moves[0]=MV_SURF;strcpy(m.nick,"FORM");

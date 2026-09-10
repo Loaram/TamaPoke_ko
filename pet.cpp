@@ -52,6 +52,7 @@ void Pet::begin() {
   opened = true;
   lastSeenEpoch = prefs.getUInt("seen", 0);
   farewellQuota = prefs.getUInt("byeQuota", 0);
+  dailyEggQuota = prefs.getUInt("eggQuota", 0);
   endedKind=CER_NONE;endedMon=PartyMon();ceremony=CER_NONE;
   // Zeroed BEFORE the branch below, not inside load(): getBytes() leaves its
   // destination untouched when the key is missing, and the fresh-install path
@@ -83,6 +84,7 @@ void Pet::begin() {
     if(ticket && prefs.getUInt("endEgg",0)!=ticket)newEgg();
   }
   Party::recoverActiveSwap(*this);
+  recoverEggClaim();
 #if defined(TAMAPOKE_FULL_DEX) || defined(TAMAPOKE_FULL_SHINY)
   // Developer-only encyclopedia builds.  Unlock every normal entry in memory;
   // each emulator variant gets a separate NVS file, so a player's regular
@@ -100,6 +102,10 @@ void Pet::begin() {
 }
 
 void Pet::newEgg() {
+  createEgg(0, false);
+}
+
+void Pet::createEgg(int16_t fixedTarget, bool fixedShiny) {
   ceremony = CER_NONE;
   neglectTicks = 0;
   weight = 0;
@@ -110,10 +116,10 @@ void Pet::newEgg() {
   // Decide shininess before selecting the species: shiny eggs must not be
   // restricted to families missing from the normal Pokedex. Roll only here,
   // never on reload or a companion swap; existing eggs retain their result.
-  eggShiny = (rollEggOdds(EggRewards::SHINY_ROLL) < eggShinyWeight());
-  eggTarget = pickEggSpecies();  // especie oculta segun rareza y pokedex
+  eggShiny = fixedTarget ? fixedShiny : (rollEggOdds(EggRewards::SHINY_ROLL) < eggShinyWeight());
+  eggTarget = fixedTarget ? fixedTarget : pickEggSpecies();
   eggByRegion[region % REGION_COUNT] = eggTarget;
-  starterPick = (registeredCount() == 0);  // primera partida: el jugador elige inicial
+  starterPick = !fixedTarget && (registeredCount() == 0); // daily claims are not a new game
   // Early retirement no longer delays the next creature's evolution.
   evoPen = 0;
   retirePending = false;
@@ -128,6 +134,7 @@ void Pet::newEgg() {
   mistakeCooldown = 0;
   sleeping = false;
   frozen = false;
+  learnQCount = 0;
   save();
   if(opened && endedKind!=CER_NONE) {
     uint32_t ticket=0;memcpy(&ticket,endedMon.care+32,4);
@@ -781,6 +788,109 @@ uint8_t Pet::farewellsRemaining() const {
   return 3 - (today() > (farewellQuota >> 2) ? 0 : (farewellQuota & 3));
 }
 
+// One atomic blob fixes the outgoing individual, the quota and the egg roll
+// before either save domain changes. Keep it until both roster and live keys
+// verify. A retry/reboot then finishes exactly the same claim, never rerolls.
+struct DailyEggClaim {
+  uint32_t magic = 0x31474745; // EGG1
+  uint32_t quota = 0;
+  PartyMon outgoing;
+  int16_t target = 0;
+  uint8_t region = 0, shiny = 0;
+};
+static_assert(sizeof(DailyEggClaim)==84, "daily egg transaction layout changed");
+
+uint8_t Pet::eggsRemaining() const {
+  uint8_t used = today() > (dailyEggQuota >> 2) ? 0 : dailyEggQuota & 3;
+  return used >= 2 ? 0 : 2-used;
+}
+
+bool Pet::eggClaimPending() const {
+  Preferences p; p.begin("tamapoke",true);
+  bool pending=p.isKey("eggClaim"); p.end(); return pending;
+}
+
+bool Pet::canReceiveEgg() const {
+  return opened && !activeSwapBlocked && !tradeStorageBlocked && !isEgg() &&
+    canSwapActive() && eggsRemaining() && party.writable() &&
+    (party.firstFree()>=0 || party.boxFirstFree()>=0) && !eggClaimPending();
+}
+
+bool Pet::receiveEgg() {
+  if(!canReceiveEgg()) return false;
+  DailyEggClaim claim;
+  uint32_t day=today(), oldDay=dailyEggQuota>>2;
+  uint32_t used=day>oldDay ? 0 : dailyEggQuota&3;
+  if(day<oldDay) day=oldDay;
+  claim.quota=(day<<2)|(used+1);
+  claim.outgoing=storageSnapshot();
+  // An individual kept instead of a good farewell retains the same protected
+  // companion status, while preserving full age/training/bond/care state.
+  claim.outgoing.care[1]|=1;
+  uint32_t ticket;
+  do {
+    ticket=((uint32_t)random(65536L)<<16)|(uint32_t)random(65536L);
+    memcpy(claim.outgoing.care+32,&ticket,4);
+  } while(!ticket || party.hasEndedMon(claim.outgoing));
+  // Scratch generation must never write live Preferences.
+  Pet preview; // Never copy Preferences: its destructor would close the live NVS handle.
+  preview.region=region; preview.streak=streak; preview.lastCareDay=lastCareDay;
+  preview.lastSeenEpoch=lastSeenEpoch; preview.lastEnd=CER_NONE; preview.bond=bond;
+  memcpy(preview.dexReg,dexReg,sizeof(dexReg));
+  preview.createEgg(0,false);
+  claim.target=preview.eggTarget; claim.shiny=preview.eggShiny; claim.region=region;
+  prefs.putBytes("eggClaim",&claim,sizeof(claim));
+  DailyEggClaim check;
+  if(prefs.getBytesLength("eggClaim")!=sizeof(check) ||
+     prefs.getBytes("eggClaim",&check,sizeof(check))!=sizeof(check) ||
+     memcmp(&claim,&check,sizeof(check))) return false;
+  activeSwapBlocked=true;
+  return recoverEggClaim();
+}
+
+bool Pet::recoverEggClaim() {
+  if(!opened || !prefs.isKey("eggClaim")) return true;
+  activeSwapBlocked=true;
+  DailyEggClaim claim;
+  if(tradeStorageBlocked || prefs.getBytesLength("eggClaim")!=sizeof(claim) ||
+     prefs.getBytes("eggClaim",&claim,sizeof(claim))!=sizeof(claim) ||
+     claim.magic!=0x31474745 || (claim.quota&3)<1 || (claim.quota&3)>2 ||
+     claim.target<1 || claim.target>DEX_COUNT || claim.region>=REGION_COUNT ||
+     claim.shiny>1 || claim.outgoing.dex<1 || claim.outgoing.dex>DEX_COUNT ||
+     claim.outgoing.care[0]!=1) return false;
+  party.begin();
+  if(party.hasPendingSwap()) {activeSwapBlocked=true;return false;}
+  // Synchronous internal recovery only: ordinary UI remains blocked before
+  // and after it. No live/roster mutation may happen between these steps.
+  activeSwapBlocked=false;
+  bool banked=party.hasEndedMon(claim.outgoing) ||
+    party.add(claim.outgoing) || party.boxAdd(claim.outgoing);
+  activeSwapBlocked=true;
+  if(!banked) return false;
+  prefs.putUInt("eggQuota",claim.quota);
+  if(prefs.getUInt("eggQuota",0)!=claim.quota) return false;
+  dailyEggQuota=claim.quota;
+  energy=claim.outgoing.care[4]; region=claim.region; lastEnd=CER_NONE;
+  createEgg(claim.target,claim.shiny!=0);
+  // Check a freshly loaded egg, not the in-memory state or the final write
+  // alone. Partial multi-key saves must remain blocked and retryable.
+  Pet check; check.prefs.begin("tamapoke",true); check.load(false); check.prefs.end();
+  bool ok=check.isEgg() && check.eggTarget==eggTarget && check.eggShiny==eggShiny &&
+    check.region==region && check.energy==energy && !check.ageMinutes &&
+    !check.eggTaps && !check.starterPick && !check.sleeping && !check.frozen &&
+    !check.learnQCount && check.ceremony==CER_NONE && !check.retirePending &&
+    !check.weight && !check.poops && !check.careMistakes && !check.evoPen &&
+    check.lastEnd==CER_NONE && check.dailyEggQuota==dailyEggQuota &&
+    check.fullness==fullness && check.joy==joy && check.hygiene==hygiene &&
+    !memcmp(check.eggByRegion,eggByRegion,sizeof(eggByRegion));
+  if(!ok) return false;
+  prefs.remove("eggClaim");
+  if(prefs.isKey("eggClaim")) return false;
+  activeSwapBlocked=false;
+  lastTick=millis(); deviceClockRemainder=0;
+  return true;
+}
+
 bool Pet::consumeFarewell() {
   if (!farewellsRemaining()) return false;
   uint32_t d = today(), oldDay = farewellQuota >> 2;
@@ -1184,9 +1294,7 @@ void Pet::registerCaughtSpecies(int16_t dex, bool caughtShiny) {
 // forma final que ya cumplio su ciclo (1 dia): lista para despedirse. La
 // despedida la dispara el usuario con el boton (no salta sola, para que la vea)
 bool Pet::canFarewellNow() const {
-  if (frozen || endedKind!=CER_NONE || !farewellsRemaining()) return false;
-  return !isEgg() && !sleeping && ceremony == CER_NONE &&
-         DEX_TBL[speciesId].evolvesTo == 0 && ageMinutes >= FAREWELL_AGE_MIN;
+  return false; // Retained only for old save/test API compatibility; no good farewell.
 }
 
 // abandono total durante 1h: lista para escaparse. La dispara el usuario con el
@@ -1205,19 +1313,17 @@ bool Pet::canRunawayNow() const {
 }
 
 bool Pet::canRetireNow() const {
-  if (frozen || endedKind!=CER_NONE || !farewellsRemaining()) return false;
-  return !isEgg() && !sleeping && ceremony == CER_NONE && !starterPick;
+  return false;
 }
 
 // The ceremony is the same one. Mark it before the ceremony starts so the
 // creature is not banked if this is an early retirement.
 void Pet::startRetire() {
-  if (!canRetireNow()) return;
-  beginFarewell(!canFarewellNow());
+  // Removed voluntary ending. Use receiveEgg(), which always preserves the pet.
 }
 
 void Pet::startFarewell() {
-  beginFarewell(false);
+  // Old serial/UI callers cannot bypass the daily egg transaction.
 }
 
 void Pet::beginFarewell(bool early) {
@@ -1244,14 +1350,7 @@ void Pet::startRunaway() {
 }
 
 void Pet::release() {
-  if (isEgg() || ceremony != CER_NONE || endedKind!=CER_NONE) return;
-  if (!consumeFarewell()) return;
-  lastEnd = CER_RELEASE;
-  ceremony = CER_RELEASE;
-  ceremonyUntil = millis() + CEREMONY_MS;
-  heartUntil = ceremonyUntil;
-  sfxPlay(SFX_BYE);
-  save();
+  // Release stored individuals through party/box. Never discard the live pet for an egg.
 }
 
 void Pet::hatch() {
@@ -1635,6 +1734,7 @@ void Pet::save() {
   prefs.putUShort("bstrk", bestStreak);
   prefs.putUInt("cday", lastCareDay);
   prefs.putUInt("byeQuota", farewellQuota);
+  prefs.putUInt("eggQuota", dailyEggQuota);
   prefs.putUChar("bond", bond);
   prefs.putUShort("medal", medals);
   prefs.putUShort("tmedal", totalMedals);
@@ -1715,6 +1815,7 @@ void Pet::load(bool progress) {
   bestStreak = prefs.getUShort("bstrk", 0);
   lastCareDay = prefs.getUInt("cday", 0);
   farewellQuota = prefs.getUInt("byeQuota", 0);
+  dailyEggQuota = prefs.getUInt("eggQuota", 0);
   bond = prefs.getUChar("bond", 0);
   medals = prefs.getUShort("medal", 0);
   totalMedals = prefs.getUShort("tmedal", 0);

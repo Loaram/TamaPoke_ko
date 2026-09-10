@@ -34,12 +34,12 @@ int main(){
   pet.streak=0;renderPlayer();shot("egg-bonus-dex-only.ppm");
   ck(pet.eggShinyWeight()==2160 && pet.eggLegendWeight()==126,"dex-only screen retains the standalone goal odds");
   pet.streak=10;setLang(LANG_EN);renderPlayer();shot("egg-bonus-max-en.ppm");setLang(LANG_KO);
-  menuOpen=true;drawMenu();shot("daily-rewards-menu.ppm");onTap(233,303);
-  ck(choiceKind==3,"retire menu opens confirmation while allowance remains");
-  drawChoiceDialog();shot("daily-rewards-confirm.ppm");choiceKind=0;
-  for(int i=0;i<3;i++){pet.release();pet.newEgg();pet.dbgHatchAs(6,false);}
-  pet.learnQCount=0;pet.ageMinutes=1440;menuOpen=true;drawMenu();shot("daily-rewards-exhausted.ppm");
-  onTap(233,303);ck(choiceKind==0 && pet.ceremony==CER_NONE,"exhausted menu cannot open a fourth farewell");
-  ck(pet.farewellsRemaining()==0,"rendering and opening menus do not refill allowance");
+  menuOpen=true;render();shot("daily-rewards-menu.ppm");onTap(233,303);
+  ck(choiceKind==3,"daily egg menu opens confirmation while allowance remains");
+  render();shot("daily-rewards-confirm.ppm");choiceKind=0;
+  for(int i=0;i<2;i++){pet.learnQCount=0;ck(pet.receiveEgg(),"daily egg claim succeeds");pet.dbgHatchAs(6,false);}
+  pet.learnQCount=0;pet.ageMinutes=1440;menuOpen=true;render();shot("daily-rewards-exhausted.ppm");
+  onTap(233,303);ck(choiceKind==0 && pet.ceremony==CER_NONE,"exhausted menu cannot open a third egg claim");
+  ck(pet.eggsRemaining()==0,"rendering and opening menus do not refill allowance");
   return bad?1:0;
 }

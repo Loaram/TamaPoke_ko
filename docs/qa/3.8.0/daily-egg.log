@@ -1,0 +1,56 @@
+PASS young non-final Pokemon can receive the first egg
+PASS deposit keeps exact age, form, training, IVs, moves, name, shiny, bond and care
+PASS egg preserves shared energy/streak and charges one use
+PASS an existing egg cannot be replaced or charged
+PASS restart retains the same egg and daily allowance
+PASS second claim banks the pet and exhausts today's allowance
+PASS third claim is rejected without losing the active Pokemon
+PASS bringing a companion cannot refill allowance
+PASS releasing stored Pokemon cannot refill allowance
+PASS whole-save round trip includes the daily egg quota
+PASS import keeps quota and streak
+PASS clock rollback does not refill quota
+PASS quota remains exhausted before midnight
+PASS local midnight grants two, not accumulated days
+PASS unused days do not accumulate
+PASS a full party deposits into the first free box slot
+PASS full party and box deny without spending or erasing
+PASS storage failure recovers exactly once or leaves the original untouched
+forms: roster write failed; recovery copies retained
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS old farewell quota does not consume the new allowance or alter the pet
+PASS unknown-clock claim is bounded and persistent
+PASS unknown-clock claim is bounded and persistent
+PASS missing clock cannot refill uses on restart
+PASS the explicitly retained neglect/runaway rule is still available
+PASS automatic runaway egg is separate and never refills menu claims
+PASS reference claim completes before crash replay
+Crash replay: claim 1, 67 write boundaries, 0 failures
+PASS all interrupted writes recover without duplicated Pokemon, egg rerolls or extra charges
+PASS reference claim completes before crash replay
+Crash replay: claim 2, 67 write boundaries, 0 failures
+PASS all interrupted writes recover without duplicated Pokemon, egg rerolls or extra charges
+PASS: daily_egg

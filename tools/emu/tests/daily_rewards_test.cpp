@@ -64,37 +64,7 @@ int main(){
   day(p,114);p.feed();ck(p.streak==2,"care resumes normally after the clock catches up");
   p.frozen=true;day(p,115);p.feed();ck(p.streak==3,"caring for a companion counts for the player too");p.frozen=false;
 
-  nvs().clear();Pet q;q.begin();day(q,200);hatch(q);
-  q.feed();q.startRetire();ck(q.retireIsEarly() && q.farewellsRemaining()==2,"early retire consumes exactly one allowance");
-  q.startFarewell();q.release();ck(q.farewellsRemaining()==2,"duplicate requests during ceremony do not consume more");
-  finish(q);hatch(q);q.ageMinutes=FAREWELL_AGE_MIN;q.startRetire();
-  ck(!q.retireIsEarly() && q.farewellsRemaining()==1,"earned farewell shares the allowance and keeps correct classification");
-  finish(q);hatch(q);q.release();ck(q.farewellsRemaining()==0,"long-press live release consumes the third allowance");
-  finish(q);hatch(q);q.ageMinutes=FAREWELL_AGE_MIN;
-  q.startRetire();q.startFarewell();q.release();
-  ck(q.ceremony==CER_NONE && !q.canFarewellNow() && !q.canRetireNow(),"all three voluntary paths reject a fourth farewell");
-  Pet reload;reload.begin();ck(reload.farewellsRemaining()==0,"restart does not refill the allowance");
-  Party bank;bank.begin();PartyMon m;m.dex=25;m.level=80;bank.add(m);
-  ck(bank.swapActive(q,false,0) && q.farewellsRemaining()==0 && q.streak==1,"free companion exchange preserves player streak and spent allowance");
-  ck(bank.swapActive(q,false,0),"returning to the original creature is still allowed");
-  bank.releaseAt(0);ck(q.farewellsRemaining()==0,"deleting banked creatures does not consume or reset live allowance");
-  q.saveNow();uint8_t backup[SAVE_MAX_BYTES];size_t n=saveExport(backup,sizeof(backup));
-  ck(n>0 && backup[4]==SAVE_VERSION && saveValidate(backup,n),"whole-save includes the daily counter");
-  nvs().clear();ck(saveImport(backup,n),"cross-device payload imports successfully");
-  Pet transferred;transferred.begin();ck(transferred.farewellsRemaining()==0 && transferred.streak==1,"save transfer retains both allowance and streak");
-  day(transferred,199);ck(transferred.farewellsRemaining()==0,"backward clock does not refill allowance");
-  transferred.setClock(201*86400-1);ck(transferred.farewellsRemaining()==0,"last second before midnight remains exhausted");
-  transferred.setClock(201*86400);ck(transferred.farewellsRemaining()==3,"local midnight replenishes three farewells");
-  hatch(transferred);nvsFailKey()="byeQuota";transferred.startRetire();
-  ck(transferred.ceremony==CER_NONE && transferred.farewellsRemaining()==3 && !transferred.retireIsEarly(),"quota write failure does not start retirement or lose the creature");
-  nvsFailKey().clear();transferred.startRetire();ck(transferred.farewellsRemaining()==2,"retry after storage recovers charges once");
-  finish(transferred);int egg=transferred.eggPeek();transferred.saveNow();
-  auto before=nvs()["eshy"];Pet eggReload;eggReload.begin();
-  ck(eggReload.eggPeek()==egg && nvs()["eshy"]==before,"existing egg species and shiny roll are preserved on reload");
-
-  nvs().erase("byeQuota");Pet legacy;legacy.begin();ck(legacy.farewellsRemaining()==3 && legacy.streak==1,"old saves without the new field preserve care history and start with three");
-  nvs().clear();Pet timeless;timeless.begin();
-  for(int i=0;i<3;i++){hatch(timeless);timeless.release();finish(timeless);}
-  Pet timelessReload;timelessReload.begin();ck(timelessReload.farewellsRemaining()==0,"missing clock cannot refill three uses on restart");
+  // The former three-farewell quota is replaced by daily_egg_test's two-egg
+  // transaction/clock/backup matrix. Rewards above remain unchanged.
   printf("%s\n",bad?"FAILURES":"all good");return bad?1:0;
 }

@@ -237,7 +237,7 @@ int main(){
        "and back on the main screen, or the check below proves nothing");
     confirmUntil=0; holdFired=false;
     hold(233,200,3400);                     // the creature itself
-    ck(confirmUntil!=0, "the hold STILL works on the main screen, where it belongs");
+    ck(confirmUntil==0 && pet.speciesId==3, "main hold cannot discard the live Pokemon or bypass daily egg claims");
     confirmUntil=0;
   }
 

@@ -1,0 +1,13 @@
+TamaPoke fw v3.8.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS trainer screen displays collectible goal with both capped probabilities
+PASS dex-only screen retains the standalone goal odds
+PASS daily egg menu opens confirmation while allowance remains
+PASS daily egg claim succeeds
+PASS daily egg claim succeeds
+PASS exhausted menu cannot open a third egg claim
+PASS rendering and opening menus do not refill allowance
+PASS: daily_rewards_ui

@@ -183,7 +183,7 @@ void Party::begin() {
   // the live pet. Move that former sixth member into the first box opening.
   // If a player's box is completely full, keep it in the reserved physical
   // slot instead of deleting it; the next box opening will migrate it.
-  activeSwapBlocked=!pendingLive.empty();
+  activeSwapBlocked=!pendingLive.empty() || prefs.isKey("eggClaim");
   if(!activeSwapBlocked) migrateLegacyOverflow();
   if(legacyLoaded && !rosterExists(prefs)) saveRoster();
 }

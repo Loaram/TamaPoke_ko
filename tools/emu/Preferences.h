@@ -11,6 +11,7 @@ typedef std::map<std::string, std::vector<uint8_t>> NvsStore;
 inline NvsStore &nvs() { static NvsStore s; return s; }
 // Opt-in fault injection for save recovery tests. Normal builds never set it.
 inline std::string &nvsFailKey() { static std::string key; return key; }
+inline auto &nvsAfterWrite() { static void (*hook)()=nullptr; return hook; }
 void nvsLoad(const char *path);
 void nvsSave(const char *path);
 
@@ -21,13 +22,14 @@ public:
   void end() {}
   void clear() { kv.clear(); }
   bool isKey(const char *k) { return kv.count(k) != 0; }
-  bool remove(const char *k) { if(nvsFailKey()==k)return false;return kv.erase(k)!=0; }
+  bool remove(const char *k) { if(nvsFailKey()==k)return false;bool erased=kv.erase(k)!=0;if(erased && nvsAfterWrite())nvsAfterWrite()();return erased; }
 
   template <typename T> void putT(const char *k, T v) {
     if(nvsFailKey()==k) return;
     std::vector<uint8_t> b(sizeof(T));
     memcpy(b.data(), &v, sizeof(T));
     kv[k] = b;
+    if(nvsAfterWrite())nvsAfterWrite()();
   }
   template <typename T> T getT(const char *k, T d) {
     auto it = kv.find(k);
@@ -52,6 +54,7 @@ public:
     if(nvsFailKey()==k) return;
     const uint8_t *b = (const uint8_t *)p;
     kv[k] = std::vector<uint8_t>(b, b + n);
+    if(nvsAfterWrite())nvsAfterWrite()();
   }
   // Size of a stored blob, 0 if absent. The firmware uses it to tell an
   // old, shorter record layout from the current one (see Party::begin).
@@ -80,6 +83,7 @@ public:
   void putString(const char *k, const char *v) {
     if(nvsFailKey()==k) return;
     kv[k] = std::vector<uint8_t>(v, v + strlen(v) + 1);
+    if(nvsAfterWrite())nvsAfterWrite()();
   }
   size_t getString(const char *k, char *out, size_t n) {
     auto it = kv.find(k);

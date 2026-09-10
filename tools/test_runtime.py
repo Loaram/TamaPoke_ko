@@ -10,7 +10,7 @@ a=p.parse_args()
 out=R/'build/runtime-tests';out.mkdir(parents=True,exist_ok=True)
 env=os.environ.copy();env['PATH']=str(Path(a.cxx).resolve().parent)+os.pathsep+env.get('PATH','')
 core=[str(R/x) for x in ['gbsynth.cpp','pet.cpp','i18n.cpp','party.cpp','battle.cpp','link.cpp','save.cpp','wild.cpp','forms.cpp','trade.cpp']]
-for test in ['sprite_layout','bond','android_udp','shared_energy','collection_lock','capture_dex','recovery_clock','modal_safety','swap_recovery','trade','trade_ui','korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
+for test in ['daily_egg','sprite_layout','bond','android_udp','shared_energy','collection_lock','capture_dex','recovery_clock','modal_safety','swap_recovery','trade','trade_ui','korean','i18n','label','save','savetransfer','upgrade','link','linkudp',
              'lan','battle','ai','gym','roster','gyms_new','evo','balance','retire','moves','box',
              'dexdata','eevee','branch','region','sprite','full_dex','full_shiny','hit',
              'touch','swipe','starter','release','joy','wild','explore','wild_result','shiny_eggs','battle_reserves','android_lifecycle','nvs_file','streak_persistence','dex_rewards','forms','forms_ui','active_swap','form_moves','daily_rewards','daily_rewards_ui','box_pages','ending_recovery','box_direct','box_sort','revive','companion_growth']:
@@ -28,4 +28,4 @@ for test in ['sprite_layout','bond','android_udp','shared_energy','collection_lo
           ['-DANDROID=1'] if test in ('android_lifecycle','recovery_clock') else [])
     subprocess.run([a.cxx,'-std=c++17','-O1','-w','-I'+str(E),'-I'+str(R),'-DSPRITE_DIR="'+(R/'tools/sdcard/mons').as_posix()+'"',*defs,*src,'-o',str(exe)],env=env,check=True)
     subprocess.run([str(exe)],cwd=out,env=env,check=True)
-print('PASS: '+(a.only or '64 runtime suites including sprite layout, bond, Android UDP transport, shared energy and save recovery'))
+print('PASS: '+(a.only or '65 runtime suites including daily eggs, sprite layout, bond, Android UDP transport, shared energy and save recovery'))

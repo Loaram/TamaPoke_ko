@@ -314,6 +314,11 @@ public:
   void caress();  // tocar al bicho
   void eggTap();  // tocar el huevo: 3 toques y eclosiona
   void newEgg();   // empezar de cero con un inicial aleatorio
+  uint8_t eggsRemaining() const;
+  bool canReceiveEgg() const;
+  bool receiveEgg(); // durable party/box deposit + one daily egg, no ceremony
+  bool recoverEggClaim();
+  bool eggClaimPending() const;
   void release();  // soltar (pulsacion larga + confirmar)
   void syncClock(uint32_t nowEpoch);  // aplica el tiempo transcurrido apagado
   void resumeProgressClock(uint32_t nowMs, uint32_t localEpoch, uint32_t utcEpoch);
@@ -444,6 +449,8 @@ public:
 
 private:
   uint32_t farewellQuota = 0;  // civil day << 2 | used (0..3); player, not creature
+  uint32_t dailyEggQuota = 0; // civil day << 2 | used (0..2), separate from legacy byeQuota
+  void createEgg(int16_t fixedTarget, bool fixedShiny);
   bool consumeFarewell();
   void beginFarewell(bool early);
   void restoreCare(const PartyMon &m);

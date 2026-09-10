@@ -48,7 +48,7 @@ int main() {
   ck(!farewell.canFarewellNow(), "farewell is unavailable one minute before one day");
   farewell.ageMinutes = FAREWELL_AGE_MIN;
   ck(farewell.level() == 73, "one day reaches level 73 at 20 minutes per level");
-  ck(farewell.canFarewellNow(), "farewell is offered at one day");
+  ck(!farewell.canFarewellNow(), "one-day growth no longer offers a farewell");
 
   Pet live;
   hatch(live);
