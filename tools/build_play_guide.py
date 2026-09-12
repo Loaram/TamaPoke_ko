@@ -22,8 +22,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.8.0-Play-Guide-KO.pdf"
-VERSION = "3.8.0"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.8.1-Play-Guide-KO.pdf"
+VERSION = "3.8.1"
 PAGE_TOTAL = 29
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -253,7 +253,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.8.0",
+            "플레이 설명서 · 3.8.1",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -264,7 +264,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-10", CENTER),
+        p("2026-09-12", CENTER),
     ]
 )
 page_break(story)
@@ -320,7 +320,7 @@ story.extend(
             ]
         ),
         Spacer(1, 4 * mm),
-        p("관동 팩 하나도 약 10~15분 걸릴 수 있습니다. 없는 지방 팩의 포켓몬은 빈 그림으로 나오지 않도록 해당 도감과 알 후보에서 잠깁니다.", CALLOUT),
+        p("관동 팩 하나도 약 10~15분 걸릴 수 있습니다. 중단되면 파일명·바이트·오류 코드를 기록하고 연결과 SD를 확인한 뒤 해당 팩을 다시 설치하세요. 저장 검증 완료 전에는 성공으로 처리하지 않습니다.", CALLOUT),
         p("ESP32의 microSD는 그림뿐 아니라 300칸 보관 기록도 저장합니다. 업데이트 전 전체 세이브를 백업하고, 사용 중 SD를 빼거나 포맷하지 마세요. 카드 교체 시 세이브 복원이 필요합니다.", DANGER),
     ]
 )
@@ -673,7 +673,7 @@ story.extend(
         info_table(
             [
                 ["증상", "확인할 내용"],
-                ["상대를 못 찾음", "같은 Wi-Fi, 로컬 권한, TamaPoke-XXXX 연결과 90초 대기 확인"],
+                ["상대를 못 찾음", "ESP 화면에 표시된 현재 Wi-Fi 이름을 선택합니다. 업데이트로 이름이 달라질 수 있습니다. 암호는 tamapoke입니다."],
                 ["전송이 멈춤", "양쪽에서 뒤로 나가 Wi-Fi를 다시 연결하고 처음부터 재시도"],
                 ["적용 버튼이 없음", "받은 데이터가 완전하지 않으므로 대상 세이브는 그대로 유지됨"],
                 ["버전 오류", "양쪽 기기에 설치 페이지의 최신 앱 또는 펌웨어를 설치하고 재시작"],
@@ -682,7 +682,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.8.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.8.1", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )

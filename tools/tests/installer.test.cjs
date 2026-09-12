@@ -51,5 +51,34 @@ function pak(name='mons/p001.bin',data=Buffer.from([1,2,3])) {
   await run("runInstall(async()=>{throw new Error('test failure')})");
   assert.match(element('status').textContent,/중단/);assert.doesNotMatch(element('status').textContent,/설치 완료/);
   assert.ok(buttons.every(b=>b.disabled));
+  for(const [code,message] of Object.entries({SD_NOT_READY:'인식',OPEN_WRITE:'열지',RX_TIMEOUT:'USB',WRITE_SHORT:'쓰지',VERIFY_OPEN:'다시 열지',VERIFY_SIZE:'크기',VERIFY_READ:'끝까지',VERIFY_CRC:'내용',INVALID_PATH:'경로',INVALID_SIZE:'크기',INVALID_COMMAND:'명령'})) {
+    context.errLine=`ERR ${code} offset=2048 expected=952 written=0`;
+    run("lineBuf='';pendingRead=undefined;reader={read:async()=>({value:enc.encode(errLine+'\\n'),done:false})}");
+    await assert.rejects(run("waitFor('OK')"),e=>e.message.includes(message)&&e.message.includes(context.errLine));
+  }
+  context.reply='OK\n#\nERR WRITE_SHORT offset=2048 expected=952 written=10\n';
+  run("lineBuf='';pendingRead=undefined;writer={write:async()=>{}};reader={read:async()=>({value:enc.encode(reply),done:false})}");
+  await assert.rejects(run("sendOne('mons/p050.bin',new Uint8Array(3000),()=>{})"),
+    /mons\/p050.bin.*데이터 쓰기.*2048\/3000 바이트\n.*WRITE_SHORT/s);
+  context.reply='OK\n#\n#\nERR VERIFY_CRC\n';
+  run("lineBuf='';pendingRead=undefined");
+  await assert.rejects(run("sendOne('mons/p047.bin',new Uint8Array(3000),()=>{})"),
+    /mons\/p047.bin.*저장 완료 확인.*3000\/3000 바이트\n.*VERIFY_CRC/s);
+  // The status must switch to the next filename BEFORE waiting for OK.
+  // Previously an open failure at file 50 left the status at file 49.
+  for(const failAt of [47,50]) {
+    context.failAt=failAt;
+    run("lineBuf='';pendingRead=undefined;globalThis.sentFiles=0;globalThis.replies=[];writer={write:async b=>{if(new TextDecoder().decode(b).startsWith('PUT ')){sentFiles++;replies.push(sentFiles===failAt?'ERR OPEN_WRITE\\n':'OK\\n');}else replies.push('#\\nDONE\\n');}};reader={read:async()=>({value:enc.encode(replies.shift()),done:false})}");
+    await assert.rejects(run("sendAll(Array.from({length:303},(_,i)=>({name:'mons/p'+String(i+1).padStart(3,'0')+'.bin',data:new Uint8Array([1])})),'관동')"),/OPEN_WRITE/);
+    assert.equal(run('sentFiles'),failAt,'no further PUT after device error');
+    assert.match(element('status').textContent,new RegExp(failAt+'/303.*p'+String(failAt).padStart(3,'0')+'\\.bin'));
+    assert.doesNotMatch(element('status').textContent,/설치 완료/);
+  }
+  await run("runInstall(async()=>{throw new Error('mons/p050.bin · 파일 열기\\nERR OPEN_WRITE')})");
+  assert.match(element('status').textContent,/p050\.bin/);
+  assert.match(element('log').textContent,/자동 재전송하지 않았습니다/);
+  for(let i=0;i<400;i++)run(`log('bounded log ${i}')`);
+  assert.ok(element('log').textContent.split('\n').length<=301);
   console.log('PASS: Korean version gate, 9 regional packs plus forms, invalid paths/truncation, PUT chunk ACKs, timeout, error and failure recovery');
+  console.log('PASS: 11 detailed device errors, file/byte/phase diagnostics, final verification failure, exact 47/50 file indices, stop-on-error and bounded logs');
 })().catch(e=>{console.error(e);process.exitCode=1});

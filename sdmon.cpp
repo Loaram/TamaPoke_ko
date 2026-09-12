@@ -5,6 +5,7 @@
 #include "pet.h"   // gRegionArt, REGIONS -- the mask this narrows
 #include <FS.h>
 #include <SD_MMC.h>
+#include "sd_upload.h"
 
 bool sdReady = false;
 bool sdDirty = false;
@@ -246,39 +247,23 @@ void SdMon::unload() {
 bool sdSerialCommand(const String &line) {
   if (line.startsWith("PUT ")) {
     int sp = line.lastIndexOf(' ');
+    if(sp<=4) {Serial.println("ERR INVALID_COMMAND");return true;}
     String path = line.substring(4, sp);
-    uint32_t size = line.substring(sp + 1).toInt();
-    if (!sdReady || size == 0 || size > 4 * 1024 * 1024) {
-      Serial.println("ERR");
-      return true;
+    String count=line.substring(sp+1);
+    uint32_t size=0;
+    for(size_t i=0;i<count.length();i++) {
+      char c=count.c_str()[i];
+      if(c<'0'||c>'9'||size>419430UL) {Serial.println("ERR INVALID_SIZE");return true;}
+      size=size*10+(c-'0');
     }
     if (!path.startsWith("/")) path = "/" + path;
-    File f = SD_MMC.open(path, FILE_WRITE);
-    if (!f) {
-      Serial.println("ERR");
-      return true;
-    }
-    Serial.println("OK");
-    static uint8_t buf[2048];
-    uint32_t remaining = size;
-    Serial.setTimeout(5000);
-    while (remaining > 0) {
-      size_t want = remaining > sizeof(buf) ? sizeof(buf) : remaining;
-      size_t n = Serial.readBytes(buf, want);
-      if (n == 0) break;  // timeout
-      f.write(buf, n);
-      remaining -= n;
-      Serial.println("#");  // ack: listo para el siguiente bloque
-    }
-    f.close();
-    Serial.setTimeout(1000);
-    sdDirty = (remaining == 0);
+    bool complete=sdReceiveSprite(SD_MMC,Serial,sdReady,path.c_str(),size);
+    sdDirty = complete;
     // A pack file just landed, so which regions are playable may have changed.
     // Flag it rather than rescanning here: this runs between the last data block
     // and the DONE the host is waiting on, and 15 file opens belong nowhere near
     // that. loop() picks it up.
-    if (remaining == 0) sdArtDirty = true;
-    Serial.println(remaining == 0 ? "DONE" : "ERR");
+    if (complete) sdArtDirty = true;
     return true;
   } else if (line == "LS") {
     File dir = SD_MMC.open("/mons");

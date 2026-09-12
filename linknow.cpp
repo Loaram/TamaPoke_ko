@@ -5,6 +5,7 @@
 #include <WiFiUdp.h>
 #include <esp_now.h>
 #include <esp_wifi.h>
+#include <esp_netif.h>
 #include <string.h>
 
 // Hybrid LAN transport. Two TamaPoke boards keep using ESP-NOW exactly as
@@ -31,6 +32,52 @@ static uint32_t gUdpPeerNode = 0;
 static uint32_t gNodeId = 0;
 static char gApName[24] = "";
 static const char AP_PASSWORD[] = "tamapoke";
+
+// Opt-in hardware diagnostics; disabled in public builds.
+#ifndef TAMAPOKE_WIFI_DIAGNOSTIC
+#define TAMAPOKE_WIFI_DIAGNOSTIC 0
+#endif
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+static bool gDiagnosticEvents = false;
+static uint32_t gDiagnosticAt = 0;
+static void wifiDiagnosticEvent(arduino_event_id_t event, arduino_event_info_t info) {
+  switch (event) {
+    case ARDUINO_EVENT_WIFI_AP_START:
+    case ARDUINO_EVENT_WIFI_AP_STOP:
+    case ARDUINO_EVENT_WIFI_STA_START:
+    case ARDUINO_EVENT_WIFI_STA_STOP:
+      Serial.printf("WIFI_DIAG event=%u ms=%lu\n", (unsigned)event, (unsigned long)millis());
+      break;
+    case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
+      Serial.printf("WIFI_DIAG associated aid=%u ms=%lu\n",
+                    info.wifi_ap_staconnected.aid, (unsigned long)millis());
+      break;
+    case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
+      Serial.printf("WIFI_DIAG disconnected aid=%u reason=%u ms=%lu\n",
+                    info.wifi_ap_stadisconnected.aid, info.wifi_ap_stadisconnected.reason,
+                    (unsigned long)millis());
+      break;
+    case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
+      Serial.printf("WIFI_DIAG client_ip=%s ms=%lu\n",
+                    IPAddress(info.wifi_ap_staipassigned.ip.addr).toString().c_str(),
+                    (unsigned long)millis());
+      break;
+    default: break;
+  }
+}
+
+static void wifiDiagnosticStatus() {
+  esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
+  esp_netif_dhcp_status_t dhcp = ESP_NETIF_DHCP_INIT;
+  esp_err_t err = netif ? esp_netif_dhcps_get_status(netif, &dhcp) : ESP_ERR_INVALID_STATE;
+  wifi_config_t config = {};
+  esp_err_t cfg = esp_wifi_get_config(WIFI_IF_AP, &config);
+  Serial.printf("WIFI_DIAG status ip=%s clients=%u dhcp=%d dhcp_err=%s cfg_err=%s auth=%u channel=%u heap=%u min=%u\n",
+                WiFi.softAPIP().toString().c_str(), WiFi.softAPgetStationNum(),
+                (int)dhcp, esp_err_to_name(err), esp_err_to_name(cfg),
+                config.ap.authmode, config.ap.channel, ESP.getFreeHeap(), ESP.getMinFreeHeap());
+}
+#endif
 
 // ESP-NOW receives on the WiFi task, so it parks frames for the main loop.
 #define RING_SLOTS 8
@@ -137,6 +184,12 @@ static void pollUdp() {
 }
 
 void linkNowPoll() {
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+  if (gUp && millis() - gDiagnosticAt >= 5000) {
+    gDiagnosticAt = millis();
+    wifiDiagnosticStatus();
+  }
+#endif
   if (!gUp || !gLink) return;
   pollUdp();
   lockEspPeer();
@@ -169,10 +222,38 @@ bool linkNowBegin(Link *link) {
   gHead = gTail = 0;
   gStats = LinkNowStats();
 
-  WiFi.mode(WIFI_AP_STA);
-  WiFi.disconnect();
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+  if (!gDiagnosticEvents) {
+    gDiagnosticEvents = WiFi.onEvent(wifiDiagnosticEvent) != 0;
+  }
+  Serial.printf("WIFI_DIAG begin v2 events=%d heap=%u\n", gDiagnosticEvents, ESP.getFreeHeap());
+#endif
+  bool modeOk = WiFi.mode(WIFI_AP_STA);
+  bool disconnectOk = WiFi.disconnect();
   uint8_t mac[6] = {0};
-  WiFi.macAddress(mac);
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+  bool macOk = WiFi.macAddress(mac) != nullptr;
+#endif
+  uint8_t driverMac[6] = {0};
+  esp_err_t macErr = esp_wifi_get_mac(WIFI_IF_STA, driverMac);
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+  Serial.printf("WIFI_DIAG init mode=%d disconnect=%d netif_mac=%d tail=%02X%02X driver_mac=%s tail=%02X%02X\n",
+                modeOk, disconnectOk, macOk, mac[4], mac[5], esp_err_to_name(macErr), driverMac[4], driverMac[5]);
+#else
+  (void)disconnectOk;
+#endif
+  // The early Arduino netif MAC can be all-zero even when its getter succeeds.
+  // Read the initialized driver and reject invalid identity instead of a 0000 AP.
+  bool validMac = false;
+  for (uint8_t b : driverMac) validMac |= b != 0;
+  if (!modeOk || macErr != ESP_OK || !validMac || (driverMac[0] & 1)) {
+    Serial.println("LAN init failed: invalid mode or MAC");
+    WiFi.mode(WIFI_OFF);
+    gApName[0] = 0;
+    gLink = nullptr;
+    return false;
+  }
+  memcpy(mac, driverMac, sizeof(mac));
   snprintf(gApName, sizeof(gApName), "TamaPoke-%02X%02X", mac[4], mac[5]);
   gNodeId = ((uint32_t)mac[2] << 24) | ((uint32_t)mac[3] << 16) |
             ((uint32_t)mac[4] << 8) | mac[5];
@@ -181,8 +262,16 @@ bool linkNowBegin(Link *link) {
   // The AP gives Android a network that needs no router or credential entry on
   // the watch. ESP-NOW remains on the same fixed channel for board-to-board play.
   gApUp = WiFi.softAP(gApName, AP_PASSWORD, 1, false, 2);
-  esp_wifi_set_channel(1, WIFI_SECOND_CHAN_NONE);
+  esp_err_t channelErr = esp_wifi_set_channel(1, WIFI_SECOND_CHAN_NONE);
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+  Serial.printf("WIFI_DIAG softap=%d channel=%s\n", gApUp, esp_err_to_name(channelErr));
+#else
+  (void)channelErr;
+#endif
   gUdpUp = gApUp && gUdp.begin(LINK_UDP_PORT);
+#if TAMAPOKE_WIFI_DIAGNOSTIC
+  wifiDiagnosticStatus();
+#endif
 
   if (esp_now_init() == ESP_OK) {
     esp_now_register_recv_cb(onRecv);

@@ -7,6 +7,8 @@ out=R/'build/sd-store-tests';out.mkdir(parents=True,exist_ok=True)
 exe=out/('roster-test.exe' if os.name=='nt' else 'roster-test')
 cxx=shutil.which(a.cxx) or str((R/a.cxx).resolve())
 env=os.environ.copy();env['PATH']=str(Path(cxx).resolve().parent)+os.pathsep+env.get('PATH','')
-subprocess.run([cxx,'-std=c++17','-DESP32','-I'+str(R/'tools/emu/sd-tests'),
-    '-I'+str(R/'tools/emu'),'-I'+str(R),str(R/'tools/emu/sd-tests/roster_store_test.cpp'),'-o',str(exe)],check=True,cwd=R,env=env,timeout=120)
-subprocess.run([str(exe)],check=True,cwd=R,env=env,timeout=30)
+for name in ('roster_store','sprite_upload'):
+    exe=out/(name+('.exe' if os.name=='nt' else ''))
+    subprocess.run([cxx,'-std=c++17','-DESP32','-I'+str(R/'tools/emu/sd-tests'),
+        '-I'+str(R/'tools/emu'),'-I'+str(R),str(R/f'tools/emu/sd-tests/{name}_test.cpp'),'-o',str(exe)],check=True,cwd=R,env=env,timeout=120)
+    subprocess.run([str(exe)],check=True,cwd=R,env=env,timeout=30)

@@ -19,7 +19,8 @@
 #define PI 3.1415926535897932384626433832795
 #endif
 
-inline void *ps_malloc(size_t n) { return malloc(n); }
+inline bool emuFailPsMalloc = false; // Test-only allocation failure injection.
+inline void *ps_malloc(size_t n) { return emuFailPsMalloc ? nullptr : malloc(n); }
 
 uint32_t millis();          // clock.cpp
 void emuSetTimeScale(uint32_t s);

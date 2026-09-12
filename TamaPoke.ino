@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.8.0"
+#define FW_VERSION "3.8.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -375,7 +375,6 @@ bool gymHard = false;   // which ladder the list is showing
 // normal battle screen takes over with btlLink set.
 bool lanOpen = false;
 Link lan;
-static uint8_t saveTransferScratch[SAVE_MAX_BYTES];
 static bool saveApplyArmed = false;
 // What the shared region chooser is being used FOR. It only changes the
 // subtitle and whether there is a way back: at first boot every count would
@@ -5390,17 +5389,28 @@ static void lanOffer(bool host) {
 static void lanSaveStart(bool sender) {
   saveApplyArmed = false;
   size_t n = 0;
+  // Sender-only staging belongs in PSRAM, not 32 KiB of permanent internal
+  // RAM needed by Wi-Fi authentication. beginSave copies it before we free it.
+  uint8_t *scratch = nullptr;
   if (sender) {
+    scratch = (uint8_t *)ps_malloc(SAVE_MAX_BYTES);
+    if (!scratch) {
+      lan.state = LINK_SAVE_INVALID;
+      lan.saveMode = true;
+      return;
+    }
     pet.flushSave();
-    n = saveExport(saveTransferScratch, sizeof(saveTransferScratch));
+    n = saveExport(scratch, SAVE_MAX_BYTES);
     if (!n) {
+      free(scratch);
       lan.state = LINK_SAVE_INVALID;
       lan.saveMode = true;
       return;
     }
   }
-  if (!lan.beginSave(sender, pet.trainerName,
-                     sender ? saveTransferScratch : nullptr, (uint16_t)n)) return;
+  bool ready = lan.beginSave(sender, pet.trainerName, scratch, (uint16_t)n);
+  free(scratch);
+  if (!ready) return;
   if (!linkNowBegin(&lan)) {
     lan.state = LINK_REFUSED;
     return;
@@ -5442,9 +5452,12 @@ void lanTap(int16_t x, int16_t y) {
         return;
       }
       if (x >= 93 && x <= 223) {
-        size_t backupN = saveExport(saveTransferScratch, sizeof(saveTransferScratch));
-        bool ok = saveImport(lan.saveData, lan.savePeerSize);
-        if (!ok && backupN) saveImport(saveTransferScratch, backupN);
+        uint8_t *backup = (uint8_t *)ps_malloc(SAVE_MAX_BYTES);
+        size_t backupN = backup ? saveExport(backup, SAVE_MAX_BYTES) : 0;
+        // Never apply a received save without a usable rollback snapshot.
+        bool ok = backupN && saveImport(lan.saveData, lan.savePeerSize);
+        if (!ok && backupN) saveImport(backup, backupN);
+        free(backup);
         if (!ok) {
           lan.state = LINK_SAVE_INVALID;
           saveApplyArmed = false;

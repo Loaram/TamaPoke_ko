@@ -14,6 +14,7 @@
 #include "link.h"
 #include "i18n.h"
 #include <cstdio>
+#include <vector>
 uint32_t g_seed=5; FakeSerial Serial; FakeESP ESP; FakeWire Wire;
 volatile int g_touchX=0,g_touchY=0; volatile bool g_touchDown=false;
 void FakeESP::restart(){exit(0);}
@@ -21,6 +22,7 @@ int FakeSerial::available(){return 0;}
 String FakeSerial::readStringUntil(char){return String("");}
 
 void setup(); void render(); void battleTap(int16_t,int16_t);
+void lanTap(int16_t,int16_t);
 extern Pet pet;
 extern Link lan;
 extern bool battleOpen, btlLink, btlLinkHost, btlOver, btlWon, lanOpen;
@@ -200,6 +202,43 @@ int main(){
     ck(lan.state==LINK_REFUSED, "with no radio it says so rather than hanging");
   }
 
+  // Actual save-menu path: temporary staging is released before radio startup.
+  std::vector<uint8_t> beforeApply(SAVE_MAX_BYTES), afterApply(SAVE_MAX_BYTES);
+  size_t beforeApplyN=saveExport(beforeApply.data(),beforeApply.size());
+  ck(beforeApplyN>0,"save-menu failure test has a valid baseline snapshot");
+  lan.state=LINK_OFF;
+  emuFailPsMalloc=true;
+  lanTap(120,220); // send (third row)
+  ck(lan.state==LINK_SAVE_INVALID && lan.saveMode,
+     "sender allocation failure stops safely before starting radio");
+  lan.state=LINK_OFF;
+  lanTap(120,280); // receive (fourth row)
+  ck(lan.state==LINK_REFUSED && lan.saveMode && !lan.saveSender,
+     "receiver needs no sender staging allocation (radio unavailable in emulator)");
+  lan.state=LINK_SAVE_READY;
+  lanTap(130,240); // arm apply
+  lanTap(130,280); // confirm
+  ck(lan.state==LINK_SAVE_INVALID,
+     "apply allocation failure rejects received save without changing storage");
+  emuFailPsMalloc=false;
+  size_t afterApplyN=saveExport(afterApply.data(),afterApply.size());
+  ck(beforeApplyN==afterApplyN && !memcmp(beforeApply.data(),afterApply.data(),beforeApplyN),
+     "allocation failure leaves exported save bytes unchanged");
+  lan.state=LINK_SAVE_READY;
+  lan.savePeerSize=1;
+  lan.saveData[0]=0;
+  lanTap(130,240); lanTap(130,280);
+  afterApplyN=saveExport(afterApply.data(),afterApply.size());
+  ck(lan.state==LINK_SAVE_INVALID && beforeApplyN==afterApplyN &&
+     !memcmp(beforeApply.data(),afterApply.data(),beforeApplyN),
+     "invalid received save preserves the complete rollback snapshot");
+  for(int i=0;i<20;i++) {
+    lan.state=LINK_OFF;
+    lanTap(120,220);
+    ck(lan.state==LINK_REFUSED && lan.saveSender && lan.saveSize>0 &&
+       saveValidate(lan.saveData,lan.saveSize),
+       "repeated send keeps a valid owned snapshot after temporary staging is freed");
+  }
   printf("%s\n", bad?"FAILURES":"all good");
   return bad?1:0;
 }

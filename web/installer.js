@@ -5,7 +5,7 @@ const regionNames = {kanto:'관동',johto:'성도',hoenn:'호연',sinnoh:'신오
 regionNames.forms='폼체인지';
 let port, reader, writer, pendingRead, decoder = new TextDecoder(), lineBuf = '', busy = false, firmwareReady = false;
 const regionButtons = [...document.querySelectorAll('[data-region]')];
-function log(message) { el('log').style.display='block'; el('log').textContent+=message+'\n'; el('log').scrollTop=el('log').scrollHeight; }
+function log(message) { el('log').style.display='block'; el('log').textContent=(el('log').textContent+message+'\n').split('\n').slice(-301).join('\n'); el('log').scrollTop=el('log').scrollHeight; }
 function status(message) { el('status').textContent=message; }
 function controls() {
   const ready=!!writer && !busy;
@@ -50,7 +50,19 @@ async function waitFor(token,timeoutMs=6000) {
   while(Date.now()<deadline) {
     const line=await readLine(deadline-Date.now());
     if(line===token) return;
-    if(line==='ERR' || line.startsWith('ERR ')) throw new Error('기기가 전송을 거부했습니다. microSD 상태를 확인하세요.');
+    if(line==='ERR' || line.startsWith('ERR ')) {
+      const reasons={SD_NOT_READY:'기기가 microSD를 인식하지 못했습니다.',
+        INVALID_PATH:'허용되지 않는 파일 경로입니다.',INVALID_SIZE:'허용되지 않는 파일 크기입니다.',
+        INVALID_COMMAND:'파일 전송 명령을 해석하지 못했습니다.',
+        OPEN_WRITE:'SD에 파일을 열지 못했습니다. 카드 연결·남은 공간·파일시스템을 확인하세요.',
+        RX_TIMEOUT:'USB 데이터가 제한 시간 안에 모두 도착하지 않았습니다. 케이블·연결과 브라우저 상태를 확인하세요.',
+        WRITE_SHORT:'SD에 요청한 용량만큼 쓰지 못했습니다. 남은 공간·카드 연결·파일시스템을 확인하세요.',
+        VERIFY_OPEN:'저장한 파일을 다시 열지 못했습니다.',VERIFY_SIZE:'다시 읽은 파일 크기가 전송 크기와 다릅니다.',
+        VERIFY_READ:'저장한 파일을 끝까지 읽지 못했습니다.',VERIFY_CRC:'다시 읽은 파일 내용이 기기가 받은 데이터와 다릅니다.'};
+      const code=line.split(/\s+/)[1];
+      throw new Error((reasons[code]||'기기가 전송을 거부했습니다. 이 응답만으로는 원인을 구분할 수 없습니다.')+` [기기 응답: ${line}]`);
+    }
+    if(line) log(`[기기] ${line.slice(0,1000)}`);
   }
   throw new Error('기기의 응답 시간이 초과됐습니다.');
 }
@@ -79,22 +91,33 @@ function parsePak(buf) {
 }
 async function sendOne(name,data,onBytes) {
   if(!validName(name)||!data.length) throw new Error('올바른 .bin 파일을 선택하세요.');
-  await writer.write(enc.encode(`PUT ${name} ${data.length}\n`));
-  await waitFor('OK');
-  for(let i=0;i<data.length;i+=2048) {
-    const chunk=data.subarray(i,i+2048);await writer.write(chunk);await waitFor('#');onBytes(chunk.length);
+  let acknowledged=0, phase='파일 열기';
+  try {
+    await writer.write(enc.encode(`PUT ${name} ${data.length}\n`));
+    await waitFor('OK',20000);
+    for(let i=0;i<data.length;i+=2048) {
+      phase=`데이터 쓰기 · 블록 시작 ${i} 바이트`;
+      const chunk=data.subarray(i,i+2048);await writer.write(chunk);await waitFor('#',20000);
+      acknowledged+=chunk.length;onBytes(chunk.length);
+    }
+    phase='저장 완료 확인';
+    await waitFor('DONE',30000);
+  } catch(e) {
+    throw new Error(`${name} · ${phase} · 기기 확인 ${acknowledged}/${data.length} 바이트\n${e.message}`);
   }
-  await waitFor('DONE',30000);
 }
 async function sendAll(items,label) {
   const total=items.reduce((n,it)=>n+it.data.length,0);let sent=0;
   el('progress').hidden=false;el('progress').value=0;
   for(const [i,it] of items.entries()) {
+    const current=`${label} · ${i+1}/${items.length} · ${it.name}`;
+    status(`${current} · 파일 열기`);
+    log(`${current} · ${it.data.length} 바이트 전송 시작`);
     // Stop immediately on a failed ACK; continuing the binary stream can
     // desynchronize PUT and falsely report a successful install.
     await sendOne(it.name,it.data,n=>{
       sent+=n;const percent=Math.floor(sent/total*100);el('progress').value=percent;
-      status(`${label} · SD 카드로 전송 중 ${percent}% (${i+1}/${items.length})`);
+      status(`${current} · SD 카드로 전송 중 ${percent}%`);
     });
   }
   log(`${label}: ${items.length}개 파일 설치 완료`);
@@ -103,7 +126,7 @@ async function runInstall(action) {
   if(busy||!writer) return;
   busy=true;controls();
   try { await action();status('설치 완료! 연결을 해제하고 기기를 재시작하세요.'); }
-  catch(e) { status('설치가 중단됐습니다. 연결을 다시 시도하세요.');log(e.message);await disconnect(); }
+  catch(e) { status(`설치가 중단됐습니다. ${e.message.split('\n')[0]}`);log(e.message);log('자동 재전송하지 않았습니다. 오류 내용을 보관하고 재연결하세요. SD 포맷·세이브 삭제는 하지 마세요.');await disconnect(); }
   finally { busy=false;controls(); }
 }
 async function loadRegion(region) {
