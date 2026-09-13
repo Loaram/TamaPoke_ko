@@ -59,7 +59,10 @@ int main(){
   onSwipe(1);onSwipeV(-1);loop();
   ck(nvs()==cleared,"stale objects, lifecycle and gestures cannot resurrect reset save");
   uint8_t backup[SAVE_MAX_BYTES];ck(saveExport(backup,sizeof(backup))==0&&!saveImport(backup,0),"backup/import blocked during reset shutdown");
-  saveResetLocked=false;pet.~Pet();new(&pet)Pet();party.~Party();new(&party)Party();party.begin();pet.begin();
+  // Re-enter real setup WITHOUT discarding native globals, like NativeActivity
+  // recreation in a process Android kept alive after finish().
+  setup();
+  ck(!saveResetLocked&&!clockOpen&&resetPanel==0,"warm Activity recreation leaves closing screen and unlocks the fresh game");
   ck(pet.isEgg()&&pet.awaitingStarter()&&pet.energy==80&&pet.streak==0&&pet.badges==0&&pet.registeredCount()==0&&party.count()==0&&party.boxCount()==0&&pet.eggsRemaining()==2,"fresh boot has initial egg, empty collection and fresh daily allowance");
   fresh();cuts.clear();nvsAfterWrite()=capture;bool ok=saveResetGame(true);nvsAfterWrite()=nullptr;
   ck(ok,"reference reset completes");int failed=0;

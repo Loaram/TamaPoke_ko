@@ -69,12 +69,18 @@ assert 'Reset crash boundaries: 67, failures: 0' in reset_log
 assert 'real recovery retry completes reset and requests restart' in reset_log
 assert 'PASS: reset,android_lifecycle,save,trade' in reset_log
 assert not re.search(r'^FAIL|Traceback',reset_log,re.M)
+warm_log=(R/'build/release-390-reset-warm.log').read_text(encoding='utf8',errors='replace')
+assert 'PASS: reset' in warm_log and 'Reset crash boundaries: 67, failures: 0' in warm_log
+assert 'warm Activity recreation leaves closing screen and unlocks the fresh game' in warm_log
+assert not re.search(r'^FAIL|Traceback',warm_log,re.M)
+(Q/'reset-warm.log').write_text(warm_log,encoding='utf8')
 report=dict(version=V,save_version=7,record_bytes=72,android_version_code=3052,wear_version_code=3053,
   runtime_ci_url='https://github.com/Loaram/TamaPoke_ko/actions/workflows/verify.yml',
   runtime_ci_note='66 suites must pass before publication; see Actions for live final results.',
   daily_menu_eggs=2,runaway_auto_egg_separate=True,
   initial_local_regression_suites=4,initial_local_regression_names=['reset','android_lifecycle','save','trade'],
   final_runtime_ci_required=True,
+  final_local_reset_suite=True,warm_activity_recreation=True,
   reset_crash_boundaries=67,reset_physical_device_test=False,local_full_runtime='Windows WinError4551; full CI required',
   installer_checks=30,esp_wifi_save_apply_user_confirmed=False,sd_upload_physical_retest=False,
   artifacts={n:{'bytes':(A/n).stat().st_size,'sha256':sha(A/n)} for n in sorted(expected)})

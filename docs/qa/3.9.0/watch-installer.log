@@ -31,3 +31,6 @@ PASS: PDF help available before bundle verification
 30 checks passed. Physical watch install not tested.
 Built and verified: C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\build\watch-installer-390-final\TamaPoke-3.9.0-Watch-Installer-Windows.zip (18,042,061 bytes)
 Physical watch pairing/install remains untested. No upload was performed.
+
+Final APK repack: unchanged previously verified installer executable reused; new local compiler/test execution hit Windows policy.
+Final Wear APK SHA256: 4472723be90f9b9969adc9ba48610d7492ede58fe2e53290b61f1ea98b83a72c

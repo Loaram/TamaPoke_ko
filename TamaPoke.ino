@@ -36,6 +36,7 @@
 #include "rtcbat.h"
 #include "i18n.h"
 #include "audio.h"
+#include <new>
 #include "korean_text.h"
 #include "pokedex_progress.h"
 // Explore graduated from the desktop beta in 2.0.0. The beta define remains
@@ -826,9 +827,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(TP_INT), touchIsr, FALLING);
 
   sdBegin();
-  if(saveResetPending()) {
-    if(!saveResetGame(false,trade.checkpoint)){resetPanel=3;return;}
+  // NativeActivity may be recreated in the same process: .so globals can
+  // survive finish(). Reconstruct the owners (never copy Preferences handles)
+  // after reset, even when its durable marker was already removed successfully.
+  bool resetBoot=saveResetLocked || saveResetPending();
+  if(resetBoot) {
+    if(saveResetPending() && !saveResetGame(false,trade.checkpoint)){resetPanel=3;return;}
+    pet.~Pet();new(&pet)Pet();party.~Party();new(&party)Party();
     saveResetLocked=false;
+    resetPanel=0;clockOpen=menuOpen=cardOpen=false;starterRegionDone=false;
   }
   party.begin();
   pet.begin();

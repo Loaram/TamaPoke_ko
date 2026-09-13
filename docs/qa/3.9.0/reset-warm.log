@@ -1,0 +1,51 @@
+TamaPoke fw v3.9.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS settings reset button only opens warning
+PASS cancel preserves every byte
+PASS double tap cannot accept final confirmation
+PASS battle blocks reset
+PASS pending trade blocks reset
+PASS save transfer menu blocks reset
+PASS unfinished swap blocks reset backend
+PASS confirmed reset clears gameplay and keeps settings
+PASS foreground return keeps reset recovery UI responsive without resuming pet writes
+PASS stale objects, lifecycle and gestures cannot resurrect reset save
+PASS backup/import blocked during reset shutdown
+TamaPoke fw v3.9.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+PASS warm Activity recreation leaves closing screen and unlocks the fresh game
+PASS fresh boot has initial egg, empty collection and fresh daily allowance
+PASS reference reset completes
+Reset crash boundaries: 67, failures: 0
+PASS every interrupted key write resumes to empty gameplay without orphan SD pointer
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS failed durable checkpoint never reports success
+PASS uncommitted intent leaves original disk save untouched
+PASS failed durable checkpoint never reports success
+PASS disk restart resumes committed reset intent
+PASS failed durable checkpoint never reports success
+PASS disk restart resumes committed reset intent
+TamaPoke fw v3.9.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+PASS real startup stops before game loading when reset recovery fails
+PASS real recovery retry completes reset and requests restart
+PASS peer recovery receipts survive gameplay reset
+PASS new test file loads
+PASS reset settings commit through actual file backend
+PASS actual file reopen retains only reset result
+PASS: reset

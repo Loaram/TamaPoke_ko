@@ -73,5 +73,5 @@ native-code: 'arm64-v8a' 'x86_64'
 + C:\WINDOWS\system32\cmd.exe /d /s /c C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\apksigner.bat verify --verbose --print-certs C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk
 + C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\zipalign.exe -c -P 16 4 C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk
 + C:\Users\hyung\AppData\Local\Android\Sdk\build-tools\36.0.0\aapt.exe dump badging C:\Users\hyung\AppData\Local\TamaPokeAndroidBuild\signed.apk
-Built C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\build\android\TamaPoke-3.9.0-Android-Full-debug.apk (387,884,324 bytes)
+Built C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke_ko\build\android\TamaPoke-3.9.0-Android-Full-debug.apk (387,888,420 bytes)
 Version 3.9.0-android.1, versionCode 3052, ABIs arm64-v8a, x86_64
