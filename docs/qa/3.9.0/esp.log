@@ -1,0 +1,16 @@
+Compiling Korean working tree
+what the installer writes:
+  0x000000..0x004E10  firmware/bootloader.bin
+  0x008000..0x008C00  firmware/partitions.bin
+  0x00E000..0x010000  firmware/boot_app0.bin
+  0x010000..0x23EE10  firmware/app.bin
+what must survive it:
+  0x009000..0x00E000  nvs
+  0x610000..0xFF0000  ffat
+
+the save is out of the blast radius
+Sketch uses 2289023 bytes (72%) of program storage space. Maximum is 3145728 bytes.
+Global variables use 185084 bytes (56%) of dynamic memory, leaving 142596 bytes for local variables. Maximum is 327680 bytes.
+
+Application bytes: 2289168
+Published verified Korean components to web/firmware

@@ -1,0 +1,202 @@
+TamaPoke fw v3.9.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+emu: thumbnails loaded: 1025
+RTC sin hora: sembrado, sin progresion offline esta vez
+PASS settings reset button only opens warning
+PASS cancel preserves every byte
+PASS double tap cannot accept final confirmation
+PASS battle blocks reset
+PASS pending trade blocks reset
+PASS save transfer menu blocks reset
+PASS unfinished swap blocks reset backend
+PASS confirmed reset clears gameplay and keeps settings
+PASS stale objects, lifecycle and gestures cannot resurrect reset save
+PASS backup/import blocked during reset shutdown
+PASS fresh boot has initial egg, empty collection and fresh daily allowance
+PASS reference reset completes
+Reset crash boundaries: 67, failures: 0
+PASS every interrupted key write resumes to empty gameplay without orphan SD pointer
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS write/remove fault keeps game locked
+PASS retry completes after storage fault
+PASS failed durable checkpoint never reports success
+PASS uncommitted intent leaves original disk save untouched
+PASS failed durable checkpoint never reports success
+PASS disk restart resumes committed reset intent
+PASS failed durable checkpoint never reports success
+PASS disk restart resumes committed reset intent
+TamaPoke fw v3.9.0
+boot: reset=power on heap=294024 psram=4194304
+emu: sprites from C:/Users/hyung/Documents/ChatGPT/Tamapoko 한글화/TamaPoke_ko/tools/sdcard/mons
+PASS real startup stops before game loading when reset recovery fails
+PASS real recovery retry completes reset and requests restart
+PASS peer recovery receipts survive gameplay reset
+PASS new test file loads
+PASS reset settings commit through actual file backend
+PASS actual file reopen retains only reset result
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS both previews wait without exchanging
+PASS matching confirmation codes
+PASS whole-save backup is blocked during a transaction
+PASS release cannot change reserved Pokemon
+PASS explicit local approval is durable
+PASS one approval cannot commit
+PASS explicit local approval is durable
+PASS lossy swap reaches durable completion
+PASS exact selected records exchanged without IV/shiny reroll
+PASS restarts and repeated completion do not duplicate/reverse trade
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS gift moves exactly one Pokemon into 300th box slot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS cancel is allowed before local confirmation
+PASS cancel keeps both originals
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS confirmed transaction cannot be unilaterally cancelled
+PASS explicit local approval is durable
+PASS prepared trade resumes after both devices reboot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS disk flush failure blocks confirmation
+PASS peer cannot commit an unpersisted approval
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS failed checkpoint recovers from durable snapshot
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS phase-boundary restart preserves exactly one of each individual
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+PASS power cut after each durable commit/receipt write resumes exactly once
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS explicit local approval is durable
+PASS explicit local approval is durable
+forms: roster write failed; recovery copies retained
+PASS roster storage fault blocks completion
+PASS roster fault recovery retains both individuals
+PASS whole-save backup is available after completion
+PASS device transaction journal never travels in a whole-save backup
+PASS begin validates and durably locks only selected slot
+PASS begin validates and durably locks only selected slot
+PASS same send roles refused without mutations
+PASS invalid IV rejected
+PASS unknown move rejected
+PASS: individual transfer transaction tests
+PASS  every key the firmware writes is in the backup table
+PASS  and the table has no duplicates
+PASS  a save exports
+PASS  and fits a sensible buffer
+      (25448 bytes)
+PASS  a blob with the wrong magic is refused
+PASS  and one from a future version
+PASS  a single flipped byte fails the checksum
+PASS  and a truncated blob is refused
+PASS  as is one too short to hold a header
+PASS  a refused import leaves the save alone
+PASS  the wipe really emptied NVS
+PASS  the backup imports
+PASS  the creature is back, shiny and all
+PASS  at the age it was
+PASS  with its IVs
+PASS  and its training
+PASS  the trainer name survives
+PASS  so does the nickname
+PASS  and the avatar, including one past the original four
+PASS  both badge ladders
+PASS  streak and medals
+PASS  every minigame record
+PASS  bond, mistakes, weight
+PASS  the Pokedex, holes and all
+PASS  and the only extra bit is the live creature re-registering itself
+PASS  and the moveset
+PASS  the whole party is back
+PASS  with every level, moveset and nickname
+PASS  and a banked shiny is still shiny
+PASS  the box comes back full
+PASS  with the right creatures in it
+PASS  a second restore over a different save
+PASS  overwrites it rather than merging with it
+PASS  failed scalar or roster write is reported, not claimed successful
+PASS  failed import restores the entire previous save without clearing it first
+PASS  failed scalar or roster write is reported, not claimed successful
+PASS  failed import restores the entire previous save without clearing it first
+PASS  duplicate keys are rejected even with a valid checksum
+PASS  wrong type for a known key is rejected before import
+all good
+PASS  sender snapshot exported
+PASS  received save imported
+PASS  restart flag stops the applying frame before autosave
+PASS  restart blocks pause/stop/resume/exit checkpoints and game ticks
+PASS  every imported key survives the Android shutdown sequence
+PASS  reopen restores received creature, dex, badges, party and box together
+PASS  repeated background callbacks never apply active-care ticks
+offline: 120 min aplicados (nv.7)
+PASS  two hours in background uses offline floors and adds no neglect
+PASS  background growth advances exactly once
+PASS  duplicate resume/focus events cannot replay time
+offline: 120 min aplicados (nv.7)
+PASS  cold launch and warm resume agree on offline growth and care
+offline: 60 min aplicados (nv.63)
+PASS  active companion gains three levels after an offline hour
+offline: 60 min aplicados (nv.66)
+PASS  active companion gains three more levels after warm resume
+PASS  backward clock correction never adds offline growth
+PASS  sleeping app checkpoint writes full 300-box disk snapshot
+PASS  process restart restores disabled sound and chosen volume after large roster
+PASS  cold startup restores manual sleep and first/last box residents
+offline: 2 min aplicados (nv.1)
+PASS  sleep survives offline minutes and restores exactly 8 energy per minute
+offline: 2 min aplicados (nv.1)
+PASS  warm resume preserves sleep without duplicate energy recovery
+PASS  manual wake saved
+PASS  manual wake also persists across process restart
+all good
+PASS: reset,android_lifecycle,save,trade

@@ -22,9 +22,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.8.1-Play-Guide-KO.pdf"
-VERSION = "3.8.1"
-PAGE_TOTAL = 29
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.9.0-Play-Guide-KO.pdf"
+VERSION = "3.9.0"
+PAGE_TOTAL = 30
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -253,7 +253,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.8.1",
+            "플레이 설명서 · 3.9.0",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -264,7 +264,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-12", CENTER),
+        p("2026-09-13", CENTER),
     ]
 )
 page_break(story)
@@ -682,7 +682,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.8.1", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.9.0", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -848,6 +848,19 @@ story.extend([
     bullet("남은 HP 10%·상태이상 보너스 없음 조건입니다. 볼 배율은 최종 확률이 아닌 계산식 안에 적용됩니다. 정수 계산 때문에 배율이 올라도 같은 확률인 구간이 있습니다. 99.99%와 정확한 100%는 다릅니다."),
     bullet("포획률 3은 특별 보정 2.5%에 같은 볼 배율을 곱합니다. 도감 100종은 3%, 500종은 5%, 900종 이상은 7%입니다. 현재 도감 최대 배율은 2.8배이며 500종에서 멈추지 않습니다."),
     p("100번째 종을 잡는 판정은 기존 99종 배율을 사용합니다. 성공해 도감에 등록된 뒤 다음 포획부터 1.2배입니다. 패배 시에는 포획하지 않으며, 100%라도 저장 오류나 보관 문제까지 성공으로 처리하지는 않습니다.", CALLOUT),
+])
+
+page_break(story)
+story.extend(page_heading("29 세이브 초기화", "처음부터 새로 시작하기", "현재 기기의 플레이 기록을 지웁니다. 일반 업데이트에는 필요하지 않습니다."))
+story.append(screenshot_pair(ROOT / "docs/qa/3.9.0/reset-warning.png", ROOT / "docs/qa/3.9.0/reset-confirm.png",62*mm))
+story.extend([
+    p("설정 → 세이브 초기화 → 다음 → 모두 지우고 새로 시작", SAFE),
+    bullet("현재 포켓몬, 파티와 300칸 박스, 도감·이로치 등록, 배지·메달, 훈련·육성·연속기록, 트레이너 정보와 하루 알 수령 기록이 지워집니다. 처음 시작하는 알과 지방·스타팅 선택으로 돌아갑니다."),
+    bullet("소리 켜기/끄기·음량·언어와 설치된 지방·폼 그림 팩은 유지됩니다. ESP microSD를 포맷하거나 그림을 다시 설치할 필요가 없습니다. 기기 시계도 변경하지 않습니다."),
+    bullet("첫 안내에서 다음을 누른 뒤 최종 확인을 읽고 1초 이상 지나서 삭제 버튼을 누르세요. 취소하거나 설정 화면에서 나가면 초기화하지 않습니다."),
+    bullet("대전·세이브 전송·미완료 포켓몬 교환 또는 보관 복구 중이면 먼저 완료하세요. 확정된 교환의 상대 기기 복구에 필요한 내부 확인 기록은 보존합니다."),
+    bullet("ESP는 재시작합니다. Android·워치·PC는 앱이 닫힌 뒤 다시 열어주세요. 저장 오류가 나면 플레이를 멈추고 다시 시도를 표시합니다. 중간에 전원이 꺼져도 다음 실행에서 초기화를 마무리합니다."),
+    p("삭제 후 실행 취소는 없습니다. 필요한 세이브는 먼저 별도로 백업하세요. SD의 예전 보관 파일과 외부 백업을 복구 불가능하게 지우는 보안 삭제 기능은 아닙니다. 다른 기기나 외부 백업은 자동 삭제하지 않습니다.", CALLOUT),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

@@ -52,6 +52,7 @@ struct PartyMon {
 class Pet;
 extern bool tradeStorageBlocked;
 extern bool activeSwapBlocked;
+extern bool saveResetLocked;
 enum BoxSortOrder : uint8_t { BOX_SORT_NAME, BOX_SORT_DEX, BOX_SORT_LEVEL };
 
 class Party {
@@ -67,7 +68,7 @@ public:
   void replaceAt(uint8_t i, const PartyMon &m);
   void releaseAt(uint8_t i);    // free a slot again
   bool save();
-  bool writable() const { return !rosterReadOnly && !tradeStorageBlocked && !activeSwapBlocked; }
+  bool writable() const { return !saveResetLocked && !rosterReadOnly && !tradeStorageBlocked && !activeSwapBlocked; }
   bool hasEndedMon(const PartyMon &m) const;
   uint16_t boxCount() const;
   int boxFirstFree() const;

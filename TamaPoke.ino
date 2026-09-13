@@ -47,7 +47,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.8.1"
+#define FW_VERSION "3.9.0"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -206,6 +206,8 @@ char partyBannerName[64] = "";
 #define PARTY_GRID_Y 88
 
 bool clockOpen = false;       // pantalla de ajuste de hora (deslizar abajo)
+uint8_t resetPanel = 0; // 1 warning, 2 final confirmation, 3 retry, 4 closing
+uint32_t resetConfirmAt = 0;
 int clockH = 12, clockM = 0;  // hora en edicion
 
 // escena de bano: espuma sobre el bicho y limpieza al reventar
@@ -824,6 +826,10 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(TP_INT), touchIsr, FALLING);
 
   sdBegin();
+  if(saveResetPending()) {
+    if(!saveResetGame(false,trade.checkpoint)){resetPanel=3;return;}
+    saveResetLocked=false;
+  }
   party.begin();
   pet.begin();
   tradeInitialize();
@@ -865,6 +871,7 @@ void ensureMon() {
 }
 
 void loop() {
+  if(saveResetLocked){handleTouch();renderReset();return;}
   if(activeSwapBlocked){handleTouch();renderSwapRecovery();return;}
   uint32_t now = millis();
 #ifdef ANDROID
@@ -899,6 +906,7 @@ void loop() {
   wasRunReady = runReady;
 
   handleTouch();
+  if(saveResetLocked){renderReset();return;}
 #ifdef ANDROID
   // Unlike ESP hardware reset, Activity.finish() returns. Do not let this
   // same frame flush a stale Pet or party after the user applied a new save.
@@ -1351,6 +1359,7 @@ void handleTouch() {
 void openClock();  // prototipo
 
 void onSwipeV(int dir) {
+  if(saveResetLocked)return;
   if(activeSwapBlocked)return;
   if(tradeOpen){if(tradeDetail)tradeDetail=0;else if(tradeMenu==1)tradePage=(tradePage+(dir>0?50:1))%51;return;}
   if (boxOpen && boxSortOpen) {
@@ -1741,6 +1750,7 @@ void partyTap(int16_t x, int16_t y) {
 
 // deslizar: dir +1 = hacia la derecha
 void onSwipe(int dir) {
+  if(saveResetLocked)return;
   if(activeSwapBlocked)return;
   if(tradeOpen){if(tradeDetail)tradeDetail=0;else if(tradeMenu==1)tradePage=(tradePage+(dir>0?50:1))%51;return;}
   if (boxOpen && boxSortOpen) {
@@ -1865,6 +1875,7 @@ void onSwipe(int dir) {
 }
 
 void onTap(int16_t x, int16_t y) {
+  if(saveResetLocked){resetTap(x,y);return;}
   if(activeSwapBlocked){
     if(x>=90 && x<=376 && y>=310 && y<=354){
       pet.begin();party.begin();
@@ -3082,6 +3093,7 @@ void drawCardStat(int y, const char *label, uint16_t val, uint16_t maxBar,
 // no hay que gestionar zona horaria. Preserva el dia (no rompe racha/edad).
 
 void openClock() {
+  resetPanel=0;
   uint32_t e = pet.lastSeenEpoch ? pet.lastSeenEpoch : rtcEpoch();
   clockH = (e / 3600) % 24;
   clockM = (e / 60) % 60;
@@ -3125,6 +3137,7 @@ void drawClockBtn(int x, int y, const char *l) {
 static const char *const LANG_CODES[LANG_COUNT] = { "ES", "EN", "FR", "DE", "IT", "PT", "한국어" };
 
 void renderClock() {
+  if(resetPanel){renderReset();return;}
 #ifdef ANDROID
   // This screen used to snapshot the hour in openClock() and then look frozen.
   // Refresh it from Android Settings on every frame so the minute visibly
@@ -3213,10 +3226,10 @@ void renderClock() {
   gfx->setCursor(CX - 18, 352);
   gfx->print(localName("OK"));
 
-  gfx->setTextColor(0x6B4D);
-  gfx->setTextSize(2);
-  gfx->setCursor(CX - textWidthFactor(T(S_CLOCK_CANCEL), 6), 410);
-  gfx->print(T(S_CLOCK_CANCEL));
+  gfx->fillRoundRect(133,392,200,32,10,UI_WHITE);
+  gfx->drawRoundRect(133,392,200,32,10,UI_BAR_BAD);
+  gfx->setTextColor(UI_BAR_BAD);
+  tradeText(gLang==LANG_KO?"세이브 초기화":"Reset save",400,1);
 
   // version del firmware (discreta, abajo del todo)
   char ver[64];
@@ -3228,6 +3241,8 @@ void renderClock() {
 }
 
 void clockTap(int16_t x, int16_t y) {
+  if(resetPanel){resetTap(x,y);return;}
+  if(x>=133 && x<=333 && y>=392 && y<=424){resetPanel=1;return;}
 #ifndef ANDROID
   if (y >= 190 && y <= 248) {  // fila de botones +/-
     if (x >= 104 && x < 162) clockH = (clockH + 23) % 24;
@@ -3260,6 +3275,55 @@ void clockTap(int16_t x, int16_t y) {
     }
   }
   if (y >= 340 && y <= 388 && x >= 133 && x <= 333) { applyClock(); return; }
+}
+
+bool resetAllowed() {
+  return !tradeStorageBlocked && !trade.pending() && !activeSwapBlocked &&
+    !battleOpen && !lanOpen && !tradeOpen && !lan.live() && party.writable();
+}
+void renderReset() {
+  gfx->fillScreen(RGB565_BLACK);gfx->fillCircle(CX,CY,231,UI_BG_DAY);
+  gfx->setTextColor(UI_INK);
+  tradeText(gLang==LANG_KO?"세이브 초기화":"Reset save",82,2);
+  if(resetPanel==4) {
+    tradeText(gLang==LANG_KO?"초기화 완료":"Reset complete",170,2);
+    tradeText(gLang==LANG_KO?"앱을 다시 열어주세요":"Please reopen the app",220,1);
+  } else if(resetPanel==3) {
+    tradeText(gLang==LANG_KO?"초기화 저장 확인 필요":"Reset storage check needed",148,1);
+    tradeText(gLang==LANG_KO?"저장 공간을 확인 후 다시 시도하세요":"Check storage, then retry",190,1);
+    tradeText(gLang==LANG_KO?"완료 전까지 플레이를 멈춥니다":"Play is paused until completion",222,1);
+    tradeButton(gLang==LANG_KO?"다시 시도":"Retry",90,310);
+  } else {
+    tradeText(gLang==LANG_KO?"포켓몬·파티·박스·도감·배지":"Pokemon, party, box, Dex, badges",136,1);
+    tradeText(gLang==LANG_KO?"육성·연속기록·알 횟수가 지워집니다":"Care, streak and egg quota are erased",166,1);
+    tradeText(gLang==LANG_KO?"소리·언어·그림 팩은 유지됩니다":"Sound, language and art are kept",196,1);
+    if(resetPanel==1) {
+      tradeText(gLang==LANG_KO?"필요한 세이브는 먼저 백업하세요":"Back up your save first if needed",232,1);
+      tradeButton(gLang==LANG_KO?"다음":"Next",90,270);
+    } else {
+      tradeText(gLang==LANG_KO?"정말 삭제할까요? 되돌릴 수 없습니다":"Delete? This cannot be undone",232,1);
+      tradeButton(gLang==LANG_KO?"모두 지우고 새로 시작":"Delete and start over",90,270);
+    }
+    tradeButton(gLang==LANG_KO?"취소":"Cancel",90,332);
+    if(!resetAllowed())tradeText(gLang==LANG_KO?"진행 중인 통신·저장을 먼저 완료하세요":"Finish communication or storage first",386,1);
+  }
+  gfx->flush();
+}
+void resetTap(int16_t x,int16_t y) {
+  if(x<90 || x>376 || resetPanel==4)return;
+  if(resetPanel==3) {
+    if(y<310 || y>354)return;
+  } else {
+    if(y>=332 && y<=376){resetPanel=0;return;}
+    if(y<270 || y>314 || !resetAllowed())return;
+    if(resetPanel==1){resetPanel=2;resetConfirmAt=millis();return;}
+    if(resetPanel!=2 || (uint32_t)(millis()-resetConfirmAt)<1000)return;
+  }
+  bool start=resetPanel!=3 || !saveResetPending();
+  resetPanel=3;
+  if(saveResetGame(start,trade.checkpoint)) {
+    resetPanel=4;renderReset();ESP.restart();
+  }
 }
 
 // llama + numero de racha arriba a la izquierda

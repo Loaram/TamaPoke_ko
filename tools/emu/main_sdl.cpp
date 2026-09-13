@@ -310,6 +310,10 @@ static int shotMode(const char *screen, const char *out, int lvl, int iv, int de
     for (int d = 1; d <= 200; d++) pet.dbgHatchAs(d, false);
   }
   else if (!strcmp(screen, "clock"))   clockOpen = true;
+  else if (!strcmp(screen,"reset-warning") || !strcmp(screen,"reset-confirm")) {
+    extern uint8_t resetPanel;clockOpen=true;
+    resetPanel=!strcmp(screen,"reset-confirm")?2:1;
+  }
   else if (!strcmp(screen, "menu"))    menuOpen = true;
   else if (!strcmp(screen, "explore")) { exploreOpen = true; exploreRegion = REGION_ALL; pet.energy = 100; }
   else if (!strcmp(screen, "wild")) {

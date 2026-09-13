@@ -11,7 +11,7 @@ class AndroidGameLifecycle {
   void requestRestart() { closing = true; }
 
   bool checkpoint(Pet &pet, uint32_t ms, uint32_t local, uint32_t utc) {
-    if (!ready || closing || activeSwapBlocked) return false;
+    if (!ready || closing || activeSwapBlocked || saveResetLocked) return false;
     if (!paused) pet.updateDeviceClock(ms, local, utc);
     pet.saveNow();
     return true;
@@ -23,7 +23,7 @@ class AndroidGameLifecycle {
   }
   void resume(Pet &pet, uint32_t ms, uint32_t local, uint32_t utc) {
     if (!ready || closing || !paused) return;
-    if (!activeSwapBlocked) {
+    if (!activeSwapBlocked && !saveResetLocked) {
       pet.updateDeviceClock(ms, local, utc, true);
       pet.saveNow();
     }

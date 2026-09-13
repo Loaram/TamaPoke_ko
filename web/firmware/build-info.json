@@ -1,5 +1,5 @@
 {
-  "version": "3.8.1",
+  "version": "3.9.0",
   "fqbn": "esp32:esp32:esp32s3:CDCOnBoot=cdc,FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB",
   "core": "esp32:esp32@3.3.8",
   "upstream": "DylanPDao/TamaPoke",
@@ -17,8 +17,8 @@
       "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
     },
     "app.bin": {
-      "size": 2286224,
-      "sha256": "fc3a067fc91fbbd64d1bb94ea4093fa5d977f18303b0f5676871912ed2450ca9"
+      "size": 2289168,
+      "sha256": "d2caaa08f9afbdf1250db5fd9a11da5fd652745961821fca77a47c43471675d3"
     }
   }
 }

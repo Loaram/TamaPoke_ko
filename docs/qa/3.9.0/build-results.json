@@ -1,0 +1,63 @@
+{
+  "version": "3.9.0",
+  "save_version": 7,
+  "record_bytes": 72,
+  "android_version_code": 3052,
+  "wear_version_code": 3053,
+  "runtime_ci_url": "https://github.com/Loaram/TamaPoke_ko/actions/workflows/verify.yml",
+  "runtime_ci_note": "66 suites must pass before publication; see Actions for live final results.",
+  "daily_menu_eggs": 2,
+  "runaway_auto_egg_separate": true,
+  "initial_local_regression_suites": 4,
+  "initial_local_regression_names": [
+    "reset",
+    "android_lifecycle",
+    "save",
+    "trade"
+  ],
+  "final_runtime_ci_required": true,
+  "reset_crash_boundaries": 67,
+  "reset_physical_device_test": false,
+  "local_full_runtime": "Windows WinError4551; full CI required",
+  "installer_checks": 30,
+  "esp_wifi_save_apply_user_confirmed": false,
+  "sd_upload_physical_retest": false,
+  "artifacts": {
+    "SHA256SUMS.txt": {
+      "bytes": 863,
+      "sha256": "27c291cffd98bf2695ea6be2226274d6ff815ccfad221f4555bae5cb0ab7fa28"
+    },
+    "TamaPoke-3.9.0-Android-Full-debug.apk": {
+      "bytes": 387884324,
+      "sha256": "8236eb556488ca96a3a93df21d7a26e51836b16c49914fc563b3663ff9f76577"
+    },
+    "TamaPoke-3.9.0-ESP32-Web-Installer.zip": {
+      "bytes": 2308515,
+      "sha256": "8be680a8b4a9dc605432ce9b47d13bcebbc152f573b2997e0bdc6ec56e0761ab"
+    },
+    "TamaPoke-3.9.0-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
+      "bytes": 186624,
+      "sha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce"
+    },
+    "TamaPoke-3.9.0-Play-Guide-KO.pdf": {
+      "bytes": 596706,
+      "sha256": "ee39bd507d4e37bb8350e453249b40b8791d77d932ac5b5beee50b2c86e1297d"
+    },
+    "TamaPoke-3.9.0-Watch-Installer-Guide-KO.pdf": {
+      "bytes": 196225,
+      "sha256": "08e2f65d863eb1100408baec7c15293a867ae759ed8e3b734b40c624b3be07a5"
+    },
+    "TamaPoke-3.9.0-Watch-Installer-Windows.zip": {
+      "bytes": 18042061,
+      "sha256": "b77401e0d148da0be2debc1d4b9e18661687c2c9db61749fb74bfb9cbb6b27d4"
+    },
+    "TamaPoke-3.9.0-WearOS-GalaxyWatch4-9-debug.apk": {
+      "bytes": 387462441,
+      "sha256": "6a496b281283c99ebd83e70139add6a3140718a9368162eff081045bd1220947"
+    },
+    "WATCH-INSTALLER-SHA256SUMS.txt": {
+      "bytes": 221,
+      "sha256": "63efb644f8c18e1eac1f010ed3bc5a3a6daff6387ebb64cef52a3fe61ae821fe"
+    }
+  }
+}

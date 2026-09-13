@@ -7,6 +7,7 @@
 #include "audio.h"
 #include "egg_rewards.h"
 #include "pokedex_progress.h"
+#include "save.h"
 
 // Avoid modulo bias in the emulator's 16-bit PRNG as well as on devices.
 static uint16_t rollEggOdds(uint16_t range) {
@@ -1674,6 +1675,7 @@ PetMood Pet::mood() const {
 }
 
 void Pet::save() {
+  if(saveResetLocked)return;
   // A Pet nobody opened is a scratch object -- the battle's opponent, a test
   // fixture, anything built to be read and thrown away. It shares the single
   // NVS namespace with the real creature, so letting it write means it

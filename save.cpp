@@ -47,6 +47,40 @@ const SaveField SAVE_FIELDS[] = {
 };
 const uint16_t SAVE_FIELD_COUNT = sizeof(SAVE_FIELDS) / sizeof(SAVE_FIELDS[0]);
 
+bool saveResetLocked = false;
+bool saveResetPending() {
+  // Read/write open also works on a virgin ESP: read-only open fails when
+  // the namespace does not exist yet. A failed open is NOT reset consent.
+  Preferences p; if(!p.begin("tamapoke",false))return false;
+  bool pending=p.isKey("resetGame");p.end();return pending;
+}
+bool saveResetGame(bool start, bool (*checkpoint)()) {
+  if(start && (tradeStorageBlocked || activeSwapBlocked || trade.pending()))return false;
+  saveResetLocked=true;
+  Preferences p;if(!p.begin("tamapoke",false))return false;
+  if(start)p.putBool("resetGame",true);
+  // Commit the intent BEFORE deleting anything. ESP writes synchronously;
+  // Android/PC supply their atomic, checked file checkpoint.
+  bool ok=p.getBool("resetGame",false) && (!checkpoint || checkpoint());
+  for(uint16_t i=0;ok && i<SAVE_FIELD_COUNT;i++) {
+    const char *k=SAVE_FIELDS[i].key;
+    if(!strcmp(k,"lang") || !strcmp(k,"snd") || !strcmp(k,"vol"))continue;
+    if(p.isKey(k))ok=p.remove(k) && !p.isKey(k);
+  }
+  // Device-local pointer, progress clock and obsolete egg key aren't exported.
+  // Removing the pointer prevents orphan SD snapshots from ever being loaded.
+  const char *extra[]={"rosterSD","aseen","eggT"};
+  for(auto k:extra)if(ok && p.isKey(k))ok=p.remove(k) && !p.isKey(k);
+  // Keep terminal trade proofs: the peer may still need its final receipt.
+  // Pending trades cannot start a reset. None of these proofs restore a roster.
+  if(ok)ok=!checkpoint || checkpoint();
+  if(ok)ok=p.remove("resetGame") && !p.isKey("resetGame");
+  if(ok && checkpoint && !checkpoint()) {
+    p.putBool("resetGame",true);ok=false;
+  }
+  p.end();return ok; // Keep RAM locked even after success until a fresh boot.
+}
+
 #define MAX_VAL PARTY_ROSTER_BYTES
 static_assert(MAX_VAL + 1024 < SAVE_MAX_BYTES,
               "whole-save buffer must leave room beyond the box blob");
@@ -129,6 +163,7 @@ size_t saveExportSize() {
 }
 
 size_t saveExport(uint8_t *out, size_t cap) {
+  if(saveResetLocked)return 0;
   if(tradeStorageBlocked)return 0;
   if (cap < SAVE_HDR + 2) return 0;
   Preferences p;
@@ -258,6 +293,7 @@ static bool applySnapshot(Preferences &p,const uint8_t *in,size_t n,uint8_t *che
 }
 
 bool saveImport(const uint8_t *in,size_t n) {
+  if(saveResetLocked)return false;
   if(tradeStorageBlocked)return false;
   if(!saveValidate(in,n))return false;
 #if defined(ESP32) && !defined(ANDROID)

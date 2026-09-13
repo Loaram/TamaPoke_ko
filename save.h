@@ -37,6 +37,12 @@ struct SaveField {
 extern const SaveField SAVE_FIELDS[];
 extern const uint16_t SAVE_FIELD_COUNT;
 
+// Device-local reset intent is never exported. A failed/interrupted reset is
+// resumed before loading any game objects; no stale object may save meanwhile.
+extern bool saveResetLocked;
+bool saveResetPending();
+bool saveResetGame(bool start, bool (*checkpoint)() = nullptr);
+
 // Serialises the live save. Returns the number of bytes written, or 0 if it
 // would not fit in cap.
 size_t saveExport(uint8_t *out, size_t cap);
