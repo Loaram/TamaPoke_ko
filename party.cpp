@@ -276,6 +276,8 @@ bool Party::swapActive(Pet &pet, bool fromBox, uint16_t index) {
   PartyMon before=slot;
   // Normalize legacy companions without writing NVS or changing player progress.
   Pet incoming; incoming.lastSeenEpoch=pet.lastSeenEpoch;
+  incoming.calendarOffset=pet.calendarOffset;
+  incoming.lastCareDay=pet.lastCareDay;
   incoming.energy=pet.energy;
   incoming.reviveFrom(slot);
   if(!incoming.moveCount()) incoming.relearnFromLevel();

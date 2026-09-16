@@ -6,6 +6,7 @@
 #include "party.h"
 #include "trade.h"
 #include "roster_store.h"
+#include "calendar_clock.h"
 
 // Every key the firmware persists. Adding one here is the whole job of adding
 // it to the backup; save_test fails if a key exists in NVS and not in this list.
@@ -44,6 +45,7 @@ const SaveField SAVE_FIELDS[] = {
   // settings, so a restored device plays the way it did
   { "lang", SK_U8 },    { "snd", SK_BOOL },   { "vol", SK_U8 },
   { "eggQuota", SK_U32 }, { "eggClaim", SK_BYTES },
+  { "dayOff", SK_U32 }, // signed logical calendar offset, stored as 32-bit bits
 };
 const uint16_t SAVE_FIELD_COUNT = sizeof(SAVE_FIELDS) / sizeof(SAVE_FIELDS[0]);
 
@@ -311,4 +313,44 @@ bool saveImport(const uint8_t *in,size_t n) {
   if(!ok && !applySnapshot(p,old,oldN,check))
     Serial.println("save: storage failure during rollback; restore external backup");
   p.end();free(old);free(check);return ok;
+}
+
+bool saveImportAtTime(const uint8_t *in,size_t n,uint32_t localEpoch) {
+  if (!localEpoch || n > SAVE_MAX_BYTES - 32 || !saveValidate(in,n)) return false;
+  auto scalar=[&](const char *key)->uint32_t {
+    uint16_t len=0;const uint8_t *v=snapshotField(in,n,{key,SK_U32},len);
+    uint32_t value=0;if(v && len==4)memcpy(&value,v,4);return value;
+  };
+  uint32_t reference=careCalendarDay(scalar("seen"),(int32_t)scalar("dayOff"));
+  // Legacy devices may already have overwritten seen with their wrong RTC.
+  // Choose the latest persisted calendar anchor, without increasing the streak
+  // or resetting any quota. Repeated transfers cannot mint an extra care day.
+  for(uint32_t day:{scalar("cday"),scalar("eggQuota")>>2,scalar("byeQuota")>>2})
+    if(day>reference)reference=day;
+  if(!reference)reference=localEpoch/86400UL;
+  if(reference>UINT32_MAX/86400UL)return false;
+  int32_t offset=(int32_t)reference-(int32_t)(localEpoch/86400UL);
+#if defined(ESP32) && !defined(ANDROID)
+  uint8_t *copy=(uint8_t*)ps_malloc(SAVE_MAX_BYTES);
+#else
+  uint8_t *copy=(uint8_t*)malloc(SAVE_MAX_BYTES);
+#endif
+  if(!copy)return false;
+  memcpy(copy,in,SAVE_HDR);size_t out=SAVE_HDR;uint16_t count=0;
+  for(size_t at=SAVE_HDR;at<n-2;) {
+    uint8_t k=in[at];size_t v=at+1+k,end=v+3+in[v+1]+((size_t)in[v+2]<<8);
+    bool replace=(k==4&&!memcmp(in+at+1,"seen",4)) || (k==6&&!memcmp(in+at+1,"dayOff",6));
+    if(!replace){memcpy(copy+out,in+at,end-at);out+=end-at;count++;}
+    at=end;
+  }
+  auto append=[&](const char *key,uint32_t value){
+    uint8_t k=strlen(key);copy[out++]=k;memcpy(copy+out,key,k);out+=k;
+    copy[out++]=SK_U32;copy[out++]=4;copy[out++]=0;memcpy(copy+out,&value,4);out+=4;count++;
+  };
+  append("seen",localEpoch);append("dayOff",(uint32_t)offset);
+  copy[5]=count;copy[6]=count>>8;
+  uint16_t crc=crc16(copy,out);copy[out++]=crc;copy[out++]=crc>>8;
+  // saveImport also removes the destination's Android UTC baseline, so its
+  // next launch establishes a fresh clock instead of replaying old offline time.
+  bool ok=saveImport(copy,out);free(copy);return ok;
 }

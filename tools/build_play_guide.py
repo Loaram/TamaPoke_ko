@@ -22,9 +22,9 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.9.0-Play-Guide-KO.pdf"
-VERSION = "3.9.0"
-PAGE_TOTAL = 30
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.9.1-Play-Guide-KO.pdf"
+VERSION = "3.9.1"
+PAGE_TOTAL = 31
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\malgunbd.ttf")
@@ -253,7 +253,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.9.0",
+            "플레이 설명서 · 3.9.1",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -264,7 +264,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-13", CENTER),
+        p("2026-09-16", CENTER),
     ]
 )
 page_break(story)
@@ -682,7 +682,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.9.0", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.9.1", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
@@ -861,6 +861,18 @@ story.extend([
     bullet("대전·세이브 전송·미완료 포켓몬 교환 또는 보관 복구 중이면 먼저 완료하세요. 확정된 교환의 상대 기기 복구에 필요한 내부 확인 기록은 보존합니다."),
     bullet("ESP는 재시작합니다. Android·워치·PC는 앱이 닫힌 뒤 다시 열어주세요. 저장 오류가 나면 플레이를 멈추고 다시 시도를 표시합니다. 중간에 전원이 꺼져도 다음 실행에서 초기화를 마무리합니다."),
     p("삭제 후 실행 취소는 없습니다. 필요한 세이브는 먼저 별도로 백업하세요. SD의 예전 보관 파일과 외부 백업을 복구 불가능하게 지우는 보안 삭제 기능은 아닙니다. 다른 기기나 외부 백업은 자동 삭제하지 않습니다.", CALLOUT),
+])
+
+page_break(story)
+story.extend(page_heading("30 연속 돌봄과 기기 시계", "다른 기기로 옮겨도 돌봄 기록 이어가기", "연속 돌봄은 접속 시간이 아니라 날짜별 돌봄 행동으로 계산합니다."))
+story.extend([
+    p("하루 한 번 먹이 주기·쓰다듬기·청소·훈련처럼 돌봄을 해주세요. 앱을 켜거나 수면 상태로 두는 것만으로 연속일수가 늘지는 않습니다.", SAFE),
+    bullet("같은 날 여러 번 돌봐도 연속일수는 한 번만 증가합니다. 다음 날 첫 돌봄에 1일이 더해지고, 한 날짜를 완전히 건너뛰면 다음 돌봄에서 현재 연속일수가 1일로 시작합니다. 최고 기록은 남습니다."),
+    bullet("폰·워치는 기기 설정의 날짜와 시간을 따릅니다. ESP는 자체 시계를 사용하며 화면에서 시·분을 맞출 수 있습니다. 기기끼리 내부 날짜가 달라도 세이브를 받을 때 돌봄 날짜의 기준을 맞춥니다."),
+    bullet("전체 세이브를 옮겨도 기존 연속일수·알 수령 사용 횟수·개체별 당일 유대 사용량은 유지됩니다. 보내기와 받기를 반복해도 추가 알이나 연속일수가 생기지 않습니다. 다음 수령일은 받는 기기의 자정을 기준으로 바뀝니다."),
+    bullet("기기 날짜 차이 자체를 성장 시간으로 계산하지 않습니다. 받은 세이브의 레벨·훈련·개체값·박스 내용은 그대로 이어지고, 받은 뒤부터 정상적으로 시간이 흐릅니다."),
+    bullet("ESP의 시계가 초기화되거나 저장 시각보다 뒤로 돌아가면 마지막 저장 시각부터 이어갑니다. 시계가 정상적으로 전진했다면 기존 오프라인 성장 규칙을 유지합니다. 시계가 꺼져 있던 실제 기간은 추측해 보충하지 않습니다."),
+    p("양쪽 기기를 같은 최신 버전으로 업데이트한 뒤 전송하세요. 과거 날짜에 막혀 남아 있는 연속기록은 보정하지만, 이미 1일로 초기화되어 사라진 기록을 임의로 복원하지는 않습니다. 업데이트 전에 세이브를 백업하고 ESP의 기존 microSD를 유지하세요.", CALLOUT),
 ])
 
 OUT.parent.mkdir(parents=True, exist_ok=True)

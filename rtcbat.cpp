@@ -18,8 +18,11 @@ bool rtcBegin() {
 
 uint32_t rtcEpoch() {
   if (!rtcOk) return 0;
+  if (!rtc.isClockIntegrityGuaranteed()) return 0;
   RTC_DateTime t = rtc.getDateTime();
   if (t.getYear() < 2025 || t.getYear() > 2120) return 0;  // sin hora valida
+  if(t.getMonth()<1 || t.getMonth()>12 || t.getDay()<1 || t.getDay()>31 ||
+     t.getHour()>23 || t.getMinute()>59 || t.getSecond()>59)return 0;
   struct tm tmv = {};
   tmv.tm_year = t.getYear() - 1900;
   tmv.tm_mon = t.getMonth() - 1;

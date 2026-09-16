@@ -93,7 +93,7 @@ def main() -> int:
 
     version = firmware_version()
     flavor = "wear" if args.wear else "android"
-    version_code = args.version_code if args.version_code is not None else (3053 if args.wear else 3052)
+    version_code = args.version_code if args.version_code is not None else (3055 if args.wear else 3054)
     revision = args.android_revision if args.android_revision is not None else 1
     version_name = f"{version}-{flavor}.{revision}"
     default_name = (f"TamaPoke-{version}-WearOS-GalaxyWatch4-9-debug.apk" if args.wear

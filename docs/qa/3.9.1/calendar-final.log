@@ -1,0 +1,234 @@
+PASS full-size roster fixture
+PASS clock-aware import into earlier/later/equal RTC
+PASS import clears destination Android UTC baseline to prevent replayed offline growth
+PASS streak and bonus preserved without instant growth
+PASS import does not refill eggs or individual bond allowance
+PASS egg odds unchanged by clock rebasing
+PASS stored individual remains byte-identical
+PASS durable active snapshot comparison uses logical calendar
+PASS recovery snapshot remains readable with offset
+PASS bring companion after cross-calendar transfer
+PASS swap cannot refill allowance or reset streak
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+offline: 1440 min aplicados (nv.73)
+PASS next recipient midnight grants normal next day
+PASS restart does not change the earned day
+offline: 2880 min aplicados (nv.100)
+PASS genuine missed recipient day still resets current streak
+PASS clock-aware import into earlier/later/equal RTC
+PASS import clears destination Android UTC baseline to prevent replayed offline growth
+PASS streak and bonus preserved without instant growth
+PASS import does not refill eggs or individual bond allowance
+PASS egg odds unchanged by clock rebasing
+PASS stored individual remains byte-identical
+PASS durable active snapshot comparison uses logical calendar
+PASS recovery snapshot remains readable with offset
+PASS bring companion after cross-calendar transfer
+PASS swap cannot refill allowance or reset streak
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+offline: 1440 min aplicados (nv.73)
+PASS next recipient midnight grants normal next day
+PASS restart does not change the earned day
+offline: 2880 min aplicados (nv.100)
+PASS genuine missed recipient day still resets current streak
+PASS clock-aware import into earlier/later/equal RTC
+PASS import clears destination Android UTC baseline to prevent replayed offline growth
+PASS streak and bonus preserved without instant growth
+PASS import does not refill eggs or individual bond allowance
+PASS egg odds unchanged by clock rebasing
+PASS stored individual remains byte-identical
+PASS durable active snapshot comparison uses logical calendar
+PASS recovery snapshot remains readable with offset
+PASS bring companion after cross-calendar transfer
+PASS swap cannot refill allowance or reset streak
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+PASS round-trip accepted
+PASS round trip cannot mint a day, egg or bond allowance
+offline: 1440 min aplicados (nv.73)
+PASS next recipient midnight grants normal next day
+PASS restart does not change the earned day
+offline: 2880 min aplicados (nv.100)
+PASS genuine missed recipient day still resets current streak
+PASS old ESP stranded behind future care date recovers once without quota refill
+offline: 1440 min aplicados (nv.73)
+PASS legacy recovery persists across restart
+PASS invalid/backward RTC recovers from saved timestamp
+PASS healthy forward RTC keeps real offline time
+PASS only virgin RTC uses initial seed
+PASS invalid destination clock rejects without writes
+PASS corrupt import rejects without writes
+PASS offset write failure rolls back complete snapshot
+PASS young non-final Pokemon can receive the first egg
+PASS deposit keeps exact age, form, training, IVs, moves, name, shiny, bond and care
+PASS egg preserves shared energy/streak and charges one use
+PASS an existing egg cannot be replaced or charged
+PASS restart retains the same egg and daily allowance
+PASS second claim banks the pet and exhausts today's allowance
+PASS third claim is rejected without losing the active Pokemon
+PASS bringing a companion cannot refill allowance
+PASS releasing stored Pokemon cannot refill allowance
+PASS whole-save round trip includes the daily egg quota
+PASS import keeps quota and streak
+PASS clock rollback does not refill quota
+PASS quota remains exhausted before midnight
+PASS local midnight grants two, not accumulated days
+PASS unused days do not accumulate
+PASS a full party deposits into the first free box slot
+PASS full party and box deny without spending or erasing
+PASS storage failure recovers exactly once or leaves the original untouched
+forms: roster write failed; recovery copies retained
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS incomplete claim blocks normal gameplay
+PASS roster reload cannot clear an egg recovery block
+PASS storage failure recovers exactly once or leaves the original untouched
+PASS old farewell quota does not consume the new allowance or alter the pet
+PASS unknown-clock claim is bounded and persistent
+PASS unknown-clock claim is bounded and persistent
+PASS missing clock cannot refill uses on restart
+PASS the explicitly retained neglect/runaway rule is still available
+PASS automatic runaway egg is separate and never refills menu claims
+PASS reference claim completes before crash replay
+Crash replay: claim 1, 68 write boundaries, 0 failures
+PASS all interrupted writes recover without duplicated Pokemon, egg rerolls or extra charges
+PASS reference claim completes before crash replay
+Crash replay: claim 2, 68 write boundaries, 0 failures
+PASS all interrupted writes recover without duplicated Pokemon, egg rerolls or extra charges
+PASS a caress increases bond below the daily limit
+PASS same-day caress is saved immediately
+PASS twenty daily action points can stop exactly at 44
+PASS daily limit is intentional; candy is not a direct bond reward
+PASS first next-day caress gives daily four plus action one
+PASS training cannot overshoot the twenty-point daily action limit
+PASS first care action counts toward the new day's twenty-point limit
+PASS overnight storage before first care does not retain yesterday's exhausted quota
+PASS restart on the same date cannot refill the quota
+PASS same-day bring-back cannot refill the quota
+PASS bond remains capped at one hundred
+PASS the final caress awards the bond medal without waiting for a minute tick
+all good
+PASS  every key the firmware writes is in the backup table
+PASS  and the table has no duplicates
+PASS  a save exports
+PASS  and fits a sensible buffer
+      (25462 bytes)
+PASS  a blob with the wrong magic is refused
+PASS  and one from a future version
+PASS  a single flipped byte fails the checksum
+PASS  and a truncated blob is refused
+PASS  as is one too short to hold a header
+PASS  a refused import leaves the save alone
+PASS  the wipe really emptied NVS
+PASS  the backup imports
+PASS  the creature is back, shiny and all
+PASS  at the age it was
+PASS  with its IVs
+PASS  and its training
+PASS  the trainer name survives
+PASS  so does the nickname
+PASS  and the avatar, including one past the original four
+PASS  both badge ladders
+PASS  streak and medals
+PASS  every minigame record
+PASS  bond, mistakes, weight
+PASS  the Pokedex, holes and all
+PASS  and the only extra bit is the live creature re-registering itself
+PASS  and the moveset
+PASS  the whole party is back
+PASS  with every level, moveset and nickname
+PASS  and a banked shiny is still shiny
+PASS  the box comes back full
+PASS  with the right creatures in it
+PASS  a second restore over a different save
+PASS  overwrites it rather than merging with it
+PASS  failed scalar or roster write is reported, not claimed successful
+PASS  failed import restores the entire previous save without clearing it first
+PASS  failed scalar or roster write is reported, not claimed successful
+PASS  failed import restores the entire previous save without clearing it first
+PASS  duplicate keys are rejected even with a valid checksum
+PASS  wrong type for a known key is rejected before import
+all good
+PASS new isolated fixture
+PASS ten actual daily care actions establish a ten-day streak
+PASS bringing a protected companion from box slot 300 retains current/best/date
+PASS box exchange does not rewrite player history to zero
+PASS returning the original growing individual also retains player history
+PASS save a genuine post-box-exchange snapshot in the unchanged disk format
+PASS 3.0.0 disk reader reproduces loss of current streak but retains best/date
+PASS old restart shows 0/10 and same-day care cannot increment it
+PASS old next-day care incorrectly restarts at one
+PASS 3.1.1 reader restores the identical file in full
+PASS 3.1.1 cold restart keeps ten-day history, bonus and incoming companion
+PASS same-day companion care keeps ten days
+PASS next-day companion care advances to eleven
+PASS simulate interruption while committing the active creature
+PASS persist interrupted swap fixture
+PASS disk restart and swap recovery preserve all player history
+PASS whole-save transfer imports streak fixture
+PASS Android/Wear/ESP transfer codec keeps streak, best and date
+PASS genuinely missing a full day still removes the bonus
+PASS real care gap resets only current streak, not best history
+all good
+PASS: calendar,save,streak_persistence,bond,daily_egg

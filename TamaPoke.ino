@@ -48,7 +48,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.9.0"
+#define FW_VERSION "3.9.1"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -847,11 +847,14 @@ void setup() {
   batBegin();
   pwrSetup();
   uint32_t e = rtcEpoch();
-  if (e == 0) {
-    rtcSetEpoch(1767225600UL);  // RTC virgen: semilla (la hora absoluta da igual,
-    e = rtcEpoch();             // solo importan las diferencias)
-    Serial.println("RTC sin hora: sembrado, sin progresion offline esta vez");
+#ifndef ANDROID
+  uint32_t safeEpoch=recoverRtcEpoch(e,pet.lastSeenEpoch);
+  if(e!=safeEpoch) {
+    rtcSetEpoch(safeEpoch);
+    e=safeEpoch; // software fallback also works if the RTC is unavailable
+    Serial.println("RTC recovered from saved clock; no backward catch-up");
   }
+#endif
   pet.syncClock(e);
 
   audioBegin();  // ES8311 + I2S + amplificador (suena un jingle de arranque)
@@ -881,6 +884,19 @@ void loop() {
   if(saveResetLocked){handleTouch();renderReset();return;}
   if(activeSwapBlocked){handleTouch();renderSwapRecovery();return;}
   uint32_t now = millis();
+#ifndef ANDROID
+  // Refresh BEFORE touch/care, including the first action just after midnight.
+  static uint32_t lastClock=0;
+  if(now-lastClock>=1000) {
+    uint32_t elapsed=(now-lastClock)/1000;lastClock+=elapsed*1000;
+    uint32_t e=rtcEpoch();
+    if(e && e>=pet.lastSeenEpoch)pet.lastSeenEpoch=e;
+    else if(pet.lastSeenEpoch) {
+      pet.lastSeenEpoch+=elapsed;
+      if(e)rtcSetEpoch(pet.lastSeenEpoch);
+    }
+  }
+#endif
 #ifdef ANDROID
   if(!tradeStorageBlocked)pet.updateDeviceClock(now, rtcEpoch(), androidUtcEpoch());
 #else
@@ -973,17 +989,6 @@ void loop() {
   if (pet.savePending() && (screenOff || dimStage >= 1 || pet.sleeping)) {
     pet.flushSave();
   }
-
-  // anota la hora real cada 30 s (se persiste en cada save del juego). Android
-  // already refreshes this every frame while driving progression from it.
-#ifndef ANDROID
-  static uint32_t lastClock = 0;
-  if (now - lastClock > 30000) {
-    lastClock = now;
-    uint32_t e = rtcEpoch();
-    if (e) pet.lastSeenEpoch = e;
-  }
-#endif
 
   // latido de salud cada 5 min (para el soak test; se descarta si no hay monitor)
   static uint32_t lastHealth = 0;
@@ -1175,6 +1180,7 @@ void handleSerial() {
     pet.dbgRunawayReady();  // fuerza el estado "lista para escaparse" (test del boton)
     Serial.println("DONE");
   } else if (line == "EXPORT") {
+    pet.saveNow(); // export today's calendar anchor even without a pending tick
     // Prints the whole save as a block of IMPORT commands. Pasting that block
     // back is the restore -- there is no separate format to get wrong, and no
     // single 2000-character line for a terminal to mangle.
@@ -1218,7 +1224,7 @@ void handleSerial() {
       return;                        // silent while collecting
     }
     if (!inN) { Serial.println("IMPORT EMPTY"); return; }
-    bool ok = saveImport(in, inN);
+    bool ok = saveImportAtTime(in, inN, rtcEpoch() ? rtcEpoch() : pet.lastSeenEpoch);
     Serial.println(ok ? "IMPORT OK" : "IMPORT REJECTED");
     inN = 0;
     if (ok) { Serial.println("DONE"); delay(100); ESP.restart(); }
@@ -1882,6 +1888,10 @@ void onSwipe(int dir) {
 }
 
 void onTap(int16_t x, int16_t y) {
+#ifndef ANDROID
+  uint32_t careNow=rtcEpoch();
+  if(careNow && careNow>=pet.lastSeenEpoch)pet.lastSeenEpoch=careNow;
+#endif
   if(saveResetLocked){resetTap(x,y);return;}
   if(activeSwapBlocked){
     if(x>=90 && x<=376 && y>=310 && y<=354){
@@ -5470,7 +5480,7 @@ static void lanSaveStart(bool sender) {
       lan.saveMode = true;
       return;
     }
-    pet.flushSave();
+    pet.saveNow(); // the wire snapshot must carry the current source calendar day
     n = saveExport(scratch, SAVE_MAX_BYTES);
     if (!n) {
       free(scratch);
@@ -5526,7 +5536,8 @@ void lanTap(int16_t x, int16_t y) {
         uint8_t *backup = (uint8_t *)ps_malloc(SAVE_MAX_BYTES);
         size_t backupN = backup ? saveExport(backup, SAVE_MAX_BYTES) : 0;
         // Never apply a received save without a usable rollback snapshot.
-        bool ok = backupN && saveImport(lan.saveData, lan.savePeerSize);
+        bool ok = backupN && saveImportAtTime(lan.saveData, lan.savePeerSize,
+                                             rtcEpoch() ? rtcEpoch() : pet.lastSeenEpoch);
         if (!ok && backupN) saveImport(backup, backupN);
         free(backup);
         if (!ok) {

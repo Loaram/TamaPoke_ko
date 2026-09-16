@@ -1,4 +1,5 @@
 #pragma once
+#include "calendar_clock.h"
 #include <Arduino.h>
 #include <Preferences.h>
 #include "dex.h"
@@ -124,6 +125,7 @@ public:
   // racha de cuidado diario (del jugador: persiste entre crianzas)
   uint16_t streak = 0, bestStreak = 0;
   uint32_t lastCareDay = 0;
+  int32_t calendarOffset = 0; // logical care days minus local RTC days
   // vinculo (del bicho: sube lento con cuidado, se resetea al nacer otro)
   uint8_t bond = 0;
   char nick[12] = "";    // apodo (vacio = nombre de especie)
@@ -495,7 +497,7 @@ private:
   uint32_t medalUntil = 0;     // celebracion de medalla en pantalla
   uint32_t milestoneUntil = 0; // celebracion de hito de racha
 
-  uint32_t today() const { return lastSeenEpoch ? lastSeenEpoch / 86400 : 0; }
+  uint32_t today() const { return careCalendarDay(lastSeenEpoch, calendarOffset); }
   void registerCare();   // primer cuidado del dia: racha + vinculo
   void addBond(uint8_t amt);
   uint8_t rollIV(int bonus) const;  // una tirada 8-31 empujada por el cuidado

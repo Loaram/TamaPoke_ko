@@ -58,5 +58,9 @@ bool saveValidate(const uint8_t *in, size_t n);
 // version, or fails its checksum. The caller must reload afterwards.
 bool saveImport(const uint8_t *in, size_t n);
 
+// Explicit cross-device restore: retain logical care dates and quota usage,
+// but start growth at the receiving device's time (no foreign-clock catch-up).
+bool saveImportAtTime(const uint8_t *in, size_t n, uint32_t localEpoch);
+
 // Roughly what saveExport needs, for sizing a buffer.
 size_t saveExportSize();

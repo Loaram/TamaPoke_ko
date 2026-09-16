@@ -52,6 +52,8 @@ void Pet::begin() {
   prefs.begin("tamapoke", false);
   opened = true;
   lastSeenEpoch = prefs.getUInt("seen", 0);
+  calendarOffset = (int32_t)prefs.getUInt("dayOff", 0);
+  bool legacyCalendar = !prefs.isKey("dayOff");
   farewellQuota = prefs.getUInt("byeQuota", 0);
   dailyEggQuota = prefs.getUInt("eggQuota", 0);
   endedKind=CER_NONE;endedMon=PartyMon();ceremony=CER_NONE;
@@ -72,6 +74,17 @@ void Pet::begin() {
     newEgg();
   } else {
     load();
+  }
+  // One-time recovery for old saves stranded behind a foreign care/quota day.
+  // Keep the earned count and all used allowances; never guess a lost streak.
+  if (legacyCalendar && lastSeenEpoch) {
+    uint32_t anchor = lastCareDay;
+    if ((dailyEggQuota >> 2) > anchor) anchor = dailyEggQuota >> 2;
+    if ((farewellQuota >> 2) > anchor) anchor = farewellQuota >> 2;
+    if (anchor > today() && anchor <= UINT32_MAX / 86400UL) {
+      calendarOffset = (int32_t)anchor - (int32_t)(lastSeenEpoch / 86400UL);
+      prefs.putUInt("dayOff", (uint32_t)calendarOffset);
+    }
   }
   PartyMon waiting;
   if(prefs.getBytesLength("endWait")==sizeof(waiting) &&
@@ -445,6 +458,7 @@ void Pet::restoreCare(const PartyMon &m) {
 bool Pet::storedIndividualMatches() {
   if(!opened) return false;
   Pet check; check.prefs.begin("tamapoke",true); check.lastSeenEpoch=lastSeenEpoch;
+  check.calendarOffset=calendarOffset;
   check.load(false); // Verification must not offer moves or normalize saved training.
   PartyMon expected=storageSnapshot(), actual=check.storageSnapshot();
   check.prefs.end();
@@ -837,6 +851,7 @@ bool Pet::receiveEgg() {
   Pet preview; // Never copy Preferences: its destructor would close the live NVS handle.
   preview.region=region; preview.streak=streak; preview.lastCareDay=lastCareDay;
   preview.lastSeenEpoch=lastSeenEpoch; preview.lastEnd=CER_NONE; preview.bond=bond;
+  preview.calendarOffset=calendarOffset;
   memcpy(preview.dexReg,dexReg,sizeof(dexReg));
   preview.createEgg(0,false);
   claim.target=preview.eggTarget; claim.shiny=preview.eggShiny; claim.region=region;
@@ -1728,6 +1743,7 @@ void Pet::save() {
   prefs.putBool("sleep", sleeping);
   prefs.putUChar("lend", lastEnd);
   if (lastSeenEpoch) prefs.putUInt("seen", lastSeenEpoch);
+  prefs.putUInt("dayOff", (uint32_t)calendarOffset);
 #ifdef ANDROID
   if (deviceProgressEpoch) prefs.putUInt("aseen", deviceProgressEpoch);
 #endif
