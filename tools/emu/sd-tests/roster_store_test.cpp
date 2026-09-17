@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstdlib>
+#include <stdlib.h> // Load GCC's C wrapper before the test-only malloc macro.
 #include "Preferences.h"
 #include "SD_MMC.h"
 static bool denyLarge=false;
