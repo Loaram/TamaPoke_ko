@@ -1,0 +1,2 @@
+PASS: Korean version gate, 9 regional packs plus forms, invalid paths/truncation, PUT chunk ACKs, timeout, error and failure recovery
+PASS: 11 detailed device errors, file/byte/phase diagnostics, final verification failure, exact 47/50 file indices, stop-on-error and bounded logs

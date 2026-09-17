@@ -250,12 +250,8 @@ void Party::saveRoster() {
   memcpy(raw+8+PARTY_RECORD_BYTES*ROSTER_N,&pendingLive,PARTY_RECORD_BYTES);
   uint32_t sum=rosterHash(raw,ROSTER_BYTES-4);memcpy(raw+ROSTER_BYTES-4,&sum,4);
   // Verify the authoritative write before touching either recovery copy.
-  uint8_t *check=(uint8_t*)malloc(ROSTER_BYTES);
-  if(!check) {free(raw);rosterReadOnly=true;return;}
   bool written=rosterWrite(prefs,raw,ROSTER_BYTES);
-  bool committed=written && check && rosterStoredSize(prefs)==ROSTER_BYTES &&
-    rosterRead(prefs,check,ROSTER_BYTES)==ROSTER_BYTES && !memcmp(check,raw,ROSTER_BYTES);
-  free(check);
+  bool committed=written && rosterMatches(prefs,raw,ROSTER_BYTES);
   if(!committed) {free(raw);rosterReadOnly=true;Serial.println("forms: roster write failed; recovery copies retained");return;}
   // Keep released-format recovery copies, without ever writing a 36-byte
   // untagged stride to keys that old releases interpret as 34/30/26 bytes.

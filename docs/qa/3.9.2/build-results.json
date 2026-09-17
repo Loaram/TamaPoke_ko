@@ -1,0 +1,55 @@
+{
+  "version": "3.9.2",
+  "save_version": 7,
+  "record_bytes": 72,
+  "android_version_code": 3056,
+  "wear_version_code": 3057,
+  "local_runtime_suites": 67,
+  "final_swap_regression": true,
+  "sd_large_allocation_fault_reproduced": true,
+  "sd_streaming_verification_bytes": 256,
+  "installer_checks": 30,
+  "play_guide_pages": 31,
+  "watch_guide_pages": 7,
+  "final_runtime_ci_required": true,
+  "physical_swap_retest": false,
+  "physical_root_cause_confirmed": false,
+  "artifacts": {
+    "SHA256SUMS.txt": {
+      "bytes": 855,
+      "sha256": "347766bdd40957ea4a5e342645189288d7c46f56bdda70c7e47002129be918c9"
+    },
+    "TamaPoke-3.9.2-Android-Full-debug.apk": {
+      "bytes": 387888420,
+      "sha256": "cf84051696334450927bab2526bc120e50c696778417c365415b6670439def89"
+    },
+    "TamaPoke-3.9.2-ESP32-Web-Installer.zip": {
+      "bytes": 2309587,
+      "sha256": "a9a45b35e02d5aa2bbfbc4663b0b55c97e050908ef5c2a61d016f17ddf5b6f86"
+    },
+    "TamaPoke-3.9.2-Galaxy-Watch4-9-Install-Guide-KO.pdf": {
+      "bytes": 186624,
+      "sha256": "36fc2e29fcd446b414a147c021f643c02f1716866ecf5fae445b2803a5dd44ce"
+    },
+    "TamaPoke-3.9.2-Play-Guide-KO.pdf": {
+      "bytes": 601342,
+      "sha256": "c6f79db51f9a674c7b2a590a76ba723b6f4d781701d22283b7cd621120c1d0f7"
+    },
+    "TamaPoke-3.9.2-Watch-Installer-Guide-KO.pdf": {
+      "bytes": 196213,
+      "sha256": "7c2ea1e27c829e5c78082e48a9da67959dc67eee443ef3670df10421e95b7736"
+    },
+    "TamaPoke-3.9.2-Watch-Installer-Windows.zip": {
+      "bytes": 18044079,
+      "sha256": "bf83ea2c004d7aa089d3961e4a1260a7ae78b2c543cdcd2014cdc90a262a1cd9"
+    },
+    "TamaPoke-3.9.2-WearOS-GalaxyWatch4-9-debug.apk": {
+      "bytes": 387466537,
+      "sha256": "083ebbff1309db95771cc0657eaa6c22d19ee34afabe1a1b9bc673a52f1bab73"
+    },
+    "WATCH-INSTALLER-SHA256SUMS.txt": {
+      "bytes": 221,
+      "sha256": "5b53bf3b2a44165781376bdb09273facca305f6a16dbe10b756c8b83ad414968"
+    }
+  }
+}

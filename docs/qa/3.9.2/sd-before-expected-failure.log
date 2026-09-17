@@ -1,0 +1,17 @@
+PASS old NVS roster remains readable without SD migration
+PASS missing card cannot replace the old authoritative save
+PASS large roster stages, verifies, and commits on SD
+PASS short write leaves commit pointer unchanged
+PASS interrupted write leaves all previous individuals intact
+PASS failed NVS pointer commit keeps previous snapshot
+PASS retry commits only the verified new snapshot
+FAIL SD verification succeeds with no additional large heap allocation
+PASS missing migrated card cannot silently fall back to stale NVS
+PASS corrupt or wrong card content fails the selected hash
+PASS factory reset cannot resurrect orphan SD snapshots
+Traceback (most recent call last):
+  File "C:\Users\hyung\Documents\ChatGPT\Tamapoko �ѱ�ȭ\TamaPoke-release-3.9.2\tools\test_sd_store.py", line 14, in <module>
+    subprocess.run([str(exe)],check=True,cwd=R,env=env,timeout=30)
+  File "C:\Users\hyung\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['C:\\Users\\hyung\\Documents\\ChatGPT\\Tamapoko �ѱ�ȭ\\TamaPoke-release-3.9.2\\build\\sd-store-tests\\roster_store.exe']' returned non-zero exit status 1.

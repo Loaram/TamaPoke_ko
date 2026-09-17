@@ -30,6 +30,30 @@ static void fresh(uint8_t energy){
 static void reboot(){pet.begin();party.begin();clearOffers();}
 int main(){
   nvs().clear();setup();
+  for(bool box:{false,true}) for(bool reverse:{false,true}) {
+    fresh(100);pet.lastSeenEpoch=1767268800UL;pet.calendarOffset=0;pet.lastCareDay=pet.lastSeenEpoch/86400;
+    pet.dbgHatchAs(reverse?890:485,false);pet.form=reverse?10359:0;
+    pet.ageMinutes=1980;pet.relearnFromLevel();clearOffers();
+    pet.ivAtk=pet.ivDef=pet.ivSpe=pet.ivHp=31;
+    auto original=pet.storageSnapshot();original.care[10]=5;original.care[11]=2;
+    original.care[12]=1;original.care[13]=3;original.care[16]=12;
+    pet.reviveFrom(original);clearOffers();
+    auto incoming=member(reverse?485:890);incoming.form=reverse?0:10359;incoming.level=100;
+    incoming.ivAtk=incoming.ivDef=incoming.ivSpe=incoming.ivHp=31;
+    if(box)party.box[299]=incoming;else party.slots[0]=incoming;
+    party.save();
+    bool ok=party.swapActive(pet,box,box?299:0)&&!activeSwapBlocked;
+    ok &= startWildBattle(false);wildDex=10;btlWon=btlOver=true;
+    for(uint32_t seed=1;seed<10000;seed++) {
+      g_seed=seed;if(wildCaptureNow(wildCatchRateForDex(wildDex),pet.collectibleRegisteredCount())){g_seed=seed;break;}
+    }
+    finishWildBattle();ok &= wildResult==WILD_RESULT_PARTY;
+    battleOpen=btlWild=false;wildResult=WILD_RESULT_NONE;
+    ok &= party.swapActive(pet,box,box?299:0)&&!activeSwapBlocked;
+    auto actual=pet.storageSnapshot();original.care[4]=100-WILD_ENERGY_COST;
+    ok &= !memcmp(&original,&actual,sizeof(actual));
+    ck(ok,"swap/explore/capture/return retains original care without reboot");
+  }
   // Every banked value (including zero/full and legacy no-care records) is
   // ignored on activation. Keep other care/individual metadata unchanged.
   bool matrix=true;

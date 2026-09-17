@@ -48,7 +48,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.9.1"
+#define FW_VERSION "3.9.2"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -772,6 +772,14 @@ void renderSwapRecovery() {
   gfx->flush();
 }
 
+static void btlFreeSprites();
+void releaseSwapSprites() {
+  // These are redrawable caches, never save data. Release the outgoing/form
+  // and battle images before storage work, including a Retry after a failure.
+  mon.unload();pmd.unload();galleryPmd.unload();evoPmd.unload();
+  btlFreeSprites();monFor=-2;sdDirty=true;
+}
+
 bool requestActiveSwap(bool fromBox,uint16_t index) {
   if(pet.hasLearnOffer()) {
     // Open the real decision, but never pass this Bring tap to its Skip button.
@@ -779,7 +787,8 @@ bool requestActiveSwap(bool fromBox,uint16_t index) {
     partyDetail=boxDetail=boxSel=boxSwapFrom=0;
     sfxPlay(SFX_TAP);return false;
   }
-  if(!party.swapActive(pet,fromBox,index)){sfxPlay(SFX_DENY);return false;}
+  releaseSwapSprites();
+  if(!party.swapActive(pet,fromBox,index) || activeSwapBlocked){sfxPlay(SFX_DENY);return false;}
   return true;
 }
 
@@ -1895,6 +1904,7 @@ void onTap(int16_t x, int16_t y) {
   if(saveResetLocked){resetTap(x,y);return;}
   if(activeSwapBlocked){
     if(x>=90 && x<=376 && y>=310 && y<=354){
+      releaseSwapSprites();
       pet.begin();party.begin();
       if(!activeSwapBlocked){
 #ifdef ANDROID
