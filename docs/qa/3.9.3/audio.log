@@ -1,0 +1,5 @@
+scenario=0 queue_no_wait=0 queue_blocking=10000 audio_writes=0 delay_calls=0 pending_sound=0
+scenario=1 queue_no_wait=1 queue_blocking=9999 audio_writes=0 delay_calls=0 pending_sound=0
+scenario=2 queue_no_wait=0 queue_blocking=10000 audio_writes=0 delay_calls=0 pending_sound=0
+scenario=3 queue_no_wait=2 queue_blocking=9998 audio_writes=4 delay_calls=1 pending_sound=0
+PASS: actual ESP audio task blocks after music stops in four scenarios

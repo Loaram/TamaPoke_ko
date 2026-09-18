@@ -1,0 +1,48 @@
+PASS old NVS roster remains readable without SD migration
+PASS missing card cannot replace the old authoritative save
+PASS large roster stages, verifies, and commits on SD
+PASS short write leaves commit pointer unchanged
+PASS interrupted write leaves all previous individuals intact
+PASS failed NVS pointer commit keeps previous snapshot
+PASS retry commits only the verified new snapshot
+PASS SD verification succeeds with no additional large heap allocation
+PASS corrupt first/chunk-boundary/final byte never commits a pointer
+PASS corrupt first/chunk-boundary/final byte never commits a pointer
+PASS corrupt first/chunk-boundary/final byte never commits a pointer
+PASS corrupt first/chunk-boundary/final byte never commits a pointer
+PASS short verification read keeps previous snapshot selected
+PASS selected SD snapshot still matches every byte
+PASS missing migrated card cannot silently fall back to stale NVS
+PASS corrupt or wrong card content fails the selected hash
+PASS factory reset cannot resurrect orphan SD snapshots
+PASS CRC32 matches standard check vector
+PASS valid full/final partial-size chunks reopen and verify before DONE
+PASS valid full/final partial-size chunks reopen and verify before DONE
+PASS valid full/final partial-size chunks reopen and verify before DONE
+PASS valid full/final partial-size chunks reopen and verify before DONE
+PASS valid full/final partial-size chunks reopen and verify before DONE
+PASS valid full/final partial-size chunks reopen and verify before DONE
+PASS OPEN_WRITE
+PASS failed open/write never acknowledges a block
+PASS WRITE_SHORT
+PASS failed open/write never acknowledges a block
+PASS short write reports actual requested and written bytes
+PASS VERIFY_OPEN
+PASS VERIFY_SIZE
+PASS VERIFY_READ
+PASS VERIFY_CRC
+PASS missing/partial USB chunk aborts without ACK or false success
+PASS missing/partial USB chunk aborts without ACK or false success
+PASS missing/partial USB chunk aborts without ACK or false success
+PASS PUT cannot address saves, directories or invalid sprite names
+PASS PUT cannot address saves, directories or invalid sprite names
+PASS PUT cannot address saves, directories or invalid sprite names
+PASS PUT cannot address saves, directories or invalid sprite names
+PASS PUT cannot address saves, directories or invalid sprite names
+PASS invalid size rejected before opening SD file
+PASS invalid size rejected before opening SD file
+PASS missing SD is distinguished from file open and transport errors
+PASS intermittent open failure at 47 or 50 stops precisely at that file
+PASS intermittent open failure at 47 or 50 stops precisely at that file
+PASS 344 successive files complete with independent CRC state
+30 checks, 0 failures

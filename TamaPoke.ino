@@ -48,7 +48,7 @@
 
 // Version del firmware. Subir este numero en cada release (y manifest.json para
 // el instalador web). Se muestra en la pantalla de ajustes y por serie al arrancar.
-#define FW_VERSION "3.9.2"
+#define FW_VERSION "3.9.3"
 #if defined(TAMAPOKE_EXPLORE_BETA) && defined(TAMAPOKE_FULL_DEX)
 #define DISPLAY_VERSION FW_VERSION "-explore-beta-dex"
 #elif defined(TAMAPOKE_EXPLORE_BETA)
@@ -3737,10 +3737,11 @@ static void buildSquad(uint8_t maxLvl, uint8_t maxCount, uint16_t mask) {
   btlPetIn = false;
   if (maxCount > TRAINER_TEAM_MAX) maxCount = TRAINER_TEAM_MAX;
   if (!pet.isEgg() && btlSquadN < maxCount && (mask & 1)) {
-    Pet tmp = pet;                       // a copy: the real pet is untouched
-    if (maxLvl && tmp.level() > maxLvl)
-      tmp.ageMinutes = (uint32_t)(maxLvl - 1) * MINUTES_PER_LEVEL;
-    combatantFromPet(btlSquad[btlSquadN++], tmp);
+    // Copy only individual data, never Pet's owning Preferences handle.
+    // A copied Pet closes the live ESP NVS handle when it leaves this block.
+    PartyMon tmp = pet.storageSnapshot();
+    if (maxLvl && tmp.level > maxLvl) tmp.level = maxLvl;
+    combatantFromParty(btlSquad[btlSquadN++], tmp);
     btlPetIn = true;      // the training reward goes to whoever fought for it
   }
   for (int i = 0; i < PARTY_SLOTS && btlSquadN < maxCount; i++) {

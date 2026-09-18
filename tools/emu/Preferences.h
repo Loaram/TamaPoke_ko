@@ -6,6 +6,11 @@
 #include <map>
 #include <string>
 #include <vector>
+#ifdef TAMAPOKE_TEST_NVS_HANDLES
+#include <set>
+inline auto &nvsOpenHandles() { static auto *s=new std::set<unsigned>; return *s; }
+inline unsigned nvsNextHandle() { static unsigned n=0; return ++n; }
+#endif
 
 typedef std::map<std::string, std::vector<uint8_t>> NvsStore;
 inline NvsStore &nvs() { static NvsStore s; return s; }
@@ -16,22 +21,43 @@ void nvsLoad(const char *path);
 void nvsSave(const char *path);
 
 class Preferences {
+#ifdef TAMAPOKE_TEST_NVS_HANDLES
+  unsigned handle=0;
+  bool started=false, readOnly=false;
+  bool readable() const { return started && nvsOpenHandles().count(handle); }
+  bool writable() const { return readable() && !readOnly; }
+#else
+  bool readable() const { return true; }
+  bool writable() const { return true; }
+#endif
 public:
   NvsStore &kv = nvs();
+#ifdef TAMAPOKE_TEST_NVS_HANDLES
+  // ESP Preferences copies share a handle: destroying either invalidates it.
+  ~Preferences() { end(); }
+  bool begin(const char *, bool ro=false) {
+    if(started) return false;
+    handle=nvsNextHandle();nvsOpenHandles().insert(handle);
+    readOnly=ro;started=true;return true;
+  }
+  void end() { if(started)nvsOpenHandles().erase(handle);started=false; }
+#else
   bool begin(const char *, bool = false) { return true; }
   void end() {}
-  void clear() { kv.clear(); }
-  bool isKey(const char *k) { return kv.count(k) != 0; }
-  bool remove(const char *k) { if(nvsFailKey()==k)return false;bool erased=kv.erase(k)!=0;if(erased && nvsAfterWrite())nvsAfterWrite()();return erased; }
+#endif
+  void clear() { if(writable())kv.clear(); }
+  bool isKey(const char *k) { return readable() && kv.count(k) != 0; }
+  bool remove(const char *k) { if(!writable() || nvsFailKey()==k)return false;bool erased=kv.erase(k)!=0;if(erased && nvsAfterWrite())nvsAfterWrite()();return erased; }
 
   template <typename T> void putT(const char *k, T v) {
-    if(nvsFailKey()==k) return;
+    if(!writable() || nvsFailKey()==k) return;
     std::vector<uint8_t> b(sizeof(T));
     memcpy(b.data(), &v, sizeof(T));
     kv[k] = b;
     if(nvsAfterWrite())nvsAfterWrite()();
   }
   template <typename T> T getT(const char *k, T d) {
+    if(!readable())return d;
     auto it = kv.find(k);
     if (it == kv.end() || it->second.size() != sizeof(T)) return d;
     T v; memcpy(&v, it->second.data(), sizeof(T)); return v;
@@ -51,7 +77,7 @@ public:
   void putUShort(const char *k, uint16_t v) { putT(k, v); }
   uint16_t getUShort(const char *k, uint16_t d = 0) { return getT(k, d); }
   void putBytes(const char *k, const void *p, size_t n) {
-    if(nvsFailKey()==k) return;
+    if(!writable() || nvsFailKey()==k) return;
     const uint8_t *b = (const uint8_t *)p;
     kv[k] = std::vector<uint8_t>(b, b + n);
     if(nvsAfterWrite())nvsAfterWrite()();
@@ -59,6 +85,7 @@ public:
   // Size of a stored blob, 0 if absent. The firmware uses it to tell an
   // old, shorter record layout from the current one (see Party::begin).
   size_t getBytesLength(const char *k) {
+    if(!readable())return 0;
     auto it = kv.find(k);
     return it == kv.end() ? 0 : it->second.size();
   }
@@ -74,6 +101,7 @@ public:
   // the badge arrays and eggByRegion at their zero initialiser on a real board,
   // while every test on this stub happily read a sane prefix and passed.
   size_t getBytes(const char *k, void *p, size_t n) {
+    if(!readable())return 0;
     auto it = kv.find(k);
     if (it == kv.end()) return 0;
     if (it->second.size() > n) return 0;      // hardware copies nothing here
@@ -81,11 +109,12 @@ public:
     return it->second.size();
   }
   void putString(const char *k, const char *v) {
-    if(nvsFailKey()==k) return;
+    if(!writable() || nvsFailKey()==k) return;
     kv[k] = std::vector<uint8_t>(v, v + strlen(v) + 1);
     if(nvsAfterWrite())nvsAfterWrite()();
   }
   size_t getString(const char *k, char *out, size_t n) {
+    if(!readable())return 0;
     auto it = kv.find(k);
     if (it == kv.end()) { if (n) out[0] = 0; return 0; }
     size_t c = it->second.size() < n ? it->second.size() : n - 1;

@@ -84,6 +84,13 @@ uint8_t nextAvailableRegion(uint8_t from);
 
 class Pet {
 public:
+  Pet() = default;
+  // Preferences owns an ESP NVS handle. Copy individual data via
+  // storageSnapshot(), not the owning object (including accidental moves).
+  Pet(const Pet &) = delete;
+  Pet &operator=(const Pet &) = delete;
+  Pet(Pet &&) = delete;
+  Pet &operator=(Pet &&) = delete;
   // Estadisticas 0..100
   uint8_t fullness = 80;  // comida
   uint8_t joy = 80;       // felicidad

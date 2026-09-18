@@ -215,7 +215,10 @@ static void audioTask(void *) {
     }
 
     if (m == MUS_NONE) {
-      if (ampOn && !gSyn.busy()) { digitalWrite(PA, LOW); ampOn = false; }
+      // No pump runs on this branch. A lingering voice would otherwise keep
+      // wantAudio true forever, spin on a zero-timeout queue and starve IDLE0.
+      gSyn.allOff();
+      if (ampOn) { digitalWrite(PA, LOW); ampOn = false; }
       playing = MUS_NONE; mi1 = mi2 = 0; at1 = at2 = clock = 0;
       continue;
     }

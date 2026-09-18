@@ -30,6 +30,7 @@ jobs:
           name: collection-screens
           path: build/collection-screens/*.png
       - run: python tools/test_runtime.py
+      - run: python tools/test_audio_task.py
       - run: python tools/test_android_lan_java.py
       - run: python tools/test_sd_store.py
       - uses: arduino/setup-arduino-cli@v2

@@ -22,8 +22,8 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "TamaPoke-3.9.2-Play-Guide-KO.pdf"
-VERSION = "3.9.2"
+OUT = ROOT / "output" / "pdf" / "TamaPoke-3.9.3-Play-Guide-KO.pdf"
+VERSION = "3.9.3"
 PAGE_TOTAL = 31
 
 FONT = Path(r"C:\Windows\Fonts\malgun.ttf")
@@ -253,7 +253,7 @@ story.extend(
             ParagraphStyle("CoverTitle", parent=TITLE, alignment=TA_CENTER, fontSize=30, leading=39),
         ),
         p(
-            "플레이 설명서 · 3.9.2",
+            "플레이 설명서 · 3.9.3",
             ParagraphStyle("CoverSub", parent=H2, alignment=TA_CENTER, fontSize=18, leading=26, textColor=BLUE),
         ),
         Spacer(1, 8 * mm),
@@ -264,7 +264,7 @@ story.extend(
         Spacer(1, 10 * mm),
         p("처음 설치부터 탐색·포획 · 육성 · 전투 · 기기간 세이브 이전까지", ParagraphStyle("CoverLine", parent=SMALL, alignment=TA_CENTER)),
         Spacer(1, 8 * mm),
-        p("2026-09-16", CENTER),
+        p("2026-09-18", CENTER),
     ]
 )
 page_break(story)
@@ -682,7 +682,7 @@ story.extend(
         ),
         Spacer(1, 5 * mm),
         p("설치 페이지: https://loaram.github.io/TamaPoke_ko/", SMALL),
-        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.9.2", SMALL),
+        p("릴리스: https://github.com/Loaram/TamaPoke_ko/releases/tag/3.9.3", SMALL),
         p("비공식·비상업 팬 프로젝트 · 코드 MIT · 스프라이트 PMD SpriteCollab (CC BY-NC) · 한글 글꼴 Galmuri11 (SIL OFL 1.1)", SMALL),
     ]
 )
